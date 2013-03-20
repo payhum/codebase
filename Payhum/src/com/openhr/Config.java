@@ -18,7 +18,7 @@ public class Config {
 	public static String payrollStrategy=""; 
 	
 	/**
-	 * Read the configuration.
+	 * Read the configuration for the employees
 	 */
 	public static void readConfig() { 
 		String property;
