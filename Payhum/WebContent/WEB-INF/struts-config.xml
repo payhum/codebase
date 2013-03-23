@@ -18,8 +18,7 @@
 		<form-bean name="mleaveForm" type="com.openhr.leave.form.MLeaveForm" />
 		<form-bean name="leaveTypeForm" type="com.openhr.leavetype.form.LeaveTypeForm" />
 		<form-bean name="benefitForm" type="com.openhr.benefit.form.BenefitForm" />
-		<form-bean name="benefitTypeForm"
-			type="com.openhr.benefittype.form.BenefitTypeForm" />
+		<form-bean name="benefitTypeForm" type="com.openhr.benefittype.form.BenefitTypeForm" />
 		<form-bean name="settingsForm" type="com.openhr.settings.form.SettingsForm" />
 		<form-bean name="photoCropForm" type="com.openhr.employee.form.PhotoCropForm" />
 	</form-beans>
@@ -45,19 +44,51 @@
 		<action path="/User" forward="user.form" />
 		<action path="/Role" forward="role.form" />
 		<action path="/Settings" forward="settings.form" />
+		<action path="/SettingsHR" forward="settingshr.form" />
 		<action path="/Report" forward="report.form" />
 		<action path="/Payroll" forward="financeHome" />
+
+		<!-- start of Report actions -->
+		<action path="/GLReportsEmployee" forward="glreportemployee.form" />
+		<action path="/GLReportsCompany" forward="glreportcomapny.form" />
+
+		<action path="/PayrollLiability" forward="payrollliability.form" />
+		<action path="/PayrollSummary" forward="payrollsummary.form" />
+       <action path="/PayrollDetails" forward="payrolldetails.form" />
+       
+       
+        <action path="/EarningsPerCompany" forward="earningspercompany.form" />
+         <action path="/EarningsRecord" forward="earningsrecord.form" />
+          <action path="/EarningsPerDepartment" forward="earningsperdepartment.form" />
+          
+          
+            
+            <action path="/TaxAnnual" forward="taxannual.form" />
+            
+            <action path="/TaxMonthly" forward="taxmonthly.form" />
+            
+         <action path="/ActiveTerminate" forward="activeterminat.form" />
+          <action path="/EmployeeDept" forward="employeedept.form" />
+          
+            <action path="/EmployeesAddress" forward="employeesaAddress.form" />
+         <action path="/PaidCheckHistory" forward="paidcheckHistory.form" />
+          
+          
+          
+       
+		<!-- end of Report actions -->
+
 		<!--Member Site Links -->
-		<action path="/MLeave" forward="mleave.form" /> 
+		<action path="/MLeave" forward="mleave.form" />
 		<action path="/MAccount" forward="maccount.form" />
 		<action path="/MBenefit" forward="mbenefit.form" />
-		
-		
-		<action path="/AdminHome" forward="adminHome"/>
-		<action path="/HRHome" forward="hrHome"/>
-		<action path="/FinanceHome" forward="financeHome"/>
-		<action path="/EmployeeHome" forward="memberHome"/>
-		
+
+
+		<action path="/AdminHome" forward="adminHome" />
+		<action path="/HRHome" forward="hrHome" />
+		<action path="/FinanceHome" forward="financeHome" />
+		<action path="/EmployeeHome" forward="memberHome" />
+
 		<!-- start of Login actions -->
 		<action path="/LoginAction" name="loginForm"
 			type="com.openhr.user.action.LoginAction" input="/login/login.jsp">
@@ -211,8 +242,8 @@
 			type="com.openhr.leave.action.LeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
 		</action>
-		
-		
+
+
 		<action path="/ApproveLeaveAction" name="leaveForm"
 			type="com.openhr.leave.action.ApproveLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
@@ -222,15 +253,15 @@
 			type="com.openhr.leave.action.ReadLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
 		</action>
-		
-		
+
+
 		<action path="/ReadRequestedLeaveAction" name="leaveForm"
 			type="com.openhr.leave.action.ReadRequestedLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
 		</action>
-		
-		
-		
+
+
+
 
 		<action path="/UpdateLeaveAction" name="leaveForm"
 			type="com.openhr.leave.action.UpdateLeaveAction" input="leave.form">
@@ -241,10 +272,10 @@
 			type="com.openhr.leave.action.DeleteLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
 		</action>
-		
-		
-		
-		
+
+
+
+
 		<!-- end of leave actions -->
 
 
@@ -303,7 +334,7 @@
 			<forward name="continue" path="settings.form" />
 		</action>
 		<!-- start of Settings actions -->
-		
+
 		<!-- start of Settings actions -->
 		<action path="/LeaveApplicationAction" name="settingsForm"
 			type="com.openhr.mleave.action.LeaveApplicationAction">
@@ -315,8 +346,7 @@
 
 
 		<!-- start of Logout actions -->
-		<action path="/LogoutAction" name="logoutForm"
-			type="com.openhr.user.action.LogoutAction">
+		<action path="/LogoutAction" name="logoutForm" type="com.openhr.user.action.LogoutAction">
 			<forward name="continue" path="index" />
 		</action>
 		<!-- start of Logout actions -->
@@ -324,17 +354,12 @@
 
 
 
-		<action path="/GeneratePayroll" 
-			type="com.openhr.Report" 
-			scope="request">			
+		<action path="/GeneratePayroll" type="com.openhr.Report" scope="request">
 		</action>
-		
-		<action path="/ChangeLanguage" 
-			type="com.openhr.ChangeLanguageAction" 
-			scope="request"
-			parameter="method"
-			validate="false">	
-			<forward name="continue" path="index" />		
+
+		<action path="/ChangeLanguage" type="com.openhr.ChangeLanguageAction"
+			scope="request" parameter="method" validate="false">
+			<forward name="continue" path="index" />
 		</action>
 
 
@@ -345,25 +370,26 @@
 
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />
 
-	<message-resources parameter="com.myapp.struts.Lang" /> 
+	<message-resources parameter="com.myapp.struts.Lang" />
 
 	<!-- ========================= Tiles plugin =============================== -->
 	<!-- This plugin initialize Tiles definition factory. This later can takes 
 		some parameters explained here after. The plugin first read parameters from 
-		web.xml, then overload them with parameters defined here. All parameters are 
-		optional. The plugin should be declared in each struts-config file. - definitions-config: 
-		(optional) Specify configuration file names. There can be several comma separated 
-		file names (default: ?? ) - moduleAware: (optional - struts1.1) Specify if 
-		the Tiles definition factory is module aware. If true (default), there will 
-		be one factory for each Struts module. If false, there will be one common 
-		factory for all module. In this later case, it is still needed to declare 
-		one plugin per module. The factory will be initialized with parameters found 
-		in the first initialized plugin (generally the one associated with the default 
-		module). true : One factory per module. (default) false : one single shared 
-		factory for all modules - definitions-parser-validate: (optional) Specify 
-		if xml parser should validate the Tiles configuration file. true : validate. 
-		DTD should be specified in file header (default) false : no validation Paths 
-		found in Tiles definitions are relative to the main context. -->
+		web.xml, then overload them with parameters defined here. All parameters 
+		are optional. The plugin should be declared in each struts-config file. - 
+		definitions-config: (optional) Specify configuration file names. There can 
+		be several comma separated file names (default: ?? ) - moduleAware: (optional 
+		- struts1.1) Specify if the Tiles definition factory is module aware. If 
+		true (default), there will be one factory for each Struts module. If false, 
+		there will be one common factory for all module. In this later case, it is 
+		still needed to declare one plugin per module. The factory will be initialized 
+		with parameters found in the first initialized plugin (generally the one 
+		associated with the default module). true : One factory per module. (default) 
+		false : one single shared factory for all modules - definitions-parser-validate: 
+		(optional) Specify if xml parser should validate the Tiles configuration 
+		file. true : validate. DTD should be specified in file header (default) false 
+		: no validation Paths found in Tiles definitions are relative to the main 
+		context. -->
 	<plug-in className="org.apache.struts.tiles.TilesPlugin">
 		<set-property property="definitions-config" value="/WEB-INF/tiles-defs.xml" />
 		<set-property property="moduleAware" value="true" />
@@ -374,6 +400,6 @@
 		<set-property property="pathnames"
 			value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
 	</plug-in>
-	
+
 
 </struts-config>
