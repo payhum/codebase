@@ -86,7 +86,7 @@
 	<li class="topitem"><div
 			class="buttonbg gradient_button gradient27" style="width: 73px;">
 			<a href="<%=request.getContextPath() + "/do/AReport"%>">
-					Report</a>
+					Reports</a>
 		</div></li>
 	<!-- <li class="topitem"><div
 			class="buttonbg gradient_button gradient27" style="width: 73px;">
