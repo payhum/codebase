@@ -4,130 +4,205 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
        "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
 
-<tiles-definitions> 
+<tiles-definitions>
 
-    <definition name="common" page="/pages/common/mainLayout.jsp">
-    </definition>
-    
-	<!-- Common Module Navigations-->
-	    <definition name="login.navigation" page="/pages/login/navigation.jsp">
-	    </definition>
-	
-	    <definition name="member.navigation" page="/pages/member/navigation.jsp">
-	    </definition>
-	    
-	    
-	    <definition name="hr.navigation" page="/pages/hr/navigation.jsp">
-	    </definition>
-	    
-	    <definition name="accounting.navigation" page="/pages/accounting/navigation.jsp">
-	    </definition>
-	
-	
-	    <definition name="admin.navigation" page="/pages/admin/navigation.jsp">
-	    </definition>    
-    <!-- End of Common Module Navigations -->
-	
+	<definition name="common" page="/pages/common/mainLayout.jsp">
+	</definition>
+
+	<!-- Common Module Navigations -->
+	<definition name="login.navigation" page="/pages/login/navigation.jsp">
+	</definition>
+
+	<definition name="member.navigation" page="/pages/member/navigation.jsp">
+	</definition>
+
+
+	<definition name="hr.navigation" page="/pages/hr/navigation.jsp">
+	</definition>
+
+	<definition name="accounting.navigation" page="/pages/accounting/navigation.jsp">
+	</definition>
+
+
+	<definition name="admin.navigation" page="/pages/admin/navigation.jsp">
+	</definition>
+	<!-- End of Common Module Navigations -->
+
 	<!-- Common Module Containers -->
-	    <definition name="index" extends="common">
-	        <put name="navigation" value="login.navigation"/>
-	        <put name="title" value="Payhum Login"/>
-	        <put name="body" value="/pages/login/login.jsp"/>
-	    </definition>	    
-	    
+	<definition name="index" extends="common">
+		<put name="navigation" value="login.navigation" />
+		<put name="title" value="Payhum Login" />
+		<put name="body" value="/pages/login/login.jsp" />
+	</definition>
+
+
+	<definition name="adminHome" extends="common">
+		<put name="navigation" value="admin.navigation" />
+		<put name="title" value="Payhum Administration Page" />
+		<put name="body" value="/pages/admin/home.jsp" />
+	</definition>
+
+
+	<definition name="hrHome" extends="common">
+		<put name="navigation" value="hr.navigation" />
+		<put name="title" value="Payhum Human Resources Page" />
+		<put name="body" value="/pages/hr/home.jsp" />
+	</definition>
+
+
+	<definition name="accountingHome" extends="common">
+		<put name="navigation" value="accounting.navigation" />
+		<put name="title" value="Payhum Accounting Page" />
+		<put name="body" value="/pages/accounting/home.jsp" />
+	</definition>
+
+	<definition name="memberHome" extends="common">
+		<put name="navigation" value="member.navigation" />
+		<put name="title" value="Payhum Employee Self Service Page" />
+		<put name="body" value="/pages/member/home.jsp" />
+	</definition>
+	<!-- End of Common Module Containers -->
+
+
+	<!-- HR Module pages -->
+	
+	<definition name="employee.form" extends="hrHome">
+		<put name="body" value="/pages/hr/employee/index.jsp" />
+	</definition>
+	
+	<definition name="glreportemployee.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/employeeview.jsp" />
+	</definition>
 		
-	    <definition name="adminHome" extends="common">
-	        <put name="navigation" value="admin.navigation"/>
-	        <put name="title" value="Payhum Administration Page"/>
-	        <put name="body" value="/pages/admin/home.jsp"/>
-	    </definition>
-	    
-	    
-	    <definition name="hrHome" extends="common">
-	       <put name="navigation" value="hr.navigation"/>
-	        <put name="title" value="Payhum Human Resources Page"/>
-	        <put name="body" value="/pages/hr/home.jsp"/>
-	    </definition>
-	    
-	    
-	    <definition name="accountingHome" extends="common">
-	       <put name="navigation" value="accounting.navigation"/>
-	        <put name="title" value="Payhum Accounting Page"/>
-	        <put name="body" value="/pages/accounting/home.jsp"/>
-	    </definition>
-	    
-	    <definition name="memberHome" extends="common">
-	       <put name="navigation" value="member.navigation"/>
-	        <put name="title" value="Payhum Employee Self Service Page"/>
-	        <put name="body" value="/pages/member/home.jsp"/>
-	    </definition>    
-     <!-- End of Common Module Containers -->
-    
-    
-    <!-- HR Module pages -->
-	    <definition name="employee.form" extends="hrHome">
-	        <put name="body" value="/pages/hr/employee/index.jsp"/>
-	    </definition>
-	    <definition name="leave.form" extends="hrHome">
-	        <put name="body" value="/pages/hr/leave/index.jsp"/>
-	    </definition>
-	    
-	    <definition name="leaveapp.form" extends="hrHome">
-	        <put name="body" value="/pages/hr/leave/approve.jsp"/>
-	    </definition>
-	    
-	    <definition name="leavetype.form" extends="hrHome">
-	        <put name="body" value="/pages/hr/leavetype/index.jsp"/>
-	    </definition>
-	    <definition name="benefit.form" extends="hrHome">
-	        <put name="body" value="/pages/hr/benefit/index.jsp"/>
-	    </definition>
-	    <definition name="benefittype.form" extends="hrHome">
-	        <put name="body" value="/pages/hr/benefittype/index.jsp"/>
-	    </definition>
-	    <definition name="position.form" extends="hrHome">
-	        <put name="body" value="/pages/hr/position/index.jsp"/>
-	    </definition>
-    <!-- End of HR Module pages -->
-    
-    
-    <!-- Accounting Module pages -->
-	    <definition name="report.form" extends="accountingHome">
-	    <put name="navigation" value="/pages/accounting/nav_finance.jsp"/>
-	        <put name="body" value="/pages/accounting/report/index.jsp"/>
-	    </definition>
-	    
-	    <definition name="financeHome" extends="accountingHome">
-	    	<put name="navigation" value="/pages/accounting/nav_finance.jsp"/>
-	        <put name="body" value="/pages/accounting/payroll/index.jsp"/>
-	    </definition>
-    <!-- End of Accounting Module pages -->
-    
-    
-    <!-- Administration Module pages -->
-	    <definition name="role.form" extends="adminHome">
-	        <put name="body" value="/pages/admin/role/index.jsp"/>
-	    </definition>
-	    <definition name="settings.form" extends="adminHome">
-	        <put name="body" value="/pages/admin/settings/index.jsp"/>
-	    </definition>
-	    
-	    <definition name="user.form" extends="adminHome">
-	        <put name="body" value="/pages/admin/user/index.jsp"/>
-	    </definition>
+	<definition name="glreportcomapny.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/companyview.jsp" />
+	</definition>
+	 
+		<definition name="payrollliability.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/liability.jsp" />
+	</definition>
+	
+	<definition name="payrollsummary.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/summary.jsp" />
+	</definition>
+	
+	<definition name="payrolldetails.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/details.jsp" />
+	</definition>
+	
+	<definition name="earningspercompany.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/percompany.jsp" />
+	</definition>
+	
+	<definition name="earningsperdepartment.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/perdepartment.jsp" />
+	</definition>
+	
+	<definition name="earningsrecord.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/record.jsp" />
+	</definition>
+	
+	<definition name="taxannual.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/taxannual.jsp" />
+	</definition>
+	
+		<definition name="taxmonthly.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/taxmonthly.jsp" />
+	</definition>
+	
+	<definition name="activeterminat.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/activeterminated.jsp" />
+	</definition>
+	
+	
+	<definition name="employeedept.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/employeesdept.jsp" />
+	</definition>
+	
+	
+	<definition name="employeesaAddress.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/employeesaddress.jsp" />
+	</definition>
+	
+	
+	<definition name="paidcheckHistory.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/paidcheckhistory.jsp" />
+	</definition>
+	
+	
+		<definition name="miscellaneous.form" extends="hrHome">
+		<put name="body" value="/pages/hr/report/miscellaneous.jsp" />
+	</definition>
+	
+	<definition name="settingshr.form" extends="hrHome">
+		<put name="body" value="/pages/hr/settings/index.jsp" />
+	</definition>
+
+	
+	
+	
+	<definition name="leave.form" extends="hrHome">
+		<put name="body" value="/pages/hr/leave/index.jsp" />
+	</definition>
+
+	<definition name="leaveapp.form" extends="hrHome">
+		<put name="body" value="/pages/hr/leave/approve.jsp" />
+	</definition>
+
+	<definition name="leavetype.form" extends="hrHome">
+		<put name="body" value="/pages/hr/leavetype/index.jsp" />
+	</definition>
+	<definition name="benefit.form" extends="hrHome">
+		<put name="body" value="/pages/hr/benefit/index.jsp" />
+	</definition>
+	<definition name="benefittype.form" extends="hrHome">
+		<put name="body" value="/pages/hr/benefittype/index.jsp" />
+	</definition>
+	<definition name="position.form" extends="hrHome">
+		<put name="body" value="/pages/hr/position/index.jsp" />
+	</definition>
+	<!-- End of HR Module pages -->
+
+
+	<!-- Accounting Module pages -->
+	<definition name="report.form" extends="accountingHome">
+		<put name="navigation" value="/pages/accounting/nav_finance.jsp" />
+		<put name="body" value="/pages/accounting/report/index.jsp" />
+	</definition>
+
+	<definition name="financeHome" extends="accountingHome">
+		<put name="navigation" value="/pages/accounting/nav_finance.jsp" />
+		<put name="body" value="/pages/accounting/payroll/index.jsp" />
+	</definition>
+	<!-- End of Accounting Module pages -->
+
+
+	<!-- Administration Module pages -->
+	<definition name="role.form" extends="adminHome">
+		<put name="body" value="/pages/admin/role/index.jsp" />
+	</definition>
+	<definition name="settings.form" extends="adminHome">
+		<put name="body" value="/pages/admin/settings/index.jsp" />
+	</definition>
+	
+	
+
+	<definition name="user.form" extends="adminHome">
+		<put name="body" value="/pages/admin/user/index.jsp" />
+	</definition>
 	<!-- End of Administration Module pages -->
 
 
 	<!-- Employee Self Service Module pages -->
-	    <definition name="mleave.form" extends="memberHome">
-	        <put name="body" value="/pages/member/leave/index.jsp"/>
-	    </definition>
-	    <definition name="mbenefit.form" extends="memberHome">
-	        <put name="body" value="/pages/member/benefit/index.jsp"/>
-	    </definition>
-	    <definition name="maccount.form" extends="memberHome">
-	        <put name="body" value="/pages/member/user/index.jsp"/>
-	    </definition>
+	<definition name="mleave.form" extends="memberHome">
+		<put name="body" value="/pages/member/leave/index.jsp" />
+	</definition>
+	<definition name="mbenefit.form" extends="memberHome">
+		<put name="body" value="/pages/member/benefit/index.jsp" />
+	</definition>
+	<definition name="maccount.form" extends="memberHome">
+		<put name="body" value="/pages/member/user/index.jsp" />
+	</definition>
 	<!-- End of Employee Self Service Module pages -->
 
 </tiles-definitions>
