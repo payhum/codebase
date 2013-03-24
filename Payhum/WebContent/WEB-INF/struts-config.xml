@@ -18,7 +18,8 @@
 		<form-bean name="mleaveForm" type="com.openhr.leave.form.MLeaveForm" />
 		<form-bean name="leaveTypeForm" type="com.openhr.leavetype.form.LeaveTypeForm" />
 		<form-bean name="benefitForm" type="com.openhr.benefit.form.BenefitForm" />
-		<form-bean name="benefitTypeForm" type="com.openhr.benefittype.form.BenefitTypeForm" />
+		<form-bean name="benefitTypeForm"
+			type="com.openhr.benefittype.form.BenefitTypeForm" />
 		<form-bean name="settingsForm" type="com.openhr.settings.form.SettingsForm" />
 		<form-bean name="photoCropForm" type="com.openhr.employee.form.PhotoCropForm" />
 	</form-beans>
@@ -54,28 +55,28 @@
 
 		<action path="/PayrollLiability" forward="payrollliability.form" />
 		<action path="/PayrollSummary" forward="payrollsummary.form" />
-       <action path="/PayrollDetails" forward="payrolldetails.form" />
-       
-       
-        <action path="/EarningsPerCompany" forward="earningspercompany.form" />
-         <action path="/EarningsRecord" forward="earningsrecord.form" />
-          <action path="/EarningsPerDepartment" forward="earningsperdepartment.form" />
-          
-          
-            
-            <action path="/TaxAnnual" forward="taxannual.form" />
-            
-            <action path="/TaxMonthly" forward="taxmonthly.form" />
-            
-         <action path="/ActiveTerminate" forward="activeterminat.form" />
-          <action path="/EmployeeDept" forward="employeedept.form" />
-          
-            <action path="/EmployeesAddress" forward="employeesaAddress.form" />
-         <action path="/PaidCheckHistory" forward="paidcheckHistory.form" />
-          
-          
-          
-       
+		<action path="/PayrollDetails" forward="payrolldetails.form" />
+
+
+		<action path="/EarningsPerCompany" forward="earningspercompany.form" />
+		<action path="/EarningsRecord" forward="earningsrecord.form" />
+		<action path="/EarningsPerDepartment" forward="earningsperdepartment.form" />
+
+
+
+		<action path="/TaxAnnual" forward="taxannual.form" />
+
+		<action path="/TaxMonthly" forward="taxmonthly.form" />
+
+		<action path="/ActiveTerminate" forward="activeterminat.form" />
+		<action path="/EmployeeDept" forward="employeedept.form" />
+
+		<action path="/EmployeesAddress" forward="employeesaAddress.form" />
+		<action path="/PaidCheckHistory" forward="paidcheckHistory.form" />
+
+
+
+
 		<!-- end of Report actions -->
 
 		<!--Member Site Links -->
@@ -123,17 +124,13 @@
 
 		<!--end of Position actions -->
 
-
-
-
-
-
-
-
-
-
-
-		<!-- start of Employee actions -->
+<!--start of Tax actions -->
+<action path="/ReadTaxAnnualAction" name="employeeForm"
+			type="com.openhr.tax.action.ReadTaxAnnualAction" input="taxannual.form">
+			<forward name="continue" path="taxannual.form" />
+		</action>
+	<!--end of Tax actions -->
+        <!-- start of Employee actions -->
 		<action path="/EmployeePhotoAction" name="employeePhotoForm"
 			type="com.openhr.employee.action.EmployeePhotoAction" input="employee.form">
 			<forward name="continue" path="employee.form" />
@@ -346,7 +343,8 @@
 
 
 		<!-- start of Logout actions -->
-		<action path="/LogoutAction" name="logoutForm" type="com.openhr.user.action.LogoutAction">
+		<action path="/LogoutAction" name="logoutForm"
+			type="com.openhr.user.action.LogoutAction">
 			<forward name="continue" path="index" />
 		</action>
 		<!-- start of Logout actions -->
