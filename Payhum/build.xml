@@ -12,14 +12,14 @@
             --------------------------------------------------
         </echo>
     </target>
-	 <target name="jar">
+	<target name="jar">
 	        <mkdir dir="jar"/>
 	        <jar destfile="jar/Payhum.jar" basedir="build/classes">
 	            <manifest>
 	                <attribute name="Main-Class" value="*"/>
 	            </manifest>
 	        </jar>
-	    </target>
+	</target>
     <target name="archive" depends="jar">
         <delete dir="${OUT}" />
         <mkdir dir="${OUT}" />
