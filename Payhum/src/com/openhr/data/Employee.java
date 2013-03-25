@@ -242,6 +242,19 @@ public class Employee implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
+
+	public ResidentType getResidentType() {
+		// TODO Auto-generated method stub
+		return ResidentType.LOCAL;
+	}
+
+	public List<EmpDependents> getDependents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean isMarried() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
