@@ -21,8 +21,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-//import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;  
@@ -242,6 +240,19 @@ public class Employee implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
+
+	public ResidentType getResidentType() {
+		// TODO Auto-generated method stub
+		return ResidentType.LOCAL;
+	}
+
+	public List<EmpDependents> getDependents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean isMarried() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.taxengine.DeductionType;
+import com.openhr.taxengine.DeductionsDeclared;
+import com.openhr.taxengine.ExemptionType;
+
 /**
  *
  * @author xmen
@@ -78,5 +82,46 @@ public class EmployeePayroll implements Serializable {
     public void setBenefitAmnt(Double benefitAmnt) {
         this.benefitAmnt = benefitAmnt;
     }
+
+	public void save() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Double getTaxableIncome() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setTaxAmount(Double taxAmount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addExemption(ExemptionType eType, Double exemption) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addExemption(ExemptionType eType, Double exemption,
+			int multiplier) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Double getBaseSalary() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public DeductionsDeclared getDeductionsDeclared() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void addDeduction(DeductionType entity, Double amount) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }
