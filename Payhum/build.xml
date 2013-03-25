@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="warCreation" basedir="." default="archive">
     <property name="WEB-INF" value="${basedir}/WebContent/WEB-INF" />
     <property name="OUT" value="${basedir}/build" />
