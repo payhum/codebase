@@ -43,8 +43,7 @@
         			type : "string",
         			validation : {
         				required : true
-        			},
-					editable : false
+        			}
         		}
         	}
         });
@@ -91,15 +90,17 @@
         $("#grid").kendoGrid({
             dataSource : usrDataSource, 
             columns : [
-                { field : "roleId", title : "Role",  editor : roleDropDownEditor, template: '#=roleId ? roleId.name: ""#', width : 120 },
+                { field : "roleId", title : "Department",  editor : roleDropDownEditor, template: '#=roleId ? roleId.name: ""#', width : 120 },
 				{ field : "employeeId", title : "Employee",  editor : employeeDropDownEditor, template: '#=employeeId ? employeeId.employeeId: ""#', width : 120 },
 				{ field : "username", title : "Username", width : 120 },
                 { field : "password", title : "Password",
-					template: "<input type='password' disabled='disabled' value='#= password #'/>",
+					template: "<input type='password' value='#= password #'/>",
 					width : 0 },
                 { command : ["edit", "destroy"], width : "210px" ,filterable :false}
             ], 
-            toolbar : ["create"],  
+             
+            
+            toolbar : [{"name" : "create",  text : "Add New User" }],
             sortable: true,
             scrollable: true,
             filterable : true,
