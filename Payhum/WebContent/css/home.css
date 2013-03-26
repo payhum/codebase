@@ -78,6 +78,26 @@
 	background-color: #FFF;
 }
 
+#rpsm
+{
+	height: 30px;
+width: 30px;
+position: absolute;
+left: 940px;
+top: -1px;
+z-index: 9999;
+background-image: url(../css/images/pd.gif);
+}
+#rpsm1
+{
+	height: 30px;
+width: 100px;
+position: absolute;
+left: 850px;
+top: -1px;
+z-index: 9999;
+
+}
 #bread-crumb {
 	height: 30px;
 	display: block;
