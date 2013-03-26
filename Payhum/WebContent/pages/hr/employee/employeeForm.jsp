@@ -77,7 +77,13 @@
 			<div class="clear"></div>
 		</div>
 
-
+<div>
+			<div class="label">Department</div>
+			<div class="field">
+				<input id="deprtDropDownList"/>
+			</div>
+			<div class="clear"></div>
+		</div>
 
 		<div>
 			<div class="label">Position/ Title</div>
@@ -281,10 +287,6 @@
 			});
 		
 			
-			
-			
-			
-		
 			$("#positionDropDownList").kendoDropDownList({
 				dataTextField : "name",
 				dataValueField : "id",
@@ -292,6 +294,19 @@
 					type : "json",
 					transport : {
 						read : "<%=request.getContextPath()+ "/do/ReadPositionAction"%>"
+					}
+				}
+			});
+			
+			
+		
+			$("#deprtDropDownList").kendoDropDownList({
+				dataTextField : "name",
+				dataValueField : "id",
+				dataSource : {
+					type : "json",
+					transport : {
+						read : "<%=request.getContextPath()+ "/do/ReadRoleAction"%>"
 					}
 				}
 			});
