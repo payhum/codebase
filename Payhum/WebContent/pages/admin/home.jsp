@@ -6,6 +6,8 @@
 		<div id="revenueChart" style="float: right; width:500px;padding-right:30px;"></div>
 		<div style="clear: both"></div>
 	</div>
+	
+	<!---
 	<script>
 		function createChart() {
 			$("#chart").kendoChart({
@@ -116,6 +118,8 @@
 			});
 		});
 	</script>
+	
+	--->
 </div>
 
 <div style="font-family:arial;
