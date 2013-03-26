@@ -1,6 +1,8 @@
 <%@include file="../../common/jspHeader.jsp" %>
 <h2 class="legend">Payroll Summary </h2> 
-<div id="grid">
+<div id="grid"><a href="#">
+<span id="rpsm"></span>
+<span id="rpsm1">Export PDF Report</span></a>
 	</div>
 <div id="empForm">
 </div>
