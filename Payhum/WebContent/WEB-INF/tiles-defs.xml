@@ -98,6 +98,7 @@
 		<put name="body" value="/pages/hr/report/perdepartment.jsp" />
 	</definition>
 	
+	
 	<definition name="earningsrecord.form" extends="hrHome">
 		<put name="body" value="/pages/hr/report/record.jsp" />
 	</definition>

@@ -125,11 +125,32 @@
 		<!--end of Position actions -->
 
 <!--start of Tax actions -->
+
+
 <action path="/ReadTaxAnnualAction" name="employeeForm"
 			type="com.openhr.tax.action.ReadTaxAnnualAction" input="taxannual.form">
 			<forward name="continue" path="taxannual.form" />
 		</action>
-	<!--end of Tax actions -->
+		
+		<action path="/ReadTaxMonthlyAction" name="employeeForm"
+			type="com.openhr.tax.action.ReadTaxMonthlyAction" input="taxmonthly.form">
+			<forward name="continue" path="taxmonthly.form" />
+		</action>
+	<!-- start Emplye adrress actions -->
+	<action path="/EmployeeAdressAction"
+			type="com.openhr.employeeadrs.action.EmployeeAdressAction" name="EmployeeAdressForm" input="employeesaAddress.form">
+			<forward name="continue" path="employeesaAddress.form" />
+		</action>
+	<!-- end Emplye adrress actions -->
+		<!--end of Tax actions -->
+	<!--Start of miscellaneous actions -->
+	<action path="/ReadActiveAction" name="employeeForm"
+			type="com.openhr.miscellaneous.action.ReadActiveAction" input="activeterminat.form">
+			<forward name="continue" path="activeterminat.form" />
+		</action>
+	<!--end of miscellaneous actions -->
+	
+	
         <!-- start of Employee actions -->
 		<action path="/EmployeePhotoAction" name="employeePhotoForm"
 			type="com.openhr.employee.action.EmployeePhotoAction" input="employee.form">
