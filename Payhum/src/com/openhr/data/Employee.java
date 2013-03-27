@@ -93,7 +93,7 @@ public class Employee implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
     private List<Leave> leaveCollection;*/
     @JoinColumn(name = "positionId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne( targetEntity=Position.class, cascade=CascadeType.ALL)
     private Position positionId;
 
     public Employee() {
