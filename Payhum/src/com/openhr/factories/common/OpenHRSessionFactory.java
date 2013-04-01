@@ -7,6 +7,7 @@ package com.openhr.factories.common;
 import com.openhr.data.Benefit;
 import com.openhr.data.BenefitType;
 import com.openhr.data.EmpBenefitView;
+import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Leave;
@@ -17,6 +18,10 @@ import com.openhr.data.Position;
 import com.openhr.data.Report;
 import com.openhr.data.Roles;
 import com.openhr.data.Users;
+import com.openhr.taxengine.DeductionsDeclared;
+import com.openhr.taxengine.DeductionsDone;
+import com.openhr.taxengine.ExemptionsDone;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 
@@ -44,6 +49,11 @@ public class OpenHRSessionFactory {
         config.addAnnotatedClass(Report.class);
         config.addAnnotatedClass(Roles.class);
         config.addAnnotatedClass(Users.class);
+        config.addAnnotatedClass(EmpDependents.class);
+        config.addAnnotatedClass(DeductionsDeclared.class);
+        config.addAnnotatedClass(DeductionsDone.class);
+        config.addAnnotatedClass(ExemptionsDone.class);
+
         sessionFactory = config.buildSessionFactory();
     }
 

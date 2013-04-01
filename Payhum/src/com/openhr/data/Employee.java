@@ -4,7 +4,7 @@
  */
 package com.openhr.data;
 
-import java.io.Serializable; 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -21,14 +21,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;  
+import javax.persistence.TemporalType;
 
 
 /**
  *
- * @author Mekbib
+ * 
  */
 @Entity
 @Table(name = "employee", catalog = "payhumrepo", schema = "")
@@ -94,6 +95,17 @@ public class Employee implements Serializable {
     @ManyToOne(optional = false)
     private Position positionId;
 
+    @Basic(optional = false)
+    @Column(name = "married", nullable = false, length = 20)
+    private String married;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId", fetch = FetchType.EAGER)
+    private List<EmpDependents> dependents;
+    
+    @Basic(optional = false)
+    @Column(name = "residentType", nullable = false, length = 20)
+    private Integer residentType;
+    
     public Employee() {
     }
 
@@ -176,22 +188,6 @@ public class Employee implements Serializable {
         this.hiredate = hiredate;
     }
     
-    /*public List<Users> getUsersCollection() {
-    return usersCollection;
-    }
-
-    public void setUsersCollection(List<Users> usersCollection) {
-    this.usersCollection = usersCollection;
-    }
-
-    public List<Leave> getLeaveCollection() {
-    return leaveCollection;
-    }
-
-    public void setLeaveCollection(List<Leave> leaveCollection) {
-    this.leaveCollection = leaveCollection;
-    }*/
-
     public Position getPositionId() {
         return positionId;
     }
@@ -242,17 +238,36 @@ public class Employee implements Serializable {
 	}
 
 	public ResidentType getResidentType() {
-		// TODO Auto-generated method stub
-		return ResidentType.LOCAL;
-	}
-
-	public List<EmpDependents> getDependents() {
-		// TODO Auto-generated method stub
+		if(this.residentType != null) {
+			if(residentType == ResidentType.LOCAL.getValue()) {
+				return ResidentType.LOCAL;
+			} else if(residentType == ResidentType.RESIDENT_FOREIGNER.getValue()) {
+				return ResidentType.RESIDENT_FOREIGNER;
+			} else if(residentType == ResidentType.NON_RESIDENT_FOREIGNER.getValue()) {
+				return ResidentType.NON_RESIDENT_FOREIGNER;
+			}
+		} 
+		
 		return null;
 	}
 
+	public List<EmpDependents> getDependents() {
+		return this.dependents;
+	}
+
 	public boolean isMarried() {
-		// TODO Auto-generated method stub
-		return false;
+		return Boolean.parseBoolean(married);
+	}
+	
+	public void setMarried(String married) {
+		this.married = married;
+	}
+	
+	public void setDependents(List<EmpDependents> deps) {
+		this.dependents = deps;
+	}
+	
+	public void setResidentType(Integer resType) {
+		this.residentType = resType;
 	}
 }

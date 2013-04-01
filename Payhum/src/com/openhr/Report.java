@@ -161,7 +161,7 @@ public class Report extends Action {
 						s.addCell(number);
 						break;
 
-					case 3:
+					/*case 3:
 						String benefitType = payroll.get(y - 3)
 								.getBenefitType() != null ? payroll.get(y - 3)
 								.getBenefitType() : "No Benefit";
@@ -187,7 +187,7 @@ public class Report extends Action {
 						}
 						s.addCell(number);
 						break;
-
+*/
 					case 5:
 						taxRate = 0.15;
 						if (payroll.get(y - 3).getGrossSalary() < 0)
