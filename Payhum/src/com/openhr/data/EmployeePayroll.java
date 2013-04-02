@@ -10,6 +10,9 @@ import java.util.Map;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.openhr.taxengine.DeductionType;
 import com.openhr.taxengine.DeductionsDeclared;
 import com.openhr.taxengine.DeductionsDone;
@@ -50,23 +53,23 @@ public class EmployeePayroll implements Serializable {
     private Double benefitAmnt;*/
 
     @Basic(optional = false)
-    @Column(name = "taxableIncome", nullable = false)
+    @Column(name = "taxableIncome")
     private Double taxableIncome;
     
     @Basic(optional = false)
-    @Column(name = "taxAmount", nullable = false)
+    @Column(name = "taxAmount")
     private Double taxAmount;
     
     @Basic(optional = false)
-    @Column(name = "totalIncome", nullable = false)
+    @Column(name = "totalIncome")
     private Double totalIncome;
     
     @Basic(optional = false)
-    @Column(name = "taxableOverseasIncome", nullable = false)
+    @Column(name = "taxableOverseasIncome")
     private Double taxableOverseasIncome;
     
     @Basic(optional = false)
-    @Column(name = "allowances", nullable = false)
+    @Column(name = "allowances")
     private Double allowances;
     
     @Basic(optional = false)
@@ -74,15 +77,15 @@ public class EmployeePayroll implements Serializable {
     private Double baseSalary;
     
     @Basic(optional = false)
-    @Column(name = "bonus", nullable = false)
+    @Column(name = "bonus")
     private Double bonus;
     
     @Basic(optional = false)
-    @Column(name = "accomodationAmount", nullable = false)
+    @Column(name = "accomodationAmount")
     private Double accomodationAmount;
     
     @Basic(optional = false)
-    @Column(name = "employerSS", nullable = false)
+    @Column(name = "employerSS")
     private Double employerSS;
     
     @Basic(optional = false)
@@ -90,13 +93,25 @@ public class EmployeePayroll implements Serializable {
     private Integer accomodationType;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
+    @Fetch(FetchMode.SUBSELECT)
     private List<DeductionsDeclared> deductionsDeclared;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
+    @Fetch(FetchMode.SUBSELECT)
     private List<DeductionsDone> deductionsDone;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
+    @Fetch(FetchMode.SUBSELECT)
     private List<ExemptionsDone> exemptionsDone;
+
+    @Basic(optional = false)
+    @Column(name = "totalDeductions")
+    private Double totalDeductions;
+
+    @Basic(optional = false)
+    @Column(name = "netPay")
+    private Double netPay;
+
     
     public EmployeePayroll() {
     	this.taxableIncome = 0D;
@@ -114,6 +129,8 @@ public class EmployeePayroll implements Serializable {
         this.employerSS = 0D;
         this.deductionsDeclared = new ArrayList<DeductionsDeclared>();
         this.grossSalary = 0D;
+        this.netPay = 0D;
+        this.totalDeductions = 0D;
     }
     
     public Double getAccomodationAmount() {
@@ -182,7 +199,21 @@ public class EmployeePayroll implements Serializable {
 	}
 
 	public void addExemption(ExemptionType eType, Double exemption) {
-		exemptionsDone.add(new ExemptionsDone(this.employeeId, eType.getValue(), exemption));
+		boolean found = false;
+		
+		for(ExemptionsDone ed: exemptionsDone) {
+			if(ed.getType() == eType.getValue()) {
+				ed.setAmount(ed.getAmount() + exemption);
+				found = true;
+				break;
+			}
+		}
+		
+		if(!found) {
+			exemptionsDone.add(new ExemptionsDone(this.employeeId, eType.getValue(), exemption));
+		}
+		
+		totalDeductions += exemption;
 		
 		if(taxableIncome > exemption) {
 			taxableIncome -= exemption;
@@ -195,13 +226,7 @@ public class EmployeePayroll implements Serializable {
 			int multiplier) {
 		Double exemptionAmt = exemption * multiplier;
 		
-		exemptionsDone.add(new ExemptionsDone(this.employeeId, eType.getValue(), exemptionAmt));
-		
-		if(taxableIncome > exemptionAmt) {
-			taxableIncome -= exemptionAmt;
-		} else {
-			taxableIncome = 0D;
-		}
+		this.addExemption(eType, exemptionAmt);
 	}
 
 	public Double getBaseSalary() {
@@ -209,7 +234,21 @@ public class EmployeePayroll implements Serializable {
 	}
 	
 	public void addDeduction(DeductionType entity, Double amount) {
-		deductionsDone.add(new DeductionsDone(this.employeeId, entity.getValue(), amount));
+		boolean found = false;
+		
+		for(DeductionsDone dd: deductionsDone) {
+			if(dd.getType() == entity.getValue()) {
+				dd.setAmount(dd.getAmount() + amount);
+				found = true;
+				break;
+			}
+		}
+		
+		if(!found) {
+			deductionsDone.add(new DeductionsDone(this.employeeId, entity.getValue(), amount));
+		}
+		
+		totalDeductions += amount;
 		
 		if(taxableIncome > amount) {
 			taxableIncome -= amount;
@@ -293,17 +332,44 @@ public class EmployeePayroll implements Serializable {
 	private static EmployeePayroll populateTestData() {
 		EmployeePayroll ePayroll = new EmployeePayroll();
 		ePayroll.setAccomodationType(AccomodationType.FREE_ACCOM_FROM_EMPLOYER_FULLY_FURNISHED.getValue());
-		ePayroll.setAllowances((double) 100000);
-		ePayroll.setBaseSalary((double) 20000000);
-		ePayroll.setBonus((double) 2000000);
+		ePayroll.setAllowances((double) 50000);
+		ePayroll.setBaseSalary((double) 30000000);
+		ePayroll.setBonus((double) 4000000);
 		
 		Employee emp = new Employee(0, "E1", "John", "", "Lui", "male", new Date(), new Date());
-		emp.setResidentType(ResidentType.NON_RESIDENT_FOREIGNER.getValue());
+		emp.setResidentType(ResidentType.LOCAL.getValue());
 		emp.setMarried("true");
 		
 		ePayroll.setEmployeeId(emp);
 		
+		DeductionsDeclared dd = new DeductionsDeclared(emp, DeductionType.EMPLOYEE_SOCIAL_SECURITY.getValue(), 0D);
+		ePayroll.deductionsDeclared.add(dd);
+		
 		return ePayroll;
+	}
+
+	public Double getTotalDeductions() {
+		return totalDeductions;
+	}
+
+	public void setTotalDeductions(Double totalDeductions) {
+		this.totalDeductions = totalDeductions;
+	}
+
+	public Double getNetPay() {
+		return netPay;
+	}
+
+	public void setNetPay(Double netPay) {
+		this.netPay = netPay;
+	}
+
+	public Double getAllowances() {
+		return allowances;
+	}
+
+	public void setTaxableIncome(Double taxableIncome) {
+		this.taxableIncome = taxableIncome;
 	}
 
 	public void setAccomodationAmount(Double accomAmt) {
@@ -314,55 +380,15 @@ public class EmployeePayroll implements Serializable {
 		this.employerSS = employerSS;
 	}
 	
-    public Map<ExemptionType, Double> getExemptionsDone() {
-    	Map<ExemptionType, Double> exempMap = new HashMap<ExemptionType, Double>();
-    	
-    	for(ExemptionsDone ed : exemptionsDone) {
-    		if(ed.getType() == ExemptionType.BASIC_ALLOWANCE.getValue()) {
-    			exempMap.put(ExemptionType.BASIC_ALLOWANCE, ed.getAmount());
-    		} else if(ed.getType() == ExemptionType.CHILDREN.getValue()) {
-    			exempMap.put(ExemptionType.CHILDREN, ed.getAmount());
-    		} else if(ed.getType() == ExemptionType.SUPPORTING_SPOUSE.getValue()) {
-    			exempMap.put(ExemptionType.SUPPORTING_SPOUSE, ed.getAmount());
-    		}
-    	}
-    	
-		return exempMap;
+    public List<ExemptionsDone> getExemptionsDone() {
+    	return exemptionsDone;
 	}
 
-	public Map<DeductionType, Double> getDeductionsDone() {
-		Map<DeductionType, Double> deducMap = new HashMap<DeductionType, Double>();
-    	
-    	for(DeductionsDone dd : deductionsDone) {
-    		if(dd.getType() == DeductionType.DONATION.getValue()) {
-    			deducMap.put(DeductionType.DONATION, dd.getAmount());
-    		} else if(dd.getType() == DeductionType.EMPLOYEE_SOCIAL_SECURITY.getValue()) {
-    			deducMap.put(DeductionType.EMPLOYEE_SOCIAL_SECURITY, dd.getAmount());
-    		} else if(dd.getType() == DeductionType.LIFE_INSURANCE.getValue()) {
-    			deducMap.put(DeductionType.LIFE_INSURANCE, dd.getAmount());
-    		} 
-    	}
-    	
-		return deducMap;
+	public List<DeductionsDone> getDeductionsDone() {
+		return deductionsDone;
 	}
 	
-	public Map<DeductionType, Double> getDeductionsDeclared() {
-		Map<DeductionType, Double> deducMap = new HashMap<DeductionType, Double>();
-    	
-    	for(DeductionsDeclared dd : deductionsDeclared) {
-    		if(dd.getType() == DeductionType.DONATION.getValue()) {
-    			deducMap.put(DeductionType.DONATION, dd.getAmount());
-    		} else if(dd.getType()  == DeductionType.EMPLOYEE_SOCIAL_SECURITY.getValue()) {
-    			deducMap.put(DeductionType.EMPLOYEE_SOCIAL_SECURITY, dd.getAmount());
-    		} else if(dd.getType()  == DeductionType.LIFE_INSURANCE.getValue()) {
-    			deducMap.put(DeductionType.LIFE_INSURANCE, dd.getAmount());
-    		} else if(dd.getType()  == DeductionType.SELF_LIFE_INSURANCE.getValue()) {
-    			deducMap.put(DeductionType.SELF_LIFE_INSURANCE, dd.getAmount());
-    		} else if(dd.getType()  == DeductionType.SPOUSE_LIFE_INSURANCE.getValue()) {
-    			deducMap.put(DeductionType.SPOUSE_LIFE_INSURANCE, dd.getAmount());
-    		} 
-    	}
-    	
-		return deducMap;
+	public List<DeductionsDeclared> getDeductionsDeclared() {
+		return deductionsDeclared;
 	}
 }

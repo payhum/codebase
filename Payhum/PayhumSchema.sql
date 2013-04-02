@@ -79,6 +79,8 @@ CREATE TABLE `emp_payroll_view` (
   `accomodationAmount` double,
   `employerSS` double,
   `accomodationType` int(10) NOT NULL,
+  `netPay` double,
+  `totalDeductions` double,
   PRIMARY KEY  (`id`),
   KEY `FK_emp_payroll_emp` (`employeeId`),
   CONSTRAINT `FK_emp_payroll_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
