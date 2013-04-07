@@ -18,11 +18,17 @@ import javax.persistence.Table;
 import com.openhr.data.Employee;
 
 @Entity
+<<<<<<< HEAD
 @Table(name = "deduction_decl", catalog = "payhumrepo", schema = "")
 @NamedQueries({
     @NamedQuery(name = "DeductionsDeclared.findAll", query = "SELECT e FROM  DeductionsDeclared e"),
     @NamedQuery(name = "DeductionsDeclared.find", query = "SELECT e FROM  DeductionsDeclared e where e.employeeId=?")}
 		)
+=======
+@Table(name = "deductions_decl", catalog = "payhumrepo", schema = "")
+@NamedQueries({
+    @NamedQuery(name = "DeductionsDeclared.findAll", query = "SELECT e FROM  DeductionsDeclared e")})
+>>>>>>> branch 'master' of https://github.com/payhum/codebase.git
 public class DeductionsDeclared implements Serializable {
 	private static final long serialVersionUID = 1L;
     @Id

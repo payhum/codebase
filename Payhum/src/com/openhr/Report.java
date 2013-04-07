@@ -191,7 +191,7 @@ public class Report extends Action {
 					case 5:
 						taxRate = 0.15;
 						if (payroll.get(y - 3).getGrossSalary() < 0)
-							//payroll.get(y - 3).setGrossSalary(0);
+							payroll.get(y - 3).setGrossSalary(0);
 						if (payroll.get(y - 3).getGrossSalary() <= 150) {
 							taxRate = 0.0;
 						}

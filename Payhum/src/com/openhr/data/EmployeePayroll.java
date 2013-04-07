@@ -30,7 +30,7 @@ import com.openhr.taxengine.ExemptionsDone;
 	 @NamedQuery(name = "EmployeePayroll.findByEmployeeId", query = "SELECT e FROM EmployeePayroll e WHERE e.employeeId = 2"),
     @NamedQuery(name = "EmployeePayroll.findAll", query = "SELECT e FROM EmployeePayroll e"),
     @NamedQuery(name = "EmployeePayroll.findByFullName", query = "SELECT e FROM EmployeePayroll e WHERE e.fullName = :fullName"),
-    @NamedQuery(name = "EmployeePayroll.findByGrossSalary", query = "SELECT e FROM EmployeePayroll e WHERE e.grossSalary = :grossSalary")})
+    @NamedQuery(name = "EmployeePayroll.findByGrossSalary", query = "SELECT e FROM EmployeePayroll e WHERE e.grossSalary = :grossSalary"),
 @NamedNativeQueries({@NamedNativeQuery(name = "finde", query = "select * from emp_payroll_view where employeeId=2",resultClass = EmployeePayroll.class)})
 public class EmployeePayroll implements Serializable {
 	private static final long serialVersionUID = 1L;
