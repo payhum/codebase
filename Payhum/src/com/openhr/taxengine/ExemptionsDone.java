@@ -20,7 +20,8 @@ import com.openhr.data.Employee;
 @Entity
 @Table(name = "exemptions_done", catalog = "payhumrepo", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "ExemptionsDone.findAll", query = "SELECT e FROM  ExemptionsDone e")})
+    @NamedQuery(name = "ExemptionsDone.findAll", query = "SELECT e FROM  ExemptionsDone e"),
+    @NamedQuery(name = "ExemptionsDone.findByEmployeeId", query = "SELECT e FROM  ExemptionsDone e where e.employeeId = ?")})
 public class ExemptionsDone implements Serializable {
 	private static final long serialVersionUID = 1L;
     @Id

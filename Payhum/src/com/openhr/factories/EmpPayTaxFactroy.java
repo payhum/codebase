@@ -85,7 +85,7 @@ catch(Exception e)
 		e.setId(employeeId);
 		session = OpenHRSessionFactory.getInstance().openSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("ExemptionsDone.find");
+		query = session.getNamedQuery("ExemptionsDone.findByEmployeeId");
 		
 		
 		query.setParameter(0, e);
@@ -102,7 +102,7 @@ catch(Exception e)
 		e.setId(employeeId);
 		session = OpenHRSessionFactory.getInstance().openSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("DeductionsDone.find");
+		query = session.getNamedQuery("DeductionsDone.findByEmployeeId");
 		
 		
 		query.setParameter(0, e);
