@@ -3,11 +3,22 @@ package com.openhr.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.Fetch;
@@ -27,7 +38,7 @@ import com.openhr.taxengine.ExemptionsDone;
 @Table(name = "emp_payroll_view", catalog = "payhumrepo", schema = "")
 @XmlRootElement
 @NamedQueries({
-	 @NamedQuery(name = "EmployeePayroll.findByEmployeeId", query = "SELECT e FROM EmployeePayroll e WHERE e.employeeId = 2"),
+	@NamedQuery(name = "EmployeePayroll.findByEmployeeId", query = "SELECT e FROM EmployeePayroll e WHERE e.employeeId = ?"),
     @NamedQuery(name = "EmployeePayroll.findAll", query = "SELECT e FROM EmployeePayroll e"),
     @NamedQuery(name = "EmployeePayroll.findByFullName", query = "SELECT e FROM EmployeePayroll e WHERE e.fullName = :fullName"),
     @NamedQuery(name = "EmployeePayroll.findByGrossSalary", query = "SELECT e FROM EmployeePayroll e WHERE e.grossSalary = :grossSalary")})
@@ -92,7 +103,6 @@ public class EmployeePayroll implements Serializable {
     @Basic(optional = false)
     @Column(name = "accomodationType", nullable = false)
     private Integer accomodationType;
-    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId", fetch=FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private List<DeductionsDeclared> deductionsDeclared;
@@ -123,7 +133,6 @@ public class EmployeePayroll implements Serializable {
         this.allowances = 0D;
         this.deductionsDone = new ArrayList<DeductionsDone>();
         this.baseSalary = 0D;
-        this.deductionsDeclared = null;
         this.bonus= 0D ;
         this.accomodationType= null ;
         this.accomodationAmount = 0D;
@@ -163,7 +172,7 @@ public class EmployeePayroll implements Serializable {
     }
 
     public Double getGrossSalary() {
-        return grossSalary;
+        return grossSalary == null ? 0D : grossSalary;
     }
 
     public void setGrossSalary(Double grossSalary) {
@@ -186,10 +195,6 @@ public class EmployeePayroll implements Serializable {
         this.benefitAmnt = benefitAmnt;
     }
 */
-	public void save() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public Double getTaxableIncome() {
 		return this.taxableIncome;
@@ -258,14 +263,11 @@ public class EmployeePayroll implements Serializable {
 		}
 	}
 
-	public static EmployeePayroll loadEmpPayroll(Employee emp) {
+	public static EmployeePayroll loadEmpPayroll(Integer empId) {
 		if(System.getProperty("DRYRUN") != null 
 		&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
 			return populateTestData();
 		}
-		
-		// TODO - Load from repos
-		
 		return null;		
 	}
 

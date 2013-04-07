@@ -1,8 +1,11 @@
 package com.openhr.taxengine.impl;
 
+import java.util.List;
+
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.ResidentType;
+import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.taxengine.IncomeCalculator;
 import com.openhr.taxengine.TaxDetails;
 
@@ -26,8 +29,8 @@ public class BaseIC implements IncomeCalculator {
 		 * - Bonus
 		 * - Allowances (medical, transport)
 		 */
-		
-		EmployeePayroll empPayroll = EmployeePayroll.loadEmpPayroll(emp);
+		List<EmployeePayroll> empPayList = EmpPayTaxFactroy.findEmpPayrollbyEmpID(emp.getId());
+		EmployeePayroll empPayroll = empPayList.get(0);
 		TaxDetails taxDetails = TaxDetails.getTaxDetailsForCountry();
 		
 		Double annualGrossPay = empPayroll.getBaseSalary();

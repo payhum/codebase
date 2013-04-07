@@ -1,15 +1,13 @@
 package com.openhr;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,294 +16,114 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import com.openhr.company.Company;
+import com.openhr.company.Licenses;
+import com.openhr.data.EmpBankAccount;
+import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
-import com.openhr.factories.BenefitViewFactory;
-import com.openhr.factories.PayrollFactory;
-import com.openhr.factories.UsersFactory;
-
-import jxl.*;
-import jxl.format.Border;
-import jxl.format.BorderLineStyle;
-import jxl.format.Orientation;
-import jxl.format.PageOrientation;
-import jxl.write.*;
-import jxl.write.Number;
+import com.openhr.factories.CompanyFactory;
+import com.openhr.factories.EmpBankAccountFactory;
+import com.openhr.factories.EmpPayTaxFactroy;
+import com.openhr.factories.EmployeeFactory;
+import com.openhr.factories.LicenseFactory;
+import com.openhr.taxengine.TaxEngine;
 
 public class Report extends Action {
+	private static final String COMMA = ",";
+	
 	@Override
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception { 
-		WritableWorkbook payrollWorkBook=null;
-		try {
+			throws Exception {
+	    Calendar currDtCal = Calendar.getInstance();
 
-			int offSet = 2;			
-			
-			String reportName = "COMPANYNAME_Payroll_Sheet_"+new SimpleDateFormat("MMM_yyyy").format(new Date())+".xlsx";
-			response.setHeader("Content-Disposition", "attachment; filename=" + reportName);
-			response.setContentType("application/vnd.ms-excel");
-			
-			payrollWorkBook = Workbook.createWorkbook(response.getOutputStream());
-			
-			WritableSheet s = payrollWorkBook.createSheet("Payroll", 0);
-			WritableSheet s2 = payrollWorkBook.createSheet("Statements", 1);
+	    // Zero out the hour, minute, second, and millisecond
+	    currDtCal.set(Calendar.HOUR_OF_DAY, 0);
+	    currDtCal.set(Calendar.MINUTE, 0);
+	    currDtCal.set(Calendar.SECOND, 0);
+	    currDtCal.set(Calendar.MILLISECOND, 0);
 
-			Label temp = null;
-			s.getSettings().setAutomaticFormulaCalculation(true);
-			s.mergeCells(0 + offSet, 0, 7 + offSet, 1);
-			s.getSettings().setDefaultColumnWidth(15);  
-			s.getSettings().setOrientation(PageOrientation.LANDSCAPE);
-			NumberFormat currency = new NumberFormat(
-					NumberFormat.CURRENCY_DOLLAR + " ###,###.00",
-					NumberFormat.COMPLEX_FORMAT);
-			WritableFont arialFont = new WritableFont(WritableFont.ARIAL, 9);
-			WritableFont arialFont1 = new WritableFont(WritableFont.ARIAL, 9);
-			WritableFont headingFont = new WritableFont(WritableFont.ARIAL, 16);
-			arialFont.setColour(Colour.BLACK);
-			arialFont1.setColour(Colour.AUTOMATIC);
-			WritableCellFormat cellFormat = new WritableCellFormat(arialFont);
-			WritableCellFormat cellFormat1 = new WritableCellFormat(arialFont1);
-			cellFormat1.setBorder(Border.ALL, BorderLineStyle.THIN);
-			cellFormat1.setBackground(Colour.WHITE);
-			cellFormat1.setWrap(true);
-			WritableCellFormat cellFormat2 = new WritableCellFormat(arialFont1);
-			cellFormat2.setBorder(Border.ALL, BorderLineStyle.THIN);
-			cellFormat2.setWrap(true);
-			WritableCellFormat netPayCellFormat = new WritableCellFormat(
-					arialFont1, currency);
+	    Date now = currDtCal.getTime();
 
-			netPayCellFormat.setBackground(Colour.ICE_BLUE);
-			netPayCellFormat.setBorder(Border.ALL, BorderLineStyle.THIN);
-			cellFormat2.setBackground(Colour.VERY_LIGHT_YELLOW);
-			WritableCellFormat headingFormat = new WritableCellFormat(
-					headingFont);
-			headingFormat.setAlignment(Alignment.CENTRE);
-
-			cellFormat.setAlignment(Alignment.CENTRE);
-			cellFormat.setBackground(Colour.GRAY_25, Pattern.SOLID);
-			cellFormat.setBorder(Border.BOTTOM, BorderLineStyle.THIN);
-			cellFormat.setOrientation(Orientation.HORIZONTAL);
-
-			
-
-			List benefitTypes = BenefitViewFactory.findAllBenefitTypes();
-			List columnHeaders = new ArrayList<String>();
-			columnHeaders.add(" EMPLOYEE ID ");
-			columnHeaders.add(" FULL NAME ");
-			columnHeaders.add(" GROSS SALARY ");
-
-			
-			columnHeaders.add(" BENEFIT TITLE ");
-			columnHeaders.add(" AMOUNT ");
-			columnHeaders.add("TAX(%)");
-			columnHeaders.add("TAXED");
-			columnHeaders.add("NET PAY");
-
-			s2.mergeCells(0 + offSet, 0, 4 + offSet, 1);
-			temp = new Label(0 + offSet, 0, "Statements ", headingFormat);
-			s2.addCell(temp);
-
-			temp = new Label(0 + offSet, 0, "COMPANY-NAME Payroll for Month : "
-					+ new SimpleDateFormat("MMM, yyyy").format(new Date()),
-					headingFormat);
-
-			s.addCell(temp);
-
-			Number number;
-			Double taxable = 0.0;
-			Double benefitAmnt = 0.0;
-			Double totalPayable = 0.0;
-			Double taxRate = 0.0;
-			for (int i = 0; i < columnHeaders.size(); i++) {
-				temp = new Label(i + offSet, 2,
-						columnHeaders.get(i).toString(), cellFormat);
-				s.addCell(temp);
-			}
-
-			List<EmployeePayroll> payroll = Payroll.generatePayroll();
-			System.out.println("SIZE OF THE LIST "+payroll.size());
-			for (int y = 3; y < payroll.size()+3; y++) {
-				System.out.println(y-3);
-				for (int i = 0; i < columnHeaders.size(); i++) {
-					switch (i) {
-					case 0:
-						if ((y - 3) % 2 == 0) {
-							temp = new Label(i + offSet, y, payroll.get(y - 3)
-									.getEmployeeid(), cellFormat1);
-						} else {
-							temp = new Label(i + offSet, y, payroll.get(y - 3)
-									.getEmployeeid(), cellFormat2);
-						}
-						s.addCell(temp);
-						break;
-
-					case 1:
-						if ((y - 3) % 2 == 0) {
-							temp = new Label(i + offSet, y, payroll.get(y - 3)
-									.getFullName(), cellFormat1);
-						} else {
-							temp = new Label(i + offSet, y, payroll.get(y - 3)
-									.getFullName(), cellFormat2);
-						}
-						s.addCell(temp);
-						break;
-
-					case 2:
-						if ((y - 3) % 2 == 0) {
-							number = new Number(i + offSet, y, payroll.get(
-									y - 3).getGrossSalary(), cellFormat1);
-						} else {
-							number = new Number(i + offSet, y, payroll.get(
-									y - 3).getGrossSalary(), cellFormat2);
-						}
-						s.addCell(number);
-						break;
-
-					/*case 3:
-						String benefitType = payroll.get(y - 3)
-								.getBenefitType() != null ? payroll.get(y - 3)
-								.getBenefitType() : "No Benefit";
-						if ((y - 3) % 2 == 0) {
-							temp = new Label(i + offSet, y, benefitType,
-									cellFormat1);
-						} else {
-							temp = new Label(i + offSet, y, benefitType,
-									cellFormat2);
-						}
-						s.addCell(temp);
-						break;
-
-					case 4:
-						benefitAmnt = payroll.get(y - 3).getBenefitAmnt() != null ? payroll
-								.get(y - 3).getBenefitAmnt() : 0.0;
-						if ((y - 3) % 2 == 0) {
-							number = new Number(i + offSet, y, benefitAmnt,
-									cellFormat1);
-						} else {
-							number = new Number(i + offSet, y, benefitAmnt,
-									cellFormat2);
-						}
-						s.addCell(number);
-						break;
-*/
-					case 5:
-						taxRate = 0.15;
-						if (payroll.get(y - 3).getGrossSalary() < 0)
-							payroll.get(y - 3).setGrossSalary(0D);
-						if (payroll.get(y - 3).getGrossSalary() <= 150) {
-							taxRate = 0.0;
-						}
-						if (payroll.get(y - 3).getGrossSalary() > 150
-								&& payroll.get(y - 3).getGrossSalary() <= 650) {
-							taxRate = 0.1;
-
-						}
-						if (payroll.get(y - 3).getGrossSalary() > 650
-								&& payroll.get(y - 3).getGrossSalary() <= 1400) {
-							taxRate = 0.15;
-						}
-						if (payroll.get(y - 3).getGrossSalary() > 1400
-								&& payroll.get(y - 3).getGrossSalary() <= 2350) {
-							taxRate = 0.2;
-						}
-						if (payroll.get(y - 3).getGrossSalary() > 2350
-								&& payroll.get(y - 3).getGrossSalary() <= 3550) {
-							taxRate = 0.25;
-						}
-						if (payroll.get(y - 3).getGrossSalary() > 3550
-								&& payroll.get(y - 3).getGrossSalary() <= 5000) {
-							taxRate = 0.3;
-						}
-						if (payroll.get(y - 3).getGrossSalary() > 5000) {
-							taxRate = 0.35;
-						}
-						if ((y - 3) % 2 == 0) {
-
-							number = new Number(i + offSet, y, 100 * taxRate,
-									cellFormat1);
-						} else {
-							number = new Number(i + offSet, y, 100 * taxRate,
-									cellFormat2);
-						}
-
-						s.addCell(number);
-						break;
-
-					case 6:
-						taxable = payroll.get(y - 3).getGrossSalary() * taxRate;
-						if ((y - 3) % 2 == 0) {
-							number = new Number(i + offSet, y, taxable,
-									cellFormat1);
-						} else {
-							number = new Number(i + offSet, y, taxable,
-									cellFormat2);
-						}
-
-						s.addCell(number);
-						break;
-
-					case 7:
-						Double netPay = (payroll.get(y - 3).getGrossSalary() + benefitAmnt)
-								- taxable;
-						totalPayable += netPay;
-
-						number = new Number(i + offSet, y, netPay,
-								netPayCellFormat);
-
-						s.addCell(number);
-						break;
-
-					}
-
+		List<Company> comps = CompanyFactory.findAll();
+		Company comp = comps.get(0);
+		String compName = comp.getName();
+		
+		// Check for licenses
+		List<Licenses> compLicenses = LicenseFactory.findByCompanyId(comps.get(0).getId());
+		for(Licenses lis : compLicenses) {
+			if(lis.getActive() == 1) {
+				Date endDate = lis.getTodate();
+				if( ! isLicenseActive(now, endDate)) {
+					// License has expired and throw an error
+					throw new Exception("License has expired");
+				} else {
+					// License is valid, so lets proceed.
+					break;
 				}
 			}
-
-			
-
-			WritableFont totalFont = new WritableFont(WritableFont.ARIAL, 12,
-					WritableFont.BOLD);
-			WritableCellFormat totalLabelFormat = new WritableCellFormat(
-					totalFont);
-			WritableCellFormat totalFormat = new WritableCellFormat(totalFont,
-					currency);
-			temp = new Label(offSet + (columnHeaders.size() - 2),
-					payroll.size()+3, "Total", totalLabelFormat);
-			s.addCell(temp);
-			number = new Number(offSet + (columnHeaders.size() - 1),
-					payroll.size()+3, totalPayable, totalFormat);
-			s.addCell(number);
-
-			temp = new Label(offSet + (columnHeaders.size() - 2),
-					payroll.size() + 6, "Approved By : ");
-			s.addCell(temp);
-			temp = new Label(offSet + (columnHeaders.size() - 1),
-					payroll.size() + 6, "____________________");
-			s.addCell(temp);
-			temp = new Label(offSet + (columnHeaders.size() - 2),
-					payroll.size() + 5, "Generated time : ");
-			s.addCell(temp);
-
-			temp = new Label(offSet + (columnHeaders.size() - 1),
-					payroll.size() + 5, new SimpleDateFormat(
-							"yyyy-MM-dd HH:mm:ss").format(new Date()));
-			s.addCell(temp);		
-			
-			payrollWorkBook.write();
-			
-			
-			
-			
-			
-		} catch (Exception e) {
-			throw new ServletException("Exception in Payroll Excel Servlet", e);
-		} finally {
-			payrollWorkBook.close();
 		}
-
+		
+		// License validation is done and there is a active license, lets proceed and run the tax engine
+		// to compute the payroll for the current pay period
+		List<Employee> empList = EmployeeFactory.findByCompanyID(comp.getId());
+		// TODO: TaxEngine taxEngine = new TaxEngine(comp, empList);
+		//  taxEngine.execute();
+		
+		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
+		String fileName = compName + "_Payroll_" + monthYear + ".csv";
+		
+		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+		response.setContentType("application/force-download");
+		
+		// Columns in the file will be:
+		// CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,AccountNo,TaxAmount,NetPay
+		List<EmployeePayroll> empPayrollList = EmpPayTaxFactroy.findAllEmpPayroll();
+		
+		StringBuilder allEmpPayStr = new StringBuilder();
+		for(EmployeePayroll empPay : empPayrollList) {
+			List<EmpBankAccount> empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPay.getEmployeeId().getId());
+			
+			StringBuilder empPayStr = new StringBuilder();
+			empPayStr.append(empPay.getEmployeeId().getCompanyId().getCompanyId());
+			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getEmployeeId().getEmployeeId());
+			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getFullName());
+			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getEmployeeId().getEmpNationalID());
+			empPayStr.append(COMMA);
+			empPayStr.append(empBankAcct.get(0).getBankName());
+			empPayStr.append(COMMA);
+			empPayStr.append(empBankAcct.get(0).getBankBranch());
+			empPayStr.append(COMMA);
+			empPayStr.append(empBankAcct.get(0).getAccountNo());
+			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getTaxAmount() / 12);
+			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getNetPay() / 12);
+			empPayStr.append("\n");
+			
+			allEmpPayStr.append(empPayStr);
+		}
+		
+		OutputStream os = response.getOutputStream();
+		os.write(allEmpPayStr.toString().getBytes());
+		os.close();
+		
 		return map.findForward("report.form");
 	}
-
+	
 	public Report() {
 
+	}
+	
+	private boolean isLicenseActive(Date currentDate, Date endDate) {
+	    if (currentDate.after(endDate)) {
+	    	// License has expired
+	    	return false;
+	    }
+	    
+	    return true;
 	}
 }

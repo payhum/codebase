@@ -1,24 +1,77 @@
 package com.openhr.company;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
-import com.openhr.data.Employee;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-public class Company {
+@Entity
+@Table(name = "company", catalog = "payhumrepo", schema = "")
+@NamedQueries({
+    @NamedQuery(name = "Company.findAll", query = "SELECT e FROM Company e"),
+    @NamedQuery(name = "Company.findById", query = "SELECT e FROM Company e WHERE e.id = ?"),
+    @NamedQuery(name = "Company.findByCompanyId", query = "SELECT e FROM Company e WHERE e.companyId = ?"),
+    @NamedQuery(name = "Company.findByName", query = "SELECT e FROM Company e WHERE e.name = ?")})
+public class Company implements Serializable {
 
-	private List<Employee> empList;
-	
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+
+    @Basic(optional = false)
+    @Column(name = "companyId", nullable = false, length = 45)
+    private String companyId;
+    
+    @Basic(optional = false)
+    @Column(name = "name", nullable = false, length = 45)
+    private String name;
+    
+    @Basic(optional = false)
+    @Column(name = "address", nullable = false, length = 90)
+    private String address;
+    
 	public Company () {
-		empList = new ArrayList<Employee>();
 	}
 	
-	public List<Employee> getActiveEmployees() {
-		return empList;
-	}
-	
-	public void addEmployee(Employee emp) {
-		empList.add(emp);
+	public Integer getId() {
+		return id;
 	}
 
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 }

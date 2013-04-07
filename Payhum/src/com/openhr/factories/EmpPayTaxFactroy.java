@@ -10,12 +10,8 @@ import org.hibernate.Session;
 import com.openhr.data.EmpPayTax;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
-
 import com.openhr.factories.common.OpenHRSessionFactory;
-import com.openhr.taxengine.DeductionType;
-import com.openhr.taxengine.DeductionsDeclared;
 import com.openhr.taxengine.DeductionsDone;
-import com.openhr.taxengine.ExemptionType;
 import com.openhr.taxengine.ExemptionsDone;
 
 public class EmpPayTaxFactroy implements Serializable {
@@ -29,6 +25,7 @@ public class EmpPayTaxFactroy implements Serializable {
 	public EmpPayTaxFactroy() {
 	}
 
+	// TODO: Need to check this and remove it.
 	public static List<EmpPayTax> findAll() throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
@@ -40,45 +37,37 @@ public class EmpPayTaxFactroy implements Serializable {
 		return employees;
 	}
 
-	public static List<EmployeePayroll> findPaySummery() 
-
+	public static List<EmployeePayroll> findAllEmpPayroll() 
 	{
-
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		try
-		{
 		query = session.getNamedQuery("EmployeePayroll.findAll");
 		empsum = query.list();
+		session.getTransaction().commit();
+
+		return empsum;
+	}
+
+	public static List<EmployeePayroll> findEmpPayrollbyEmpID(Integer empID) 
+	{
+		if(System.getProperty("DRYRUN") != null 
+		&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
+			EmployeePayroll empP = EmployeePayroll.loadEmpPayroll(empID);
+			List<EmployeePayroll> empPList = new ArrayList<EmployeePayroll>();
+			empPList.add(empP);
+			return empPList;
 		}
 		
-catch(Exception e)
-{
-	e.printStackTrace();
-}
-		session.getTransaction().commit();
-
-		return empsum;
-	}
-
-	public synchronized static List<EmployeePayroll> findById(Integer employeeId)
-			throws Exception {
-		//Employee e=new Employee();
-		//e.setId(employeeId);
-		session = OpenHRSessionFactory.getInstance().openSession();
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("finde");
-		
-		
-		//query.setParameter(0, e);
+		query = session.getNamedQuery("EmployeePayroll.findByEmployeeId");
+		query.setInteger(0,empID);
 		empsum = query.list();
-
 		session.getTransaction().commit();
-        session.close();
+
 		return empsum;
 	}
 
-	
 	public synchronized static List<ExemptionsDone> exemptionsDone(Integer employeeId)
 			throws Exception {
 		Employee e=new Employee();
@@ -86,10 +75,8 @@ catch(Exception e)
 		session = OpenHRSessionFactory.getInstance().openSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("ExemptionsDone.findByEmployeeId");
-		
-		
 		query.setParameter(0, e);
-		 List<ExemptionsDone> empsum1 = query.list();
+		List<ExemptionsDone> empsum1 = query.list();
 
 		session.getTransaction().commit();
         session.close();
@@ -103,8 +90,6 @@ catch(Exception e)
 		session = OpenHRSessionFactory.getInstance().openSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("DeductionsDone.findByEmployeeId");
-		
-		
 		query.setParameter(0, e);
 		List<DeductionsDone> empsum2 = query.list();
 

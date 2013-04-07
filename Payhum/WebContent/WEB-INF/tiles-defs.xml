@@ -206,4 +206,9 @@
 	</definition>
 	<!-- End of Employee Self Service Module pages -->
 
+    <definition name="masterhome.form" extends="adminHome">
+    	<put name="navigation" value="/pages/masteradmin/nav_masteradmin.jsp" />
+    	<put name="body" value="/pages/masteradmin/masterhome.jsp" />
+	</definition>
+
 </tiles-definitions>

@@ -26,6 +26,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.openhr.company.Company;
+
 
 /**
  *
@@ -42,6 +44,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Employee.findByLastname", query = "SELECT e FROM Employee e WHERE e.lastname = ?"),
     @NamedQuery(name = "Employee.findBySex", query = "SELECT e FROM Employee e WHERE e.sex = ?"),
     @NamedQuery(name = "Employee.findByBirthdate", query = "SELECT e FROM Employee e WHERE e.birthdate = ?"),
+    @NamedQuery(name = "Employee.findByCompanyID", query = "SELECT e FROM Employee e WHERE e.companyId = ?"),
     @NamedQuery(name = "Employee.findByHiredate", query = "SELECT e FROM Employee e WHERE e.hiredate = ?")})
 @NamedNativeQuery(name = "Employee.findLastId", query = "SELECT * FROM Employee WHERE Employee.id = (SELECT max(Employee.id) FROM EMPLOYEE)",
 			resultClass=Employee.class)
@@ -99,14 +102,30 @@ public class Employee implements Serializable {
     @Column(name = "married", nullable = false, length = 20)
     private String married;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId", fetch=FetchType.EAGER)
     private List<EmpDependents> dependents;
     
     @Basic(optional = false)
     @Column(name = "residentType", nullable = false, length = 20)
     private Integer residentType;
     
-    public Employee() {
+	@JoinColumn(name = "companyId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private Company companyId;
+
+    @Basic(optional = false)
+    @Column(name = "empNationalID", nullable = false, length = 45)
+    private String empNationalID;
+    
+    public String getEmpNationalID() {
+		return empNationalID;
+	}
+
+	public void setEmpNationalID(String empNationalID) {
+		this.empNationalID = empNationalID;
+	}
+
+	public Employee() {
     }
 
     public Employee(Integer id) {
@@ -269,5 +288,13 @@ public class Employee implements Serializable {
 	
 	public void setResidentType(Integer resType) {
 		this.residentType = resType;
+	}
+	
+    public Company getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(Company companyId) {
+		this.companyId = companyId;
 	}
 }

@@ -12,7 +12,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.openhr.data.Employee;
-import com.openhr.data.Position;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
@@ -110,6 +109,17 @@ public class EmployeeFactory implements Serializable {
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findByRaisePerYear");
 		query.setDouble(0, raise);
+		employees = query.list();
+		session.getTransaction().commit();
+
+		return employees;
+	}
+
+	public static List<Employee> findByCompanyID(Integer compID) throws Exception{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Employee.findByCompanyID");
+		query.setInteger(0, compID);
 		employees = query.list();
 		session.getTransaction().commit();
 

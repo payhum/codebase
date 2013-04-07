@@ -49,13 +49,12 @@ public class TestTaxEngine {
 		
 		List<Employee> empList = new ArrayList<Employee>();
 		empList.add(emp);
-		comp.addEmployee(emp);
 		
 		// Run through the engine
 		System.out.println("Running the Tax Engine in DRYRUN Mode.");
 		System.out.println("======================================");
 
-		TaxEngine taxEngine = new TaxEngine(comp);
+		TaxEngine taxEngine = new TaxEngine(comp, empList);
 		Map<Employee, EmployeePayroll> retData = taxEngine.testExecute();
 
 		for(Employee ei : retData.keySet()) {

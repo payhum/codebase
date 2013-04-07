@@ -4,11 +4,15 @@
  */
 package com.openhr.factories.common;
 
+import com.openhr.company.Company;
+import com.openhr.company.CompanyPayroll;
+import com.openhr.company.Licenses;
 import com.openhr.data.Benefit;
 import com.openhr.data.BenefitType;
 import com.openhr.data.DeductionType;
 
 import com.openhr.data.Dtest;
+import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpBenefitView;
 import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
@@ -64,6 +68,10 @@ public class OpenHRSessionFactory {
         config.addAnnotatedClass(Dtest.class);
         config.addAnnotatedClass(DeductionType.class);        
         config.addAnnotatedClass(Exemptionstype.class);
+        config.addAnnotatedClass(Licenses.class);
+        config.addAnnotatedClass(CompanyPayroll.class);
+        config.addAnnotatedClass(EmpBankAccount.class);
+        config.addAnnotatedClass(Company.class);
         sessionFactory = config.buildSessionFactory();
     }
 

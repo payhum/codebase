@@ -34,6 +34,19 @@ CREATE TABLE `position` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Definition of table `company`
+--
+
+DROP TABLE IF EXISTS `company`;
+CREATE TABLE `company` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `companyId` varchar(45) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `address` varchar(90) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Definition of table `employee`
 --
 
@@ -52,11 +65,15 @@ CREATE TABLE `employee` (
   `status` varchar(20) NOT NULL,
   `version` int(11) NOT NULL default '1',
   `married` varchar(6) NOT NULL,
-  `residentType` int(11) NOT NULL default '1',
+  `residentType` int(11) NOT NULL default '0',
+  `companyId` int(10) unsigned NOT NULL,
+  `empNationalID` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_employee_position` (`positionId`),
   KEY `FK_employee_id` (`employeeId`),
-  CONSTRAINT `FK_employee_position` FOREIGN KEY (`positionId`) REFERENCES `position` (`id`)
+  KEY `FK_employee_company` (`companyId`),
+  CONSTRAINT `FK_employee_position` FOREIGN KEY (`positionId`) REFERENCES `position` (`id`),
+  CONSTRAINT `FK_employee_company` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -68,17 +85,19 @@ CREATE TABLE `emp_payroll_view` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `employeeId` int(10) unsigned NOT NULL,
   `FULL_NAME` varchar(137) NOT NULL,
-  `GROSS_SALARY` double,
-  `taxableIncome` double,
-  `taxAmount` double,
-  `totalIncome` double,
-  `taxableOverseasIncome` double,
-  `allowances` double,
+  `GROSS_SALARY` double default 0,
+  `taxableIncome` double default 0,
+  `taxAmount` double default 0,
+  `totalIncome` double default 0,
+  `taxableOverseasIncome` double default 0,
+  `allowances` double default 0,
   `baseSalary` double NOT NULL,
-  `bonus` double,
-  `accomodationAmount` double,
-  `employerSS` double,
+  `bonus` double default 0,
+  `accomodationAmount` double default 0,
+  `employerSS` double default 0,
   `accomodationType` int(10) NOT NULL,
+  `netPay` double default 0,
+  `totalDeductions` double default 0,
   PRIMARY KEY  (`id`),
   KEY `FK_emp_payroll_emp` (`employeeId`),
   CONSTRAINT `FK_emp_payroll_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
@@ -100,7 +119,6 @@ CREATE TABLE `benefitype` (
 --
 -- Definition of table `benefit`
 --
-
 DROP TABLE IF EXISTS `benefit`;
 CREATE TABLE `benefit` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -118,7 +136,6 @@ CREATE TABLE `benefit` (
 --
 -- Definition of table `deductiontype`
 --
-
 DROP TABLE IF EXISTS `deductiontype`;
 CREATE TABLE `deductiontype` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -128,17 +145,10 @@ CREATE TABLE `deductiontype` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-
-ALTER TABLE deduction
-	ADD CONSTRAINT FK_dedecuction_type
-	FOREIGN KEY(deductionType)
-	REFERENCES deductiontype(id)
-GO
 --
--- Definition of table `deduction`
+-- Definition of table `exemptionstype`
 --
-
+DROP TABLE IF EXISTS `exemptionstype`;
 CREATE TABLE `exemptionstype` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(45) NOT NULL,
@@ -147,17 +157,9 @@ CREATE TABLE `exemptionstype` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-INSERT INTO exemptionstype(id, name, description, version)
-  VALUES(2, 'Policies', 'Policies', 1)
-GO
-INSERT INTO exemptionstype(id, name, description, version)
-  VALUES(3, 'Economics', 'Economics', 1)
-GO
-INSERT INTO exemptionstype(id, name, description, version)
-  VALUES(4, 'Noncompliance', 'Noncompliance', 1)
-
-
+--
+-- Definition of table `deduction`
+--
 
 DROP TABLE IF EXISTS `deduction`;
 CREATE TABLE `deduction` (
@@ -349,7 +351,7 @@ DROP VIEW IF EXISTS `emp_benefit_view`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `payhumrepo`.`emp_benefit_view` AS select `payhumrepo`.`employee`.`employeeId` AS `EMP_ID`,`payhumrepo`.`position`.`salary` AS `SALARY`,`payhumrepo`.`benefit`.`amount` AS `BENEFIT_AMNT`,`payhumrepo`.`benefitype`.`name` AS `BENEFIT_TYPE` from (((`payhumrepo`.`employee` join `payhumrepo`.`position`) join `payhumrepo`.`benefit`) join `payhumrepo`.`benefitype`) where ((`payhumrepo`.`employee`.`positionId` = `payhumrepo`.`position`.`id`) and (`payhumrepo`.`employee`.`id` = `payhumrepo`.`benefit`.`employeeId`) and (`payhumrepo`.`benefit`.`typeId` = `payhumrepo`.`benefitype`.`id`));
 
 --
--- New tables created
+-- Definition of table `deduction_decl`
 --
 DROP TABLE IF EXISTS `deduction_decl`;
 CREATE TABLE `deduction_decl` (
@@ -362,6 +364,9 @@ CREATE TABLE `deduction_decl` (
   CONSTRAINT `FK_dedecuction_decl` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Definition of table `deduction_done`
+--
 DROP TABLE IF EXISTS `deduction_done`;
 CREATE TABLE `deduction_done` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -372,6 +377,10 @@ CREATE TABLE `deduction_done` (
   KEY `FK_deducdone_emp` (`employeeId`),
   CONSTRAINT `FK_deducdone_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `exemptions_done`
+--
 
 DROP TABLE IF EXISTS `exemptions_done`;
 CREATE TABLE `exemptions_done` (
@@ -384,6 +393,9 @@ CREATE TABLE `exemptions_done` (
   CONSTRAINT `FK_exemptions_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Definition of table `emp_dependents`
+--
 
 DROP TABLE IF EXISTS `emp_dependents`;
 CREATE TABLE `emp_dependents` (
@@ -399,18 +411,76 @@ CREATE TABLE `emp_dependents` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+--
+-- Definition of table `licenses`
+--
+
+DROP TABLE IF EXISTS `licenses`;
+CREATE TABLE `licenses` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `fromdate` datetime NOT NULL,
+  `todate` datetime NOT NULL,
+  `companyId` int(10) unsigned NOT NULL,
+  `active` int(2) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_licenses_comp` (`companyId`),
+  CONSTRAINT `FK_licenses_comp` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `company_payroll`
+-- 
+DROP TABLE IF EXISTS `company_payroll`;
+CREATE TABLE `company_payroll` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `companyId` int(10) unsigned NOT NULL,
+  `processedDate` datetime NOT NULL,
+  `employeeId` int(10) unsigned NOT NULL,
+  `empFullName` varchar(60) NOT NULL,
+  `empNationalID` varchar(45) NOT NULL, 
+  `taxAmount` double NOT NULL,
+  `netPay` double NOT NULL,
+  `bankName` varchar(45) NOT NULL,
+  `bankBranch` varchar(45) NOT NULL,
+  `accountNo` varchar(45) NOT NULL,
+  `month` int(2) unsigned NOT NULL,
+  `year` int(4) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_comppay_comp` (`companyId`),
+  CONSTRAINT `FK_comppay_comp` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `employee_account`
+-- 
+DROP TABLE IF EXISTS `employee_account`;
+CREATE TABLE `employee_account` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `employeeId` int(10) unsigned NOT NULL,
+  `bankName` varchar(45) NOT NULL,
+  `bankBranch` varchar(45) NOT NULL,
+  `accountNo` varchar(45) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_empacc_emp` (`employeeId`),
+  CONSTRAINT `FK_empacc_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `glemployee`
+-- 
+DROP TABLE IF EXISTS `glemployee`;
 CREATE TABLE glemployee
 (
-gl_id int(10)  NOT NULL auto_increment,
-acc_no int(30) NOT NULL,
-accnt_name varchar(70),
-employeeId int(10) unsigned NOT NULL,
-debit  double,
-credit double,
-date datetime,
-version int(11) NOT NULL default '1',
-PRIMARY KEY (gl_id),
-KEY FK_ glemployee_employee (employeeId),
+  `gl_id` int(10)  NOT NULL auto_increment,
+  `acc_no` int(30) NOT NULL,
+  `accnt_name` varchar(70),
+  `employeeId` int(10) unsigned NOT NULL,
+  `debit`  double,
+  `credit` double,
+  `date` datetime,
+  `version` int(11) NOT NULL default '1',
+  PRIMARY KEY (gl_id),
+  KEY FK_glemployee_employee (employeeId),
   CONSTRAINT FK_glemployee_employee FOREIGN KEY (employeeId) REFERENCES employee (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

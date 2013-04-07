@@ -31,6 +31,7 @@
 					<option value="HR">Human Resource</option>
 					<option value="Accountant">Accountant</option>
 					<option value="Administrator"><bean:message key="pageAdmin"/></option>
+					<option value="MasterAdmin">Master Admin</option>
 				</select>
 				<a id="setLoginAs" class="k-button"><bean:message key="ok"/></a>
 			</div>

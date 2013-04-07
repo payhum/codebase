@@ -13,37 +13,30 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import com.openhr.data.EmpPayTax;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.factories.EmpPayTaxFactroy;
 
-public class ReadPayrollSummary extends Action{
+public class ReadPayrollSummary extends Action {
 	@Override
-    public ActionForward execute(ActionMapping map,
-            ActionForm form,
-            HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-       
+	public ActionForward execute(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 
+		JSONArray result = new JSONArray();
+		try {
+			List<EmployeePayroll> eptx = EmpPayTaxFactroy.findAllEmpPayroll();
+			result = JSONArray.fromObject(eptx);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        JSONArray result = null;
-        try {
-            List<EmployeePayroll> eptx= EmpPayTaxFactroy.findPaySummery();
-            
-         
-            result = JSONArray.fromObject(eptx);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-        System.out.print(result.toString());
-        
-        response.setContentType("application/json; charset=utf-8");
-        PrintWriter out = response.getWriter();
-        out.print(result.toString());
-        out.flush();
+		System.out.print(result.toString());
 
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
 
-        return map.findForward("");
-    }
+		return map.findForward("");
+	}
 }

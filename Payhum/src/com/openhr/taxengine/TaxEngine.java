@@ -10,11 +10,13 @@ import com.openhr.data.EmployeePayroll;
 
 public class TaxEngine {
 	private Company comp;
+	private List<Employee> empList;
 	
 	private Map<Employee, EmployeePayroll> testMap;
 	
-	public TaxEngine(Company company) {
+	public TaxEngine(Company company, List<Employee> empL) {
 		this.comp = company;
+		this.empList = empL;
 		
 		if(System.getProperty("DRYRUN") != null 
 		&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
@@ -23,10 +25,6 @@ public class TaxEngine {
 	}
 	
 	public void execute() {
-		// TODO: Get the fiscal year, assuming the current year?
-		
-		List<Employee> empList = comp.getActiveEmployees();
-		
 		/*
 		 * for each emp
 		> Resident type factory.getSourceofIncomeObj(type)
@@ -55,7 +53,7 @@ public class TaxEngine {
 			TaxCalculator taxCalc = ResidentTypeFactory.getTaxCalculator(emp);
 			taxCalc.calculate(emp, empPayroll);
 			
-			empPayroll.save();
+			// EmpPayTaxFactory.update(empPayroll);
 			
 			if(System.getProperty("DRYRUN") != null 
 			&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {

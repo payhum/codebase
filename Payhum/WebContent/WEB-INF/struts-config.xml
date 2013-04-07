@@ -48,7 +48,8 @@
 		<action path="/SettingsHR" forward="settingshr.form" />
 		<action path="/Report" forward="report.form" />
 		<action path="/Payroll" forward="financeHome" />
-
+        <action path="/MasterHome" forward="masterhome.form" />
+        
 		<!-- start of Report actions -->
 		<action path="/GLReportsEmployee" forward="glreportemployee.form" />
 		<action path="/GLReportsCompany" forward="glreportcomapny.form" />
@@ -125,6 +126,7 @@
 			<forward name="hr" path="/do/HRHome" />
 			<forward name="member" path="/do/EmployeeHome" />
 			<forward name="finance" path="/do/FinanceHome" />
+			<forward name="masteradmin" path="/do/MasterHome" />
 			<forward name="login" path="index" />
 		</action>
 		<!-- end of Login actions -->
@@ -423,6 +425,16 @@
 
 
 		<action path="/GeneratePayroll" type="com.openhr.Report" scope="request">
+		</action>
+		
+		<action path="/UploadFile" type="com.openhr.UploadFile" scope="request">
+		<forward name="continue" path="report.form" />
+		</action>
+
+		<action path="/GenerateBankFile" type="com.openhr.payroll.BankFile" scope="request">
+		</action>
+
+		<action path="/GenerateGovtFile" type="com.openhr.payroll.GovtFile" scope="request">
 		</action>
 
 		<action path="/ChangeLanguage" type="com.openhr.ChangeLanguageAction"

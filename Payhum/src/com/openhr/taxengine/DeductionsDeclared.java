@@ -20,7 +20,9 @@ import com.openhr.data.Employee;
 @Entity
 @Table(name = "deduction_decl", catalog = "payhumrepo", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "DeductionsDeclared.findAll", query = "SELECT e FROM  DeductionsDeclared e")})
+    @NamedQuery(name = "DeductionsDeclared.findAll", query = "SELECT e FROM  DeductionsDeclared e"),
+    @NamedQuery(name = "DeductionsDeclared.find", query = "SELECT e FROM  DeductionsDeclared e where e.employeeId=?")}
+		)
 public class DeductionsDeclared implements Serializable {
 	private static final long serialVersionUID = 1L;
     @Id

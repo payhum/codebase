@@ -1,17 +1,19 @@
 <%@include file="../../common/jspHeader.jsp"%>
 <div class="payroll_form">
-	<div style="float: right; padding-top: 20px; padding-right: 20px;">
-		
-		<div>
-			<a href="<%=request.getContextPath() + "/do/GeneratePayroll"%>">
-				<input type="button" value="Run Payroll"/>
-			</a>
-			<a id="launchSettingsWindow">
-		<input type="button" value="Settings"/></a>
-		</div>
-	</div>
 	<div id="container">
-
+		<div style="width: 800px;">
+			<fieldset>
+				<legend>Run Payroll</legend>
+				<div style="float:left">
+					Generate the payroll for the current pay period.<br><br>
+					<b><i>NOTE: Ensure the employee status is updated before generating the payroll for the current pay period.</i></b>
+					<br> <br>
+					<a href="<%=request.getContextPath() + "/do/GeneratePayroll"%>">
+						<input type="button" value="Run Payroll"/>
+					</a>
+				</div>
+			</fieldset>
+		</div>
 		<div style="width: 800px;">
 			<fieldset>
 				<legend>Search Employees</legend>
@@ -139,7 +141,7 @@
 						<legend>Deductions</legend>
 						<p class="information_msg"
 							style="font-size: 14px; padding: 5px; background-color: #006699; color: #fff; border: 1px solid yellow;">
-							un check on <i>Deduction</i> to exculde from payroll
+							un check on <i>Deduction</i> to exclude from payroll
 						</p>
 						<div style="padding: 10px;">
 							<div style="float: left; width: 200px">
@@ -504,7 +506,6 @@ h3{
 		});
 
 		$("#launchSettingsWindow").bind("click", function() {
-			alert("Hello");
 			$("#payrollSettingsWindow").css("display", "block");
 			$("#payrollSettingTabs").kendoTabStrip({
 				animation : {
