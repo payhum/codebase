@@ -88,6 +88,7 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 	
 	        
 	       empDataSource = new kendo.data.DataSource({
+	    	   pageSize:3,
 	        	transport : {
 	           		read : {
 	           			url : "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>",
@@ -142,7 +143,8 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 	            toolbar : [{"name" : "create", className : "newEmp", text : "Add New Employee" }],
 	            sortable: true,  
 	            scrollable : true,
-	            height : 500,
+	            height : 400,
+	            pageable:true,
 	            filterable: true,
 	            groupable : true,
 	            resizeable : true,

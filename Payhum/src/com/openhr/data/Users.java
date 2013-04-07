@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -28,7 +30,9 @@ import javax.persistence.Table;
 	@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
 	@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = ?"), 
 	@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = ?"), 
-	@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = ?")})
+	@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = ?"),
+	@NamedQuery(name = "Users.findByRoleId", query = "SELECT u FROM Users u WHERE u.roleId= ?")})
+ @NamedNativeQueries({@NamedNativeQuery(name = "findAllEmpDepart", query = "select r.name, count(u.roleId) as total from roles r,users u where u.roleId=r.id group by  roleId",resultClass = Users.class)})
 public class Users implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

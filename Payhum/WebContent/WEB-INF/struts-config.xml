@@ -78,7 +78,35 @@
 
 
 		<!-- end of Report actions -->
+		
+		
+		<action path="/GetEmpAllAction" 
+			type="com.openhr.employee.action.GetEmpAllAction" input="payrolldetails.form">
+			<forward name="admin" path="/do/AdminHome" />
+			
+		</action>
 
+<!-- Start Read Payroll actions  -->
+<action path="/ReadPayDetailsAction" name="employeeForm" 
+			type="com.openhr.payroll.action.ReadPayDetailsAction"  input="/pages/hr/report/employeeviewform.jsp">
+			<forward name="admin" path="/do/AdminHome" />
+			
+		</action>
+		
+		
+		<action path="/TestPayDeatils" name="employeeForm" parameter="parameter"
+			type="com.openhr.payroll.action.TestPayDeatils"  input="/pages/hr/report/details.jsp">
+			<forward name="admin" path="/do/AdminHome" />
+			
+		</action>
+		
+		
+		<action path="/ReadPayrollSummary" name="PayrollForm" 
+			type="com.openhr.payroll.action.ReadPayrollSummary"  input="/pages/hr/report/summary.jsp">
+			<forward name="admin" path="/do/AdminHome" />
+			
+		</action>
+		<!-- End Read Payroll actions  -->
 		<!--Member Site Links -->
 		<action path="/MLeave" forward="mleave.form" />
 		<action path="/MAccount" forward="maccount.form" />
@@ -141,6 +169,14 @@
 			type="com.openhr.employeeadrs.action.EmployeeAdressAction" name="EmployeeAdressForm" input="employeesaAddress.form">
 			<forward name="continue" path="employeesaAddress.form" />
 		</action>
+		<action path="/EmployeeDepartAction"
+			type="com.openhr.employee.action.EmployeeDepartAction"  input="employeedept.form">
+			<forward name="continue" path="employeesaAddress.form" />
+		</action>
+				<action path="/EmployeeCommanAction" parameter="parameter"
+			type="com.openhr.employee.action.EmployeeCommanAction"  input="employeedept.form">
+			<forward name="continue" path="employeesaAddress.form" />
+		</action>
 	<!-- end Emplye adrress actions -->
 		<!--end of Tax actions -->
 	<!--Start of miscellaneous actions -->
@@ -149,6 +185,19 @@
 			<forward name="continue" path="activeterminat.form" />
 		</action>
 	<!--end of miscellaneous actions -->
+	
+	
+	<!-- start of GLEmployeeView actions -->
+	<action path="/ReadEmployeeViewAction"  
+			type="com.openhr.glreports.action.ReadEmployeeViewAction" input="glreportemployee.form">
+			<forward name="continue" path="glreportemployee.form" />
+		</action>
+		
+			<action path="/ReadCompanyViewAction"  
+			type="com.openhr.glreports.action.ReadCompanyViewAction" input="glreportcomapny.form">
+			<forward name="continue" path="glreportcomapny.form" />
+		</action>
+	<!-- End of GLEmployeeView actions -->
 	
 	
         <!-- start of Employee actions -->

@@ -29,7 +29,15 @@ var taxDataSource;
 	           			dataType : "json",
 	           			cache : false
 	           		},
-	            
+	           		group: {
+                        field: "list", aggregates: [
+                           { field: "ProductName", aggregate: "count" },
+                           { field: "UnitPrice", aggregate: "sum"},
+                           { field: "UnitsOnOrder", aggregate: "average" },
+                           { field: "UnitsInStock", aggregate: "count" }
+                        ]
+                      },
+
 	                parameterMap : function(options, operation){
 	           			if(operation !== "read" && options.models){	           				           				
 	           				return JSON.stringify(options.models);
@@ -68,7 +76,7 @@ $("#grid").kendoGrid({
 	                {field : "incometaxdec", title : "Amount Income Tax deducted", width : 50 }
 	                ],             
 	        
-	            
+	                pageable: true,
 	            sortable: true,  
 	            scrollable : true,
 	            height : 500,

@@ -7,6 +7,8 @@
  */
 package com.openhr.tax.form;
 
+import java.util.List;
+
 import org.apache.struts.action.ActionForm;
 
 import com.openhr.data.Position;
@@ -37,7 +39,20 @@ public class TaxAnnualForm  extends ActionForm {
     private double incometaxdec;
     private boolean logic;
     
-    public boolean isLogic() {
+    
+    
+ private List lit;
+ 
+ 
+ 
+ 
+    public List getLit() {
+	return lit;
+}
+public void setLit(List lit) {
+	this.lit = lit;
+}
+	public boolean isLogic() {
 		return logic;
 	}
 	public void setLogic(boolean logic) {

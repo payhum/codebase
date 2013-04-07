@@ -10,6 +10,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.upload.FormFile;
 
 import com.openhr.data.Position;
+import com.openhr.data.Roles;
 
 /**
  *
@@ -26,10 +27,21 @@ public class EmployeeForm extends ActionForm {
     private Date hiredate;
     private Position positionId; 
     private String photo;
+    private Roles roleID;
     
     
     
-    public Date getBirthdate() {
+
+
+	public Roles getRoleID() {
+		return roleID;
+	}
+
+	public void setRoleID(Roles roleID) {
+		this.roleID = roleID;
+	}
+
+	public Date getBirthdate() {
         return birthdate;
     }
 

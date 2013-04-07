@@ -12,6 +12,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.openhr.data.Employee;
+import com.openhr.data.Position;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
@@ -28,6 +29,7 @@ public class EmployeeFactory implements Serializable {
 	private static Session session;
 	private static Query query;
 	private static List<Employee> employees;
+
 
 	public EmployeeFactory() {
 	}
@@ -50,8 +52,11 @@ public class EmployeeFactory implements Serializable {
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findAll");
 		employees = query.list();
+		
 		session.getTransaction().commit();
-
+		
+		
+		
 		return employees;
 	}
 

@@ -14,7 +14,7 @@
 
 		<div style="width: 800px;">
 			<fieldset>
-				<legend>Search Employee</legend>
+				<legend>Search Employees</legend>
 				<div style="float:left">
 					<div style="display:none" id="employeeHeader">
 						<input type="button" id="clearSearch" value="Clear Search"/>
@@ -504,6 +504,7 @@ h3{
 		});
 
 		$("#launchSettingsWindow").bind("click", function() {
+			alert("Hello");
 			$("#payrollSettingsWindow").css("display", "block");
 			$("#payrollSettingTabs").kendoTabStrip({
 				animation : {

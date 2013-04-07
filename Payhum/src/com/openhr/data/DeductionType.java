@@ -22,8 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "DeductionType.findById", query = "SELECT d FROM DeductionType d WHERE d.id = :id"),
     @NamedQuery(name = "DeductionType.findByName", query = "SELECT d FROM DeductionType d WHERE d.name = :name")})
 public class DeductionType implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "deductionType")
-    private List<Deduction> deductionList;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -100,13 +99,6 @@ public class DeductionType implements Serializable {
         return "com.openhr.data.DeductionType[ id=" + id + " ]";
     }
 
-    @XmlTransient
-    public List<Deduction> getDeductionList() {
-        return deductionList;
-    }
-
-    public void setDeductionList(List<Deduction> deductionList) {
-        this.deductionList = deductionList;
-    }
+  
     
 }

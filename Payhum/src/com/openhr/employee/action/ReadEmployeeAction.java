@@ -65,7 +65,11 @@ public class ReadEmployeeAction extends Action {
 		System.out.println("It took " + diff +" milli seconds to read the results");
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
-		out.print(result.toString());
+		if(result == null) {
+			out.print("");
+		} else {
+			out.print(result.toString());
+		}
 		out.flush();
 
 		return map.findForward("");

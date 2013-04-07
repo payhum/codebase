@@ -46,6 +46,8 @@ public class LoginAction extends OpenHRAction {
 				request.getSession().setAttribute("loggedEmployee",
 						u.getEmployeeId());
 				
+				//Integer rl=u.getRoleId();
+				
 				
 				if (loginForm.getRole().equalsIgnoreCase("Administrator")) {
 					return map.findForward("admin");

@@ -98,6 +98,28 @@ top: -1px;
 z-index: 9999;
 
 }
+
+#rpex
+{
+	height: 40px;
+width: 40px;
+position: absolute;
+left: 750px;
+top: -3px;
+z-index: 9999;
+background-image: url(../css/images/excs.gif);
+}
+
+#rpex1
+{
+	height: 30px;
+width: 100px;
+position: absolute;
+left: 650px;
+top: -1px;
+z-index: 9999;
+
+}
 #bread-crumb {
 	height: 30px;
 	display: block;

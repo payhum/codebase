@@ -6,11 +6,15 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -95,12 +99,38 @@ public class ReadTaxAnnualAction extends Action {
 		}
 
 		System.out.println("It took " + diff
-				+ " milli seconds to read the results");
+				+ " milli seconds to read the results"+result.toString());
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.print(result.toString());
 		out.flush();
 
 		return map.findForward("");
+	}
+	
+	public static void main(String s[])
+	{
+		
+		
+		Map<String, Long> map = new HashMap<String, Long>();
+        map.put("A", 10L);
+        map.put("B", 20L);
+        map.put("C", 30L);
+         
+        JSONObject json = new JSONObject();
+        json.accumulateAll(map);
+         
+        System.out.println(json.toString());
+ 
+         
+        List<String> list = new ArrayList<String>();
+        list.add("Sunday");
+        list.add("Monday");
+        list.add("Tuesday");
+         
+        json.accumulate("weekdays", map);
+        System.out.println(json.toString());
+		
+		
 	}
 }

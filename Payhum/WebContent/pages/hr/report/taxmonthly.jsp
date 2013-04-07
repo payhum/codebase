@@ -52,7 +52,8 @@ $("#grid").kendoGrid({
 	                {field : "remarks", title : " Remarks", width : 100 }
 	                ],             
 	        
-	            
+	                      
+	       	        
 	            sortable: true,  
 	            scrollable : true,
 	            height : 500,

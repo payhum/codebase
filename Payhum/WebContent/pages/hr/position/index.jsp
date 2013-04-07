@@ -64,7 +64,8 @@
                     command: ["edit","destroy"], title: "&nbsp;", width: "210px",filterable :false
                 }
             ], 
-            toolbar: ["create"],
+          
+            toolbar : [{"name" : "create",text : "Add New Role"}],
             editable: "popup",
             sortable: true,
             scrollable: true,
