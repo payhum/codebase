@@ -30,8 +30,7 @@ import com.openhr.taxengine.ExemptionsDone;
 	 @NamedQuery(name = "EmployeePayroll.findByEmployeeId", query = "SELECT e FROM EmployeePayroll e WHERE e.employeeId = 2"),
     @NamedQuery(name = "EmployeePayroll.findAll", query = "SELECT e FROM EmployeePayroll e"),
     @NamedQuery(name = "EmployeePayroll.findByFullName", query = "SELECT e FROM EmployeePayroll e WHERE e.fullName = :fullName"),
-    @NamedQuery(name = "EmployeePayroll.findByGrossSalary", query = "SELECT e FROM EmployeePayroll e WHERE e.grossSalary = :grossSalary"),
-@NamedNativeQueries({@NamedNativeQuery(name = "finde", query = "select * from emp_payroll_view where employeeId=2",resultClass = EmployeePayroll.class)})
+    @NamedQuery(name = "EmployeePayroll.findByGrossSalary", query = "SELECT e FROM EmployeePayroll e WHERE e.grossSalary = :grossSalary")})
 public class EmployeePayroll implements Serializable {
 	private static final long serialVersionUID = 1L;
     @Id
@@ -204,15 +203,15 @@ public class EmployeePayroll implements Serializable {
 		boolean found = false;
 		
 		for(ExemptionsDone ed: exemptionsDone) {
-			/*if(ed.getType() == eType.getValue()) {
+			if(ed.getType() == eType.getValue()) {
 				ed.setAmount(ed.getAmount() + exemption);
 				found = true;
 				break;
-			}*/
+			}
 		}
 		
 		if(!found) {
-			//exemptionsDone.add(new ExemptionsDone(this.employeeId, eType.getValue(), exemption));
+			exemptionsDone.add(new ExemptionsDone(this.employeeId, eType.getValue(), exemption));
 		}
 		
 		totalDeductions += exemption;
@@ -239,15 +238,15 @@ public class EmployeePayroll implements Serializable {
 		boolean found = false;
 		
 		for(DeductionsDone dd: deductionsDone) {
-			/*if(dd.getType() == entity.getValue()) {
+			if(dd.getType() == entity.getValue()) {
 				dd.setAmount(dd.getAmount() + amount);
 				found = true;
 				break;
-			}*/
+			}
 		}
 		
 		if(!found) {
-			//deductionsDone.add(new DeductionsDone(this.employeeId, entity.getValue(), amount));
+			deductionsDone.add(new DeductionsDone(this.employeeId, entity.getValue(), amount));
 		}
 		
 		totalDeductions += amount;

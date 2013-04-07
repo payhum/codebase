@@ -59,16 +59,11 @@ public class OpenHRSessionFactory {
         config.addAnnotatedClass(DeductionsDeclared.class);
         config.addAnnotatedClass(DeductionsDone.class);
         config.addAnnotatedClass(ExemptionsDone.class);
-<<<<<<< HEAD
         config.addAnnotatedClass(GLEmployee.class);
         config.addAnnotatedClass(Etest.class);
         config.addAnnotatedClass(Dtest.class);
-        config.addAnnotatedClass(DeductionType.class);
-        
+        config.addAnnotatedClass(DeductionType.class);        
         config.addAnnotatedClass(Exemptionstype.class);
-=======
-
->>>>>>> branch 'master' of https://github.com/payhum/codebase.git
         sessionFactory = config.buildSessionFactory();
     }
 

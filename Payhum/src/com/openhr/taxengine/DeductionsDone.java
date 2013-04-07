@@ -15,58 +15,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-<<<<<<< HEAD
-import com.openhr.data.DeductionType;
 import com.openhr.data.Employee;
 
 @Entity
 @Table(name = "deduction_done", catalog = "payhumrepo", schema = "")
-@NamedQueries({
-    @NamedQuery(name = "DeductionsDone.findAll", query = "SELECT e FROM  DeductionsDone e"),
-    @NamedQuery(name = "DeductionsDone.find", query = "SELECT e FROM  DeductionsDone e where e.employeeId=?")})
-
-public class DeductionsDone implements Serializable {
-	private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id", nullable = false)
-    
-    private Integer id;
-    
-   
-    @ManyToOne(targetEntity=DeductionType.class, cascade=CascadeType.ALL)
-    @JoinColumn(name = "type", referencedColumnName="id")
-	private DeductionType type;
-    @Basic(optional = false)
-    @Column(name = "amount", nullable = false)
-	private Double amount;
-    @ManyToOne(targetEntity=Employee.class, cascade=CascadeType.ALL)
-    @JoinColumn(name = "employeeId", referencedColumnName="id")
-    private Employee employeeId;
-
-	public DeductionsDone() {
-		
-	}
-	
-	public DeductionsDone(Employee eid, DeductionType type, Double amt) {
-		this.type = type;
-		this.amount = amt;
-		this.employeeId = eid;
-	}
-
-
-
-	public DeductionType getType() {
-		return type;
-	}
-
-	public void setType(DeductionType type) {
-=======
-import com.openhr.data.Employee;
-
-@Entity
-@Table(name = "deductions_done", catalog = "payhumrepo", schema = "")
 @NamedQueries({
     @NamedQuery(name = "DeductionsDone.findAll", query = "SELECT e FROM  DeductionsDone e")})
 public class DeductionsDone implements Serializable {
@@ -101,7 +53,6 @@ public class DeductionsDone implements Serializable {
 	}
 
 	public void setType(Integer type) {
->>>>>>> branch 'master' of https://github.com/payhum/codebase.git
 		this.type = type;
 	}
 
