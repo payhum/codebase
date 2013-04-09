@@ -15,6 +15,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import com.openhr.data.DeductionsType;
 import com.openhr.data.Employee;
 
 @Entity
@@ -29,9 +30,10 @@ public class DeductionsDone implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @Basic(optional = false)
-    @Column(name = "type", nullable = false)
-	private Integer type;
+    @ManyToOne(targetEntity=DeductionsType.class, cascade=CascadeType.ALL)
+    @JoinColumn(name = "type", referencedColumnName="id")
+	private DeductionsType type;
+
     @Basic(optional = false)
     @Column(name = "amount", nullable = false)
 	private Double amount;
@@ -43,17 +45,17 @@ public class DeductionsDone implements Serializable {
 		
 	}
 	
-	public DeductionsDone(Employee eid, Integer type, Double amt) {
+	public DeductionsDone(Employee eid, DeductionsType type, Double amt) {
 		this.type = type;
 		this.amount = amt;
 		this.employeeId = eid;
 	}
 
-	public Integer getType() {
+	public DeductionsType getType() {
 		return type;
 	}
 
-	public void setType(Integer type) {
+	public void setType(DeductionsType type) {
 		this.type = type;
 	}
 

@@ -9,7 +9,7 @@ import com.openhr.company.CompanyPayroll;
 import com.openhr.company.Licenses;
 import com.openhr.data.Benefit;
 import com.openhr.data.BenefitType;
-import com.openhr.data.DeductionType;
+import com.openhr.data.DeductionsType;
 
 import com.openhr.data.Dtest;
 import com.openhr.data.EmpBankAccount;
@@ -66,7 +66,7 @@ public class OpenHRSessionFactory {
         config.addAnnotatedClass(GLEmployee.class);
         config.addAnnotatedClass(Etest.class);
         config.addAnnotatedClass(Dtest.class);
-        config.addAnnotatedClass(DeductionType.class);        
+        config.addAnnotatedClass(DeductionsType.class);        
         config.addAnnotatedClass(Exemptionstype.class);
         config.addAnnotatedClass(Licenses.class);
         config.addAnnotatedClass(CompanyPayroll.class);

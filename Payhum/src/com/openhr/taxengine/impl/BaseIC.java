@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
-import com.openhr.data.ResidentType;
 import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.taxengine.IncomeCalculator;
 import com.openhr.taxengine.TaxDetails;
@@ -49,18 +48,7 @@ public class BaseIC implements IncomeCalculator {
 			
 			empPayroll.setAccomodationAmount(accomAmt);
 		}
-		
-		// Employer Social Security
-		Double employerSS = taxDetails.getEmployerSocialSecurityPercentage() * annualGrossPay / 100;
-		totalIncome += employerSS;
-		
-		empPayroll.setEmployerSS(employerSS);
-		
-		// Overseas income
-		if(emp.getResidentType() == ResidentType.LOCAL) {
-			totalIncome += empPayroll.getTaxableOverseasIncome();
-		}
-		
+				
 		empPayroll.setTotalIncome(totalIncome);
 		
 		return empPayroll;

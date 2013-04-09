@@ -16,6 +16,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.openhr.data.Employee;
+import com.openhr.data.Exemptionstype;
 
 @Entity
 @Table(name = "exemptions_done", catalog = "payhumrepo", schema = "")
@@ -29,9 +30,9 @@ public class ExemptionsDone implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @Basic(optional = false)
-    @Column(name = "type", nullable = false)
-	private Integer type;
+    @ManyToOne(targetEntity=Exemptionstype.class, cascade=CascadeType.ALL)
+    @JoinColumn(name = "type", referencedColumnName="id")
+	private Exemptionstype type;
     @Basic(optional = false)
     @Column(name = "amount", nullable = false)
 	private Double amount;
@@ -43,17 +44,17 @@ public class ExemptionsDone implements Serializable {
 		
 	}
 	
-	public ExemptionsDone(Employee eid, Integer type, Double amt) {
+	public ExemptionsDone(Employee eid, Exemptionstype type, Double amt) {
 		this.type = type;
 		this.amount = amt;
 		this.employeeId = eid;
 	}
 
-	public Integer getType() {
+	public Exemptionstype getType() {
 		return type;
 	}
 
-	public void setType(Integer type) {
+	public void setType(Exemptionstype type) {
 		this.type = type;
 	}
 

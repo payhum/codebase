@@ -206,9 +206,10 @@ public class EmployeePayroll implements Serializable {
 
 	public void addExemption(ExemptionType eType, Double exemption) {
 		boolean found = false;
-		
+		Exemptionstype ex=null;
 		for(ExemptionsDone ed: exemptionsDone) {
-			if(ed.getType() == eType.getValue()) {
+		 ex=ed.getType();
+			if(ex.getId() == eType.getValue()) {
 				ed.setAmount(ed.getAmount() + exemption);
 				found = true;
 				break;
@@ -216,7 +217,8 @@ public class EmployeePayroll implements Serializable {
 		}
 		
 		if(!found) {
-			exemptionsDone.add(new ExemptionsDone(this.employeeId, eType.getValue(), exemption));
+			 ex.setId(eType.getValue());
+			exemptionsDone.add(new ExemptionsDone(this.employeeId, ex, exemption));
 		}
 		
 		totalDeductions += exemption;
@@ -241,9 +243,9 @@ public class EmployeePayroll implements Serializable {
 	
 	public void addDeduction(DeductionType entity, Double amount) {
 		boolean found = false;
-		
+		DeductionsType dx=null;
 		for(DeductionsDone dd: deductionsDone) {
-			if(dd.getType() == entity.getValue()) {
+			if(dd.getType().getId() == entity.getValue()) {
 				dd.setAmount(dd.getAmount() + amount);
 				found = true;
 				break;
@@ -251,7 +253,8 @@ public class EmployeePayroll implements Serializable {
 		}
 		
 		if(!found) {
-			deductionsDone.add(new DeductionsDone(this.employeeId, entity.getValue(), amount));
+			dx.setId(entity.getValue());
+			deductionsDone.add(new DeductionsDone(this.employeeId, dx, amount));
 		}
 		
 		totalDeductions += amount;
@@ -293,10 +296,7 @@ public class EmployeePayroll implements Serializable {
 
 	public void setTotalIncome(Double totalIncome) {
 		this.totalIncome = totalIncome;
-		
-		if(taxableIncome != null & taxableIncome == 0D) {
-			this.taxableIncome = totalIncome;
-		}
+		this.taxableIncome = totalIncome;
 	}
     
 	public Double getTotalIncome() {

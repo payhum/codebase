@@ -96,17 +96,17 @@ public class TestTaxEngine {
 			Double basicAllow = 0D;
 			
 			for(DeductionsDone dd : ddone) {
-				if(dd.getType() == DeductionType.EMPLOYEE_SOCIAL_SECURITY.getValue()) {
+				if(dd.getType().getId() == DeductionType.EMPLOYEE_SOCIAL_SECURITY.getValue()) {
 					empSS = dd.getAmount();
 				}
 			}
 			
 			for(ExemptionsDone ed : edone) {
-				if(ed.getType() == ExemptionType.SUPPORTING_SPOUSE.getValue()) {
+				if(ed.getType().getId() == ExemptionType.SUPPORTING_SPOUSE.getValue()) {
 					suppSpouse = ed.getAmount();
-				} else if(ed.getType() == ExemptionType.CHILDREN.getValue()) {
+				} else if(ed.getType().getId() == ExemptionType.CHILDREN.getValue()) {
 					children = ed.getAmount();
-				} else if(ed.getType() == ExemptionType.BASIC_ALLOWANCE.getValue()) {
+				} else if(ed.getType().getId() == ExemptionType.BASIC_ALLOWANCE.getValue()) {
 					basicAllow = ed.getAmount();
 				}
 			}

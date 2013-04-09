@@ -39,7 +39,7 @@ public class EmpPayTaxFactroy implements Serializable {
 
 	public static List<EmployeePayroll> findAllEmpPayroll() 
 	{
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session = OpenHRSessionFactory.getInstance().openSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("EmployeePayroll.findAll");
 		empsum = query.list();

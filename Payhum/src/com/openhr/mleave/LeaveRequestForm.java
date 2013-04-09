@@ -2,15 +2,21 @@ package com.openhr.mleave;
 
 import java.util.Date;
 
-public class LeaveRequestForm {
-	private String employeeId;
+import org.apache.struts.action.ActionForm;
+
+public class LeaveRequestForm extends ActionForm {
+	
+	private static final long serialVersionUID = 1L;
+	
+ 	private String employeeId;
 	private Integer leaveTypeId;
-	private Date leaveDate;
+	private Date leaveDate = new Date();
 	private Integer noOfDays;
-	private Date returnDate;
+	private Date returnDate = new Date();
 	private String description;
+ 	
 	public String getEmployeeId() {
-		return employeeId;
+ 		return employeeId;
 	}
 	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
@@ -45,7 +51,5 @@ public class LeaveRequestForm {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
-	
+ 
 }

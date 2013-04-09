@@ -5,7 +5,7 @@ import org.apache.struts.action.ActionForm;
 public class GlReportForm extends ActionForm{
 	
 	private Integer id;
-	 private Integer accno;
+	 private String accno;
 	 
 	 private String accname;
 	 
@@ -31,10 +31,10 @@ public class GlReportForm extends ActionForm{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getAccno() {
+	public String getAccno() {
 		return accno;
 	}
-	public void setAccno(Integer accno) {
+	public void setAccno(String accno) {
 		this.accno = accno;
 	}
 	public String getAccname() {

@@ -47,7 +47,7 @@ public class ReadCompanyViewAction extends Action{
 			 sumc=sumd+(Double)obj[5];
 				 sumd=sumd+(Double)obj[4];
 				 
-				gl.setAccno((Integer) obj[1]);
+					gl.setAccno( obj[1].toString());
 				gl.setAccname((String)obj[2]);
 				gl.setSumcredit((Double)obj[5]);
 				gl.setSumdebit((Double)obj[4]);

@@ -67,8 +67,8 @@ public class Report extends Action {
 		// License validation is done and there is a active license, lets proceed and run the tax engine
 		// to compute the payroll for the current pay period
 		List<Employee> empList = EmployeeFactory.findByCompanyID(comp.getId());
-		// TODO: TaxEngine taxEngine = new TaxEngine(comp, empList);
-		//  taxEngine.execute();
+		TaxEngine taxEngine = new TaxEngine(comp, empList);
+		// TODO taxEngine.execute();
 		
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		String fileName = compName + "_Payroll_" + monthYear + ".csv";

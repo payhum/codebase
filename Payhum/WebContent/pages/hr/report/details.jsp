@@ -36,10 +36,10 @@
                 <div class="tabstrip">
                     <ul>
                         <li class="k-state-active">
-                              Dedcution 
+                             Deductions 
                         </li>
                         <li>
-                    Exemption
+                    Exemptions
                         </li>
                     </ul>
                     <div>
@@ -55,7 +55,7 @@
             </script>
 	<script type="text/javascript">
                 $(document).ready(function() {
-        
+    
                     //alert(detailInit);
                 	var empDataSource;
                 	
@@ -83,14 +83,14 @@
                
                         columns : [
 
-{ field : "employeeId", title : "employeeId",template:'#=employeeId ? employeeId.id: ""#',  width : 120, hidden:true },  
+{ template:'#=employeeId ? employeeId.id: ""#', width : 1},  
 { field : "employeeId", title : "Id",template:'#=employeeId ? employeeId.employeeId: ""#', width : 120 },
 { field : "employeeId", title : "Name", template:'#=employeeId ? employeeId.firstname+" "+employeeId.middlename: ""#', width : 100 },
 
 
 
 { field : "baseSalary", title : " Hours",    width : 100  },
-{ field : "grossSalary", title : " Gross Pay",    width : 100  },
+{ field : "grossSalary", title : "Gross Pay",    width : 100  },
 
 { field : "baseSalary", title : "Tax Withheld",    width : 100  },
 
@@ -102,7 +102,10 @@
                                    ]          
                            
                     });
-             grid.hideColumn("employeeId");
+                	
+                	
+             
+                
                 });
                 
                 function detailInit(e) {

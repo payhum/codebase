@@ -31,7 +31,7 @@ public class Deduction implements Serializable {
     private String doneDate;
     @JoinColumn(name = "deductionType", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private DeductionType deductionType;
+    private DeductionsType deductionType;
     @JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Employee employeeId;
@@ -64,11 +64,11 @@ public class Deduction implements Serializable {
         this.doneDate = doneDate;
     }
 
-    public DeductionType getDeductionType() {
+    public DeductionsType getDeductionType() {
         return deductionType;
     }
 
-    public void setDeductionType(DeductionType deductionType) {
+    public void setDeductionType(DeductionsType deductionType) {
         this.deductionType = deductionType;
     }
 

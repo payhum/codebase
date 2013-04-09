@@ -8,6 +8,7 @@
 <struts-config>
 	<form-beans>
 		<form-bean name="loginForm" type="com.openhr.user.form.LoginForm" />
+		<form-bean name="applyLeave" type="com.openhr.mleave.LeaveRequestForm" />
 		<form-bean name="usersForm" type="com.openhr.user.form.UserForm" />
 		<form-bean name="roleForm" type="com.openhr.role.form.RoleForm" />
 		<form-bean name="logoutForm" type="com.openhr.user.form.LogoutForm" />
@@ -36,8 +37,7 @@
 		<!--Admin Site Links -->
 		<action path="/Welcome" forward="/do/LogoutAction" />
 		<action path="/Position" forward="position.form" />
-		<action path="/Leave" forward="leave.form" />
-		<action path="/ApproveLeave" forward="leaveapp.form" />
+ 		<action path="/ApproveLeave" forward="leaveapp.form" />
 		<action path="/LeaveType" forward="leavetype.form" />
 		<action path="/Employee" forward="employee.form" />
 		<action path="/Benefit" forward="benefit.form" />
@@ -405,9 +405,9 @@
 		<!-- start of Settings actions -->
 
 		<!-- start of Settings actions -->
-		<action path="/LeaveApplicationAction" name="settingsForm"
+		<action path="/LeaveApplicationAction" name="applyLeave"
 			type="com.openhr.mleave.action.LeaveApplicationAction">
-			<forward name="continue" path="settings.form" />
+			<forward name="continue" path="mbenefit.form" />
 		</action>
 		<!-- start of Settings actions -->
 

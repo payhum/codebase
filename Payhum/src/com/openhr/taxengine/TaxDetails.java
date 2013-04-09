@@ -12,11 +12,21 @@ public class TaxDetails {
 	private Map<DeductionType, Double> deductionList;
 	private Map<AccomodationType, Float> accomationPercentage;
 	private Float employerSSPercentage;
+	private Boolean employerSSDone;
 	
 	private TaxDetails() {
 		exemptionList = new HashMap<ExemptionType, Double>();
 		deductionList = new HashMap<DeductionType, Double>();
 		accomationPercentage = new HashMap<AccomodationType, Float>();
+		employerSSDone = true;
+	}
+
+	public Boolean getEmployerSSDone() {
+		return employerSSDone;
+	}
+
+	public void setEmployerSSDone(Boolean employerSSDone) {
+		this.employerSSDone = employerSSDone;
 	}
 
 	public static TaxDetails getTaxDetailsForCountry() {
@@ -26,7 +36,7 @@ public class TaxDetails {
 		}
 		
 		// TODO Load from repos.
-		return null;
+		return populateTestData();
 	}
 
 	public Double getExemption(ExemptionType type) {

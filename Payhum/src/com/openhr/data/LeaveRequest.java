@@ -5,146 +5,152 @@
 package com.openhr.data;
 
 import java.io.Serializable;
-import java.util.Date; 
+import java.util.Date;
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement; 
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * 
  * @author xmen
  */
 @Entity
 @Table(name = "leaverequest", catalog = "payhumrepo", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "LeaveRequest.findAll", query = "SELECT l FROM LeaveRequest l"),
-    @NamedQuery(name = "LeaveRequest.findById", query = "SELECT l FROM LeaveRequest l WHERE l.id = ?"),
-    @NamedQuery(name = "LeaveRequest.findByLeaveDate", query = "SELECT l FROM LeaveRequest l WHERE l.leaveDate = ?"),
-    @NamedQuery(name = "LeaveRequest.findByReturnDate", query = "SELECT l FROM LeaveRequest l WHERE l.returnDate = ?"),
-    @NamedQuery(name = "LeaveRequest.findByStatus", query = "SELECT l FROM LeaveRequest l WHERE l.status = ?"),
-    @NamedQuery(name = "LeaveRequest.findByNoOfDays", query = "SELECT l FROM LeaveRequest l WHERE l.noOfDays = ?")})
+		@NamedQuery(name = "LeaveRequest.findAll", query = "SELECT l FROM LeaveRequest l"),
+		@NamedQuery(name = "LeaveRequest.findById", query = "SELECT l FROM LeaveRequest l WHERE l.id = ?"),
+		@NamedQuery(name = "LeaveRequest.findByLeaveDate", query = "SELECT l FROM LeaveRequest l WHERE l.leaveDate = ?"),
+		@NamedQuery(name = "LeaveRequest.findByReturnDate", query = "SELECT l FROM LeaveRequest l WHERE l.returnDate = ?"),
+		@NamedQuery(name = "LeaveRequest.findByStatus", query = "SELECT l FROM LeaveRequest l WHERE l.status = ?"),
+		@NamedQuery(name = "LeaveRequest.findByNoOfDays", query = "SELECT l FROM LeaveRequest l WHERE l.noOfDays = ?") })
 public class LeaveRequest implements Serializable {
-    @Basic(optional = false)
-    @Column(name = "leaveDate", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date leaveDate;
-    @Basic(optional = false)
-    @Column(name = "returnDate", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date returnDate;
-    /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "requestId")
-    private List<LeaveApproval> leaveApprovalList;*/
-    private static final long serialVersionUID = 1L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id", nullable = false)
-    private Integer id;
-    @Basic(optional = false)
-    @Column(name = "status", nullable = false)
-    private int status;
-    
-    @Basic(optional = false)
-    @Column(name = "noOfDays", nullable = false)
-    private int noOfDays;
-    
-    @Basic(optional = false)
-    @Column(name = "description", nullable = false)
-    private String description;
-    
-    @JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private Employee employeeId;
-    @JoinColumn(name = "leaveTypeId", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private LeaveType leaveTypeId;
+	/*
+	 * @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestId") private
+	 * List<LeaveApproval> leaveApprovalList;
+	 */
+	private static final long serialVersionUID = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Basic(optional = false)
+	@Column(name = "id", nullable = false)
+	private Integer id;
 
-    public LeaveRequest() {
-    }
+	@Basic(optional = false)
+	@Column(name = "leaveDate", nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date leaveDate;
+	@Basic(optional = false)
+	@Column(name = "returnDate", nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date returnDate;
 
-    public LeaveRequest(Integer id) {
-        this.id = id;
-    }
+	@Basic(optional = false)
+	@Column(name = "status", nullable = false)
+	private int status;
 
-    public LeaveRequest(Integer id, Date leaveDate, Date returnDate, int status) {
-        this.id = id;
-        this.leaveDate = leaveDate;
-        this.returnDate = returnDate;
-        this.status = status;
-    }
+	@Basic(optional = false)
+	@Column(name = "noOfDays", nullable = false)
+	private int noOfDays;
 
-    public Integer getId() {
-        return id;
-    }
+	@Basic(optional = false)
+	@Column(name = "description", nullable = false)
+	private String description;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	@JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false)
+	private Employee employeeId;
+	@JoinColumn(name = "leaveTypeId", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false)
+	private LeaveType leaveTypeId;
 
-    public int getStatus() {
-        return status;
-    }
+	public LeaveRequest() {
+	}
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
+	public LeaveRequest(Integer id) {
+		this.id = id;
+	}
 
-    public Employee getEmployeeId() {
-        return employeeId;
-    }
+	public LeaveRequest(Integer id, Date leaveDate, Date returnDate, int status) {
+		this.id = id;
+		this.leaveDate = leaveDate;
+		this.returnDate = returnDate;
+		this.status = status;
+	}
 
-    public void setEmployeeId(Employee employeeId) {
-        this.employeeId = employeeId;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public LeaveType getLeaveTypeId() {
-        return leaveTypeId;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public void setLeaveTypeId(LeaveType leaveTypeId) {
-        this.leaveTypeId = leaveTypeId;
-    }
+	public int getStatus() {
+		return status;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
-    }
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof LeaveRequest)) {
-            return false;
-        }
-        LeaveRequest other = (LeaveRequest) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
-    }
+	public Employee getEmployeeId() {
+		return employeeId;
+	}
 
-    @Override
-    public String toString() {
-        return "com.openhr.data.LeaveRequest[ id=" + id + " ]";
-    }
+	public void setEmployeeId(Employee employeeId) {
+		this.employeeId = employeeId;
+	}
 
-    public long getLeaveDate() {
-        return leaveDate.getTime();
-    }
+	public LeaveType getLeaveTypeId() {
+		return leaveTypeId;
+	}
 
-    public void setLeaveDate(Date leaveDate) {
-        this.leaveDate = leaveDate;
-    }
+	public void setLeaveTypeId(LeaveType leaveTypeId) {
+		this.leaveTypeId = leaveTypeId;
+	}
 
-    public long getReturnDate() {
-        return returnDate.getTime();
-    }
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		hash += (id != null ? id.hashCode() : 0);
+		return hash;
+	}
 
-    public void setReturnDate(Date returnDate) {
-        this.returnDate = returnDate;
-    }
+	@Override
+	public boolean equals(Object object) {
+		// TODO: Warning - this method won't work in the case the id fields are
+		// not set
+		if (!(object instanceof LeaveRequest)) {
+			return false;
+		}
+		LeaveRequest other = (LeaveRequest) object;
+		if ((this.id == null && other.id != null)
+				|| (this.id != null && !this.id.equals(other.id))) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "com.openhr.data.LeaveRequest[ id=" + id + " ]";
+	}
+
+	public long getLeaveDate() {
+		return leaveDate.getTime();
+	}
+
+	public void setLeaveDate(Date leaveDate) {
+		this.leaveDate = leaveDate;
+	}
+
+	public long getReturnDate() {
+		return returnDate.getTime();
+	}
+
+	public void setReturnDate(Date returnDate) {
+		this.returnDate = returnDate;
+	}
 
 	public int getNoOfDays() {
 		return noOfDays;
@@ -161,17 +167,13 @@ public class LeaveRequest implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-    
-    
-    
-    /*
-    @XmlTransient
-    public List<LeaveApproval> getLeaveApprovalList() {
-        return leaveApprovalList;
-    }
 
-    public void setLeaveApprovalList(List<LeaveApproval> leaveApprovalList) {
-        this.leaveApprovalList = leaveApprovalList;
-    }*/
-    
+	/*
+	 * @XmlTransient public List<LeaveApproval> getLeaveApprovalList() { return
+	 * leaveApprovalList; }
+	 * 
+	 * public void setLeaveApprovalList(List<LeaveApproval> leaveApprovalList) {
+	 * this.leaveApprovalList = leaveApprovalList; }
+	 */
+
 }

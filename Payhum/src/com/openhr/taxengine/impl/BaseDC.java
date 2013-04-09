@@ -46,7 +46,6 @@ public class BaseDC implements DeductionCalculator{
 					(eligibleAmt > actualAmt ? actualAmt : eligibleAmt));
 		}
 		
-		// TODO: Social Security required only if 5+ employees
 		empPayroll.addDeduction(DeductionType.EMPLOYEE_SOCIAL_SECURITY,
 				taxDetails.getDeduction(DeductionType.EMPLOYEE_SOCIAL_SECURITY) * empPayroll.getBaseSalary() / 100);
 		

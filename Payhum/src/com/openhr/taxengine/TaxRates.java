@@ -22,7 +22,7 @@ public class TaxRates {
 		}
 		
 		// TODO Load from repos.
-		return null;
+		return populateTestData();
 	}
 
 	public boolean shouldTax(EmployeePayroll empPayroll) {
