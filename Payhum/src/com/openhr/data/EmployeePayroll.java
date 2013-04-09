@@ -208,7 +208,7 @@ public class EmployeePayroll implements Serializable {
 		boolean found = false;
 		Exemptionstype ex=null;
 		for(ExemptionsDone ed: exemptionsDone) {
-		 ex=ed.getType();
+		    ex=ed.getType();
 			if(ex.getId() == eType.getValue()) {
 				ed.setAmount(ed.getAmount() + exemption);
 				found = true;
@@ -217,7 +217,7 @@ public class EmployeePayroll implements Serializable {
 		}
 		
 		if(!found) {
-			 ex.setId(eType.getValue());
+			ex = new Exemptionstype(eType.getValue(), "TODO", "TOOD");
 			exemptionsDone.add(new ExemptionsDone(this.employeeId, ex, exemption));
 		}
 		
@@ -253,7 +253,7 @@ public class EmployeePayroll implements Serializable {
 		}
 		
 		if(!found) {
-			dx.setId(entity.getValue());
+			dx = new DeductionsType(entity.getValue(), "TODO", "TODO");
 			deductionsDone.add(new DeductionsDone(this.employeeId, dx, amount));
 		}
 		
