@@ -1,4 +1,35 @@
 <%@include file="../../common/jspHeader.jsp"%>
+ <style>
+
+                .k-textbox {
+                    width: 11.8em;
+                }
+
+           
+
+
+                .required {
+                    font-weight: bold;
+                }
+
+                .accept, .status {
+                    padding-left: 90px;
+                }
+
+                .valid {
+                    color: green;
+                }
+
+                .invalid {
+                    color: red;
+                }
+                span.k-tooltip {
+                    margin-left: 6px;
+                }
+                
+#tick{display:none}
+#cross{display:none}
+            </style>
 <div class="payroll_form">
 	<div id="container">
 		<div style="width: 800px;">
@@ -19,7 +50,7 @@
 				<legend>Search Employees</legend>
 				<div style="float:left">
 					<div style="display:none" id="employeeHeader">
-						<input type="button" id="clearSearch" value="Clear Search"/>
+					
 						<table cellspacing=15 style="border:1px solid #999">
 							<tr>
 								<td>Photo</td>								
@@ -89,7 +120,7 @@
 						<legend>Allowances</legend>
 						<p class="information_msg"
 							style="font-size: 14px; padding: 5px; background-color: #006699; color: #fff; border: 1px solid yellow">
-							un check on <i>Allowance</i> to exculde from payroll
+							UnCheck on <i>Allowance</i> to exculde from payroll
 						</p>
 						<div style="padding: 10px;">
 							<div style="float: left; width: 200px">
@@ -275,96 +306,135 @@
 
 <div id="payrollSettingsWindow" style="display: none">
 	<div id="payrollSettingTabs">
-		<ul>
+		<ul class="list">
 			<li class="k-state-active">Overtime Setting</li>
-			<li>Staff Loan Setting</li>
+			<li>Tax Rates Setting</li>
 			<li>Deduction Type Setting</li>
-			<li>Currency Setting</li>
+<!--  <li>Currency Setting</li> -->
 		</ul>
 
 		<div>
+		<form>
 			<fieldset>
 				<legend>Overtime pay rate Definition</legend>
 				<label>Choose day group</label><br> 
-				<select >
-					<option>Work day</option>
-					<option>Weekend</option>
-					<option>Holiday</option>
-				</select> 
+				
+				
+						<select id="daygroup" ></select>
+				
 				<label>% of Gross salary</label> 
-				<input type="text" value="1.5%"/><br><br> 
-				<input type="button" value="Save" />
-			</fieldset>
+				<input type="text" id="percentgrup" /><br><br> 
+				<input type="button"  class="ratesave" value="Save" />
+			 	<input type="reset"  class="overClear"  value="Clear"/>
+			</fieldset></form>
 		</div>
 
 
-		<div>
+		<div id="taxratesdiv">
+					 <div id="example" class="k-content">
+            <div id="grid"></div>
+<div id="empForm">
+</div>
+           
+            
+     </div>
+					
+			<form>
 			<fieldset>
-				<legend>Staff loan eligibility Definition</legend>
-				<label>Experience in years</label> <br>
-				<select>
-					<option>1/2</option>
-					<option>1</option>
-					<option>2</option>
-					<option>3</option>
-					<option>over 3 years</option>
-				</select><br> 
-				<label>Can ask for</label> <br>
-				<select >
-					<option>50</option>
-					<option>100</option>
-					<option>200</option>
-					<option>300</option>
-					<option>400</option>
-				</select> <label>% of salary</label><br> <br>
-				<input type="button" value="Save" />
+				<legend>Tax Rates Settings</legend>
+				<label>Income From (Kyat)</label> 
+				<input type="text"  id="incomeFrom"  disabled /><br> 
+					<label>Income To(Kyat)</label> 
+				<input type="text" id="incomeTo" /><br> 
+				<input type="hidden"  id="incomeFromId"   /><br> 
+				<label>Rate </label> 
+				<select id="taxpercent">
+					<option value='-1'>select</option>
+					<option value='1'>1</option>
+					<option value='2' >2</option>
+					<option value='3' >3</option>
+					<option value='4' >4</option>
+					<option value='5' >5</option>
+					<option value='6' >6</option>
+					<option value='7' >7</option>
+					<option value='8' >8</option>
+					<option value='9' >9</option>
+					<option value='10' >10</option>
+					<option value='11' >11</option>
+					<option value='12' >12</option>
+					<option value='13' >13</option>
+					<option value='14' >14</option>
+					<option value='15' >15</option>
+					<option value='16' >16</option>
+					<option value='17' >17</option>
+					<option value='18' >18</option>
+					<option value='19' >19</option>
+					<option value='20' >20</option>
+					<option value='21' >21</option>
+					<option value='22' >22</option>
+					<option value='23' >23</option>
+					<option value='24' >24</option>
+			<option value='25' >25</option>
+			<option value='26' >26</option>
+				<option value='27' >27</option>
+			<option value='28' >28</option>
+			<option value='29' >29</option>
+			<option value='30' >30</option>
+
+				</select> <label>Income %</label><br> <br>
+				<input type="button" class="taxRateSave" value="Save" />
+					<input type="reset" class="taxClear"  value="Clear"/>
 			</fieldset>
+				</form>
 		</div>
 
 
-		<div>
+		<div class="decdiv">
+		<form>
 			<fieldset>
 				<legend>Deduction Type Definition</legend>
 				
-				<div style="float:right;padding-right:40px;">
+				<div style="float:right;">
 					<label>List of recorded Deductions</label><br>
-					<select   multiple="multiple" size="10">
-						<option>Staff Loan</option>
-						<option>Pension</option>
-						<option>Credit Association</option>
-					</select>
-					<a href="#">Edit</a>	
-					<a href="#">Remove</a>				
+			
+						
+						
+						<select id="multiselect" class="multy" ></select>
+
+					<a href="#" class="edtdec">Edit</a>	
+					<a href="#" class="rmvdec">Remove</a>				
 				</div>
-				<label>Name</label><br>
-				<input type="text"/><br>
-				<label>Description</label><br>
-				<textarea rows="5" cols="50"></textarea><br><br>			
-				<input type="button" value="Save"/>
+				<input type="hidden" id="did" />
+				  <div id="tickets">
+				<label class="required">Name</label><br>
+				
+				<input type="text" id="decname" name="decname" class="k-textbox" placeholder="Deduction Name" required validationMessage="Please Enter Deduction"/><br>
+				<img id="tick" src="<%=request.getContextPath() + "/css/images/tick.png"%>"  style="margin-left:5cm"/><br>
+<img id="cross" src="<%=request.getContextPath() + "/css/images/cross.png"%>"   width="16" height="16"  style="margin-left:5cm"/><br>
+				<label class="required">Description</label><br>
+				<textarea rows="5" cols="50" id="dedctext"  name="dedctext" class="k-textbox" placeholder="Deduction Description" required validationMessage="Please Enter Deduction Description "></textarea><br><br>			
+				<input type="button"  class="dedc" value="Save"/>
+			 	<input type="reset"   class="decClear" value="Clear"/>
+                <span class="status"></span>
+              
+				</div>
 			</fieldset>
+			</form>
+			<!-- start Deduction scipt -->
+			
+				<!-- End Deduction scipt -->
 		</div>
 
-		<div>
-			<fieldset>
-				<legend>Currency Definition</legend>
-				<label>Choose currency</label><br>
-				<select >
-					<option>ETB</option>
-					<option>USD</option>
-					<option>CAD</option>
-					<option>EURO</option>
-					<option>POUND</option>
-				</select><br> <br>
-				<input type="button" value="Save" />
-			</fieldset>
-		</div>
-		
+	<div>
+
+
+
 		
 	</div>
 
 </div>
 
-
+</div>
 
 <div id="pay_summary_cont" style="width:650px;display:none">
 	<div style="clear:both">
@@ -372,7 +442,7 @@
 	</div>
 	<div>
 		<h3 style="float:right">Anthony Williams</h3>	
-		<hr style="clear:both"">
+		<hr style="clear:both">
 	</div>
 	<div>
 		<h3 style="float:left">Basic</h3>
@@ -480,6 +550,14 @@ h3{
 <script>
 	var no_Of_steps = 3, first_step = 1;
 	$(document).ready(function() {
+		var   empTemplate= kendo.template($("#employeeTemplate").html());
+		
+		//alert(empTemplate);
+	var  df=$("#payrollSettingsWindow").html();
+	
+	
+	//var  decdiv=$(".decdiv").html();
+	//alert(df);
 		$("#employeeSummaryGrid").kendoGrid();
 		$("#calculations_payroll_menu").kendoMenu();
 
@@ -504,8 +582,48 @@ h3{
 				$("#currentlyAssigned").css("border", "1px solid #333021");
 			}
 		});
+		 $("#cancelEmp").bind("click", function() { 
+			 empWindow.content('');
+			 empWindow.close();	                	 
+         }); 
 
 		$("#launchSettingsWindow").bind("click", function() {
+			var wnd=null;
+		function reuseScript(className)
+		
+		{
+			var blr=false;
+			//alert("hello");
+		$("#payrollSettingsWindow").html(df);
+		
+		//$("ul.list li:nth-child(1)").removeClass("k-state-active");
+		
+		
+		//var f=$("ul.list li:nth-child(3)").addClass("k-state-active");
+		
+		//var className = 1;
+		
+		switch(className)
+        {
+            case 1:
+            	alert('1!');
+            break;
+            case 2:
+            	$("ul.list li:nth-child(1)").removeClass("k-state-active");
+            	$("ul.list li:nth-child(2)").addClass("k-state-active");
+            break;      
+            case 3:
+            	$("ul.list li:nth-child(1)").removeClass("k-state-active");
+            	$("ul.list li:nth-child(3)").addClass("k-state-active");
+            break;     
+            case 4:
+            	alert('4');
+            break;
+            default:
+                
+        }
+		
+	
 			$("#payrollSettingsWindow").css("display", "block");
 			$("#payrollSettingTabs").kendoTabStrip({
 				animation : {
@@ -513,18 +631,734 @@ h3{
 						effects : "fadeIn"
 					}
 				}
+		
 			});
-			var wnd = $("#payrollSettingsWindow").kendoWindow({
-				modal : true,
-				resizable : false,
+			
+			wnd = $("#payrollSettingsWindow").kendoWindow({
+			
 				width : 700,
+				hieght:800,
 				title : "Payroll Settings"
 			}).data("kendoWindow");
+
 			wnd.center();
 			wnd.open();
+			
+			
+			
+			
+			$("#daygroup").kendoDropDownList({
+				dataTextField : "dayGroupName",
+				dataValueField : "id",
+				optionLabel: "Select DayGroup",
+				dataSource : {
+					type : "json",
+					transport : {
+						read : "<%=request.getContextPath()+ "/do/ReadOvertimePayRate"%>"
+					}
+				}
+		    }).change(function(){
+		    	var day=$("#daygroup").val();
+			   //alert("The text has been changed.-------"+day);
+		if(day!='')
+			{		var rate = JSON.stringify([{
+				
+				"id" :day
+				
+				
+			 }]);
+			
+			$.ajax({
+				 type : "POST",
+				 url:'<%=request.getContextPath()+ "/do/OvertimeAction"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 data : rate,
+				 success : function(data1){
+					 alert(data1);
+					
+					
+					var d=data1;
+					var pers=d[0].grossPercent;
+					$("#percentgrup").val(pers);
+					 if(data1)
+					 { alert("true");}
+					 else
+						 {alert("false");}
+					 
+				 }
+				
+			}); }
+		else
+			{
+			 reuseScript();
+			
+			}
+		
+			
+			  });
+			
+			$("#taxratesdiv").ready(function()
+					{
+				//alert("taxratesdiv");
+
+				$.ajax({
+						 type : "POST",
+						 url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=getTaxRate"%>',
+						
+						
+						 success : function(data1){
+						// alert("hello-----"+data1);
+						 var d=data1;
+						 
+						 $("#incomeFrom").val(d[0].incomeFrom);
+						 $("#incomeFromId").val(d[0].id);
+						 
+						// reuseScript(2);
+							
+						 }
+						
+					});
+				
+					});
+		
+			var   empDataSource = new kendo.data.DataSource({
+	        	transport : {
+	           		read : {
+	           			url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=getAllTaxRates"%>',
+	           			dataType : "json",
+	           			cache : false
+	           		}
+	            
+	              
+	           	},
+	           	pageSize: 3,
+	           	autoSync : true,
+	           	batch : true 
+	        });
+	       
+	        
+			var grid=$("#grid").kendoGrid({
+	            dataSource : empDataSource,
+	            pageable: true,
+	            columns: [
+                          { field:"id", title: "id" ,width: "1px"},
+                          { field: "incomeFrom", title:"From Income", width: "100px" },
+                          { field: "incomeTo", title:"To Income", width: "100px" },
+                          { field: "incomePersent", title:"%Income",width: "100px" },
+                          { command: [{"name" : "edit", className : "editEmp"}, {"name" :"destroy", className:"delTax"}], title: "", width: "80px" }],
+	                      
+	  
+	        }).data("kendoGrid");
+			
+			$("#grid").delegate(".delTax", "click", function(e) {alert("delTax");
+			e.preventDefault();
+			 var dataItem = grid.dataItem($(this).closest("tr"));
+			   //alert(dataItem.id+"-----"+dataItem.incomePersent);     
+			   
+			   
+			   	$("#taxpercent").val(dataItem.incomePersent);
+				$("#incomeTo").val(dataItem.incomeTo).attr('disabled', 'disabled');;
+				$("#incomeFromId").val(dataItem.id).attr('disabled', 'disabled');;
+				
+				$("#incomeFrom").val(dataItem.incomeFrom);
+				
+				
+				var taxpercnt=$("#taxpercent").val();
+				var incomeTo=$("#incomeTo").val();
+				var idTax= $("#incomeFromId").val();
+				
+				var incomeFrom=$("#incomeFrom").val();
+				
+				var rate = JSON.stringify([{
+					"id":idTax,
+					"incomeFrom" :incomeFrom,
+					"incomeTo":incomeTo,
+				"incomePersent":taxpercnt
+					
+					
+				 }]);
+				  $.ajax({
+	      				 type : "POST",
+	      				url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=deleteTaxRate"%>',
+	     				 dataType : 'json',
+	     				 contentType : 'application/json; charset=utf-8',
+	     				 data : rate,
+	     				 success : function(datas){ 
+	     					 alert(datas);
+	     					 
+	     					
+	                    	 
+	     					//wnd2.close();
+	     					
+	     					//$("#employeeTemplate").html('');
+	     					reuseScript(2);
+	     				 }	        				
+	     			});
+			});
+			
+
+			$("#grid").delegate(".editEmp", "click", function(e) {
+		//alert("hello");
+				e.preventDefault();
+	//alert(e+"eeeeeeeeeee"+grid);
+	        var dataItem = grid.dataItem($(this).closest("tr"));
+	        	       // alert(dataItem.id+"-----"+dataItem.incomePersent);      
+      //    alert(empTemplate+"empTemplate");
+         //   var wnd2 = $("#empForm").kendoWindow({
+                 ///   title: "Employee Details",
+                 //   modal: true, 
+                 //  resizable: false,
+	                // width : 700
+              //  }).data("kendoWindow");          
+            
+				  
+          //   wnd2.content(empTemplate(dataItem));
+              // $(".cancelTax").click(function() { 
+            	 // wnd2.content('');
+               //	 wnd2.close();	                	 
+             //  }); 
+              // wnd2.open(); 
+              // wnd2.center();
+               
+               
+       	$("#taxpercent").val(dataItem.incomePersent);
+			$("#incomeTo").val(dataItem.incomeTo).attr('disabled', 'disabled');;
+			$("#incomeFromId").val(dataItem.id).attr('disabled', 'disabled');;
+			
+			$("#incomeFrom").val(dataItem.incomeFrom);
+               
+		
+			$(".taxRateSave").val('UpDate');
+               
+               //alert( $("#editTaxPercent").bind("click"));
+               
+               $(".editTaxPercent").bind("click", function() { 
+            	 //  alert("hellort");
+            	  var  id = $(".eperid").val(); 
+            	  var  incEdit = $(".incomePersentEdit").val(); 
+            	  
+            	  var editData = JSON.stringify([{
+  					"id" : id,
+  					"incomePersent" : incEdit,
+  				
+  				 }]);
+            	  
+            		//var f=$("#employeeTemplate").html();
+            		//alert(f);
+            	  $.ajax({
+      				 type : "POST",
+      				url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
+     				 dataType : 'json',
+     				 contentType : 'application/json; charset=utf-8',
+     				 data : editData,
+     				 success : function(datas){ 
+     					 alert(datas);
+     					 
+     					
+                    	 
+     					//wnd2.close();
+     					
+     					//$("#employeeTemplate").html('');
+     					reuseScript(2);
+     				 }	        				
+     			});	 
+            	  
+          
+                   
+               });
+            	   
+            	   
+            	   
+            	   
+            	   
+            	   
+            	   
+            	   
+            	   
+            	   
+            	   
+              
+               
+               
+               
+               
+               
+               
+			}); 
+			
+			$(".taxClear").bind("click", function() { //alert("hello");
+
+				 reuseScript(2);
+				 //alert("hello");
+			});
+			
+			$(".taxRateSave").bind("click", function() { 
+				//alert("taxpercentincomeToincomeFrom");
+			var taxpercnt=$("#taxpercent").val();
+			var incomeTo=$("#incomeTo").val();
+			var idTax= $("#incomeFromId").val();
+			var taxbutton=$(".taxRateSave").val();
+			var incomeFrom=$("#incomeFrom").val();
+	//alert(incomeFrom > incomeTo);
+			if(incomeFrom==''||incomeTo==''||taxpercnt=='-1'|| incomeFrom > incomeTo)
+				{
+				alert("fill data correctly");
+				
+				
+				}
+			else
+				{
+				
+				var rate = JSON.stringify([{
+					"id":idTax,
+					"incomeFrom" :incomeFrom,
+					"incomeTo":incomeTo,
+				"incomePersent":taxpercnt
+					
+					
+				 }]);
+			//alert(taxbutton);
+			if(taxbutton=="UpDate")
+			
+			{
+				//alert("Update");
+			  	  $.ajax({
+	      				 type : "POST",
+	      				url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
+	     				 dataType : 'json',
+	     				 contentType : 'application/json; charset=utf-8',
+	     				 data : rate,
+	     				 success : function(datas){ 
+	     					 alert(datas);
+	     					 
+	     					
+	                    	 
+	     					//wnd2.close();
+	     					
+	     					//$("#employeeTemplate").html('');
+	     					reuseScript(2);
+	     				 }	        				
+	     			});	 
+	            	  
+			}
+			
+				
+				
+			if(taxbutton=="Save")
+				
+			{
+			//alert("savbe");
+			$.ajax({
+					 type : "POST",
+					 url:'<%=request.getContextPath()+ "/do/TaxRatesAction"%>',
+					 dataType : 'json',
+					 contentType : 'application/json; charset=utf-8',
+					 data : rate,
+					 success : function(data1){
+					 alert(data1);
+						
+					 reuseScript(2);
+						
+					 }
+					
+				});
+				
+				}
+				}
+					
+			}); 
+			
+			
+			
+			
+			var dnameup;
+			
+			
+			
+			
+			$(".ratesave").bind("click", function() { //alert("edit");
+				var day=$("#daygroup").val();
+				var grossPercent=$("#percentgrup").val();
+				var rate = JSON.stringify([{
+					
+					"id" :day,
+					"grossPercent":grossPercent
+					
+					
+				 }]);
+				
+				
+				if(day!='')
+				{
+				$.ajax({
+					 type : "POST",
+					 url:'<%=request.getContextPath()+ "/do/UpdateOvertimeAction"%>',
+					 dataType : 'json',
+					 contentType : 'application/json; charset=utf-8',
+					 data : rate,
+					 success : function(data1){
+					 alert(data1);
+						
+					 reuseScript();
+						
+					 }
+					
+				});
+				
+				}
+				
+				else
+				{
+					alert("please select other one");
+				 reuseScript();
+				
+				}
+				
+				}); 	
+				
+			
+			
+			
+			
+			
+			
+			
+			
+			$("#multiselect").kendoDropDownList({
+				dataTextField : "name",
+				dataValueField : "id",
+				optionLabel: "Select Deduction",
+				dataSource : {
+					type : "json",
+					transport : {
+						read : "<%=request.getContextPath()+ "/do/ReadDeductionAction"%>"
+					}
+				}
+		    }); 
+			
+			
+			
+			$(".edtdec").bind("click", function() {// alert("edit"); 	
+			var ae=$("#multiselect").val(); 
+			var updateData1 = JSON.stringify([{
+				
+				"id" :ae
+				
+				
+			 }]);
+		
+			
+			$.ajax({
+				 type : "POST",
+				 url:'<%=request.getContextPath()+ "/do/DeductionGet"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 data : updateData1,
+				 success : function(data1){
+				//	 alert(data1);
+					 var d=data1;
+					// alert(d[0].name);
+					 
+					 var ids=d[0].id;
+					 
+					 var nam=d[0].name;
+					  var tax=d[0].description;
+					 // alert(ids+"---"+nam+"---"+tax);
+					  $("#decname").val(nam);
+					  $("#dedctext").val(tax);
+					  dnameup=nam;
+					  $("#did").val(ids);
+					  $(".dedc").val("Update");
+					  $("#decname").css('border', '1px #000 solid');
+						$('#cross').hide();
+					  var validator = $("#tickets").kendoValidator().data("kendoValidator"),
+	                  status = $(".status");
+					  if (validator.validate()) {
+	                      status.text("")
+	                          .removeClass("invalid")
+	                          .addClass("valid");
+	                      
+	                      
+	                  } else {
+	                      status.text("")
+	                          .removeClass("valid")
+	                          .addClass("invalid");
+	                      return false;
+	                      
+	                  }
+				 }
+				
+			}); 
+			
+			}); 
+
+		
+			
+			
+			
+			
+			
+			
+			
+			$(".rmvdec").bind("click", function() { 
+				
+				var aa=$("#multiselect").val();
+				//alert("remove----"+aa); 
+				
+				if(aa=='')
+					{
+					alert("fill data ");
+					return false;
+					}
+				
+				
+				
+				
+				
+				var updateData1 = JSON.stringify([{
+					
+					"id" :aa
+					
+					
+				 }]);
+			
+				
+				$.ajax({
+					 type : "POST",
+					 url:'<%=request.getContextPath()+ "/do/DeleteDeductionAction"%>',
+					 dataType : 'json',
+					 contentType : 'application/json; charset=utf-8',
+					 data : updateData1,
+					 success : function(data1){
+						// alert(data1);
+						 if(data1)
+							 {alert("Sucessfuully deleted");}
+						 else
+							 {alert("alredy in Use");}
+						 reuseScript(3);
+					 }
+					
+				}); 
+				
+				
+				
+				
+			
+			});
+			
+				
+	$(".overClear").bind("click", function() { 
+		reuseScript();
+	});
+			$(".decClear").bind("click", function() { 
+				reuseScript(3);
+			});
+			
+			$(".dedc").bind("click", function() { 
+				  var validator = $("#tickets").kendoValidator().data("kendoValidator"),
+                  status = $(".status");
+				  if (validator.validate()) {
+                      status.text("")
+                          .removeClass("invalid")
+                          .addClass("valid");
+                      
+                      
+                  } else {
+                      status.text("")
+                          .removeClass("valid")
+                          .addClass("invalid");
+                      return false;
+                      
+                  }
+				  
+				  
+				  
+				  
+		//alert("helllo");
+		var dedcname=$("#decname").val();
+		
+		var dedctxt=$("#dedctext").val();
+		var id=$("#did").val();
+		var idf=$(".dedc").val();
+		
+		var updateData = JSON.stringify([{
+			
+			"name" : dedcname,
+			"description" : dedctxt,
+			"id":id
+			
+		 }]);       
+		
+		//alert(dnameup+"dnameup");
+		
+		if(idf=="Update")
+			
+			{
+			//alert("Update");
+		
+			$.ajax({
+				 type : "POST",
+				 url:'<%=request.getContextPath()+ "/do/UpdateDeductionAction"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 data : updateData,
+				 success : function(data){
+					 alert(data);
+					 
+					 if(data)
+						 {
+						 
+						 alert("Data UpDate ");
+						 reuseScript(3);
+				 
+				///	wnd.restore();
+					alert(""+f);	
+						
+						 }
+					 else
+						 {
+						 alert("Data not UpDate");
+						 }
+					 
+				 }
+				
+			}); }
+		
+		else
+			{
+			
+			
+			}
+	
+		//alert(blr+"----blr");
+		if(idf=="Save"&&!blr)
+		{	$.ajax({
+			 type : "POST",
+			 url:'<%=request.getContextPath()+ "/do/DeductionAction"%>',
+			 dataType : 'json',
+			 contentType : 'application/json; charset=utf-8',
+			 data : updateData,
+			 success : function(data){
+				 alert(data);
+				 
+				 if(data)
+					 {
+					 
+					 alert("Data insert");
+					 reuseScript(3);
+					 }
+				 else
+					 {
+					 alert("Data not insert");
+					 }
+				 
+			 }
+			
+		}); }
+		
+		else if(idf=="Save")
+			{
+			 alert("please chose another one ");
+			
+			}
+		
+	
+			});
+			
+			//var dedcnamecheck=$("#decname").val();	
+
+			$("#decname").bind("keyup",function()
+			
+				{
+				
+				//alert("keyup");
+			var dedcname=$(this).val();
+			
+			
+			
+			var updateData = JSON.stringify([{
+				
+				"name" : dedcname,
+				
+				
+			 }]); 
+			//alert("---"+dedcname);
+			if(dedcname!=''&&dedcname.length > 0&&dedcname!=dnameup)
+			{
+			
+			
+			$.ajax({
+				 type : "POST",
+				 url:'<%=request.getContextPath()+ "/do/CheckDeductionName"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 data : updateData,
+				 success : function(datas){
+				// alert(data);
+				 if(datas) //if username not avaiable
+				  {
+					  	$("#decname").css('border', '3px #C33 solid').focus();	
+						$('#tick').hide();
+						$('#cross').fadeIn();
+						blr=true;
+				
+				 alert("please chose another one");
+		          }
+				  else
+				  {
+					  $("#decname").css('border', '3px #090 solid');
+						$('#cross').hide();
+						$('#tick').fadeIn();
+						blr=false;
+				  }
+				 
+				 }
+				
+				
+			});
+			}
+			else{
+				
+				$(this).css('border', '3px #CCC solid');
+				$('#tick').hide();
+				
+			}
+				
+				});
+			
+		
+		} 
+			
+		
+			//alert("he");
+			
+			
+		 
+			
+			reuseScript();
+			
+				
+				
+				//$(".multiselect").html('');
+				
+			 
+		
+		
+				
+				
+
+			 
+			
 		});
 		
 		$("#clearSearch").click(function(){
+			
+
+			
+			
+			
+			
 			$("#searchByName").data("kendoAutoComplete").placeholder("Start typing");
 			$("#employeeHeader").css("display", "none");
 			$("#calculations").css("display", "none");
@@ -653,3 +1487,23 @@ img.image_preview{
 	float: right;
 }
 </style>
+<script type="text/x-kendo-template" id="employeeTemplate">
+				
+	<div class="field">
+<div class="label">%Of Income</div>
+				<input type="hidden" class="eperid" value="#=id#"/>
+                
+				<input type="text" class="k-input k-textbox incomePersentEdit"   value="#=incomePersent#" />
+			</div>
+			<div class="clear"></div>
+
+		<div>
+			<div class="field">
+				<a class="k-button k-icontext editTaxPercent" ><span class="k-icon k-update"></span>Update</a> <a
+					class="k-button k-icontext cancelTax"><span class="k-icon k-cancel"></span>Cancel</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</div>
+</script>
+

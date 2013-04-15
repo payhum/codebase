@@ -24,9 +24,13 @@ import com.openhr.data.Leave;
 import com.openhr.data.LeaveApproval;
 import com.openhr.data.LeaveRequest;
 import com.openhr.data.LeaveType;
+import com.openhr.data.OverTimePayRateData;
+import com.openhr.data.OverTime;
 import com.openhr.data.Position;
 import com.openhr.data.Report;
 import com.openhr.data.Roles;
+
+import com.openhr.data.TaxRatesData;
 import com.openhr.data.Users;
 import com.openhr.taxengine.DeductionsDeclared;
 import com.openhr.taxengine.DeductionsDone;
@@ -72,6 +76,9 @@ public class OpenHRSessionFactory {
         config.addAnnotatedClass(CompanyPayroll.class);
         config.addAnnotatedClass(EmpBankAccount.class);
         config.addAnnotatedClass(Company.class);
+        config.addAnnotatedClass(OverTime.class);
+        config.addAnnotatedClass(OverTimePayRateData.class);
+        config.addAnnotatedClass(TaxRatesData.class);
         sessionFactory = config.buildSessionFactory();
     }
 

@@ -1,15 +1,15 @@
 package com.openhr.taxengine;
 
 public enum ExemptionType {
-	SUPPORTING_SPOUSE(0),
+	SUPPORTING_SPOUSE(1),
 	
-	CHILDREN(1),
+	CHILDREN(2),
 	
-	BASIC_ALLOWANCE(2), 
+	BASIC_ALLOWANCE(3), 
 	
-	BASIC_ALLOWANCE_PERCENTAGE(3),
+	BASIC_ALLOWANCE_PERCENTAGE(4),
 	
-	BASIC_ALLOWANCE_LIMIT(4);
+	BASIC_ALLOWANCE_LIMIT(5);
 	
 	private int value;
 	

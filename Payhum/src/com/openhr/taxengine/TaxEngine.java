@@ -7,6 +7,7 @@ import java.util.Map;
 import com.openhr.company.Company;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
+import com.openhr.factories.EmpPayTaxFactroy;
 
 public class TaxEngine {
 	private Company comp;
@@ -36,6 +37,7 @@ public class TaxEngine {
 			> Calculator.execute(emp);
 		 */
 		for (Employee emp : empList) {
+			System.out.println("Processing for employee - " + emp.getId());
 			IncomeCalculator incomeCalc = ResidentTypeFactory.getIncomeCalculator(emp);
 			
 			// Get the annual income of the person, which involves his AGP + other incomes
@@ -53,7 +55,12 @@ public class TaxEngine {
 			TaxCalculator taxCalc = ResidentTypeFactory.getTaxCalculator(emp);
 			taxCalc.calculate(emp, empPayroll);
 			
-			// EmpPayTaxFactory.update(empPayroll);
+			empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
+			
+			// Update the payroll details into the repos.
+			if( ! EmpPayTaxFactroy.update(empPayroll)) {
+				// TODO Failed to update, throw error.
+			}
 			
 			if(System.getProperty("DRYRUN") != null 
 			&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {

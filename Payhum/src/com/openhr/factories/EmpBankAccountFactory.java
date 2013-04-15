@@ -11,6 +11,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.openhr.data.EmpBankAccount;
+import com.openhr.data.EmployeePayroll;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
@@ -37,7 +38,7 @@ public class EmpBankAccountFactory implements Serializable {
 		query = session.getNamedQuery("EmpBankAccount.findAll");
 		empBankAccounts = query.list();
 		session.getTransaction().commit();
-
+		
 		return empBankAccounts;
 	}
 
@@ -48,19 +49,23 @@ public class EmpBankAccountFactory implements Serializable {
 		query.setInteger(0, id);
 		empBankAccounts = query.list();
 		session.getTransaction().commit();
-
+		
 		return empBankAccounts;
 	}
 
-	public static List<EmpBankAccount> findByEmployeeId(Integer employeeId) throws Exception{
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+	public static EmpBankAccount findByEmployeeId(Integer employeeId) throws Exception{
+		session = OpenHRSessionFactory.getInstance().openSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("EmpBankAccount.findByEmployeeId");
-		query.setInteger(0, employeeId);
-		empBankAccounts = query.list();
-		session.getTransaction().commit();
-
-		return empBankAccounts;
+		EmpBankAccount eBank = (EmpBankAccount) session.get(EmpBankAccount.class, employeeId);
+		
+		if(eBank == null ) {
+			query = session.getNamedQuery("EmpBankAccount.findByEmployeeId");
+			query.setInteger(0, employeeId);
+			eBank = (EmpBankAccount) query.list().get(0);
+			session.getTransaction().commit();
+		}
+		session.close();
+		return eBank;
 	}
 	
 	public static boolean delete(EmpBankAccount e) throws Exception{
@@ -70,10 +75,10 @@ public class EmpBankAccountFactory implements Serializable {
 
 		EmpBankAccount eBankAccnt = (EmpBankAccount) session.get(EmpBankAccount.class, e.getId());
 		session.delete(eBankAccnt);
-		session.getTransaction().commit();
 		session.flush();
+		session.getTransaction().commit();
 		done = true;
-
+		session.close();
 		return done;
 	}
 
@@ -86,7 +91,7 @@ public class EmpBankAccountFactory implements Serializable {
 		session.save(e);
 		session.getTransaction().commit();
 		done = true;
-
+		session.close();
 		return done;
 	}
 }

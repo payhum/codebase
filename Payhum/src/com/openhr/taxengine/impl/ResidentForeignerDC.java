@@ -19,11 +19,11 @@ public class ResidentForeignerDC extends BaseDC {
 		Double spouseInsuranceAmt = 0D;
 		Double donationAmt = 0D;
 		for(DeductionsDeclared dd : dDeclared) {
-			if(dd.getType() == DeductionType.SELF_LIFE_INSURANCE.getValue()) {
+			if(dd.getType().getId() == DeductionType.SELF_LIFE_INSURANCE.getValue()) {
 				selfInsuranceAmt = dd.getAmount();
-			} else if (dd.getType() == DeductionType.SPOUSE_LIFE_INSURANCE.getValue()) {
+			} else if (dd.getType().getId() == DeductionType.SPOUSE_LIFE_INSURANCE.getValue()) {
 				spouseInsuranceAmt = dd.getAmount();
-			} else if(dd.getType() == DeductionType.DONATION.getValue()) {
+			} else if(dd.getType().getId() == DeductionType.DONATION.getValue()) {
 				donationAmt = dd.getAmount();
 			}
 		}

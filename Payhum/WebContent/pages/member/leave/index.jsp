@@ -17,8 +17,8 @@
  			<div class="legend">
  				<div style="float:right">
 					<input type="submit" id="applyLeave" value="New"/>
-					<input type="submit" value="Delete"/>
-					<input type="submit" value="Edit"/>
+					<input type="submit" value="Delete" id="deleteLeave"/>
+					<input type="submit" value="Edit" style="display:none !important;"/>
 				</div>
  				<div style="float:left">
 					<p>Your Leave History</p>
@@ -26,8 +26,7 @@
 				<div style="clear:both"></div><br/>
 			</div><br/><br/>
  			<div id="addLeaveDiv" class="displayClass">
-				<form action="/Payhum/do/LeaveApplicationAction">
-					<span><label>LeaveFrom : &nbsp;&nbsp;</label></span>
+ 					<span><label>LeaveFrom : &nbsp;&nbsp;</label></span>
 					<span><input type="text" name="leaveDate" id="leaveFrom" value="2012/07/10" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  					<span><label>LeaveFrom : &nbsp;&nbsp;</label></span>
 					<span><input type="text" name="returnDate" id="leaveTo" value="2012/08/11"/></span><br/><br/>
@@ -36,6 +35,7 @@
  						<input type="hidden" name="noOfDays" value="2"/>
  						<input type="hidden" name="employeeId" id="employeeId" />
 						<input type="hidden" id="leaveKinds" value="" />
+						<input type="hidden" name="userType" value="Employee"/>
 						<select name="leaveTypeId" id="TypeOfLeave"> </select>&nbsp;&nbsp;&nbsp;&nbsp;
   					</span>
  					<span><label>LeaveDescription : &nbsp;&nbsp;</label></span>
@@ -44,44 +44,136 @@
 	  					<span><input type="submit" id="addLeave" value="Apply"/></span>&nbsp;&nbsp;
 						<span><input type="button" id="canceLeave" value="Cancel"/></span>
  					</div>
- 				</form>
- 			</div><br/><br/>
-			<div id="pendingGrid">
-				<table id="loansGrid">
- 				<thead>
-					<tr>
-						<th data-field="requestDate">Requested On Date</th>
-						<th data-field="requestedLeavingDate">Request Benefit Type</th>
-						<th data-field="requestedReturningDate">Amount</th>
-						<th data-field="status">Status</th>
-						<th data-field="approvedBy">Approved Date</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>11/07/2012</td>
-						<td>Overtime Payment</td>
-						<td>$ 250</td>
-						<td>Pending</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td>11/07/2012</td>
-						<td>Transport Allowance</td>
-						<td>$ 150</td>
-						<td>Approved</td>
-						<td>13/01/2012</td>
-					</tr>
- 				</tbody>
-			</table>
-			</div>
-		</div>
+  			</div><br/><br/>
+  			<div id="grid"> </div>
+ 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
 
-  	$(document).ready(function() {	
+	function getEmployeeLeaves(){
+  	
+  		
+  			function employeeDropDownEditor(container, options) {
+	            $('<input data-text-field="employeeId" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
+	                autoBind: false,
+	                dataSource: {
+	                    type: "json",
+	                    transport: {
+	                        read: "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>"
+	                    }
+	                }
+	            }); 
+	        }
+	        
+	        function leaveTypeDropDownEditor(container, options) {
+	            $('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
+	                autoBind: false,
+	                dataSource: {
+	                    type: "json",
+	                    transport: {
+	                        read: "<%=request.getContextPath() + "/do/ReadLeaveTypeAction"%>"
+	                    }
+	                }
+	            }); 
+	        }	
+	       		
+   			
+  			var leaveApprovalModel = kendo.data.Model.define({
+  	        	id: "id",            
+  	            fields: {
+  	            	leaveDate : {
+  	            		type : "date"
+  	            	},
+  	            	returnDate : {
+  	            		type : "date"
+  	            	},
+  	            	noOfDays : {
+  	            		type : "number"
+  	            	},
+  	        		status : {
+  	        			type : "string"
+  	        		},
+  	                employeeId:{
+  	        			defaultValue : {
+  	        				id : 0,
+  	        				employeeId : "",
+  	        				firstname : "",
+  	        				middlename : "",
+  	        				lastname : "",        				
+  	        				sex : "",
+  	        				hiredate : "",
+  	        				birthdate : "",
+  	        				positionId : {
+  	        					defaultValue : {
+  	        						id : 0,
+  	        						name : "",
+  	        						salary : 0,
+  	        						raisePerYear : 0
+  	        					}
+  	        				},
+  	        				photo : "",
+  	        			}
+  	        		},
+  	        		leaveTypeId: {
+  	                	defaultValue : {
+  	                		id:  0,
+  	                		name: "",
+  	                        dayCap: 0 
+  	                	}
+  	                },
+  	                description : {
+  	                	type : "string"
+  	                }
+  	            }
+  	        });		
+  			
+  			$("#grid").kendoGrid({
+  				dataSource : {
+  					transport : {
+  						read : {
+  	                        url : "<%=request.getContextPath() + "/do/ReadRequestedAction"%>",
+  	                        dataType : 'json',
+  	                        cache : false
+  	                    },
+  	                    parameterMap: function(options, operation) {
+  	                        if (operation !== "read" && options.models) {
+  	                        	$.each(options.models, function(){
+  	                        		/*this.leaveDate = new Date(this.leaveDate);
+  	                        		this.returnDate = new Date(this.returnDate);*/
+  	                        	});
+  	                            return JSON.stringify(options.models);
+  	                        }
+  	                    }
+  					},
+  					schema : {
+  						model :leaveApprovalModel
+  					},
+  					batch : true,
+  	                pageSize : 10
+  				},
+  				columns: [
+  					{ field : "employeeId", title : "Employee Id",  editor : employeeDropDownEditor, template: '#=id ? employeeId.id: ""#', width : 100 },
+  					{ title : "Full name",template: '#=employeeId ? employeeId.firstname +" "+employeeId.middlename +" "+employeeId.lastname: ""#', width : 180 },
+  					{ field : "leaveTypeId", title : "Leave Type",  editor : leaveTypeDropDownEditor, template: '#=leaveTypeId ? leaveTypeId.name: ""#', width : 120 },
+  					{ field : "leaveDate", title : "Leave date", template : "#= kendo.toString(new Date(leaveDate), 'MMM, dd yyyy') #", width : 100  },
+  		            { field : "returnDate", title : "Return date", template : "#= kendo.toString(new Date(returnDate) , 'MMM, dd yyyy') #", width : 100 },
+  		            { field : "noOfDays", title : "No of days", width : 100 },
+  		            { field : "description", title : "Description", width : 100 },
+  		            { field : "status", title : "Status", template : "#= status == 0 ? 'New' : 'Accepted' #", width : 100 },
+   	            ], 
+  	            sortable: true,
+  	            scrollable: true,
+  	            filterable : true,
+  	            selectable : "row",
+   	            pageable : true
+  			});	
+  		}
+  			
+  		$(document).ready(function() {		
+   			 getEmployeeLeaves();
+  
      	$("#leaveFrom").kendoDatePicker();
     	$("#leaveTo").kendoDatePicker();
      	<% List<LeaveType>	list =  (List<LeaveType>) request.getAttribute("leaveTypes");   
@@ -106,5 +198,60 @@
 			$("#addLeaveDiv").addClass("displayClass");
 		}
  	});    
+	
+	$("#addLeave").click(function(){
+ 
+		leaveFrom   = $("#leaveFrom").val();
+		leaveTo     = $("#leaveTo").val();
+		leaveType   = $("#TypeOfLeave").val();
+		description = $("#description").val();
+		employeeId  = $("#employeeId").val();
+ 		 
+   		leaveApply = JSON.stringify({
+   			"leaveFrom"	  : leaveFrom,
+   			"leaveTo" 	  : leaveTo, 
+   			"leaveType"   : leaveType, 
+   			"description" : description,
+   			"employeeId"  : employeeId
+   		}); 
+    	
+   		$.ajax({
+       		url 		: "<%=request.getContextPath() + "/do/LeaveApplicationAction"%>",
+       		type 		: 'POST',
+			dataType 	: 'json',
+			contentType : 'application/json; charset=utf-8',
+			data 		: leaveApply,
+			success     : function(){
+				$("#addLeaveDiv").addClass("displayClass");
+				$("#grid").empty();
+				getEmployeeLeaves();
+			}
+        });  
+	});
+	
+	$("#deleteLeave").click(function(){
+		 employeeId = $(".k-state-selected").find('td').eq(0).text();
+		 leaveDate  = $(".k-state-selected").find('td').eq(3).text();
+		 
+ 	  	 deleteLeaveAction = JSON.stringify({
+	   		"employeeId"	  : employeeId,
+	   		"leaveDate" 	  : leaveDate 
+ 	 	 }); 
+	    	
+	  	 $.ajax({
+	   		url 		: "<%=request.getContextPath() + "/do/DeleteLeaveApplication"%>",
+	    	type 		: 'POST',
+			dataType 	: 'json',
+			contentType : 'application/json; charset=utf-8',
+			data 		: deleteLeaveAction,
+			success     : function(){
+ 				$("#grid").empty();
+				getEmployeeLeaves();
+			}
+	 	 });  
+ 		 
+  	});
+	
+	
     
 </script>

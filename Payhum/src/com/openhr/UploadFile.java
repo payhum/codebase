@@ -24,6 +24,7 @@ import org.apache.struts.action.ActionMapping;
 
 import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
+import com.openhr.company.LicenseValidator;
 import com.openhr.company.Licenses;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
@@ -139,8 +140,19 @@ public class UploadFile extends Action {
                     					// License has expired and throw an error
                     					throw new Exception("License has expired");
                     				} else {
-                    					// License is valid, so lets proceed.
-                    					break;
+                    					// License enddate is valid, so lets check the key.
+                    					String compName = comp.getName();
+                    					String licenseKeyStr = LicenseValidator.formStringToEncrypt(compName, endDate);
+                    					if(LicenseValidator.encryptAndCompare(licenseKeyStr, lis.getLicensekey())) {
+                    						// License key is valid, so proceed.
+                    						break;
+                    					} else {
+                    						br.close();
+                                			in.close();
+                                    		fstream.close();
+                                    		
+                    						throw new Exception("License is tampered. Contact Support.");
+                    					}
                     				}
                     			}
                     		}
@@ -171,9 +183,10 @@ public class UploadFile extends Action {
             System.out.println("Upload has been done successfully!");
         } catch (Exception ex) {
         	System.out.println("There was an error: " + ex.getMessage());
+        	ex.printStackTrace();
         }
         
-		return map.findForward("masteradmin");
+		return map.findForward("masterhome.form");
 	}
 	
 

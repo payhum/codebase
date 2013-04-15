@@ -13,6 +13,10 @@
 			<li class="gradient_menuitem gradient31 first_item"><a
 				href="<%=request.getContextPath() + "/do/Employee"%>"> Employee
 					List</a></li>
+					
+			<li class="gradient_menuitem gradient31 first_item"><a
+				href="<%=request.getContextPath() + "/do/ApproveOverTime"%>">Over Time</a>
+			</li>
 
 			<li class="topitem spaced_li">
 				<div class="buttonbg gradient_button gradient27"

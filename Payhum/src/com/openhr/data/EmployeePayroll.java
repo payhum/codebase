@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,7 +48,8 @@ public class EmployeePayroll implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
+
+	@JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Employee employeeId;
     @Basic(optional = false)
@@ -103,15 +103,15 @@ public class EmployeePayroll implements Serializable {
     @Basic(optional = false)
     @Column(name = "accomodationType", nullable = false)
     private Integer accomodationType;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private List<DeductionsDeclared> deductionsDeclared;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private List<DeductionsDone> deductionsDone;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private List<ExemptionsDone> exemptionsDone;
 
@@ -218,7 +218,7 @@ public class EmployeePayroll implements Serializable {
 		
 		if(!found) {
 			ex = new Exemptionstype(eType.getValue(), "TODO", "TOOD");
-			exemptionsDone.add(new ExemptionsDone(this.employeeId, ex, exemption));
+			exemptionsDone.add(new ExemptionsDone(this, ex, exemption));
 		}
 		
 		totalDeductions += exemption;
@@ -254,7 +254,7 @@ public class EmployeePayroll implements Serializable {
 		
 		if(!found) {
 			dx = new DeductionsType(entity.getValue(), "TODO", "TODO");
-			deductionsDone.add(new DeductionsDone(this.employeeId, dx, amount));
+			deductionsDone.add(new DeductionsDone(this, dx, amount));
 		}
 		
 		totalDeductions += amount;
@@ -266,7 +266,7 @@ public class EmployeePayroll implements Serializable {
 		}
 	}
 
-	public static EmployeePayroll loadEmpPayroll(Integer empId) {
+	public static EmployeePayroll loadEmpPayroll(Employee empId) {
 		if(System.getProperty("DRYRUN") != null 
 		&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
 			return populateTestData();
@@ -345,7 +345,8 @@ public class EmployeePayroll implements Serializable {
 		
 		ePayroll.setEmployeeId(emp);
 		
-		DeductionsDeclared dd = new DeductionsDeclared(emp, DeductionType.EMPLOYEE_SOCIAL_SECURITY.getValue(), 0D);
+		DeductionsType dType = new DeductionsType(4, "Employee Social Security", "");
+		DeductionsDeclared dd = new DeductionsDeclared(ePayroll, dType, 0D);
 		ePayroll.deductionsDeclared.add(dd);
 		
 		return ePayroll;
@@ -394,4 +395,21 @@ public class EmployeePayroll implements Serializable {
 	public List<DeductionsDeclared> getDeductionsDeclared() {
 		return deductionsDeclared;
 	}
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setDeductionsDone(List<DeductionsDone> deductionsDone) {
+		this.deductionsDone = deductionsDone;
+	}
+
+	public void setExemptionsDone(List<ExemptionsDone> exemptionsDone) {
+		this.exemptionsDone = exemptionsDone;
+	}
+	
+    public void setId(Integer id) {
+		this.id = id;
+	}
+
 }

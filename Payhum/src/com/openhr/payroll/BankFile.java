@@ -1,8 +1,8 @@
 package com.openhr.payroll;
 
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +17,6 @@ import org.apache.struts.action.ActionMapping;
 
 import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
-import com.openhr.data.EmpBankAccount;
-import com.openhr.data.EmployeePayroll;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
 
@@ -34,6 +32,7 @@ public class BankFile extends Action {
 		Integer compId = 1;
 		List<Company> comps = CompanyFactory.findById(compId);
 		String compName = comps.get(0).getName();
+		compName = compName.replace(" ", "_");
 		
 		Date now = new Date();
         Calendar cal = Calendar.getInstance();
@@ -63,10 +62,10 @@ public class BankFile extends Action {
 			empPayStr.append(COMMA);
 			empPayStr.append(compPay.getAccountNo());
 			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getNetPay());
+			empPayStr.append(new DecimalFormat("MMK ###.##").format(compPay.getNetPay()));
 			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getTaxAmount());
-			empPayStr.append(COMMA);
+			empPayStr.append(new DecimalFormat("MMK ###.##").format(compPay.getTaxAmount()));
+			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);
 		}

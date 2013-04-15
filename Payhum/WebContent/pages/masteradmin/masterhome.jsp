@@ -22,18 +22,15 @@
 			Select the Client Company from the list here and click on the below buttons to generate the files to be sent to <b>Bank</b> and <b>Government</b>.
 		<br><br>
 		<div>
-			<a href="<%=request.getContextPath() + "/do/GenerateBankFile"%>">
-				<input type="button" value="Generate Bank File"/>
-			</a> to be sent to Bank for crediting the Salary to Employees and Tax to Government.<br>
-			<br><br>
+		    <form method="post" action="<%=request.getContextPath() + "/do/GenerateBankFile"%>" enctype="multipart/form-data">
+		    	<input type="submit" value="Generate Bank File"/> to be sent to Bank for crediting the Salary to Employees and Tax to Government.<br>
+	        </form> <br>
 		</div>
 		
 		<div>
-			<a href="<%=request.getContextPath() + "/do/GenerateGovtFile"%>">
-				<input type="button" value="Generate Government File"/>
-			</a>
-			 to be sent to Government to inform the Tax being credited on behalf of the Employees of the Company.
-			 <br>
+			<form method="post" action="<%=request.getContextPath() + "/do/GenerateGovtFile"%>" enctype="multipart/form-data">
+		    	<input type="submit" value="Generate Government File"/> to be sent to Government to inform the Tax being credited on behalf of the Employees of the Company.
+	        </form> <br>
 		</div>
 		
 </fieldset>

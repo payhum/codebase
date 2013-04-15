@@ -4,11 +4,17 @@
  */
 package com.openhr.user.action;
 
+import java.util.List;
+
+
+
 import com.openhr.Config;
 import com.openhr.common.OpenHRAction;
 import com.openhr.data.Employee;
+import com.openhr.data.LeaveType;
 import com.openhr.data.Users;
 import com.openhr.factories.EmployeeFactory;
+import com.openhr.factories.LeaveTypeFactory;
 import com.openhr.factories.UsersFactory;
 import com.openhr.user.form.LoginForm;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +46,7 @@ public class LoginAction extends OpenHRAction {
 						loginForm.getUsername());
 				Users u = UsersFactory.findByUserName(loginForm.getUsername())
 						.get(0);
+				String s = u.getEmployeeId().getEmployeeId();
 				request.getSession().setAttribute("employeeId",
 						u.getEmployeeId().getId());
 				
@@ -54,6 +61,12 @@ public class LoginAction extends OpenHRAction {
 					return map.findForward("hr");
 				}
 				else if (loginForm.getRole().equalsIgnoreCase("Employee")) {
+ 					 List<LeaveType> leaveTypes = LeaveTypeFactory.findAll();
+					 request.setAttribute("leaveTypes", leaveTypes);
+					 Employee nn = user.getEmployeeId();
+					 String str = nn.getEmployeeId();
+					 String n = nn.getFirstname();
+					 request.setAttribute("employeeId", n);
 					return map.findForward("member");
 				}
 				else if (loginForm.getRole().equalsIgnoreCase("Accountant")) {

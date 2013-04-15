@@ -17,7 +17,7 @@ import org.apache.struts.action.ActionMapping;
 import com.openhr.data.DeductionsType;
 import com.openhr.factories.DeductionFactory;
 
-public class UpdateDeductionAction extends Action {
+public class CheckDeductionName extends Action {
 	@Override
     public ActionForward execute(ActionMapping map,
             ActionForm form,
@@ -40,9 +40,8 @@ public class UpdateDeductionAction extends Action {
         DeductionsType dtyp = new DeductionsType();
         for (DeductionsType rFromJSON : aCollection) {
         	dtyp.setName(rFromJSON.getName());  
-        	dtyp.setDescription(rFromJSON.getDescription()); 
-        	dtyp.setId(rFromJSON.getId());
-        	 flag=DeductionFactory.update(dtyp);            
+        	
+        	 flag=DeductionFactory.checkAval(dtyp);            
         }
         PrintWriter out = reponse.getWriter();
 out.println(flag);

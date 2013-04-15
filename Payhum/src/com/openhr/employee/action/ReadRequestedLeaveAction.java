@@ -1,4 +1,4 @@
-package com.openhr.overtime.action;
+package com.openhr.employee.action;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -13,33 +13,30 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import com.openhr.factories.OverTimeFactory;
+import com.openhr.factories.LeaveRequestFactory;
 
-public class ReadOvertimeAction extends Action {
+public class ReadRequestedLeaveAction extends Action {
 	@SuppressWarnings("rawtypes")
 	@Override
     public ActionForward execute(ActionMapping map,
             ActionForm form,
             HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-		
-		
+            HttpServletResponse response) throws Exception { 
+ 
+ 		int empId = (Integer) request.getSession().getAttribute("employeeId");
+		 
 		JSONArray result = null;
         try {
-        	List applicationList = OverTimeFactory.findAll();
+        	List applicationList = LeaveRequestFactory.findByEmployeeId(empId);
              result = JSONArray.fromObject(applicationList);
         } catch (Exception e) {
             e.printStackTrace();
-        }         
+        }
+        
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();
         out.print(result.toString());
         out.flush();
-		
-		
-		
-		
-		
-		return null;
+ 		return null;
 	}
 }

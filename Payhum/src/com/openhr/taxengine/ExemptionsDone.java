@@ -2,8 +2,8 @@ package com.openhr.taxengine;
 
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,14 +15,14 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.openhr.data.Employee;
+import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Exemptionstype;
 
 @Entity
 @Table(name = "exemptions_done", catalog = "payhumrepo", schema = "")
 @NamedQueries({
     @NamedQuery(name = "ExemptionsDone.findAll", query = "SELECT e FROM  ExemptionsDone e"),
-    @NamedQuery(name = "ExemptionsDone.findByEmployeeId", query = "SELECT e FROM  ExemptionsDone e where e.employeeId = ?")})
+    @NamedQuery(name = "ExemptionsDone.findByEmpPayrollId", query = "SELECT e FROM  ExemptionsDone e where e.payrollId = ?")})
 public class ExemptionsDone implements Serializable {
 	private static final long serialVersionUID = 1L;
     @Id
@@ -30,24 +30,24 @@ public class ExemptionsDone implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @ManyToOne(targetEntity=Exemptionstype.class, cascade=CascadeType.ALL)
+    @ManyToOne(targetEntity=Exemptionstype.class)
     @JoinColumn(name = "type", referencedColumnName="id")
 	private Exemptionstype type;
     @Basic(optional = false)
     @Column(name = "amount", nullable = false)
 	private Double amount;
-    @ManyToOne(targetEntity=Employee.class, cascade=CascadeType.ALL)
-    @JoinColumn(name = "employeeId", referencedColumnName="id")
-    private Employee employeeId;
+    @ManyToOne(targetEntity=EmployeePayroll.class)
+    @JoinColumn(name = "payrollId", referencedColumnName="id")
+    private EmployeePayroll payrollId;
     
 	public ExemptionsDone() {
 		
 	}
 	
-	public ExemptionsDone(Employee eid, Exemptionstype type, Double amt) {
+	public ExemptionsDone(EmployeePayroll epid, Exemptionstype type, Double amt) {
 		this.type = type;
 		this.amount = amt;
-		this.employeeId = eid;
+		this.payrollId = epid;
 	}
 
 	public Exemptionstype getType() {
@@ -74,12 +74,12 @@ public class ExemptionsDone implements Serializable {
 		this.id = id;
 	}
 
-	public Employee getEmployeeId() {
-		return employeeId;
+	public EmployeePayroll getEmployeePayrollId() {
+		return payrollId;
 	}
 
-	public void setEmployeeId(Employee employeeId) {
-		this.employeeId = employeeId;
+	public void setEmployeePayrollId(EmployeePayroll epId) {
+		this.payrollId = epId;
 	}
 
 }

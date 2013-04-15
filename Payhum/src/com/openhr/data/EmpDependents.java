@@ -28,7 +28,7 @@ public class EmpDependents  implements Serializable {
     private Integer id;
     @ManyToOne(targetEntity=Employee.class, cascade=CascadeType.ALL)
     @JoinColumn(name = "employeeId", referencedColumnName="id")
-    private String employeeId;
+    private Employee employeeId;
     @Basic(optional = false)
     @Column(name = "age", nullable = false, length = 20)
 	private int age;
@@ -46,7 +46,7 @@ public class EmpDependents  implements Serializable {
     	
     }
 
-	public EmpDependents(Integer id, String employeeId, int age, String name, Integer occType, Integer dType) {
+	public EmpDependents(Integer id, Employee employeeId, int age, String name, Integer occType, Integer dType) {
 		this.id = id;
 		this.employeeId = employeeId;
 		this.age = age;

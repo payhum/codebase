@@ -38,6 +38,7 @@
 		<action path="/Welcome" forward="/do/LogoutAction" />
 		<action path="/Position" forward="position.form" />
  		<action path="/ApproveLeave" forward="leaveapp.form" />
+ 		<action path="/ApproveOverTime" forward="overtime.form" />
 		<action path="/LeaveType" forward="leavetype.form" />
 		<action path="/Employee" forward="employee.form" />
 		<action path="/Benefit" forward="benefit.form" />
@@ -153,8 +154,77 @@
 		</action>
 
 		<!--end of Position actions -->
-
+		
+		
+				<!--Start of TaxRatesAction-->
+						<action path="/TaxRatesAction" 
+			type="com.openhr.tax.action.TaxRatesAction" >
+			<forward name="continue" path="position.form" />
+		</action>
+						
+							<action path="/CommanTaxReatesActions" parameter="parameter"
+    type="com.openhr.tax.action.CommanTaxReatesActions">
+    <forward name="success" path="/UserSuccess.jsp" />
+    <forward name="failure" path="/UserSuccess.jsp" />
+    
+</action>
+						<!--end of TaxRatesAction-->
+		
+		<!--start  Deductions actions -->
+	<action path="/ReadDeductionAction" 
+			type="com.openhr.deduction.action.ReadDeductionAction" >
+			<forward name="continue" path="position.form" />
+		</action>
+		<action path="/DeductionGet" 
+			type="com.openhr.deduction.action.DeductionGet" >
+			<forward name="continue" path="position.form" />
+		</action>
+		
+			<action path="/UpdateDeductionAction" 
+			type="com.openhr.deduction.action.UpdateDeductionAction" >
+			<forward name="continue" path="position.form" />
+		</action>
+		
+		<action path="/DeductionAction" 
+			type="com.openhr.deduction.action.DeductionAction" >
+			<forward name="continue" path="position.form" />
+		</action>
+		
+<action path="/CheckDeductionName" name="positionForm"
+			type="com.openhr.deduction.action.CheckDeductionName" >
+			<forward name="continue" path="position.form" />
+		</action>
+		
+			<action path="/DeleteDeductionAction" 
+			type="com.openhr.deduction.action.DeleteDeductionAction" >
+			<forward name="continue" path="position.form" />
+		</action>
+		<!--end of Deductions actions-->
+		
+		
+		<!-- start over time rate settings -->
+			<action path="/UpdateOvertimeAction" 
+			type="com.openhr.overtime.action.UpdateOvertimeAction">
+			<forward name="continue" path="taxannual.form" />
+		</action>
+		
+		<action path="/ReadOvertimePayRate" 
+			type="com.openhr.payroll.action.ReadOvertimePayRate">
+			<forward name="continue" path="taxannual.form" />
+		</action>
+		
+			<action path="/OvertimeAction" 
+		type="com.openhr.overtime.action.OvertimeAction">
+			<forward name="continue" path="taxannual.form" />
+		</action>
+				<!-- end over time rate settings -->
 <!--start of Tax actions -->
+
+
+<action path="/ReadTaxAnnualAction" name="employeeForm"
+			type="com.openhr.tax.action.ReadTaxAnnualAction" input="taxannual.form">
+			<forward name="continue" path="taxannual.form" />
+		</action>
 
 
 <action path="/ReadTaxAnnualAction" name="employeeForm"
@@ -317,7 +387,14 @@
 			type="com.openhr.leave.action.ApproveLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
 		</action>
-
+		
+		
+		
+		<action path="/ApproveOverTimeAction"
+			type="com.openhr.overtime.action.ApproveOverTimeAction">
+ 		</action>
+		
+		
 		<action path="/ReadLeaveAction" name="leaveForm"
 			type="com.openhr.leave.action.ReadLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
@@ -409,8 +486,35 @@
 			type="com.openhr.mleave.action.LeaveApplicationAction">
 			<forward name="continue" path="mbenefit.form" />
 		</action>
+		
+		
+		<action path="/ApplyOverTime" name="applyLeave"
+			type="com.openhr.overtime.action.ApplyOverTimeAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		
+		<action path="/DeleteLeaveApplication" name="applyLeave"
+			type="com.openhr.mleave.action.DeleteLeaveApplication">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/DeleteOverTime" name="applyLeave"
+			type="com.openhr.overtime.action.DeleteOvertimeAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
 		<!-- start of Settings actions -->
 
+		<action path="/ReadRequestedAction" name="leaveForm"
+			type="com.openhr.employee.action.ReadRequestedLeaveAction" input="leave.form">
+			<forward name="continue" path="leave.form" />
+		</action>
+		
+		<action path="/ReadOverTimeInfo" 
+			type="com.openhr.overtime.action.ReadOvertimeAction" >
+			<forward name="continue" path="leave.form" />
+		</action>
 
 
 

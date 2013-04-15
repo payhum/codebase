@@ -3,6 +3,7 @@ package com.openhr.deduction.action;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,13 +18,14 @@ import org.apache.struts.action.ActionMapping;
 import com.openhr.data.DeductionsType;
 import com.openhr.factories.DeductionFactory;
 
-public class UpdateDeductionAction extends Action {
+public class DeductionGet extends Action {
 	@Override
     public ActionForward execute(ActionMapping map,
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse reponse) throws Exception {
-		boolean flag=false;
+		JSONArray result = null;
+		List<DeductionsType> dedList=null;
 		BufferedReader bf = request.getReader();
         StringBuffer sb = new StringBuffer();
         String line = null;
@@ -33,19 +35,21 @@ public class UpdateDeductionAction extends Action {
         JSONArray json = JSONArray.fromObject(sb.toString());
         
         
-      //  System.out.println("THE JSON " + json.toString());
+        System.out.println("THE JSON " + json.toString());
         
-        
+        StringBuilder s=new StringBuilder("hello");
         Collection<DeductionsType> aCollection = JSONArray.toCollection(json, DeductionsType.class);
         DeductionsType dtyp = new DeductionsType();
         for (DeductionsType rFromJSON : aCollection) {
         	dtyp.setName(rFromJSON.getName());  
-        	dtyp.setDescription(rFromJSON.getDescription()); 
-        	dtyp.setId(rFromJSON.getId());
-        	 flag=DeductionFactory.update(dtyp);            
+        	dtyp.setDescription(rFromJSON.getDescription());  
+        	 dedList =DeductionFactory.findById(rFromJSON.getId());     
+        	 result = JSONArray.fromObject(dedList);
+        
         }
         PrintWriter out = reponse.getWriter();
-out.println(flag);
+out.println(result.toString());
         return map.findForward("");
+        
 	}
 }

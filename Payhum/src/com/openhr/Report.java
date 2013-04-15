@@ -1,9 +1,8 @@
 package com.openhr;
 
 import java.io.OutputStream;
-import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +16,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import com.openhr.company.Company;
+import com.openhr.company.LicenseValidator;
 import com.openhr.company.Licenses;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.Employee;
@@ -48,6 +48,7 @@ public class Report extends Action {
 		List<Company> comps = CompanyFactory.findAll();
 		Company comp = comps.get(0);
 		String compName = comp.getName();
+		compName = compName.replace(" ", "_");
 		
 		// Check for licenses
 		List<Licenses> compLicenses = LicenseFactory.findByCompanyId(comps.get(0).getId());
@@ -58,8 +59,14 @@ public class Report extends Action {
 					// License has expired and throw an error
 					throw new Exception("License has expired");
 				} else {
-					// License is valid, so lets proceed.
-					break;
+					// License enddate is valid, so lets check the key.
+					String licenseKeyStr = LicenseValidator.formStringToEncrypt(compName, endDate);
+					if(LicenseValidator.encryptAndCompare(licenseKeyStr, lis.getLicensekey())) {
+						// License key is valid, so proceed.
+						break;
+					} else {
+						throw new Exception("License is tampered. Contact Support.");
+					}
 				}
 			}
 		}
@@ -68,7 +75,7 @@ public class Report extends Action {
 		// to compute the payroll for the current pay period
 		List<Employee> empList = EmployeeFactory.findByCompanyID(comp.getId());
 		TaxEngine taxEngine = new TaxEngine(comp, empList);
-		// TODO taxEngine.execute();
+		taxEngine.execute();
 		
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		String fileName = compName + "_Payroll_" + monthYear + ".csv";
@@ -82,26 +89,26 @@ public class Report extends Action {
 		
 		StringBuilder allEmpPayStr = new StringBuilder();
 		for(EmployeePayroll empPay : empPayrollList) {
-			List<EmpBankAccount> empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPay.getEmployeeId().getId());
+			EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPay.getEmployeeId().getId());
 			
 			StringBuilder empPayStr = new StringBuilder();
-			empPayStr.append(empPay.getEmployeeId().getCompanyId().getCompanyId());
+			empPayStr.append(empPay.getEmployeeId().getCompanyId().getId());
 			empPayStr.append(COMMA);
-			empPayStr.append(empPay.getEmployeeId().getEmployeeId());
+			empPayStr.append(empPay.getEmployeeId().getId());
 			empPayStr.append(COMMA);
 			empPayStr.append(empPay.getFullName());
 			empPayStr.append(COMMA);
 			empPayStr.append(empPay.getEmployeeId().getEmpNationalID());
 			empPayStr.append(COMMA);
-			empPayStr.append(empBankAcct.get(0).getBankName());
+			empPayStr.append(empBankAcct.getBankName());
 			empPayStr.append(COMMA);
-			empPayStr.append(empBankAcct.get(0).getBankBranch());
+			empPayStr.append(empBankAcct.getBankBranch());
 			empPayStr.append(COMMA);
-			empPayStr.append(empBankAcct.get(0).getAccountNo());
+			empPayStr.append(empBankAcct.getAccountNo());
 			empPayStr.append(COMMA);
-			empPayStr.append(empPay.getTaxAmount() / 12);
+			empPayStr.append(new DecimalFormat("###.##").format(empPay.getTaxAmount() / 12));
 			empPayStr.append(COMMA);
-			empPayStr.append(empPay.getNetPay() / 12);
+			empPayStr.append(new DecimalFormat("###.##").format(empPay.getNetPay() / 12));
 			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);

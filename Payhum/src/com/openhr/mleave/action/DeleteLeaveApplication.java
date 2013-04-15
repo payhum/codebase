@@ -1,4 +1,4 @@
-package com.openhr.overtime.action;
+package com.openhr.mleave.action;
 
 import java.io.BufferedReader;
 import java.text.Format;
@@ -16,15 +16,15 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import com.openhr.data.OverTime;
-import com.openhr.factories.OverTimeFactory;
+import com.openhr.data.LeaveRequest;
+import com.openhr.factories.LeaveRequestFactory;
 
-public class DeleteOvertimeAction extends Action {
+public class DeleteLeaveApplication extends Action {
 	@Override
-    public ActionForward execute(ActionMapping map,
-            ActionForm form,
-            HttpServletRequest request,
-            HttpServletResponse reponse) throws Exception {
+	public ActionForward execute(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+ 
+ 		
 		
 		BufferedReader bf = request.getReader();
 		StringBuffer sb = new StringBuffer();
@@ -34,24 +34,21 @@ public class DeleteOvertimeAction extends Action {
 		}
 		JSONObject json = JSONObject.fromObject(sb.toString());
  		
-		int employeeId   	 = json.getInt("employeeId");
-		String requestOnDate = json.getString("requestOnDate");
-  		List<OverTime> overTimeList = OverTimeFactory.findByEmployeeId(employeeId);
-  		OverTime overTimes = null;
-  		for(OverTime overTime : overTimeList){
- 			Date date = new Date(overTime.getOverTimeDate());
+		int employeeId   = json.getInt("employeeId");
+		String leaveDate = json.getString("leaveDate");
+  		List<LeaveRequest> leaveRequestList = LeaveRequestFactory.findByEmployeeId(employeeId);
+  		LeaveRequest leaveReq = null;
+  		for(LeaveRequest leaveRequest : leaveRequestList){
+ 			Date date = new Date(leaveRequest.getLeaveDate());
 		    Format format = new SimpleDateFormat("MMM, dd yyyy");
 		    String d = format.format(date).toString();
- 			if(d.equals(requestOnDate)){
- 				overTimes = overTime;
+ 			if(d.equals(leaveDate)){
+ 				leaveReq = leaveRequest;
 				break;
 			}
  		}
    		
-   		OverTimeFactory.delete(overTimes);
+   		LeaveRequestFactory.delete(leaveReq);
 		return null;
-		
-		
-		
- 	}
+	}
 }

@@ -1,4 +1,4 @@
-package com.openhr.deduction.action;
+package com.openhr.payroll.action;
 
 import java.io.PrintWriter;
 import java.util.List;
@@ -14,11 +14,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import com.openhr.data.DeductionsType;
-import com.openhr.data.Position;
+import com.openhr.data.OverTimePayRateData;
 import com.openhr.factories.DeductionFactory;
-import com.openhr.factories.PositionFactory;
+import com.openhr.factories.EmpPayTaxFactroy;
 
-public class ReadDeductionAction extends Action {
+public class ReadOvertimePayRate extends Action {
 	@Override
     public ActionForward execute(ActionMapping map,
             ActionForm form,
@@ -28,7 +28,7 @@ public class ReadDeductionAction extends Action {
 		
 		 JSONArray result = null;
 	        try {
-	        	List<DeductionsType> dedc = DeductionFactory.findAll();
+	        	List<OverTimePayRateData> dedc = EmpPayTaxFactroy.findOverTimeRateAll();
 	            result = JSONArray.fromObject(dedc);
 	        } catch (Exception e) {
 	            e.printStackTrace();

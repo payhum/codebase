@@ -15,11 +15,12 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "leaverequest", catalog = "payhumrepo", schema = "")
-@XmlRootElement
+@XmlRootElement     
 @NamedQueries({
 		@NamedQuery(name = "LeaveRequest.findAll", query = "SELECT l FROM LeaveRequest l"),
 		@NamedQuery(name = "LeaveRequest.findById", query = "SELECT l FROM LeaveRequest l WHERE l.id = ?"),
-		@NamedQuery(name = "LeaveRequest.findByLeaveDate", query = "SELECT l FROM LeaveRequest l WHERE l.leaveDate = ?"),
+		@NamedQuery(name = "LeaveRequest.findByEmployeeId", query = "SELECT l FROM LeaveRequest l WHERE l.employeeId = ?"),
+ 		@NamedQuery(name = "LeaveRequest.findByLeaveDate", query = "SELECT l FROM LeaveRequest l WHERE l.leaveDate = ?"),
 		@NamedQuery(name = "LeaveRequest.findByReturnDate", query = "SELECT l FROM LeaveRequest l WHERE l.returnDate = ?"),
 		@NamedQuery(name = "LeaveRequest.findByStatus", query = "SELECT l FROM LeaveRequest l WHERE l.status = ?"),
 		@NamedQuery(name = "LeaveRequest.findByNoOfDays", query = "SELECT l FROM LeaveRequest l WHERE l.noOfDays = ?") })

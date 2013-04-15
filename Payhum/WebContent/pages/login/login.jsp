@@ -1,10 +1,11 @@
 <%@include file="../common/jspHeader.jsp" %>
 <div id="loginFormContainer">
     <html:form action="/LoginAction" styleClass="loginForm">
-    	<h2 class="login-legend">Login
-    	<span style="float:right;padding-right:40px;">
-	    	<!--a class="link" href="<%=request.getContextPath() + "/do/ChangeLanguage?method=amharic" %>"
-	    		<span><img src="<%=request.getContextPath() + "/css/images/et_flag.png"%>"</span>
+    	<h2 class="login-legend">Payhum Login
+    	<span style="float:right;padding-right:40px;padding-top:15px">
+    		<span><img src="<%=request.getContextPath() + "/css/images/mm-flag.png"%>"></span>
+    		<!--a class="link" href="<%=request.getContextPath() + "/do/ChangeLanguage?method=amharic" %>">
+	    		<span><img src="<%=request.getContextPath() + "/css/images/mm-flag.png"%>"></span>
 	    	</a-->
 			<!-- a class="link" href="<%=request.getContextPath() + "/do/ChangeLanguage?method=english" %>">
 				<span><img src="<%=request.getContextPath() + "/css/images/us_flag.png"%>"</span>

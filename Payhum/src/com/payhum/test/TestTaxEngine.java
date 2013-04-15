@@ -1,5 +1,6 @@
 package com.payhum.test;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.openhr.company.Company;
-import com.openhr.data.AccomodationType;
+import com.openhr.company.LicenseValidator;
 import com.openhr.data.DependentType;
 import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
@@ -18,7 +19,6 @@ import com.openhr.taxengine.DeductionType;
 import com.openhr.taxengine.DeductionsDone;
 import com.openhr.taxengine.ExemptionType;
 import com.openhr.taxengine.ExemptionsDone;
-import com.openhr.taxengine.TaxDetails;
 import com.openhr.taxengine.TaxEngine;
 
 public class TestTaxEngine {
@@ -28,14 +28,14 @@ public class TestTaxEngine {
 		System.setProperty("DRYRUN", "true");
 
 		// First Create the dummy Employee data
-		Employee emp = new Employee(0, "E1", "John", "", "Lui", "male", new Date(), new Date());
+		Employee emp = new Employee(2, "E1", "John", "", "Lui", "male", new Date(), new Date());
 		emp.setResidentType(ResidentType.LOCAL.getValue());
 		emp.setMarried("true");
 
-		EmpDependents dep1 = new EmpDependents(1, "eE0", 45, "T", OccupationType.NONE.getValue(), DependentType.SPOUSE.getValue());
-		EmpDependents dep2 = new EmpDependents(1, "eE0",5, "E", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
-		EmpDependents dep3 = new EmpDependents(2, "eE0",15, "F", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
-		EmpDependents dep4 = new EmpDependents(4, "eE0",12, "G", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
+		EmpDependents dep1 = new EmpDependents(1, emp, 45, "T", OccupationType.NONE.getValue(), DependentType.SPOUSE.getValue());
+		EmpDependents dep2 = new EmpDependents(2, emp, 5, "E", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
+		EmpDependents dep3 = new EmpDependents(3, emp, 15, "F", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
+		EmpDependents dep4 = new EmpDependents(4, emp, 12, "G", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
 
 		List<EmpDependents> deps = new ArrayList<EmpDependents>();
 		deps.add(dep1);

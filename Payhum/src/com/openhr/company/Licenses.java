@@ -51,9 +51,17 @@ public class Licenses implements Serializable {
     @Column(name = "active", nullable = false)
     private Integer active;
     
+    @Basic(optional = false)
+    @Column(name = "licensekey", nullable = false)
+    private String licensekey;
+    
 	public Licenses () {
 	}
 	
+	public String getLicensekey() {
+		return licensekey;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -92,6 +100,12 @@ public class Licenses implements Serializable {
 
 	public void setActive(Integer active) {
 		this.active = active;
+	}
+	
+	public void formLicenseKey() {
+		String compName = companyId.getName();
+		String strToBeEncrypted = LicenseValidator.formStringToEncrypt(compName, this.todate);
+		licensekey = LicenseValidator.encrypt(strToBeEncrypted);
 	}
 
 }

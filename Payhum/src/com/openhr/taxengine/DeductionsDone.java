@@ -3,7 +3,6 @@ package com.openhr.taxengine;
 import java.io.Serializable;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,13 +15,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import com.openhr.data.DeductionsType;
-import com.openhr.data.Employee;
+import com.openhr.data.EmployeePayroll;
 
 @Entity
 @Table(name = "deduction_done", catalog = "payhumrepo", schema = "")
 @NamedQueries({
     @NamedQuery(name = "DeductionsDone.findAll", query = "SELECT e FROM  DeductionsDone e"),
-    @NamedQuery(name = "DeductionsDone.findByEmployeeId", query = "SELECT e FROM  DeductionsDone e where e.employeeId = ?")})
+    @NamedQuery(name = "DeductionsDone.findByEmpPayrollId", query = "SELECT e FROM  DeductionsDone e where e.payrollId = ?")})
 public class DeductionsDone implements Serializable {
 	private static final long serialVersionUID = 1L;
     @Id
@@ -30,25 +29,26 @@ public class DeductionsDone implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @ManyToOne(targetEntity=DeductionsType.class, cascade=CascadeType.ALL)
+    @ManyToOne(targetEntity=DeductionsType.class)
     @JoinColumn(name = "type", referencedColumnName="id")
 	private DeductionsType type;
 
     @Basic(optional = false)
     @Column(name = "amount", nullable = false)
 	private Double amount;
-    @ManyToOne(targetEntity=Employee.class, cascade=CascadeType.ALL)
-    @JoinColumn(name = "employeeId", referencedColumnName="id")
-    private Employee employeeId;
+    
+    @ManyToOne(targetEntity=EmployeePayroll.class)
+    @JoinColumn(name = "payrollId", referencedColumnName="id")
+    private EmployeePayroll payrollId;
 
 	public DeductionsDone() {
 		
 	}
 	
-	public DeductionsDone(Employee eid, DeductionsType type, Double amt) {
+	public DeductionsDone(EmployeePayroll epid, DeductionsType type, Double amt) {
 		this.type = type;
 		this.amount = amt;
-		this.employeeId = eid;
+		this.payrollId = epid;
 	}
 
 	public DeductionsType getType() {
@@ -75,12 +75,12 @@ public class DeductionsDone implements Serializable {
 		this.id = id;
 	}
 
-	public Employee getEmployeeId() {
-		return employeeId;
+	public EmployeePayroll getEmployeePayrollId() {
+		return payrollId;
 	}
 
-	public void setEmployeeId(Employee employeeId) {
-		this.employeeId = employeeId;
+	public void setEmployeePayrollId(EmployeePayroll payrollId) {
+		this.payrollId = payrollId;
 	}
 
 }

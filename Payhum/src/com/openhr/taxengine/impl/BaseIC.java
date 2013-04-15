@@ -28,8 +28,7 @@ public class BaseIC implements IncomeCalculator {
 		 * - Bonus
 		 * - Allowances (medical, transport)
 		 */
-		List<EmployeePayroll> empPayList = EmpPayTaxFactroy.findEmpPayrollbyEmpID(emp.getId());
-		EmployeePayroll empPayroll = empPayList.get(0);
+		EmployeePayroll empPayroll = EmpPayTaxFactroy.findEmpPayrollbyEmpID(emp);
 		TaxDetails taxDetails = TaxDetails.getTaxDetailsForCountry();
 		
 		Double annualGrossPay = empPayroll.getBaseSalary();

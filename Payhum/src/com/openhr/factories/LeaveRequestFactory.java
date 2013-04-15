@@ -4,7 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.hibernate.Session; 
+import org.hibernate.Session;
+
 import com.openhr.data.LeaveRequest;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
@@ -12,6 +13,7 @@ public class LeaveRequestFactory {
 	/**
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 	
 	private static Session session;
@@ -21,7 +23,9 @@ public class LeaveRequestFactory {
     public LeaveRequestFactory() {
     }
 
-    public static List<LeaveRequest> findAll() {
+     
+    @SuppressWarnings("unchecked")
+	public static List<LeaveRequest> findAll() {
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
         query = session.getNamedQuery("LeaveRequest.findAll");
@@ -31,7 +35,20 @@ public class LeaveRequestFactory {
         return leaveRequests;
     }
 
-    public static List<LeaveRequest> findById(Integer leaveId) {
+    @SuppressWarnings("unchecked")
+	public static List<LeaveRequest> findByEmployeeId(Integer employeeId){
+     	session = OpenHRSessionFactory.getInstance().getCurrentSession();
+        session.beginTransaction();
+        query = session.getNamedQuery("LeaveRequest.findByEmployeeId");
+        query.setInteger(0, employeeId);
+         leaveRequests = query.list();
+        session.getTransaction().commit();
+        return leaveRequests;
+    	
+    }
+    
+    @SuppressWarnings("unchecked")
+	public static List<LeaveRequest> findById(Integer leaveId) {
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
         query = session.getNamedQuery("LeaveRequest.findById");
@@ -42,7 +59,8 @@ public class LeaveRequestFactory {
         return leaveRequests;
     }
 
-    public static List<LeaveRequest> findByLeaveDate(Date leaveDate) {
+    @SuppressWarnings("unchecked")
+	public static List<LeaveRequest> findByLeaveDate(Date leaveDate) {
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
         query = session.getNamedQuery("LeaveRequest.findByLeaveDate");
@@ -53,7 +71,8 @@ public class LeaveRequestFactory {
         return leaveRequests;
     }
 
-    public static List<LeaveRequest> findByReturnDate(Date returnDate) {
+    @SuppressWarnings("unchecked")
+	public static List<LeaveRequest> findByReturnDate(Date returnDate) {
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
         query = session.getNamedQuery("LeaveRequest.findByReturnDate");
@@ -64,7 +83,8 @@ public class LeaveRequestFactory {
         return leaveRequests;
     } 
     
-    public static List<LeaveRequest> findByStatus(Integer status) {
+    @SuppressWarnings("unchecked")
+	public static List<LeaveRequest> findByStatus(Integer status) {
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
         query = session.getNamedQuery("LeaveRequest.findByStatus");
@@ -75,7 +95,8 @@ public class LeaveRequestFactory {
         return leaveRequests;
     }
     
-    public static List<LeaveRequest> findByNoOfDays(Integer noOfDays) {
+    @SuppressWarnings("unchecked")
+	public static List<LeaveRequest> findByNoOfDays(Integer noOfDays) {
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
         query = session.getNamedQuery("LeaveRequest.findByNoOfDays");
@@ -125,7 +146,7 @@ public class LeaveRequestFactory {
         boolean done = false;
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
-
+         
         try {
             LeaveRequest leaveRequest = (LeaveRequest)session.get(LeaveRequest.class, l.getId());
             leaveRequest.setLeaveTypeId(l.getLeaveTypeId());

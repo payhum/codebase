@@ -57,16 +57,11 @@ INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`s
  (13,'MODETH-0013','Abera','Girma','Lemma','Female','2012-08-02 00:00:00','2012-08-02 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',1,1,'N9'),
  (14,'MODETH-0014','James','Gasolin','Chant','Male','1940-08-05 23:44:45','2012-08-06 00:00:00',2,'employees.bmp','ACTIVE',1,'true',1,1,'N10'),
  (15,'MODETH-0015','asdfasd','fasdf','asdfadsf','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',1,'/data/photo/Koala.jpg','ACTIVE',1,'true',1,1,'N11'),
- (16,'MODETH-0016','asdf','dsdd','ddd','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',1,2,'N12'),
- (17,'MODETH-0017','ssxdfere','adfa','zxcavdfadsf','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',1,'/data/photo/Tulips.jpg','ACTIVE',1,'true',1,2,'N13'),
- (18,'MODETH-0018','Asdfs','asdf','asdfwerwer','Male','1989-02-07 00:00:00','2012-08-10 00:00:00',1,'/data/photo/placeholder-pic.png','IN ACTIVE',1,'true',2,2,'N14'),
- (19,'MODETH-0019','Mesay1','Solomon','Solomon','Male','1980-01-01 00:00:00','2012-08-10 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',2,2,'N15');
-INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`companyId`,`empNationalID`) VALUES 
- (20,'MODETH-0020','Biruk','Abebe','Degu','Male','1975-02-02 00:00:00','2012-08-10 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',0,2,'N16'),
- (21,'MODETH-0021','xxsd','wer','qwewqe','Male','2012-08-11 00:00:00','2012-08-11 00:00:00',2,'employees.bmp','ACTIVE',1,'true',0,2,'N17'),
- (22,'MODETH-0022','James','Smith','Joshwa','Male','2012-08-20 00:00:00','2012-08-20 00:00:00',1,'movie-poster.jpg','ACTIVE',1,'true',0,2,'N18'),
- (23,'MODETH-0023','Selam','Haile','Mule','Male','1960-01-28 00:00:00','2012-09-13 00:00:00',5,'Penguins.jpg','ACTIVE',1,'false',1,2,'N19'),
- (24,'MODETH-0024','Mikias','Mikias','Mikias','Male','1969-10-14 00:00:00','2012-09-25 00:00:00',6,'/data/photo/placeholder-pic.png','IN ACTIVE',1,'false',1,2,'N20');
+ (16,'MODETH-0016','asdf','dsdd','ddd','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',1,1,'N12'),
+ (17,'MODETH-0017','ssxdfere','adfa','zxcavdfadsf','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',1,'/data/photo/Tulips.jpg','ACTIVE',1,'true',1,1,'N13'),
+ (18,'MODETH-0018','Asdfs','asdf','asdfwerwer','Male','1989-02-07 00:00:00','2012-08-10 00:00:00',1,'/data/photo/placeholder-pic.png','IN ACTIVE',1,'true',2,1,'N14'),
+ (19,'MODETH-0019','Mesay1','Solomon','Solomon','Male','1980-01-01 00:00:00','2012-08-10 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',2,1,'N15'),
+ (20,'MODETH-0020','Biruk','Abebe','Degu','Male','1975-02-02 00:00:00','2012-08-10 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',0,1,'N16');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 
 --
@@ -77,8 +72,7 @@ INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`s
 INSERT INTO `benefit` (`id`,`typeId`,`amount`,`employeeId`,`version`) VALUES 
  (1,5,1500,3,1),
  (2,5,1000,2,1),
- (3,4,700,3,1),
- (4,4,1500,24,1);
+ (3,4,700,3,1);
 /*!40000 ALTER TABLE `benefit` ENABLE KEYS */;
 
 --
@@ -144,39 +138,79 @@ INSERT INTO `users` (`id`,`username`,`password`,`employeeId`,`roleId`,`version`)
 -- Dumping data for table emp_payroll_view
 --
 /*!40000 ALTER TABLE `emp_payroll_view` DISABLE KEYS */;
+INSERT INTO `emp_payroll_view` (`id`, `employeeId`, `FULL_NAME`, `baseSalary`, `accomodationType`,`bonus`,`allowances`) VALUES
+ (1,2,'JohnBWin',30000000,0,4000000,50000);
 INSERT INTO `emp_payroll_view` (`id`, `employeeId`, `FULL_NAME`, `baseSalary`, `accomodationType`) VALUES
-(1,2,'JohnBWin',2000000,1),
-(2,3,'Desta',2000000,0);
+ (2,3,'Desta',2000000,0),
+ (3,4,'AMAN_DEKSISO',3000000,1),
+ (4,5,'New_Employee',2500000,1),
+ (5,6,'Abebe',1500000,1),
+ (6,7,'JamesSmith',40000000,1),
+ (7,8,'HaileGebre',3500000,0),
+ (8,12,'AndersonNeyo',2346777555,0),
+ (9,13,'AberaGirma',33300000,0),
+ (10,14,'JamesGasolin',45000000,1),
+ (11,15,'asdfasd',1000000,1),
+ (12,16,'asdf', 200000,0),
+ (13,17,'ssxdfere',12312312,1),
+ (14,18,'Asdfs',45643545,0),
+ (15,19,'Mesay1Solomon',12312311,1),
+ (16,20,'BirukAbebe',1000000,1);
 /*!40000 ALTER TABLE `emp_payroll_view` ENABLE KEYS */;
 
+
+--
+-- Dumping data for table exemptionstype
+--
+/*!40000 ALTER TABLE `exemptionstype` DISABLE KEYS */;
+INSERT INTO `exemptionstype` (`id`, `name`, `description`, `version`) VALUES
+(1, 'Supporting Spouse', 'Supporting Spouse', 1),
+(2, 'Children', 'Children', 1),
+(3, 'Basic Allowance', 'Basic Allowance', 1),
+(4, 'Basic Allowance Percentage', 'Allowance Percentage', 1),
+(5, 'Basic Allowance Limit', 'Basic Allowance Limit', 1);
+/*!40000 ALTER TABLE `exemptionstype` ENABLE KEYS */;
+
+
+--
+-- Dumping data for table deductiontype
+--
+/*!40000 ALTER TABLE `deductiontype` DISABLE KEYS */;
+INSERT INTO `deductiontype` (`id`, `name`, `description`, `version`) VALUES
+(1, 'Self Life Insurance', 'Life Insurance of Self', 1),
+(2, 'Spouse Insurance', 'Life Insurance of Spouse', 1),
+(3, 'Life Insurance', 'self and spouse insurance', 1),
+(4, 'Donation', 'Donation to Charity', 1),
+(5, 'Employee Social Security', 'Social Security', 1);
+/*!40000 ALTER TABLE `deductiontype` ENABLE KEYS */;
 
 --
 -- Dumping data for table deduction_done
 --
 /*!40000 ALTER TABLE `deduction_done` DISABLE KEYS */;
-INSERT INTO `deduction_done` (`id`, `employeeId`, `type`, `amount`) VALUES
-(1,2,2,50000),
-(2,2,4,10000),
-(3,3,4,10000);
+INSERT INTO `deduction_done` (`id`, `payrollId`, `type`, `amount`) VALUES
+(1,1,2,50000),
+(2,1,4,10000),
+(3,1,5,10000);
 /*!40000 ALTER TABLE `deduction_done` ENABLE KEYS */;
 
 --
 -- Dumping data for table exemptions_done
 --
 /*!40000 ALTER TABLE `exemptions_done` DISABLE KEYS */;
-INSERT INTO `exemptions_done` (`id`, `employeeId`, `type`, `amount`) VALUES
-(1,2,0,20000),
-(2,2,0,10000),
-(3,3,2,10000);
+INSERT INTO `exemptions_done` (`id`, `payrollId`, `type`, `amount`) VALUES
+(1,1,1,20000),
+(2,1,2,10000),
+(3,1,3,10000);
 /*!40000 ALTER TABLE `exemptions_done` ENABLE KEYS */;
 
 --
 -- Dumping data for table licenses
 --
 /*!40000 ALTER TABLE `licenses` DISABLE KEYS */;
-INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`) VALUES
-(1,'2012-08-22 16:22:59','2013-08-22 16:22:59',1,1),
-(2,'2012-08-22 16:22:59','2014-08-22 16:22:59',2,1);
+INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`,`licensekey`) VALUES
+(1,'2012-08-22 16:22:59','2013-08-22 16:22:59',1,1,'123'),
+(2,'2012-08-22 16:22:59','2014-08-22 16:22:59',2,1,'123');
 /*!40000 ALTER TABLE `licenses` ENABLE KEYS */;
 
 --
@@ -184,25 +218,41 @@ INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`) VALUES
 --
 /*!40000 ALTER TABLE `employee_account` DISABLE KEYS */;
 INSERT INTO `employee_account` (`id`, `employeeId`, `bankName`, `bankBranch`,`accountNo`) VALUES
-(1,2,'First Bank','J Colony','12345'),
-(2,3,'Yes Bank','Chruch Street','53421'),
-(3,4,'Citi Bank','Marks Road','00921312');
+ (1,2,'First Bank','J Colony','12345'),
+ (2,3,'Yes Bank','Chruch Street','53421'),
+ (3,4,'Citi Bank','Marks Road','00921312'),
+ (4,5,'First Bank','J Colony','12345'),
+ (5,6,'First Bank','J Colony','3244'),
+ (6,7,'First Bank','J Colony','234'),
+ (7,8,'First Bank','J Colony','34534'),
+ (8,12,'First Bank','J Colony','45645'),
+ (9,13,'First Bank','J Colony','2342'),
+ (10,14,'First Bank','J Colony','45654'),
+ (11,15,'First Bank','J Colony','231'),
+ (12,16,'First Bank','J Colony','2342'),
+ (13,17,'First Bank','J Colony','12312'),
+ (14,18,'First Bank','J Colony','23424'),
+ (15,19,'First Bank','J Colony','45456'),
+ (16,20,'Yes Bank','J Colony','43534');
 /*!40000 ALTER TABLE `employee_account` ENABLE KEYS */;
 
 --
 -- Dumping data for table deductions_decl
 --
 /*!40000 ALTER TABLE `deduction_decl` DISABLE KEYS */;
-INSERT INTO `deduction_decl` (`id`, `employeeId`, `type`, `amount`) VALUES
-(1,2,2,50000),
-(2,2,4,10000);
+INSERT INTO `deduction_decl` (`id`, `payrollId`, `type`, `amount`) VALUES
+(1,1,1,50000),
+(2,1,2,10000);
 /*!40000 ALTER TABLE `deduction_decl` ENABLE KEYS */;
 
+
 --
--- Dumping data for table exemptionstype
+-- Dumping data for table emp_dependents
 --
-/*!40000 ALTER TABLE `exemptionstype` DISABLE KEYS */;
-INSERT INTO `exemptionstype` (`id`, `name`, `description`, `version`) VALUES
-(2, 'Supporting Spouse', 'Supporting Spouse', 1),
-(3, 'Children', 'Children', 1);
-/*!40000 ALTER TABLE `exemptionstype` ENABLE KEYS */;
+/*!40000 ALTER TABLE `emp_dependents` DISABLE KEYS */;
+INSERT INTO `emp_dependents` (`id`, `employeeId`, `name`, `age`, `occupationType`, `depType`) VALUES
+(1,2,'Bob',5,0,1),
+(2,2,'Mary',15,0,1),
+(3,2,'Boe',9,0,1),
+(4,2,'Wily',35,1,0);
+/*!40000 ALTER TABLE `emp_dependents` ENABLE KEYS */;

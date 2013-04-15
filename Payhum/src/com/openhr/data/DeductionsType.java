@@ -19,8 +19,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DeductionsType.findAll", query = "SELECT d FROM DeductionsType d"),
-    @NamedQuery(name = "DeductionsType.findById", query = "SELECT d FROM DeductionsType d WHERE d.id = :id"),
-    @NamedQuery(name = "DeductionsType.findByName", query = "SELECT d FROM DeductionsType d WHERE d.name = :name")})
+    @NamedQuery(name = "DeductionsType.findById", query = "SELECT d FROM DeductionsType d WHERE d.id = ?"),
+    @NamedQuery(name = "DeductionsType.findByName", query = "SELECT d FROM DeductionsType d WHERE d.name = ?")})
 public class DeductionsType implements Serializable {
     
     private static final long serialVersionUID = 1L;

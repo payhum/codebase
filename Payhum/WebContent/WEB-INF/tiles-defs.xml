@@ -149,6 +149,10 @@
 	<definition name="leaveapp.form" extends="hrHome">
 		<put name="body" value="/pages/hr/leave/approve.jsp" />
 	</definition>
+	
+	<definition name="overtime.form" extends="hrHome">
+		<put name="body" value="/pages/hr/leave/overtimeapprove.jsp" />
+	</definition>
 
 	<definition name="leavetype.form" extends="hrHome">
 		<put name="body" value="/pages/hr/leavetype/index.jsp" />

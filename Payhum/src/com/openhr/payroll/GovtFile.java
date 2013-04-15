@@ -1,6 +1,7 @@
 package com.openhr.payroll;
 
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,7 +32,8 @@ public class GovtFile extends Action {
 		Integer compId = 1;
 		List<Company> comps = CompanyFactory.findById(compId);
 		String compName = comps.get(0).getName();
-
+		compName = compName.replace(" ", "_");
+		
 		Date now = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
@@ -56,8 +58,8 @@ public class GovtFile extends Action {
 			empPayStr.append(COMMA);
 			empPayStr.append(compPay.getEmpNationalID());
 			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getTaxAmount());
-			empPayStr.append(COMMA);
+			empPayStr.append(new DecimalFormat("MMK ###.##").format(compPay.getTaxAmount()));
+			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);
 		}

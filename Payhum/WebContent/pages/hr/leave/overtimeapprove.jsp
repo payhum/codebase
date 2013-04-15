@@ -1,9 +1,7 @@
 <%@include file="../../common/jspHeader.jsp" %>
 <h2 class="legend">Approve Leave form</h2>
 
-<div id="grid">
-		
-</div>
+<div id="grid"> </div>
 
 <script>
 
@@ -11,18 +9,18 @@
 		var leaveApprovalModel = kendo.data.Model.define({
         	id: "id",            
             fields: {
-            	leaveDate : {
-            		type : "date"
-            	},
-            	returnDate : {
-            		type : "date"
-            	},
-            	noOfDays : {
-            		type : "number"
-            	},
-        		status : {
-        			type : "string"
-        		},
+            	overTimeDate : {
+              		type : "date"
+              	},
+              	 
+              	noOfHours : {
+              		type : "String"
+              	},
+              	
+              	status : {
+          			type : "string"
+          		},
+          		 
                 employeeId:{
         			defaultValue : {
         				id : 0,
@@ -43,17 +41,8 @@
         				},
         				photo : "",
         			}
-        		},
-        		leaveTypeId: {
-                	defaultValue : {
-                		id:  0,
-                		name: "",
-                        dayCap: 0 
-                	}
-                },
-                description : {
-                	type : "string"
-                }
+        		}
+        		 
             }
         });		
 		
@@ -61,7 +50,7 @@
 			dataSource : {
 				transport : {
 					read : {
-                        url : "<%=request.getContextPath() + "/do/ReadRequestedLeaveAction"%>",
+                        url : "<%=request.getContextPath() + "/do/ReadOverTimeInfo"%>",
                         dataType : 'json',
                         cache : false
                     },
@@ -84,13 +73,10 @@
 			columns: [
 				{ field : "employeeId", title : "Employee Id",  editor : employeeDropDownEditor, template: '#=id ? employeeId.id: ""#', width : 100 },
 				{ title : "Full name",template: '#=employeeId ? employeeId.firstname +" "+employeeId.middlename +" "+employeeId.lastname: ""#', width : 180 },
-				{ field : "leaveTypeId", title : "Leave Type",  editor : leaveTypeDropDownEditor, template: '#=leaveTypeId ? leaveTypeId.name: ""#', width : 120 },
-				{ field : "leaveDate", title : "Leave date", template : "#= kendo.toString(new Date(leaveDate), 'MMM, dd yyyy') #", width : 100  },
-	            { field : "returnDate", title : "Return date", template : "#= kendo.toString(new Date(returnDate) , 'MMM, dd yyyy') #", width : 100 },
-	            { field : "noOfDays", title : "No of days", width : 100 },
-	            { field : "description", title : "Description", width : 100 },
-	            { field : "status", title : "Status", template : "#= status == 0 ? 'New' : 'In Process' #", width : 100 },
-	            {
+ 				{ field : "overTimeDate", title : "RequestedOnDate", template : "#= kendo.toString(new Date(overTimeDate), 'MMM, dd yyyy') #", width : 100  },
+ 	            { field : "noOfHours", title : "No of days", width : 100 },
+ 	            { field : "status", title : "Status", template : "#= status == 0 ? 'Pending' : 'Approved' #", width : 100 },
+              	{
                     command: [{name : "approve", text: "Aprrove", className: "approve"}, {name : "reject", text : "Reject", className: "approve" }], width:200, filterable:false
                 }
             ], 
@@ -136,19 +122,17 @@
 		
 		 $("#grid").delegate(".approve", "click", function(e) {
  			employeeId = $('.k-state-selected').find('td').eq(0).text();
- 			leaveDate = $('.k-state-selected').find('td').eq(3).text();
-        	leaveId = employeeId;
-       		approverId = "<%=(request.getSession().getAttribute("employeeId")!=null ? request.getSession().getAttribute("employeeId") : "")%>";
-        	approvedByDate = new Date().getTime(); 
-       		approvalData = JSON.stringify({"approvedbydate" : approvedByDate, "approverId" : approverId, "requestId" : leaveId, "leaveDate" : leaveDate}); 
+ 			requestedDate = $('.k-state-selected').find('td').eq(2).text();
+        	approverId = "<%=(request.getSession().getAttribute("employeeId")!=null ? request.getSession().getAttribute("employeeId") : "")%>";
+        	approveOverTime = JSON.stringify({"approverId" : approverId, "requestedDate" : requestedDate, "employeeId" : employeeId }); 
         	 
        		if(approverId!=''){
  	       		 $.ajax({
-	       		  	url 		: "<%=request.getContextPath() + "/do/ApproveLeaveAction"%>",
+	       		  	url 		: "<%=request.getContextPath() + "/do/ApproveOverTimeAction"%>",
 	       			type 		: 'POST',
 					dataType 	: 'json',
 					contentType : 'application/json; charset=utf-8',
-					data 		: approvalData,
+					data 		: approveOverTime,
 					success 	: function(){
 						$("#grid").empty();
 						getLeaveRequests();

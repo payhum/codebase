@@ -93,11 +93,30 @@ public class LicenseFactory implements Serializable {
 
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-
+		e.formLicenseKey();
 		session.save(e);
 		session.getTransaction().commit();
 		done = true;
 
 		return done;
 	}
+	
+	public static boolean update(Licenses e) throws Exception {
+		boolean done = false;
+
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		
+		Licenses lis = (Licenses) session.get(Licenses.class, e.getId());
+
+		lis.setCompanyId(e.getCompanyId());
+		lis.setActive(e.getActive());
+		
+		session.update(lis);
+		session.getTransaction().commit();
+		done = true;
+
+		return done;
+	}
+
 }
