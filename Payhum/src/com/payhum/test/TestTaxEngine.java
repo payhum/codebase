@@ -1,6 +1,5 @@
 package com.payhum.test;
 
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,18 +7,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.openhr.company.Company;
-import com.openhr.company.LicenseValidator;
-import com.openhr.data.DependentType;
+import com.openhr.data.DeductionsType;
 import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
-import com.openhr.data.OccupationType;
+import com.openhr.data.Exemptionstype;
 import com.openhr.data.ResidentType;
-import com.openhr.taxengine.DeductionType;
+import com.openhr.factories.DeductionFactory;
 import com.openhr.taxengine.DeductionsDone;
-import com.openhr.taxengine.ExemptionType;
 import com.openhr.taxengine.ExemptionsDone;
 import com.openhr.taxengine.TaxEngine;
+import com.openhr.taxengine.impl.BaseDC;
+import com.openhr.taxengine.impl.BaseEC;
 
 public class TestTaxEngine {
 	public static void main(String[] args) {
@@ -32,10 +31,10 @@ public class TestTaxEngine {
 		emp.setResidentType(ResidentType.LOCAL.getValue());
 		emp.setMarried("true");
 
-		EmpDependents dep1 = new EmpDependents(1, emp, 45, "T", OccupationType.NONE.getValue(), DependentType.SPOUSE.getValue());
-		EmpDependents dep2 = new EmpDependents(2, emp, 5, "E", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
-		EmpDependents dep3 = new EmpDependents(3, emp, 15, "F", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
-		EmpDependents dep4 = new EmpDependents(4, emp, 12, "G", OccupationType.STUDENT.getValue(), DependentType.CHILD.getValue());
+		EmpDependents dep1 = new EmpDependents(1, emp, 45, "T", BaseEC.NONE, BaseEC.SPOUSE);
+		EmpDependents dep2 = new EmpDependents(2, emp, 5, "E", BaseEC.STUDENT, BaseEC.CHILD);
+		EmpDependents dep3 = new EmpDependents(3, emp, 15, "F", BaseEC.STUDENT, BaseEC.CHILD);
+		EmpDependents dep4 = new EmpDependents(4, emp, 12, "G", BaseEC.STUDENT, BaseEC.CHILD);
 
 		List<EmpDependents> deps = new ArrayList<EmpDependents>();
 		deps.add(dep1);
@@ -69,7 +68,7 @@ public class TestTaxEngine {
 			List<EmpDependents> dependents = emp.getDependents();
 			int noOfChildren = 0;
 			for(EmpDependents dep : dependents ) {
-				if(dep.getType() == DependentType.CHILD) {
+				if(dep.getType().compareTo(BaseEC.CHILD) == 0) {
 					noOfChildren++;
 				}
 			}
@@ -89,6 +88,8 @@ public class TestTaxEngine {
 
 			List<DeductionsDone> ddone = empPay.getDeductionsDone();
 			List<ExemptionsDone> edone = empPay.getExemptionsDone();
+			List<DeductionsType> deductionsTypes = DeductionFactory.findAll();
+			List<Exemptionstype> exemptionsTypes = DeductionFactory.findAllExemptionTypes();
 			
 			Double suppSpouse = 0D;
 			Double children = 0D;
@@ -96,17 +97,17 @@ public class TestTaxEngine {
 			Double basicAllow = 0D;
 			
 			for(DeductionsDone dd : ddone) {
-				if(dd.getType().getId() == DeductionType.EMPLOYEE_SOCIAL_SECURITY.getValue()) {
+				if(dd.getType().getId().compareTo(getDeductionsType(deductionsTypes, BaseDC.EMPLOYEE_SS).getId()) == 0) {
 					empSS = dd.getAmount();
 				}
 			}
 			
 			for(ExemptionsDone ed : edone) {
-				if(ed.getType().getId() == ExemptionType.SUPPORTING_SPOUSE.getValue()) {
+				if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, BaseEC.SUPPORTING_SPOUSE).getId()) == 0) {
 					suppSpouse = ed.getAmount();
-				} else if(ed.getType().getId() == ExemptionType.CHILDREN.getValue()) {
+				} else if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, BaseEC.CHILDREN).getId()) == 0) {
 					children = ed.getAmount();
-				} else if(ed.getType().getId() == ExemptionType.BASIC_ALLOWANCE.getValue()) {
+				} else if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, BaseEC.BASIC_ALLOWANCE).getId()) == 0) {
 					basicAllow = ed.getAmount();
 				}
 			}
@@ -122,5 +123,25 @@ public class TestTaxEngine {
 			System.out.println("TAXABLE INCOME - " + new DecimalFormat("MMK ###,###.###").format(empPay.getTaxableIncome()));
 			System.out.println("TAX AMOUNT - " + new DecimalFormat("MMK ###,###.###").format(empPay.getTaxAmount()));
 		}
+	}
+	
+	private static DeductionsType getDeductionsType(
+			List<DeductionsType> deductionsTypes, String typeStr) {
+		for(DeductionsType dType: deductionsTypes) {
+			if(dType.getName().equalsIgnoreCase(typeStr))
+				return dType;
+		}
+		
+		return null;
+	}
+	
+	private static Exemptionstype getExemptionsType(
+			List<Exemptionstype> eTypes, String typeStr) {
+		for(Exemptionstype eType: eTypes) {
+			if(eType.getName().equalsIgnoreCase(typeStr))
+				return eType;
+		}
+		
+		return null;
 	}
 }

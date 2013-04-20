@@ -519,10 +519,11 @@ CREATE TABLE paycycle
 --
 -- Definition of table `overtime_payrate`
 -- 
+DROP TABLE IF EXISTS `overtime_payrate`;
 create table `overtime_payrate`
 (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(30) NOT NULL,
+  `day_group` varchar(30) NOT NULL,
   `grosspay_percent` double NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -530,6 +531,7 @@ create table `overtime_payrate`
 --
 -- Definition of table `overtime`
 -- 
+DROP TABLE IF EXISTS `overtime`;
 create table `overtime`
 (
   `id` int (10) unsigned NOT NULL auto_increment,
@@ -547,6 +549,7 @@ create table `overtime`
 --
 -- Definition of table `overtime`
 -- 
+DROP TABLE IF EXISTS `taxrates`;
 create table `taxrates`
 (
   `id` int(10) unsigned NOT NULL auto_increment,

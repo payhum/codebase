@@ -138,7 +138,7 @@ input[type="submit"],input[type="button"] {
 }*/
 
 
-input[type="button"],input[type="submit"] {
+input[type="button"],input[type="submit"],input[type="reset"] {
 	padding: 4px;
 	font-family: Tahoma;
 	font-size: 11px;
@@ -146,7 +146,7 @@ input[type="button"],input[type="submit"] {
 	font-weight: bold;
 }
 
-input[type="button"]:hover,input[type="submit"]:hover {
+input[type="button"]:hover,input[type="submit"],input[type="reset"]:hover {
 	cursor: pointer;
 }
 

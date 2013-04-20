@@ -7,10 +7,14 @@ import org.hibernate.Session;
 
 import com.openhr.data.DeductionsType;
 import com.openhr.data.Employee;
+import com.openhr.data.EmployeePayroll;
+import com.openhr.data.Exemptionstype;
 import com.openhr.data.Position;
 import com.openhr.data.Roles;
 import com.openhr.data.Users;
 import com.openhr.factories.common.OpenHRSessionFactory;
+import com.openhr.taxengine.DeductionsDeclared;
+import com.openhr.taxengine.DeductionsDone;
 
 
 public class DeductionFactory {
@@ -19,6 +23,7 @@ public class DeductionFactory {
 	private static Session session;
 	private static Query query;
 	private static List<DeductionsType> decType;
+	private static List<Exemptionstype> exmType;
 	public DeductionFactory(){
 		
 	}
@@ -31,6 +36,16 @@ public class DeductionFactory {
 		session.getTransaction().commit();
 
 		return decType;
+	}
+	
+	public static List<Exemptionstype> findAllExemptionTypes() {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Exemptionstype.findAll");
+		exmType = query.list();
+		session.getTransaction().commit();
+
+		return exmType;
 	}
 	
     public static boolean checkAval(DeductionsType dt) {
@@ -51,7 +66,23 @@ public class DeductionFactory {
         
     }
     
-    
+    public static boolean checkDeductionDeclare(DeductionsType dt) {
+        boolean done = false;
+
+        session = OpenHRSessionFactory.getInstance().getCurrentSession();
+        session.beginTransaction();
+        query = session.getNamedQuery("DeductionsDeclared.findType");
+        query.setParameter(0, dt);
+      if(query.list().size()>0)
+    	  
+      {
+    	  done=true;
+    	  
+      }
+        session.getTransaction().commit();
+        return done;
+        
+    }
     public static boolean insert(DeductionsType dt) {
         boolean done = false;
 
@@ -153,5 +184,57 @@ public class DeductionFactory {
         return done;
     }
 
+    public static boolean insertDeducDec(DeductionsDeclared dt) {
+        boolean done = false;
+
+        session = OpenHRSessionFactory.getInstance().getCurrentSession();
+        session.beginTransaction();
+        try { 
+        	session.save(dt);            
+            session.getTransaction().commit();
+            done = true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }finally{
+        	
+        }
+        return done;
+        
+    }
+	public  static List<DeductionsDeclared> deductionsDecl(Integer payrollId)
+			throws Exception {
+		EmployeePayroll ePay = new EmployeePayroll();
+		ePay.setId(payrollId);
+		Session session1 = OpenHRSessionFactory.getInstance().openSession();
+		session1.beginTransaction();
+		query = session1.getNamedQuery("DeductionsDeclared.find");
+		query.setParameter(0, ePay);
+		List<DeductionsDeclared> empsum2 = query.list();
+
+		session1.getTransaction().commit();
+        session1.close();
+		return empsum2;
+	}
+	
+	
+	
+    public static boolean deleteDeducDec(Integer usrs) {
+        boolean done = false;
+        session = OpenHRSessionFactory.getInstance().getCurrentSession();
+        session.beginTransaction();
+        try {
+        	DeductionsDeclared dcr = (DeductionsDeclared) session.get(DeductionsDeclared.class, usrs);
+            session.delete(dcr);
+            session.flush();
+            session.getTransaction().commit();
+            done = true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }finally{
+        	
+        }
+        return done;
+    }
+	
 	
 }

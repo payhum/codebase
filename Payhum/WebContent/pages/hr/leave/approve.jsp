@@ -91,7 +91,7 @@
 	            { field : "description", title : "Description", width : 100 },
 	            { field : "status", title : "Status", template : "#= status == 0 ? 'New' : 'In Process' #", width : 100 },
 	            {
-                    command: [{name : "approve", text: "Aprrove", className: "approve"}, {name : "reject", text : "Reject", className: "approve" }], width:200, filterable:false
+                    command: [{name : "approve", text: "Approve", className: "approve"}, {name : "reject", text : "Reject", className: "approve" }], width:200, filterable:false
                 }
             ], 
             sortable: true,

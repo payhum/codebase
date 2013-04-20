@@ -73,11 +73,11 @@
 			columns: [
 				{ field : "employeeId", title : "Employee Id",  editor : employeeDropDownEditor, template: '#=id ? employeeId.id: ""#', width : 100 },
 				{ title : "Full name",template: '#=employeeId ? employeeId.firstname +" "+employeeId.middlename +" "+employeeId.lastname: ""#', width : 180 },
- 				{ field : "overTimeDate", title : "RequestedOnDate", template : "#= kendo.toString(new Date(overTimeDate), 'MMM, dd yyyy') #", width : 100  },
- 	            { field : "noOfHours", title : "No of days", width : 100 },
+ 				{ field : "overTimeDate", title : "Requested Date", template : "#= kendo.toString(new Date(overTimeDate), 'MMM, dd yyyy') #", width : 100  },
+ 	            { field : "noOfHours", title : "Hours", width : 100 },
  	            { field : "status", title : "Status", template : "#= status == 0 ? 'Pending' : 'Approved' #", width : 100 },
               	{
-                    command: [{name : "approve", text: "Aprrove", className: "approve"}, {name : "reject", text : "Reject", className: "approve" }], width:200, filterable:false
+                    command: [{name : "approve", text: "Approve", className: "approve"}, {name : "reject", text : "Reject", className: "approve" }], width:200, filterable:false
                 }
             ], 
             sortable: true,

@@ -11,13 +11,21 @@
 		</div>
 		<ul class="gradient_menu gradient95">
 			<li class="gradient_menuitem gradient31 first_item"><a
-				href="<%=request.getContextPath() + "/do/Employee"%>"> Employee
-					List</a></li>
+				href="<%=request.getContextPath() + "/do/Employee"%>">Employees</a>
+			</li>
+			
+			<li class="gradient_menuitem gradient31 first_item"><a
+				href="<%=request.getContextPath() + "/do/holidays"%>">Holidays</a>
+			</li>
+			
+			<li class="gradient_menuitem gradient31 last_item"><a
+				href="<%=request.getContextPath() + "/do/Position"%>"> Job Titles</a>
+			</li>
 					
 			<li class="gradient_menuitem gradient31 first_item"><a
-				href="<%=request.getContextPath() + "/do/ApproveOverTime"%>">Over Time</a>
+				href="<%=request.getContextPath() + "/do/ApproveOverTime"%>">Overtime</a>
 			</li>
-
+			
 			<li class="topitem spaced_li">
 				<div class="buttonbg gradient_button gradient27"
 					style="width: auto;">
@@ -57,13 +65,6 @@
 							Benefit</a></li>
 				</ul>
 			</li>
-
-
-
-			<li class="gradient_menuitem gradient31 last_item"><a
-				href="<%=request.getContextPath() + "/do/Position"%>"> Job
-					Titles</a></li>
-
 
 
 			<!--<li class="topitem spaced_li">

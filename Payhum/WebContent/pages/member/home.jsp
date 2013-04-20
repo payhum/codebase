@@ -3,9 +3,11 @@
 	<ul>
 
 		<li class="k-state-active">Notices</li>
-		<li >Leave</li>
+		<li>Holidays</li>
+		<li>Leave</li>
 		<li>Overtime</li>
-		<li>Loan</li>		
+		<li>Deductions Declaration</li>	
+	    
 	</ul>
 	
 	<div id="noticeBoard">
@@ -24,10 +26,13 @@
 	
 	
 	
+	<div id="deductions">
+		<tiles:insert page="../../pages/member/deductions/deductionsdecmember.jsp" />
+	</div>	
+
 	<div id="loan">
 		<tiles:insert page="../../pages/member/benefit/loan/index.jsp" />
 	</div>	
-
 </div>
 
 

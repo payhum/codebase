@@ -26,11 +26,11 @@
 				<div style="clear:both"></div><br/>
 			</div><br/><br/>
  			<div id="addLeaveDiv" class="displayClass">
- 					<span><label>LeaveFrom : &nbsp;&nbsp;</label></span>
-					<span><input type="text" name="leaveDate" id="leaveFrom" value="2012/07/10" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 					<span><label>LeaveFrom : &nbsp;&nbsp;</label></span>
-					<span><input type="text" name="returnDate" id="leaveTo" value="2012/08/11"/></span><br/><br/>
-					<span><label>LeaveType :&nbsp;&nbsp; </label></span>
+ 					<span><label>Leave From : &nbsp;&nbsp;</label></span>
+					<span><input type="text" name="leaveDate" id="leaveFrom" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 					<span><label>Leave To : &nbsp;&nbsp;</label></span>
+					<span><input type="text" name="returnDate" id="leaveTo" /></span><br/><br/>
+					<span><label>Leave Type :&nbsp;&nbsp; </label></span>
  					<span>
  						<input type="hidden" name="noOfDays" value="2"/>
  						<input type="hidden" name="employeeId" id="employeeId" />
@@ -38,7 +38,7 @@
 						<input type="hidden" name="userType" value="Employee"/>
 						<select name="leaveTypeId" id="TypeOfLeave"> </select>&nbsp;&nbsp;&nbsp;&nbsp;
   					</span>
- 					<span><label>LeaveDescription : &nbsp;&nbsp;</label></span>
+ 					<span><label>Description : &nbsp;&nbsp;</label></span>
 					<span><input type="textarea" style="width:130px !important;" name="description" id="description" /></span><br/><br/>
   					<div style="float:right;">
 	  					<span><input type="submit" id="addLeave" value="Apply"/></span>&nbsp;&nbsp;
@@ -155,11 +155,11 @@
   				},
   				columns: [
   					{ field : "employeeId", title : "Employee Id",  editor : employeeDropDownEditor, template: '#=id ? employeeId.id: ""#', width : 100 },
-  					{ title : "Full name",template: '#=employeeId ? employeeId.firstname +" "+employeeId.middlename +" "+employeeId.lastname: ""#', width : 180 },
+  					{ title : "Full Name",template: '#=employeeId ? employeeId.firstname +" "+employeeId.middlename +" "+employeeId.lastname: ""#', width : 180 },
   					{ field : "leaveTypeId", title : "Leave Type",  editor : leaveTypeDropDownEditor, template: '#=leaveTypeId ? leaveTypeId.name: ""#', width : 120 },
-  					{ field : "leaveDate", title : "Leave date", template : "#= kendo.toString(new Date(leaveDate), 'MMM, dd yyyy') #", width : 100  },
-  		            { field : "returnDate", title : "Return date", template : "#= kendo.toString(new Date(returnDate) , 'MMM, dd yyyy') #", width : 100 },
-  		            { field : "noOfDays", title : "No of days", width : 100 },
+  					{ field : "leaveDate", title : "Leave Date", template : "#= kendo.toString(new Date(leaveDate), 'MMM, dd yyyy') #", width : 100  },
+  		            { field : "returnDate", title : "Return Date", template : "#= kendo.toString(new Date(returnDate) , 'MMM, dd yyyy') #", width : 100 },
+  		            { field : "noOfDays", title : "No of Days", width : 100 },
   		            { field : "description", title : "Description", width : 100 },
   		            { field : "status", title : "Status", template : "#= status == 0 ? 'New' : 'Accepted' #", width : 100 },
    	            ], 
@@ -189,12 +189,18 @@
      		$('#employeeId').val(employeeId);
  	});
  	
-	$('#applyLeave').click(function(){
+	$('#applyLeave, #canceLeave').click(function(){
 		isDisplayed = $("#addLeaveDiv").hasClass("displayClass");
 		if(isDisplayed){
+			 $("#leaveFrom").val('');
+			 $("#leaveTo").val('');
+			 $("#description").val('');
 			 $("#addLeaveDiv").removeClass("displayClass");
 		}
 		else{
+			 $("#leaveFrom").val('');
+			 $("#leaveTo").val('');
+			 $("#description").val('');
 			$("#addLeaveDiv").addClass("displayClass");
 		}
  	});    
@@ -222,6 +228,10 @@
 			contentType : 'application/json; charset=utf-8',
 			data 		: leaveApply,
 			success     : function(){
+			    $("#leaveFrom").val('');
+				$("#leaveTo").val('');
+ 				$("#description").val('');
+ 			 		 
 				$("#addLeaveDiv").addClass("displayClass");
 				$("#grid").empty();
 				getEmployeeLeaves();
@@ -232,23 +242,28 @@
 	$("#deleteLeave").click(function(){
 		 employeeId = $(".k-state-selected").find('td').eq(0).text();
 		 leaveDate  = $(".k-state-selected").find('td').eq(3).text();
+		 status1 = $(".k-state-selected").find('td').eq(7).text();
 		 
  	  	 deleteLeaveAction = JSON.stringify({
 	   		"employeeId"	  : employeeId,
 	   		"leaveDate" 	  : leaveDate 
  	 	 }); 
-	    	
-	  	 $.ajax({
-	   		url 		: "<%=request.getContextPath() + "/do/DeleteLeaveApplication"%>",
-	    	type 		: 'POST',
-			dataType 	: 'json',
-			contentType : 'application/json; charset=utf-8',
-			data 		: deleteLeaveAction,
-			success     : function(){
- 				$("#grid").empty();
-				getEmployeeLeaves();
-			}
-	 	 });  
+	    if(status1 == "New"){	
+		  	 $.ajax({
+		   		url 		: "<%=request.getContextPath() + "/do/DeleteLeaveApplication"%>",
+		    	type 		: 'POST',
+				dataType 	: 'json',
+				contentType : 'application/json; charset=utf-8',
+				data 		: deleteLeaveAction,
+				success     : function(){
+	 				$("#grid").empty();
+					getEmployeeLeaves();
+				}
+		 	 }); 
+	    }
+	    else{
+	    	alert("Approved Leaves cannot be deleted.");
+ 	    }
  		 
   	});
 	

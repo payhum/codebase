@@ -7,16 +7,23 @@ import com.openhr.data.AccomodationType;
 
 public class TaxDetails {
 	
-	private Map<ExemptionType, Double> exemptionList;
+	public static final String SUPPORTING_SPOUSE = "SUPPORTING_SPOUSE";
+	public static final String CHILDREN = "CHILDREN";
+	public static final String BASIC_ALLOWANCE_PERCENTAGE = "BASIC_ALLOWANCE_PERCENTAGE";
+	public static final String BASIC_ALLOWANCE_LIMIT = "BASIC_ALLOWANCE_LIMIT";
+	public static final String DONATION = "DONATION";
+	public static final String EMPLOYEE_SOCIAL_SECURITY = "EMPLOYEE_SOCIAL_SECURITY";
+	
+	private Map<String, Double> exemptionList;
 	private Double limitForNoTax;
-	private Map<DeductionType, Double> deductionList;
+	private Map<String, Double> deductionList;
 	private Map<AccomodationType, Float> accomationPercentage;
 	private Float employerSSPercentage;
 	private Boolean employerSSDone;
 	
 	private TaxDetails() {
-		exemptionList = new HashMap<ExemptionType, Double>();
-		deductionList = new HashMap<DeductionType, Double>();
+		exemptionList = new HashMap<String, Double>();
+		deductionList = new HashMap<String, Double>();
 		accomationPercentage = new HashMap<AccomodationType, Float>();
 		employerSSDone = true;
 	}
@@ -39,15 +46,15 @@ public class TaxDetails {
 		return populateTestData();
 	}
 
-	public Double getExemption(ExemptionType type) {
-		if(exemptionList.containsKey(type)) {
-			return exemptionList.get(type);
+	public Double getExemption(String typeStr) {
+		if(exemptionList.containsKey(typeStr)) {
+			return exemptionList.get(typeStr);
 		}
 		
 		return 0D;
 	}
 
-	public Double getDeduction(DeductionType type) {
+	public Double getDeduction(String type) {
 		if(deductionList.containsKey(type)) {
 			return deductionList.get(type);
 		}
@@ -80,11 +87,11 @@ public class TaxDetails {
 		this.employerSSPercentage = employerSSPercentage;
 	}
 	
-	public void addExemption(ExemptionType type, Double amount) {
+	public void addExemption(String type, Double amount) {
 		exemptionList.put(type,  amount);
 	}
 	
-	public void addDeduction(DeductionType type, Double amount) {
+	public void addDeduction(String type, Double amount) {
 		deductionList.put(type,  amount);
 	}
 	
@@ -95,16 +102,16 @@ public class TaxDetails {
 	private static TaxDetails populateTestData() {
 		TaxDetails td = new TaxDetails();
 		
-		td.addDeduction(DeductionType.DONATION, 25D);
-		td.addDeduction(DeductionType.EMPLOYEE_SOCIAL_SECURITY, 1.5D);
+		td.addDeduction(DONATION, 25D);
+		td.addDeduction(EMPLOYEE_SOCIAL_SECURITY, 1.5D);
 		
-		td.addExemption(ExemptionType.BASIC_ALLOWANCE_LIMIT, 10000000D);
-		td.addExemption(ExemptionType.BASIC_ALLOWANCE_PERCENTAGE, 20D);
+		td.addExemption(BASIC_ALLOWANCE_LIMIT, 10000000D);
+		td.addExemption(BASIC_ALLOWANCE_PERCENTAGE, 20D);
 		
 		td.setLimitForNoTax(1440000D);
 		
-		td.addExemption(ExemptionType.CHILDREN, 200000D);
-		td.addExemption(ExemptionType.SUPPORTING_SPOUSE, 300000D);
+		td.addExemption(CHILDREN, 200000D);
+		td.addExemption(SUPPORTING_SPOUSE, 300000D);
 		
 		td.addAccomodationPercentage(AccomodationType.FREE_ACCOM_FROM_EMPLOYER_FULLY_FURNISHED, 12.5F);
 		td.addAccomodationPercentage(AccomodationType.FREE_ACCOM_FROM_EMPLOYER_NOT_FURNISHED, 10F);

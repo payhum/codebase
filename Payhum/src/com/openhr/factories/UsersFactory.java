@@ -181,13 +181,13 @@ public class UsersFactory {
 	
 	 public static List<Dtest>  findBy() {
 	       // session = OpenHRSessionFactory.getInstance().getCurrentSession();
-	        Session session = OpenHRSessionFactory.getInstance().openSession();
-	        session.beginTransaction();
-	        query = session.getNamedQuery("Dtest.findAll");
+	        Session session2 = OpenHRSessionFactory.getInstance().openSession();
+	        session2.beginTransaction();
+	        query = session2.getNamedQuery("Dtest.findAll");
 	        
 	        List<Dtest>   users1 = query.list();
-	        session.getTransaction().commit();
-	        
+	        session2.getTransaction().commit();
+	        session2.close();
 	        return users1;
 	    }
 	

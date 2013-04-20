@@ -44,18 +44,20 @@ public class ReadEmployeeAction extends Action {
 			List<Employee> employees = EmployeeFactory.findAll();
 			start=System.currentTimeMillis();
 			for (Employee emp : employees) {
-				System.out.println("Path to look photos for: "
+				/*System.out.println("Path to look photos for: "
 						+ getServlet().getServletContext().getRealPath(
-								emp.getPhoto()));
+								emp.getPhoto()));*/
 				File photo = new File(getServlet().getServletContext()
 						.getRealPath(emp.getPhoto()));
 				if (!photo.exists()) {
 					emp.setPhoto("/data/photo/placeholder-pic.png");
 				}
-				System.out.println("Birthdate " + new Date(emp.getBirthdate()));
+				//System.out.println("Birthdate " + new Date(emp.getBirthdate()));
 			}
 
 			result = JSONArray.fromObject(employees);
+			
+			
 			end=System.currentTimeMillis();
 			diff = end - start;
 		} catch (Exception e) {
@@ -63,6 +65,7 @@ public class ReadEmployeeAction extends Action {
 		}
 
 		System.out.println("It took " + diff +" milli seconds to read the results");
+		System.out.print(result.toString());
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		if(result == null) {

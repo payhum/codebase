@@ -1,104 +1,75 @@
 <div id="loanTabs">
-	<ul>
-		<li class="k-state-active">Make Request</li> 
-	</ul>
-
-	
-
+	 
 	<div>
 
 		<div class="k-content">
 	
-			<div class="legend">
-			
-				<div style="float:right">
-					<input type="submit" value="+New"/>
-					<input type="submit" value="-Delete"/>
-					<input type="submit" value="_,Edit"/>
-				</div>
-			
+			<div class="legend"> 
 				<div style="float:left">
-					<p>Your Loan History</p>
+					<p>Holidays List</p>
 				</div>
 				<div style="clear:both"></div>
-			</div>
+			</div><br/><br/>
 			
-			<table id="loansGrid">
-
-				<thead>
-					<tr>
-						<th data-field="requestDate">Requested On Date</th>
-						<th data-field="requestedLeavingDate">Request Benefit Type</th>
-						<th data-field="requestedReturningDate">Amount</th>
-						<th data-field="status">Status</th>
-						 <th data-field="approvedBy">Approved Date</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>11/07/2012</td>
-						<td>Overtime Payment</td>
-						<td>$ 250</td>
-						<td>Pending</td>
-						<td>-</td>
-					</tr>
-					<tr>
-						<td>11/07/2012</td>
-						<td>Transport Allowance</td>
-						<td>$ 150</td>
-						<td>Approved</td>
-						<td>13/01/2012</td>
-					</tr>
-
-
-				</tbody>
-			</table>
+			<div id="holidayListGrid"> </div>
 		</div>
 	</div>
 </div>
 <script>
+	function getHolidays(){
+			
+		var holidayModal = kendo.data.Model.define({
+	  	id: "id",            
+	      fields: {
+	      	date : {
+	      		type : "date"
+	      	},
+	        
+	      	name : {
+	  			type : "string"
+	  		},
+	  	 
+	      }
+	  });		
+		
+		$("#holidayListGrid").kendoGrid({
+			dataSource : {
+				transport : {
+					read : {
+	                  url : "<%=request.getContextPath() + "/do/ReadHolidays"%>",
+	                  dataType : 'json',
+	                  cache : false
+	              },
+	              parameterMap: function(options, operation) {
+	                  if (operation !== "read" && options.models) {
+	                  	$.each(options.models, function(){
+	                  		/*this.leaveDate = new Date(this.leaveDate);
+	                  		this.returnDate = new Date(this.returnDate);*/
+	                  	});
+	                      return JSON.stringify(options.models);
+	                  }
+	              }
+				},
+				schema : {
+					model :holidayModal
+				},
+				batch : true,
+	          pageSize : 10
+			},
+			columns: [
+					{ field : "date", title : "Holiday Date", template : "#= kendo.toString(new Date(date), 'MMM, dd yyyy') #", width : 50  },
+		            { field : "name", title : "Holiday Name", width : 50 },
+	          ], 
+	      sortable: true,
+	      scrollable: true,
+	      filterable : true,
+	      selectable : "row",
+	       pageable : true
+		});	
+	}
+
+
 	$(document).ready(function() {
-		$("#loanTabs").kendoTabStrip({
-			animation : {
-				open : {
-					effects : "fadeIn"
-				}
-			}
-		});
-
-		$("#loansGrid").kendoGrid({
-			selectable : "row",
-			sortable : true,
-			height : 200
-		});
-		
-		
-		
-		$("#empIdBenefit").kendoAutoComplete({
-	        dataSource: new kendo.data.DataSource({
-	            transport: {
-	                read: "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>" 
-	            }
-	        }),
-	        change : function(e){
-	        	$("#calculations").css("display", "block");
-	        },
-	        dataTextField: "firstname",  
-	        placeholder : 'Start typing',
-	        template: kendo.template($("#searchByNameAutoComplete").html())
-    	});
-	});
+ 			getHolidays();
+	}); 
 </script>
-
-<script id="searchByNameAutoComplete" type="text/x-kendo-tmpl">
- 	<div class="autoCompleteDIV">
-		<img width=50 height=50 class='image_preview'  src="#='/OpenHR'+photo#"/> 
-		<b>#=employeeId+' - '+firstname+' '+middlename+' '+lastname#</b>
-	</div>
-</script>
-<style>
-div.autoCompleteDIV{
-	vertical-align: middle;
-	display:block;
-}
-</style>

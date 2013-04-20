@@ -55,16 +55,8 @@ public class EmpDependents  implements Serializable {
 		this.depType = dType;
 	}
 	
-	public OccupationType getOccupationType() {
-		if(this.occupationType != null) {
-			if(occupationType == OccupationType.STUDENT.getValue()) {
-				return OccupationType.STUDENT;
-			} else if(occupationType == OccupationType.NONE.getValue()) {
-				return OccupationType.NONE;
-			}
-		} 
-		
-		return null;
+	public Integer getOccupationType() {
+		return this.occupationType;
 	}
 
 	public void setOccupationType(Integer occupationType) {
@@ -79,18 +71,8 @@ public class EmpDependents  implements Serializable {
 		this.depType = depType;
 	}
 
-	public DependentType getType() {
-		if(this.depType != null) {
-			if(depType == DependentType.CHILD.getValue()) {
-				return DependentType.CHILD;
-			} else if(depType == DependentType.PARENT.getValue()) {
-				return DependentType.PARENT;
-			} else if(depType == DependentType.SPOUSE.getValue()) {
-				return DependentType.SPOUSE;
-			} 
-		} 
-		
-		return null;
+	public Integer getType() {
+		return this.depType;
 	}
 
 	public int getAge() {

@@ -1,46 +1,52 @@
 <%@include file="../../common/jspHeader.jsp"%>
- <style>
+<style>
+.k-textbox {
+	width: 11.8em;
+}
 
-                .k-textbox {
-                    width: 11.8em;
-                }
+.k-grid tbody .k-button {
+	min-width: 1px;
+}
 
-           
+.required {
+	font-weight: bold;
+}
 
+.accept,.status {
+	padding-left: 90px;
+}
 
-                .required {
-                    font-weight: bold;
-                }
+.valid {
+	color: green;
+}
 
-                .accept, .status {
-                    padding-left: 90px;
-                }
+.invalid {
+	color: red;
+}
 
-                .valid {
-                    color: green;
-                }
+span.k-tooltip {
+	margin-left: 6px;
+}
 
-                .invalid {
-                    color: red;
-                }
-                span.k-tooltip {
-                    margin-left: 6px;
-                }
-                
-#tick{display:none}
-#cross{display:none}
-            </style>
+#tick {
+	display: none
+}
+
+#cross {
+	display: none
+}
+</style>
 <div class="payroll_form">
 	<div id="container">
 		<div style="width: 800px;">
 			<fieldset>
 				<legend>Run Payroll</legend>
-				<div style="float:left">
-					Generate the payroll for the current pay period.<br><br>
-					<b><i>NOTE: Ensure the employee status is updated before generating the payroll for the current pay period.</i></b>
-					<br> <br>
+				<div style="float: left">
+					Generate the payroll for the current pay period.<br> <br>
+					<b><i>NOTE: Ensure the employee status is updated before
+							generating the payroll for the current pay period.</i></b> <br> <br>
 					<a href="<%=request.getContextPath() + "/do/GeneratePayroll"%>">
-						<input type="button" value="Run Payroll"/>
+						<input type="button" value="Run Payroll" />
 					</a>
 				</div>
 			</fieldset>
@@ -48,40 +54,43 @@
 		<div style="width: 800px;">
 			<fieldset>
 				<legend>Search Employees</legend>
-				<div style="float:left">
-					<div style="display:none" id="employeeHeader">
-					
-						<table cellspacing=15 style="border:1px solid #999">
+				<div style="float: left">
+					<div style="display: none" id="employeeHeader">
+
+						<table cellspacing=15 style="border: 1px solid #999">
 							<tr>
-								<td>Photo</td>								
+								<td>Photo</td>
 								<td>Id #</td>
 								<td>Full Name</td>
 							</tr>
 							<tr>
-								<td><img id="photo" style="border: 2px solid #000" width=100 height=75 src=""/></td>
-								<td><label id="empId" style="font-size:16px;">No employee selected</label></td>
-								<td><label id="fullName" style="font-size:16px;">No employee selected</label></td>								
+								<td><img id="photo" style="border: 2px solid #000"
+									width=100 height=75 src="" /></td>
+								<td><label id="empId" style="font-size: 16px;">No
+										employee selected</label></td>
+								<td><label id="fullName" style="font-size: 16px;">No
+										employee selected</label></td>
 							</tr>
-						</table>					
+						</table>
 					</div>
-					<label>First Name</label>
-					<input type="text" style="width:350px" id="searchByName"/>
+					<label>First Name</label> <input type="text" style="width: 350px"
+						id="searchByName" />
 				</div>
-				<div style="float:right; padding-right:100px">
+				<div style="float: right; padding-right: 100px">
 					<input type="button" id="view_pay_summary" value="View Summary"
-						style="display:none"/>
+						style="display: none" />
 				</div>
-				<div style="clear:both"></div>
+				<div style="clear: both"></div>
 			</fieldset>
 		</div>
-		
-		<div id="calculations" style="display:none">
-		
+
+		<div id="calculations" style="display: none">
+
 			<div class="k-content">
-				
+
 				<fieldset>
 					<legend>General Summary</legend>
-					
+
 					<table id="employeeSummaryGrid">
 						<thead>
 							<tr>
@@ -115,7 +124,7 @@
 			</div>
 
 			<div>
-				<div style="float: left; width: 440px"  id="allowances">
+				<div style="float: left; width: 440px" id="allowances">
 					<fieldset>
 						<legend>Allowances</legend>
 						<p class="information_msg"
@@ -157,11 +166,11 @@
 							<div style="margin-left: 200px">
 
 
-								<input type="button" value="Edit" id="editAllowances"/>
+								<input type="button" value="Edit" id="editAllowances" />
 
 							</div>
 							<p style="clear: both"></p>
-						</div>						
+						</div>
 					</fieldset>
 				</div>
 
@@ -209,11 +218,11 @@
 							<div style="margin-left: 200px">
 
 
-								<input type="button" value="Edit" id="editDeductions"/>
+								<input type="button" value="Edit" id="editDeductions" />
 
 							</div>
 							<p style="clear: both"></p>
-						</div> 
+						</div>
 					</fieldset>
 				</div>
 				<p style="clear: both"></p>
@@ -229,7 +238,7 @@
 							<input type="text" style="width: 80px; font-size: 18px"
 								value="6250" disabled="disabled" /><label>ETB</label>
 						</div>
-						
+
 						<p style="clear: both"></p>
 					</div>
 
@@ -310,239 +319,236 @@
 			<li class="k-state-active">Overtime Setting</li>
 			<li>Tax Rates Setting</li>
 			<li>Deduction Type Setting</li>
-<!--  <li>Currency Setting</li> -->
+			<li>Payroll period Setting</li>
 		</ul>
 
 		<div>
-		<form>
-			<fieldset>
-				<legend>Overtime pay rate Definition</legend>
-				<label>Choose day group</label><br> 
-				
-				
-						<select id="daygroup" ></select>
-				
-				<label>% of Gross salary</label> 
-				<input type="text" id="percentgrup" /><br><br> 
-				<input type="button"  class="ratesave" value="Save" />
-			 	<input type="reset"  class="overClear"  value="Clear"/>
-			</fieldset></form>
+			<form>
+				<fieldset>
+					<legend>Overtime pay rate Definition</legend>
+					<label>Choose day group</label><br> <select id="daygroup"></select>
+
+					<label>% of Gross salary</label> <input type="text"
+						id="percentgrup" /><br> <br> <input type="button"
+						class="ratesave" value="Save" /> <input type="reset"
+						class="overClear" value="Clear" />
+				</fieldset>
+			</form>
 		</div>
 
 
 		<div id="taxratesdiv">
-					 <div id="example" class="k-content">
-            <div id="grid"></div>
-<div id="empForm">
-</div>
-           
-            
-     </div>
-					
-			<form>
-			<fieldset>
-				<legend>Tax Rates Settings</legend>
-				<label>Income From (Kyat)</label> 
-				<input type="text"  id="incomeFrom"  disabled /><br> 
-					<label>Income To(Kyat)</label> 
-				<input type="text" id="incomeTo" /><br> 
-				<input type="hidden"  id="incomeFromId"   /><br> 
-				<label>Rate </label> 
-				<select id="taxpercent">
-					<option value='-1'>select</option>
-					<option value='1'>1</option>
-					<option value='2' >2</option>
-					<option value='3' >3</option>
-					<option value='4' >4</option>
-					<option value='5' >5</option>
-					<option value='6' >6</option>
-					<option value='7' >7</option>
-					<option value='8' >8</option>
-					<option value='9' >9</option>
-					<option value='10' >10</option>
-					<option value='11' >11</option>
-					<option value='12' >12</option>
-					<option value='13' >13</option>
-					<option value='14' >14</option>
-					<option value='15' >15</option>
-					<option value='16' >16</option>
-					<option value='17' >17</option>
-					<option value='18' >18</option>
-					<option value='19' >19</option>
-					<option value='20' >20</option>
-					<option value='21' >21</option>
-					<option value='22' >22</option>
-					<option value='23' >23</option>
-					<option value='24' >24</option>
-			<option value='25' >25</option>
-			<option value='26' >26</option>
-				<option value='27' >27</option>
-			<option value='28' >28</option>
-			<option value='29' >29</option>
-			<option value='30' >30</option>
+			<div id="example" class="k-content">
+				<div id="grid"></div>
+				<div id="empForm"></div>
 
-				</select> <label>Income %</label><br> <br>
-				<input type="button" class="taxRateSave" value="Save" />
-					<input type="reset" class="taxClear"  value="Clear"/>
-			</fieldset>
-				</form>
+
+			</div>
+
+			<form>
+				<fieldset>
+					<legend>Tax Rates Settings</legend>
+					<label>From (MMK)</label> <input type="text" id="incomeFrom"
+						disabled /><br> <label>To(MMK)</label> <input type="text"
+						id="incomeTo" /><br> <input type="hidden" id="incomeFromId" /><br>
+					<label>Rate </label> <select id="taxpercent">
+
+					</select> <label> %</label><br> <br> <input type="button"
+						class="taxRateSave" value="Save" /> <input type="reset"
+						class="taxClear" value="Clear" />
+				</fieldset>
+			</form>
 		</div>
 
 
 		<div class="decdiv">
-		<form>
-			<fieldset>
-				<legend>Deduction Type Definition</legend>
-				
-				<div style="float:right;">
-					<label>List of recorded Deductions</label><br>
-			
-						
-						
-						<select id="multiselect" class="multy" ></select>
+			<form>
+				<fieldset>
+					<legend>Deduction Type Definition</legend>
 
-					<a href="#" class="edtdec">Edit</a>	
-					<a href="#" class="rmvdec">Remove</a>				
-				</div>
-				<input type="hidden" id="did" />
-				  <div id="tickets">
-				<label class="required">Name</label><br>
-				
-				<input type="text" id="decname" name="decname" class="k-textbox" placeholder="Deduction Name" required validationMessage="Please Enter Deduction"/><br>
-				<img id="tick" src="<%=request.getContextPath() + "/css/images/tick.png"%>"  style="margin-left:5cm"/><br>
-<img id="cross" src="<%=request.getContextPath() + "/css/images/cross.png"%>"   width="16" height="16"  style="margin-left:5cm"/><br>
-				<label class="required">Description</label><br>
-				<textarea rows="5" cols="50" id="dedctext"  name="dedctext" class="k-textbox" placeholder="Deduction Description" required validationMessage="Please Enter Deduction Description "></textarea><br><br>			
-				<input type="button"  class="dedc" value="Save"/>
-			 	<input type="reset"   class="decClear" value="Clear"/>
-                <span class="status"></span>
-              
-				</div>
-			</fieldset>
+					<div style="float: right;">
+						<label>List of recorded Deductions</label><br> <select
+							id="multiselect" class="multy"></select> <a href="#"
+							class="edtdec">Edit</a> <a href="#" class="rmvdec">Remove</a>
+					</div>
+					<input type="hidden" id="did" />
+					<div id="tickets">
+						<label class="required">Name</label><br> <input type="text"
+							id="decname" name="decname" class="k-textbox"
+							placeholder="Deduction Name" required
+							validationMessage="Please Enter Deduction" /><br> <img
+							id="tick"
+							src="<%=request.getContextPath() + "/css/images/tick.png"%>"
+							style="margin-left: 5cm" /><br> <img id="cross"
+							src="<%=request.getContextPath() + "/css/images/cross.png"%>"
+							width="16" height="16" style="margin-left: 5cm" /><br> <label
+							class="required">Description</label><br>
+						<textarea rows="5" cols="50" id="dedctext" name="dedctext"
+							class="k-textbox" placeholder="Deduction Description" required
+							validationMessage="Please Enter Deduction Description "></textarea>
+						<br> <br> <input type="button" class="dedc" value="Save" />
+						<input type="reset" class="decClear" value="Clear" /> <span
+							class="status"></span>
+
+					</div>
+				</fieldset>
 			</form>
 			<!-- start Deduction scipt -->
-			
-				<!-- End Deduction scipt -->
+
+			<!-- End Deduction scipt -->
 		</div>
 
-	<div>
+		<div id="payPrdDiv">
+
+			<form>
+				<fieldset>
+					<legend>Payroll period Definition</legend>
+					<label>Choose Payroll period</label><br> <select
+						id="payperiodval">
+
+					</select> <input type="hidden" id="idPayPeriod" /> <input type="button"
+						class="payPrdSave" value="Change" /> <input type="reset"
+						class="payPrdClear" value="Clear" />
+				</fieldset>
+			</form>
 
 
+		</div>
 
-		
 	</div>
 
 </div>
 
-</div>
-
-<div id="pay_summary_cont" style="width:650px;display:none">
-	<div style="clear:both">
+<div id="pay_summary_cont" style="width: 650px; display: none">
+	<div style="clear: both">
 		<input type="button" value="Print" />
 	</div>
 	<div>
-		<h3 style="float:right">Anthony Williams</h3>	
-		<hr style="clear:both">
+		<h3 style="float: right">Anthony Williams</h3>
+		<hr style="clear: both">
 	</div>
 	<div>
-		<h3 style="float:left">Basic</h3>
-		<hr style="clear:both"/>
+		<h3 style="float: left">Basic</h3>
+		<hr style="clear: both" />
 	</div>
 	<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">Salary</p></div>
-		<div style="float:right"><strong style="color:#0f0;font-style:underline;font-size:16px;">2569.56</strong></div>
-		<div style="clear:both"></div>
+		<div style="float: left">
+			<p style="width: 400px; font-size: 13px; text-align: right">Salary</p>
+		</div>
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 16px;">2569.56</strong>
+		</div>
+		<div style="clear: both"></div>
 	</div>
-	
-	
-	
-	
+
+
+
+
 	<div>
-		<h3 style="float:left">Allowances</h3>
-		<hr style="clear:both"/>
-	</div>			
-	<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">House</p></div>
-		<div style="float:right"><strong style="color:#0f0;font-style:underline;font-size:16px;">251.26</strong></div>
-		<div style="clear:both"></div>
-	</div>
-	
-	<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">Fuel</p></div>
-		<div style="float:right"><strong style="color:#0f0;font-style:underline;font-size:16px;">452</strong></div>
-		<div style="clear:both"></div>
-	</div>
-	
-	<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">Representation</p></div>
-		<div style="float:right"><strong style="color:#0f0;font-style:underline;font-size:16px;">236.9</strong></div>
-		<div style="clear:both"></div>
-	</div>
-	<hr>
-	
-	
-	
-	
-	
-	
-	<div>
-		<h3 style="float:left">Deductions</h3>
-		<hr style="clear:both"/>
-	</div>			
-	<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">Income Tax(35%)</p></div>
-		<div style="float:right"><strong style="color:#0f0;font-style:underline;font-size:16px;">652.26</strong></div>
-		<div style="clear:both"></div>
-	</div>
-	
-	<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">Pension(6%)</p></div>
-		<div style="float:right"><strong style="color:#0f0;font-style:underline;font-size:16px;">142.45</strong></div>
-		<div style="clear:both"></div>
+		<h3 style="float: left">Allowances</h3>
+		<hr style="clear: both" />
 	</div>
 	<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">Staff Loan</p></div>
-		<div style="float:right"><strong style="color:#0f0;font-style:underline;font-size:16px;">520.25</strong></div>
-		<div style="clear:both"></div>
+		<div style="float: left">
+			<p style="width: 400px; font-size: 13px; text-align: right">House</p>
+		</div>
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 16px;">251.26</strong>
+		</div>
+		<div style="clear: both"></div>
+	</div>
+
+	<div>
+		<div style="float: left">
+			<p style="width: 400px; font-size: 13px; text-align: right">Fuel</p>
+		</div>
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 16px;">452</strong>
+		</div>
+		<div style="clear: both"></div>
+	</div>
+
+	<div>
+		<div style="float: left">
+			<p style="width: 400px; font-size: 13px; text-align: right">Representation</p>
+		</div>
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 16px;">236.9</strong>
+		</div>
+		<div style="clear: both"></div>
 	</div>
 	<hr>
-	
-	
-	
-	
-	
-	
-		
+
+
+
+
+
+
 	<div>
-		<div style="float:left">
+		<h3 style="float: left">Deductions</h3>
+		<hr style="clear: both" />
+	</div>
+	<div>
+		<div style="float: left">
+			<p style="width: 400px; font-size: 13px; text-align: right">Income
+				Tax(35%)</p>
+		</div>
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 16px;">652.26</strong>
+		</div>
+		<div style="clear: both"></div>
+	</div>
+
+	<div>
+		<div style="float: left">
+			<p style="width: 400px; font-size: 13px; text-align: right">Pension(6%)</p>
+		</div>
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 16px;">142.45</strong>
+		</div>
+		<div style="clear: both"></div>
+	</div>
+	<div>
+		<div style="float: left">
+			<p style="width: 400px; font-size: 13px; text-align: right">Staff
+				Loan</p>
+		</div>
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 16px;">520.25</strong>
+		</div>
+		<div style="clear: both"></div>
+	</div>
+	<hr>
+	<div>
+		<div style="float: left">
 			<h3>Total</h3>
 		</div>
-		<div style="float:right">
-			<strong style="color:#0f0;font-style:underline;font-size:18px;">2397.56</strong>			
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 18px;">2397.56</strong>
 		</div>
-		<div style="clear:both"></div>
+		<div style="clear: both"></div>
 	</div>
 	<hr>
-	
+
 	<div>
-		<div style="float:left">
+		<div style="float: left">
 			<h3>Net Pay</h3>
 		</div>
-		<div style="float:right">
-			<strong style="color:#0f0;font-style:underline;font-size:18px;">1500.56</strong>
+		<div style="float: right">
+			<strong style="color: #0f0; font-style: underline; font-size: 18px;">1500.56</strong>
 			<hr>
 			<hr>
 		</div>
-		<div style="clear:both"></div>
+		<div style="clear: both"></div>
 	</div>
-			
-			
-</div> 
-	
+
+
+</div>
+
 
 <style scoped>
-h3{
-	font-size : 18px;
+h3 {
+	font-size: 18px;
 }
 </style>
 
@@ -550,18 +556,78 @@ h3{
 <script>
 	var no_Of_steps = 3, first_step = 1;
 	$(document).ready(function() {
-		var   empTemplate= kendo.template($("#employeeTemplate").html());
+		//var   empTemplate= kendo.template($("#employeeTemplate").html());
 		
 		//alert(empTemplate);
 	var  df=$("#payrollSettingsWindow").html();
 	
-	
+	 var payPerdData = [
+                 {text: "Weekly", value:"1"},
+                 {text: "Bi-weekly", value:"2"},
+                 {text: "Monthly", value:"3"}
+             ];
+var percentSelect=null;
+	 
+	 var rateIncome=[  {text: "1", value:"1"},
+	                   {text: "2", value:"2"},
+	                   
+	                   {text: "3", value:"3"},
+	                   {text: "4", value:"4"},
+	                   
+	                   {text: "5", value:"5"},
+	                   
+	                   {text: "6", value:"6"},
+	                   {text: "7", value:"7"},
+	                   
+	                   {text: "8", value:"8"},
+	                   {text: "9", value:"9"},
+	                   
+	                   {text: "10", value:"10"},
+	                   
+	                   {text: "11", value:"11"},
+	                   
+	                   {text: "12", value:"12"},
+	                   {text: "13", value:"13"},
+	                   {text: "14", value:"14"},
+	                   {text: "15", value:"15"},
+	                   
+	                   {text: "16", value:"16"},
+	                   
+	                   {text: "17", value:"17"},
+	                   
+	                   {text: "18", value:"18"},
+	                   
+	                   {text: "19", value:"19"},
+	                   {text: "20", value:"20"},
+	                   
+	                   {text: "21", value:"21"},
+	                   
+	                   {text: "22", value:"22"},
+	                   
+	                   {text: "23", value:"23"},
+	                   
+	                   {text: "24", value:"24"},
+	                   
+	                   {text: "25", value:"25"},
+	                   {text: "26", value:"26"},
+	                   {text: "27", value:"27"},
+	                   {text: "28", value:"28"},
+	                   {text: "29", value:"29"},
+	                   {text: "30", value:"30"}
+	         
+	                   
+	                   ];  
 	//var  decdiv=$(".decdiv").html();
 	//alert(df);
+
+	
+	
 		$("#employeeSummaryGrid").kendoGrid();
 		$("#calculations_payroll_menu").kendoMenu();
 
 		$("#showOvertimeSheet").click(function() {
+			
+			//alert("fdf");
 			$("#overtimeSheet").css("display", "block");
 			$("#overtimeGrid").kendoGrid();
 			var wnd = $("#overtimeSheet").kendoWindow({
@@ -606,7 +672,7 @@ h3{
 		switch(className)
         {
             case 1:
-            	alert('1!');
+            	//alert('1!');
             break;
             case 2:
             	$("ul.list li:nth-child(1)").removeClass("k-state-active");
@@ -617,7 +683,8 @@ h3{
             	$("ul.list li:nth-child(3)").addClass("k-state-active");
             break;     
             case 4:
-            	alert('4');
+            	$("ul.list li:nth-child(1)").removeClass("k-state-active");
+            	$("ul.list li:nth-child(4)").addClass("k-state-active");
             break;
             default:
                 
@@ -647,6 +714,7 @@ h3{
 			
 			
 			
+			
 			$("#daygroup").kendoDropDownList({
 				dataTextField : "dayGroupName",
 				dataValueField : "id",
@@ -654,7 +722,7 @@ h3{
 				dataSource : {
 					type : "json",
 					transport : {
-						read : "<%=request.getContextPath()+ "/do/ReadOvertimePayRate"%>"
+						read : "<%=request.getContextPath() + "/do/ReadOvertimePayRate"%>"
 					}
 				}
 		    }).change(function(){
@@ -670,7 +738,7 @@ h3{
 			
 			$.ajax({
 				 type : "POST",
-				 url:'<%=request.getContextPath()+ "/do/OvertimeAction"%>',
+				 url:'<%=request.getContextPath() + "/do/OvertimeAction"%>',
 				 dataType : 'json',
 				 contentType : 'application/json; charset=utf-8',
 				 data : rate,
@@ -704,7 +772,8 @@ h3{
 
 				$.ajax({
 						 type : "POST",
-						 url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=getTaxRate"%>',
+						 url:'<%=request.getContextPath()
+					+ "/do/CommanTaxReatesActions?parameter=getTaxRate"%>',
 						
 						
 						 success : function(data1){
@@ -719,13 +788,65 @@ h3{
 						 }
 						
 					});
+				 $("#taxpercent").kendoDropDownList({
+	                 dataTextField: "text",
+	                 dataValueField: "value",
+	                 optionLabel: "Select %",
+	                 dataSource: rateIncome
+	             });
+	             
+	             percentSelect=$("#taxpercent").data("kendoDropDownList");
+					});
+		$("#payPrdDiv").ready(function()
+				
+		
+					{
+				
+			
+		 $("#payperiodval").kendoDropDownList({
+                 dataTextField: "text",
+                 dataValueField: "value",
+                 dataSource: payPerdData
+             });
+			
+			var paydrop = $("#payperiodval").data("kendoDropDownList");
+	
+			
+				$.ajax({
+					 type : "POST",
+						url:'<%=request.getContextPath()
+					+ "/do/CommanPayPeriodAction?parameter=getPayPeriod"%>',
+					
+					
+					 
+					 success : function(data1){
+						// alert(data1);
+						
+						var d=data1;
+						$("#idPayPeriod").val(d[0].id);
+						
+						
+						
+						
+				//$("#payperiodval :selected").text(d[0].periodName);
+						//$("#payperiodval").val(d[0].periodValue);
+						
+						
+						paydrop.value(d[0].periodValue);
+						
+						
+						
+					 }
+					
+				});
+				
 				
 					});
-		
 			var   empDataSource = new kendo.data.DataSource({
 	        	transport : {
 	           		read : {
-	           			url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=getAllTaxRates"%>',
+	           			url:'<%=request.getContextPath()
+					+ "/do/CommanTaxReatesActions?parameter=getAllTaxRates"%>',
 	           			dataType : "json",
 	           			cache : false
 	           		}
@@ -742,22 +863,27 @@ h3{
 	            dataSource : empDataSource,
 	            pageable: true,
 	            columns: [
-                          { field:"id", title: "id" ,width: "1px"},
-                          { field: "incomeFrom", title:"From Income", width: "100px" },
-                          { field: "incomeTo", title:"To Income", width: "100px" },
-                          { field: "incomePersent", title:"%Income",width: "100px" },
-                          { command: [{"name" : "edit", className : "editEmp"}, {"name" :"destroy", className:"delTax"}], title: "", width: "80px" }],
+                          { field:"id",hidden:true, title: "id" ,width: "1px"},
+                          { field: "incomeFrom", title:"From", width: "30px" },
+                          { field: "incomeTo", title:"To", width: "30px" },
+                          { field: "incomePersent", title:"%",width: "30px" },
+                          { command: [{"name" : "edit", text:"", className : "editEmp"}, {"name" :"destroy", text:"", className:"delTax"}], title: "", width: "50px" }],
 	                      
 	  
 	        }).data("kendoGrid");
-			
-			$("#grid").delegate(".delTax", "click", function(e) {alert("delTax");
+			//$("#GRID_ID").find("table th").eq(COLUMN_NO).hide();
+			$("#grid").delegate(".delTax", "click", function(e) {
+				
+				
+				//("delTax");
+				
 			e.preventDefault();
 			 var dataItem = grid.dataItem($(this).closest("tr"));
 			   //alert(dataItem.id+"-----"+dataItem.incomePersent);     
+			  // alert(dataItem.incomePersent);
 			   
-			   
-			   	$("#taxpercent").val(dataItem.incomePersent);
+			  // 	$("#taxpercent").val(dataItem.incomePersent);
+			   	percentSelect.value(dataItem.incomePersent);
 				$("#incomeTo").val(dataItem.incomeTo).attr('disabled', 'disabled');;
 				$("#incomeFromId").val(dataItem.id).attr('disabled', 'disabled');;
 				
@@ -780,7 +906,8 @@ h3{
 				 }]);
 				  $.ajax({
 	      				 type : "POST",
-	      				url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=deleteTaxRate"%>',
+	      				url:'<%=request.getContextPath()
+					+ "/do/CommanTaxReatesActions?parameter=deleteTaxRate"%>',
 	     				 dataType : 'json',
 	     				 contentType : 'application/json; charset=utf-8',
 	     				 data : rate,
@@ -799,7 +926,7 @@ h3{
 			
 
 			$("#grid").delegate(".editEmp", "click", function(e) {
-		//alert("hello");
+	//alert("hello");
 				e.preventDefault();
 	//alert(e+"eeeeeeeeeee"+grid);
 	        var dataItem = grid.dataItem($(this).closest("tr"));
@@ -821,15 +948,15 @@ h3{
               // wnd2.open(); 
               // wnd2.center();
                
-               
-       	$("#taxpercent").val(dataItem.incomePersent);
+               	percentSelect.value(dataItem.incomePersent);
+      
 			$("#incomeTo").val(dataItem.incomeTo).attr('disabled', 'disabled');;
 			$("#incomeFromId").val(dataItem.id).attr('disabled', 'disabled');;
 			
 			$("#incomeFrom").val(dataItem.incomeFrom);
                
 		
-			$(".taxRateSave").val('UpDate');
+			$(".taxRateSave").val('Update');
                
                //alert( $("#editTaxPercent").bind("click"));
                
@@ -848,7 +975,8 @@ h3{
             		//alert(f);
             	  $.ajax({
       				 type : "POST",
-      				url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
+      				url:'<%=request.getContextPath()
+					+ "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
      				 dataType : 'json',
      				 contentType : 'application/json; charset=utf-8',
      				 data : editData,
@@ -870,22 +998,7 @@ h3{
             	   
             	   
             	   
-            	   
-            	   
-            	   
-            	   
-            	   
-            	   
-            	   
-            	   
-              
-               
-               
-               
-               
-               
-               
-			}); 
+}); 
 			
 			$(".taxClear").bind("click", function() { //alert("hello");
 
@@ -894,38 +1007,95 @@ h3{
 			});
 			
 			$(".taxRateSave").bind("click", function() { 
-				//alert("taxpercentincomeToincomeFrom");
+		//alert("taxpercentincomeToincomeFrom");
 			var taxpercnt=$("#taxpercent").val();
 			var incomeTo=$("#incomeTo").val();
 			var idTax= $("#incomeFromId").val();
 			var taxbutton=$(".taxRateSave").val();
 			var incomeFrom=$("#incomeFrom").val();
 	//alert(incomeFrom > incomeTo);
+	
+	
+	
 			if(incomeFrom==''||incomeTo==''||taxpercnt=='-1'|| incomeFrom > incomeTo)
 				{
-				alert("fill data correctly");
+				//alert("in if"+taxbutton);
+				
+				if(taxbutton=="Update")
+					
+				{
+					//alert("hxkjgzxj");
+					perFlag=true;
+					
+					//return true;
+				}
+				
+				else
+					{		
+					
+					alert("fill data correctly");
+					return false;
+					}
+
 				
 				
 				}
 			else
 				{
 				
-				var rate = JSON.stringify([{
-					"id":idTax,
-					"incomeFrom" :incomeFrom,
-					"incomeTo":incomeTo,
-				"incomePersent":taxpercnt
+if(taxbutton=="Update")
 					
+				{
+					//alert("hxkjgzxj");
+					perFlag=true;
 					
-				 }]);
-			//alert(taxbutton);
-			if(taxbutton=="UpDate")
+					//return true;
+				}
+				}
+			var rate = JSON.stringify([{
+				"id":idTax,
+				"incomeFrom" :incomeFrom,
+				"incomeTo":incomeTo,
+			"incomePersent":taxpercnt
+				
+				
+			 }]);
+	if(taxbutton=="Save")
+				
+			{
+			//alert("savbe");
+			$.ajax({
+					 type : "POST",
+					 url:'<%=request.getContextPath() + "/do/TaxRatesAction"%>',
+					 dataType : 'json',
+					 contentType : 'application/json; charset=utf-8',
+					 data : rate,
+					 success : function(data1){
+					 alert(data1);
+						
+					 reuseScript(2);
+						
+					 }
+					
+				});
+				
+				}
+			
+			
+			
+			if(perFlag)
+				{
+				
+				
+	//alert(taxbutton);
+			if(taxbutton=="Update")
 			
 			{
 				//alert("Update");
 			  	  $.ajax({
 	      				 type : "POST",
-	      				url:'<%=request.getContextPath()+ "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
+	      				url:'<%=request.getContextPath()
+					+ "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
 	     				 dataType : 'json',
 	     				 contentType : 'application/json; charset=utf-8',
 	     				 data : rate,
@@ -945,26 +1115,7 @@ h3{
 			
 				
 				
-			if(taxbutton=="Save")
-				
-			{
-			//alert("savbe");
-			$.ajax({
-					 type : "POST",
-					 url:'<%=request.getContextPath()+ "/do/TaxRatesAction"%>',
-					 dataType : 'json',
-					 contentType : 'application/json; charset=utf-8',
-					 data : rate,
-					 success : function(data1){
-					 alert(data1);
-						
-					 reuseScript(2);
-						
-					 }
-					
-				});
-				
-				}
+		
 				}
 					
 			}); 
@@ -993,7 +1144,7 @@ h3{
 				{
 				$.ajax({
 					 type : "POST",
-					 url:'<%=request.getContextPath()+ "/do/UpdateOvertimeAction"%>',
+					 url:'<%=request.getContextPath() + "/do/UpdateOvertimeAction"%>',
 					 dataType : 'json',
 					 contentType : 'application/json; charset=utf-8',
 					 data : rate,
@@ -1017,10 +1168,44 @@ h3{
 				
 				}); 	
 				
+	
 			
 			
+			$(".payPrdSave").bind("click", function() { //alert("hello");
 			
+			var idPayPeriod=$("#idPayPeriod").val();
+			var payperiodval =$("#payperiodval :selected").val();
 			
+			var payperiodText =$("#payperiodval :selected").text();
+			//alert(payperiodval+"---Ratet---"+payperiodText);
+			var rate = JSON.stringify([{
+				"id":idPayPeriod,
+				"periodValue" :payperiodval,
+				"periodName":payperiodText
+			
+				
+				
+			 }]);
+			
+			$.ajax({
+				 type : "POST",
+					url:'<%=request.getContextPath()
+					+ "/do/CommanPayPeriodAction?parameter=upDatePayPeriod"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 data :rate,
+				 success : function(data1){
+					// alert(data1);
+					 if(data1)
+						 {alert("tue");}
+					 else
+						 {alert("false");}
+					 reuseScript(4);
+				 }
+				
+			});
+			
+});
 			
 			
 			
@@ -1032,7 +1217,7 @@ h3{
 				dataSource : {
 					type : "json",
 					transport : {
-						read : "<%=request.getContextPath()+ "/do/ReadDeductionAction"%>"
+						read : "<%=request.getContextPath() + "/do/ReadDeductionAction"%>"
 					}
 				}
 		    }); 
@@ -1051,7 +1236,7 @@ h3{
 			
 			$.ajax({
 				 type : "POST",
-				 url:'<%=request.getContextPath()+ "/do/DeductionGet"%>',
+				 url:'<%=request.getContextPath() + "/do/DeductionGet"%>',
 				 dataType : 'json',
 				 contentType : 'application/json; charset=utf-8',
 				 data : updateData1,
@@ -1126,7 +1311,7 @@ h3{
 				
 				$.ajax({
 					 type : "POST",
-					 url:'<%=request.getContextPath()+ "/do/DeleteDeductionAction"%>',
+					 url:'<%=request.getContextPath() + "/do/DeleteDeductionAction"%>',
 					 dataType : 'json',
 					 contentType : 'application/json; charset=utf-8',
 					 data : updateData1,
@@ -1199,7 +1384,7 @@ h3{
 		
 			$.ajax({
 				 type : "POST",
-				 url:'<%=request.getContextPath()+ "/do/UpdateDeductionAction"%>',
+				 url:'<%=request.getContextPath() + "/do/UpdateDeductionAction"%>',
 				 dataType : 'json',
 				 contentType : 'application/json; charset=utf-8',
 				 data : updateData,
@@ -1235,7 +1420,7 @@ h3{
 		if(idf=="Save"&&!blr)
 		{	$.ajax({
 			 type : "POST",
-			 url:'<%=request.getContextPath()+ "/do/DeductionAction"%>',
+			 url:'<%=request.getContextPath() + "/do/DeductionAction"%>',
 			 dataType : 'json',
 			 contentType : 'application/json; charset=utf-8',
 			 data : updateData,
@@ -1290,7 +1475,7 @@ h3{
 			
 			$.ajax({
 				 type : "POST",
-				 url:'<%=request.getContextPath()+ "/do/CheckDeductionName"%>',
+				 url:'<%=request.getContextPath() + "/do/CheckDeductionName"%>',
 				 dataType : 'json',
 				 contentType : 'application/json; charset=utf-8',
 				 data : updateData,
@@ -1342,122 +1527,143 @@ h3{
 				
 				//$(".multiselect").html('');
 				
-			 
-		
-		
-				
-				
-
-			 
-			
 		});
 		
 		$("#clearSearch").click(function(){
 			
-
-			
-			
-			
-			
-			$("#searchByName").data("kendoAutoComplete").placeholder("Start typing");
+$("#searchByName").data("kendoAutoComplete").placeholder("Start typing");
 			$("#employeeHeader").css("display", "none");
 			$("#calculations").css("display", "none");
         	$("#view_pay_summary").css("display", "none");
 		});
 		
 		$("#searchByName").kendoAutoComplete({
+		
 	        dataSource: new kendo.data.DataSource({
 	            transport: {
-	                read: "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>" 
-	            }
-	        }),select: function(e) {
-                ////////////////////////////////////////////////////
-	        	var dataItem = this.dataItem(e.item.index());
-                ////////////////////////////////////////////////////
-                $("#employeeHeader").css("display", "block");
-                $("#calculations").css("display", "block");
-	        	$("#view_pay_summary").css("display", "block");
-	        	////////////////////////////////////////////////////
-                $("#empId").text(dataItem.employeeId);
-                $("#fullName").text(dataItem.firstname+' '+
-                		dataItem.middlename+' '+
-                		dataItem.lastname);
-                $("#photo").attr("src", "/OpenHR" + dataItem.photo);
-                //output selected dataItem
-                //alert(kendo.stringify(dataItem));       
-            },
-	        dataTextField: "firstname",  
-	        placeholder : 'Start typing',
-	        template: kendo.template($("#searchByNameAutoComplete").html())
-    	});
-		
-		
-		
-		
-		
-		
-		
-		$("#printPaySlip").click(function(){
-			
-			$(".information_msg").css("display", "none");
-			$("input[type=button]").css("display", "none");
-			$("a").css("display", "none");
-			$("#calculations").jqprint();
-			setTimeout(function(){			
-					$(".information_msg").css("display", "block");
-					$("input[type=button]").css("display", "block");
-					$("a").css("display", "block");			
-			}, 5000);
-		}); 
-		
-		
-		
-		
-		
-		
-		$("#view_pay_summary").click(function(){
-			$("#pay_summary_cont").css("display","block");
-			$("#pay_summary_cont").kendoWindow({
-				modal : true,
-				title : "Pay Summary"
-			});
-			$("#pay_summary_cont").data("kendoWindow").center();
-			$("#pay_summary_cont").data("kendoWindow").open();
-		});
-		
-		
-		
-		
-		
-		$("#editAllowances").click(function(){
-			var allowanceEditor = $("#allowances").clone();
-			$(allowanceEditor).kendoWindow({
-				modal : true,
-				resizable :false,
-				title : "Allowances editor window"
-			});
-			
-			$("div.k-widget input[type='text']").removeAttr("disabled");
-			
-			
-			
-			$("div.k-widget input#editAllowances").val("Save");
-			$("div.k-widget input#editAllowances").click(function(){
-				if(confirm('Are you sure you want to save changes \nYes if you want to proceed'+
-						'\nNo if you want to cancel')){
-					alert('Your changes are saved successfully!'); 
-					//iterate the new value set from the modal window
-					alert(JSON.stringify(allowanceEditor));
-					$(allowanceEditor).data("kendoWindow").close();
-				}else{
-					$(allowanceEditor).data("kendoWindow").close();
-				}
-			});
-			$(allowanceEditor).data("kendoWindow").center();
-			$(allowanceEditor).data("kendoWindow").open();
-			
-		});
-	});
+	                read: "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>"
+														}
+													}),
+											select : function(e) {
+												alert("hello");
+												////////////////////////////////////////////////////
+												var dataItem = this
+														.dataItem(e.item
+																.index());
+												////////////////////////////////////////////////////
+												$("#employeeHeader").css(
+														"display", "block");
+												$("#calculations").css(
+														"display", "block");
+												$("#view_pay_summary").css(
+														"display", "block");
+												////////////////////////////////////////////////////
+												$("#empId").text(
+														dataItem.employeeId);
+												$("#fullName")
+														.text(
+																dataItem.firstname
+																		+ ' '
+																		+ dataItem.middlename
+																		+ ' '
+																		+ dataItem.lastname);
+												$("#photo")
+														.attr(
+																"src",
+																"/OpenHR"
+																		+ dataItem.photo);
+												//output selected dataItem
+												alert(kendo.stringify(dataItem));       
+											},
+											dataTextField : "firstname",
+											placeholder : 'Start typing',
+											template : kendo
+													.template($(
+															"#searchByNameAutoComplete")
+															.html())
+										});
+
+						$("#printPaySlip").click(
+								function() {
+
+									$(".information_msg")
+											.css("display", "none");
+									$("input[type=button]").css("display",
+											"none");
+									$("a").css("display", "none");
+									$("#calculations").jqprint();
+									setTimeout(function() {
+										$(".information_msg").css("display",
+												"block");
+										$("input[type=button]").css("display",
+												"block");
+										$("a").css("display", "block");
+									}, 5000);
+								});
+
+						$("#view_pay_summary").click(
+								function() {
+									$("#pay_summary_cont").css("display",
+											"block");
+									$("#pay_summary_cont").kendoWindow({
+										modal : true,
+										title : "Pay Summary"
+									});
+									$("#pay_summary_cont").data("kendoWindow")
+											.center();
+									$("#pay_summary_cont").data("kendoWindow")
+											.open();
+								});
+
+						$("#editAllowances")
+								.click(
+										function() {
+											var allowanceEditor = $(
+													"#allowances").clone();
+											$(allowanceEditor)
+													.kendoWindow(
+															{
+																modal : true,
+																resizable : false,
+																title : "Allowances editor window"
+															});
+
+											$("div.k-widget input[type='text']")
+													.removeAttr("disabled");
+
+											$(
+													"div.k-widget input#editAllowances")
+													.val("Save");
+											$(
+													"div.k-widget input#editAllowances")
+													.click(
+															function() {
+																if (confirm('Are you sure you want to save changes \nYes if you want to proceed'
+																		+ '\nNo if you want to cancel')) {
+																	alert('Your changes are saved successfully!');
+																	//iterate the new value set from the modal window
+																	alert(JSON
+																			.stringify(allowanceEditor));
+																	$(
+																			allowanceEditor)
+																			.data(
+																					"kendoWindow")
+																			.close();
+																} else {
+																	$(
+																			allowanceEditor)
+																			.data(
+																					"kendoWindow")
+																			.close();
+																}
+															});
+											$(allowanceEditor).data(
+													"kendoWindow").center();
+											$(allowanceEditor).data(
+													"kendoWindow").open();
+
+										});
+					});
 </script>
 
 
@@ -1471,10 +1677,10 @@ h3{
 </script>
 
 <style>
-
-img.image_preview{
-	border : 2px solid #fff;
+img.image_preview {
+	border: 2px solid #fff;
 }
+
 #prevousStep,#nextStep {
 	padding: 4px;
 }

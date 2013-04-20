@@ -21,6 +21,7 @@ import com.openhr.data.EmployeePayroll;
 @Table(name = "deduction_decl", catalog = "payhumrepo", schema = "")
 @NamedQueries({
     @NamedQuery(name = "DeductionsDeclared.findAll", query = "SELECT e FROM  DeductionsDeclared e"),
+    @NamedQuery(name = "DeductionsDeclared.findType", query = "SELECT e FROM  DeductionsDeclared e where e.type=?"),
     @NamedQuery(name = "DeductionsDeclared.find", query = "SELECT e FROM  DeductionsDeclared e where e.payrollId=?")}
 		)
 public class DeductionsDeclared implements Serializable {

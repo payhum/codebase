@@ -240,9 +240,9 @@ INSERT INTO `employee_account` (`id`, `employeeId`, `bankName`, `bankBranch`,`ac
 -- Dumping data for table deductions_decl
 --
 /*!40000 ALTER TABLE `deduction_decl` DISABLE KEYS */;
-INSERT INTO `deduction_decl` (`id`, `payrollId`, `type`, `amount`) VALUES
-(1,1,1,50000),
-(2,1,2,10000);
+INSERT INTO `deduction_decl` (`id`, `payrollId`, `type`, `amount`,`description`) VALUES
+(1,1,1,50000,'test1'),
+(2,1,2,10000,'test2');
 /*!40000 ALTER TABLE `deduction_decl` ENABLE KEYS */;
 
 
@@ -256,3 +256,24 @@ INSERT INTO `emp_dependents` (`id`, `employeeId`, `name`, `age`, `occupationType
 (3,2,'Boe',9,0,1),
 (4,2,'Wily',35,1,0);
 /*!40000 ALTER TABLE `emp_dependents` ENABLE KEYS */;
+
+--
+-- Dumping data for table overtime_payrate
+--
+/*!40000 ALTER TABLE `overtime_payrate` DISABLE KEYS */;
+INSERT INTO `overtime_payrate` (`id`, `day_group`, `grosspay_percent`) VALUES
+(1,'Weekday',1),
+(2,'Weekend',2),
+(3,'Holidays',2);
+/*!40000 ALTER TABLE `overtime_payrate` ENABLE KEYS */;
+
+
+--
+-- Dumping data for table taxrates
+--
+/*!40000 ALTER TABLE `taxrates` DISABLE KEYS */;
+INSERT INTO `taxrates` (`id`, `income_from`, `income_to`,`income_percnt`,`version`) VALUES
+(1,1,1000,1,1),
+(2,1001,2000,2,1),
+(3,2001,-1,3,1);
+/*!40000 ALTER TABLE `taxrates` ENABLE KEYS */;

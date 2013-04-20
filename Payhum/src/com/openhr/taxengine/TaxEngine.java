@@ -57,14 +57,14 @@ public class TaxEngine {
 			
 			empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
 			
-			// Update the payroll details into the repos.
-			if( ! EmpPayTaxFactroy.update(empPayroll)) {
-				// TODO Failed to update, throw error.
-			}
-			
 			if(System.getProperty("DRYRUN") != null 
 			&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
 				testMap.put(emp,  empPayroll);
+			} else {
+				// Update the payroll details into the repos.
+				if( ! EmpPayTaxFactroy.update(empPayroll)) {
+					// TODO Failed to update, throw error.
+				}
 			}
 		}
 	}

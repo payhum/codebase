@@ -23,10 +23,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import com.openhr.taxengine.DeductionType;
 import com.openhr.taxengine.DeductionsDeclared;
 import com.openhr.taxengine.DeductionsDone;
-import com.openhr.taxengine.ExemptionType;
 import com.openhr.taxengine.ExemptionsDone;
 
 /**
@@ -204,12 +202,10 @@ public class EmployeePayroll implements Serializable {
 		this.taxAmount = taxAmount;
 	}
 
-	public void addExemption(ExemptionType eType, Double exemption) {
+	public void addExemption(Exemptionstype eType, Double exemption) {
 		boolean found = false;
-		Exemptionstype ex=null;
 		for(ExemptionsDone ed: exemptionsDone) {
-		    ex=ed.getType();
-			if(ex.getId() == eType.getValue()) {
+		    if(ed.getType().getId() == eType.getId()) {
 				ed.setAmount(ed.getAmount() + exemption);
 				found = true;
 				break;
@@ -217,8 +213,7 @@ public class EmployeePayroll implements Serializable {
 		}
 		
 		if(!found) {
-			ex = new Exemptionstype(eType.getValue(), "TODO", "TOOD");
-			exemptionsDone.add(new ExemptionsDone(this, ex, exemption));
+			exemptionsDone.add(new ExemptionsDone(this, eType, exemption));
 		}
 		
 		totalDeductions += exemption;
@@ -230,7 +225,7 @@ public class EmployeePayroll implements Serializable {
 		}
 	}
 
-	public void addExemption(ExemptionType eType, Double exemption,
+	public void addExemption(Exemptionstype eType, Double exemption,
 			int multiplier) {
 		Double exemptionAmt = exemption * multiplier;
 		
@@ -241,11 +236,10 @@ public class EmployeePayroll implements Serializable {
 		return this.baseSalary;
 	}
 	
-	public void addDeduction(DeductionType entity, Double amount) {
+	public void addDeduction(DeductionsType entity, Double amount) {
 		boolean found = false;
-		DeductionsType dx=null;
 		for(DeductionsDone dd: deductionsDone) {
-			if(dd.getType().getId() == entity.getValue()) {
+			if(dd.getType().getId() == entity.getId()) {
 				dd.setAmount(dd.getAmount() + amount);
 				found = true;
 				break;
@@ -253,8 +247,7 @@ public class EmployeePayroll implements Serializable {
 		}
 		
 		if(!found) {
-			dx = new DeductionsType(entity.getValue(), "TODO", "TODO");
-			deductionsDone.add(new DeductionsDone(this, dx, amount));
+			deductionsDone.add(new DeductionsDone(this, entity, amount));
 		}
 		
 		totalDeductions += amount;

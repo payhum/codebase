@@ -27,6 +27,7 @@ public class LeaveFactory {
 	private static Session session;
 	private static Query query;
 	private static List<Leave> leaves;
+	private static List<LeaveApproval> appLeavs;
 
 	public LeaveFactory() {
 	}
@@ -50,6 +51,17 @@ public class LeaveFactory {
 		session.getTransaction().commit();
 
 		return leaves;
+	}
+	
+	public static List<LeaveApproval> findByLeaveId(Integer leaveId) {
+ 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("LeaveApproval.findById");
+		query.setInteger(0, leaveId);
+		appLeavs = query.list();
+		session.getTransaction().commit();
+
+		return appLeavs;
 	}
 
 	public static List<Leave> findByUnusedDays(Integer unusedDays) {

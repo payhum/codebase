@@ -23,9 +23,9 @@
 				</div><br/><br/>
 				
 				<div id="addOverTimeDiv" class="displayClass">
-	 					<span><label>RequestOnDate : &nbsp;&nbsp;</label></span>
+	 					<span><label>Request Date : &nbsp;&nbsp;</label></span>
 						<span><input type="text" name="leaveDate" id="requestOnDate" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 					<span><label>No Of Hours : &nbsp;&nbsp;</label></span>
+	 					<span><label>Hours : &nbsp;&nbsp;</label></span>
 						<span><input type="text" name="noofhours" id="noOfHours"/></span><br/><br/>
 	    				<div style="float:right;">
 		  					<span><input type="submit" id="overTimeReq" value="Apply"/></span>&nbsp;&nbsp;
@@ -112,10 +112,10 @@ function getEmployeeOverTimes(){
               pageSize : 10
 			},
 			columns: [
- 				{ field : "overTimeDate", title : "RequestedOnDate", template : "#= kendo.toString(new Date(overTimeDate), 'MMM, dd yyyy') #", width : 100  },
- 	            { field : "noOfHours", title : "No of days", width : 100 },
+ 				{ field : "overTimeDate", title : "Requested Date", template : "#= kendo.toString(new Date(overTimeDate), 'MMM, dd yyyy') #", width : 100  },
+ 	            { field : "noOfHours", title : "Hours", width : 100 },
  	            { field : "status", title : "Status", template : "#= status == 0 ? 'Pending' : 'Approved' #", width : 100 },
- 	           	{ field : "approvedDate", title : "ApprovedDate", template : "#= approvedBy == 'PayHum' ? '-' : kendo.toString(new Date(approvedDate), 'MMM, dd yyyy') #", width : 100 },
+ 	           	{ field : "approvedDate", title : "Approved Date", template : "#= approvedBy == 'PayHum' ? '-' : kendo.toString(new Date(approvedDate), 'MMM, dd yyyy') #", width : 100 },
              ], 
           sortable: true,
           scrollable: true,
@@ -137,9 +137,13 @@ function getEmployeeOverTimes(){
 		isDisplayed = $("#addOverTimeDiv").hasClass("displayClass");
 		if(isDisplayed){
 			 $("#addOverTimeDiv").removeClass("displayClass");
+			 $("#noOfHours").val('');
+			 $("#requestOnDate").val('');
 		}
 		else{
 			$("#addOverTimeDiv").addClass("displayClass");
+			$("#noOfHours").val('');
+			 $("#requestOnDate").val('');
 		}
 	});
 	

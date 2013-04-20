@@ -105,13 +105,13 @@ return lov;
 }
 	public static List<EmployeePayroll> findAllEmpPayroll() 
 	{
-		session = OpenHRSessionFactory.getInstance().openSession();
-		session.beginTransaction();
-		session.evict(empsum);
-		query = session.getNamedQuery("EmployeePayroll.findAll");
+		Session session1 = OpenHRSessionFactory.getInstance().openSession();
+		session1.beginTransaction();
+		session1.evict(empsum);
+		query = session1.getNamedQuery("EmployeePayroll.findAll");
 		empsum = query.list();
-		session.getTransaction().commit();
-		session.close();
+		session1.getTransaction().commit();
+		session1.close();
 		return empsum;
 	}
 
@@ -152,14 +152,14 @@ return lov;
 			throws Exception {
 		EmployeePayroll ePay = new EmployeePayroll();
 		ePay.setId(payrollId);
-		session = OpenHRSessionFactory.getInstance().openSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("ExemptionsDone.findByEmpPayrollId");
+		Session session2 = OpenHRSessionFactory.getInstance().openSession();
+		session2.beginTransaction();
+		query = session2.getNamedQuery("ExemptionsDone.findByEmpPayrollId");
 		query.setParameter(0, ePay);
 		List<ExemptionsDone> empsum1 = query.list();
 
-		session.getTransaction().commit();
-        session.close();
+		session2.getTransaction().commit();
+        session2.close();
 		return empsum1;
 	}
 	
@@ -167,14 +167,14 @@ return lov;
 			throws Exception {
 		EmployeePayroll ePay = new EmployeePayroll();
 		ePay.setId(payrollId);
-		session = OpenHRSessionFactory.getInstance().openSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("DeductionsDone.findByEmpPayrollId");
+		Session session1 = OpenHRSessionFactory.getInstance().openSession();
+		session1.beginTransaction();
+		query = session1.getNamedQuery("DeductionsDone.findByEmpPayrollId");
 		query.setParameter(0, ePay);
 		List<DeductionsDone> empsum2 = query.list();
 
-		session.getTransaction().commit();
-        session.close();
+		session1.getTransaction().commit();
+        session1.close();
 		return empsum2;
 	}
 

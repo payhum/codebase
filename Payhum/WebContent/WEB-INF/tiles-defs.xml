@@ -153,6 +153,10 @@
 	<definition name="overtime.form" extends="hrHome">
 		<put name="body" value="/pages/hr/leave/overtimeapprove.jsp" />
 	</definition>
+	
+	<definition name="holiday.form" extends="hrHome">
+		<put name="body" value="/pages/hr/settings/holidaylist.jsp" />
+	</definition>
 
 	<definition name="leavetype.form" extends="hrHome">
 		<put name="body" value="/pages/hr/leavetype/index.jsp" />

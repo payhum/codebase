@@ -12,12 +12,12 @@
 	<li class="topitem"><div
 			class="buttonbg gradient_button gradient27" style="width: 73px;">
 			<a href="<%=request.getContextPath() + "/do/Payroll"%>">
-					Payroll</a>
+					Home</a>
 		</div></li>
-	<li class="topitem"><div
+	<!-- li class="topitem"><div
 			class="buttonbg gradient_button gradient27" style="width: 73px;">
 			<a href="<%=request.getContextPath() + "/do/Report"%>">
 					Report</a>
-		</div></li>		
+		</div></li-->		
 	
 </ul>

@@ -43,13 +43,13 @@ public static List<TaxRatesData> findByIncomeToo(double double1)
 }
 public static List<TaxRatesData> findByIncomeTo(double double1)
 {
-	Session	session = OpenHRSessionFactory.getInstance().openSession();
-	session.beginTransaction();
-	query = session.getNamedQuery("TaxRatesData.findByIncomeFrom");
+	Session	session2 = OpenHRSessionFactory.getInstance().openSession();
+	session2.beginTransaction();
+	query = session2.getNamedQuery("TaxRatesData.findByIncomeFrom");
     query.setDouble(0, double1);
     List<TaxRatesData> trdto = query.list();
-    session.getTransaction().commit();
-    session.close();
+    session2.getTransaction().commit();
+    session2.close();
 	return trdto;
 }
 
@@ -96,7 +96,7 @@ public static boolean updatePercent(TaxRatesData trds) {
     	TaxRatesData trd= null;
     	
     	if(trds.getId() != null) {
-    		trd = (TaxRatesData) session.get(TaxRatesData.class, trds.getId()); ;
+    		trd = (TaxRatesData) session.get(TaxRatesData.class, trds.getId()); 
     	}
     	
     	
@@ -144,26 +144,30 @@ public static boolean delete(TaxRatesData txrdata) {
     return done;
 }
 
-public static boolean upDateDelete(Double to,Double from) {
-    boolean done = false;
-    session = OpenHRSessionFactory.getInstance().getCurrentSession();
-    session.beginTransaction();
-    try {
-    	List<TaxRatesData> trdis = TaxratesFactory.findByIncomeTo(to);
-    	
-    	
-    	TaxRatesData txr = (TaxRatesData) session.get(TaxRatesData.class, trdis.get(0).getId());
-    	txr.setIncomeFrom(from);
-    	
-        session.update(txr);
-        session.flush();
-        session.getTransaction().commit();
-        done = true;
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }finally{
-    	
-    }
-    return done;
+public static boolean upDateDelete(Double to, Double from) {
+	boolean done = false;
+	session = OpenHRSessionFactory.getInstance().getCurrentSession();
+	session.beginTransaction();
+	try {
+		List<TaxRatesData> trdis = TaxratesFactory.findByIncomeTo(to);
+
+		if (trdis.size() != 0) {
+			TaxRatesData txr = (TaxRatesData) session.get(
+					TaxRatesData.class, trdis.get(0).getId());
+			txr.setIncomeFrom(from);
+
+			session.update(txr);
+			session.flush();
+			session.getTransaction().commit();
+			done = true;
+
+		}
+
+	} catch (Exception ex) {
+		ex.printStackTrace();
+	} finally {
+
+	}
+	return done;
 }
 }

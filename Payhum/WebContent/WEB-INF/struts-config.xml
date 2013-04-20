@@ -39,6 +39,7 @@
 		<action path="/Position" forward="position.form" />
  		<action path="/ApproveLeave" forward="leaveapp.form" />
  		<action path="/ApproveOverTime" forward="overtime.form" />
+ 		<action path="/holidays" forward="holiday.form" />
 		<action path="/LeaveType" forward="leavetype.form" />
 		<action path="/Employee" forward="employee.form" />
 		<action path="/Benefit" forward="benefit.form" />
@@ -103,12 +104,32 @@
 		</action>
 		
 		
+			
+			<action path="/AccountPayrollAtuo" 
+			type="com.openhr.payroll.action.AccountPayrollAtuo"  input="/pages/accounting/payroll/index.jsp">
+			<forward name="admin" path="/do/AdminHome" />
+			</action>
+			
 		<action path="/ReadPayrollSummary" name="PayrollForm" 
 			type="com.openhr.payroll.action.ReadPayrollSummary"  input="/pages/hr/report/summary.jsp">
 			<forward name="admin" path="/do/AdminHome" />
 			
 		</action>
 		<!-- End Read Payroll actions  -->
+		
+				<!-- Start PayperiodActions actions  -->
+				
+				
+				<action path="/CommanPayPeriodAction" parameter="parameter"
+    type="com.openhr.settings.action.CommanPayPeriodAction">
+    <forward name="success" path="/UserSuccess.jsp" />
+    <forward name="failure" path="/UserSuccess.jsp" />
+    
+</action>
+						<!-- End PayperiodActions actions  -->
+		
+		
+		
 		<!--Member Site Links -->
 		<action path="/MLeave" forward="mleave.form" />
 		<action path="/MAccount" forward="maccount.form" />
@@ -171,6 +192,15 @@
 						<!--end of TaxRatesAction-->
 		
 		<!--start  Deductions actions -->
+		
+		<action path="/ReadDeductionDeclAction" parameter="parameter"
+    type="com.openhr.deductiondec.action.ReadDeductionDeclAction">
+    <forward name="success" path="/UserSuccess.jsp" />
+    <forward name="failure" path="/UserSuccess.jsp" />
+    
+</action>
+		
+		
 	<action path="/ReadDeductionAction" 
 			type="com.openhr.deduction.action.ReadDeductionAction" >
 			<forward name="continue" path="position.form" />
@@ -400,12 +430,25 @@
 			<forward name="continue" path="leave.form" />
 		</action>
 
+		<action path="/ReadNoticeAction" name="leaveForm"
+			type="com.openhr.mleave.action.ReadNoticeAction" input="leave.form">
+			<forward name="continue" path="leave.form" />
+		</action>
+		
+		<action path="/ReadApprovedLeaveAction"  
+			type="com.openhr.employee.action.ReadApprovedLeaveAction">
+			<forward name="continue" path="leave.form" />
+		</action>
 
 		<action path="/ReadRequestedLeaveAction" name="leaveForm"
 			type="com.openhr.leave.action.ReadRequestedLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
 		</action>
 
+		<action path="/ReadHolidays" 
+			type="com.openhr.ReadHolidaysAction">
+			<forward name="continue" path="holiday.form" />
+		</action>
 
 
 
@@ -417,6 +460,11 @@
 		<action path="/DeleteLeaveAction" name="leaveForm"
 			type="com.openhr.leave.action.DeleteLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
+		</action>
+		
+		<action path="/DeleteHoliday"  
+			type="com.openhr.DeleteHolidayAction">
+			<forward name="continue" path="holiday.form" />
 		</action>
 
 
@@ -492,6 +540,12 @@
 			type="com.openhr.overtime.action.ApplyOverTimeAction">
 			<forward name="continue" path="mbenefit.form" />
 		</action>
+		
+		<action path="/addHoliday" 
+			type="com.openhr.AddHolidayAction">
+			<forward name="continue" path="holiday.form" />
+		</action>
+		
 		
 		
 		<action path="/DeleteLeaveApplication" name="applyLeave"

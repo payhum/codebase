@@ -159,10 +159,12 @@ public class CommanTaxReatesActions extends DispatchAction{
 			useIncomeFrom=eFromJSON.getIncomeFrom();
 			useIncomeTo=eFromJSON.getIncomeTo()+1;
 			
-			if(TaxratesFactory.delete(eFromJSON))
+			if(eFromJSON.getIncomeTo()!=-1)
 			{
 				
-				flag=TaxratesFactory.upDateDelete(useIncomeTo,useIncomeFrom);
+				if(TaxratesFactory.delete(eFromJSON))
+				{flag=TaxratesFactory.upDateDelete(useIncomeTo,useIncomeFrom);}
+				
 			}
 			
 			// result = JSONArray.fromObject(txl);

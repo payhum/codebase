@@ -11,8 +11,10 @@ import java.util.List;
 import com.openhr.Config;
 import com.openhr.common.OpenHRAction;
 import com.openhr.data.Employee;
+import com.openhr.data.EmployeePayroll;
 import com.openhr.data.LeaveType;
 import com.openhr.data.Users;
+import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.EmployeeFactory;
 import com.openhr.factories.LeaveTypeFactory;
 import com.openhr.factories.UsersFactory;
@@ -52,8 +54,13 @@ public class LoginAction extends OpenHRAction {
 				
 				request.getSession().setAttribute("loggedEmployee",
 						u.getEmployeeId());
-				
-				
+				//Employee e=u.getEmployeeId();
+				EmployeePayroll epay=	EmpPayTaxFactroy.findEmpPayrollbyEmpID(u.getEmployeeId()); 
+				if(epay!=null)
+				{
+				request.getSession().setAttribute("empPay",
+						epay.getId());
+				}
 				if (loginForm.getRole().equalsIgnoreCase("Administrator")) {
 					return map.findForward("admin");
 				}
