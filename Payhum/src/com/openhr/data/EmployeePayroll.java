@@ -121,8 +121,12 @@ public class EmployeePayroll implements Serializable {
     @Column(name = "netPay")
     private Double netPay;
 
+    @Basic(optional = false)
+    @Column(name = "overtimeamt")
+    private Double overtimeamt;
     
-    public EmployeePayroll() {
+    
+	public EmployeePayroll() {
     	this.taxableIncome = 0D;
         this.taxAmount = 0D;
         this.exemptionsDone = new ArrayList<ExemptionsDone>();
@@ -405,4 +409,11 @@ public class EmployeePayroll implements Serializable {
 		this.id = id;
 	}
 
+    public Double getOvertimeamt() {
+		return overtimeamt;
+	}
+
+	public void setOvertimeamt(Double overtimeamt) {
+		this.overtimeamt = overtimeamt;
+	}
 }

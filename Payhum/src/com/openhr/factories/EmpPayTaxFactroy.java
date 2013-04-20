@@ -214,6 +214,8 @@ return lov;
 			ePayroll.setTotalDeductions(empPayroll.getTotalDeductions());
 			ePayroll.setDeductionsDone(empPayroll.getDeductionsDone());
 			ePayroll.setExemptionsDone(empPayroll.getExemptionsDone());
+			ePayroll.setOvertimeamt(empPayroll.getOvertimeamt());
+			ePayroll.setTaxableOverseasIncome(empPayroll.getTaxableOverseasIncome());
 			
 			session.update(ePayroll);
 			//session.getTransaction().commit();
