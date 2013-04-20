@@ -21,6 +21,7 @@ public class BaseEC implements ExemptionCalculator {
 	
 	public static Integer STUDENT = 0;
 	public static Integer NONE = 1;
+	public static Integer WORKING = 2;
 	
 	@Override
 	public void calculate(Employee emp, EmployeePayroll empPayroll) {
@@ -32,7 +33,8 @@ public class BaseEC implements ExemptionCalculator {
 		// Handle Married person supporting spouse
 		if(emp.isMarried()) {
 			for(EmpDependents dependent : dependents) {
-				if(dependent.getType().compareTo(SPOUSE) == 0) {
+				if(dependent.getType().compareTo(SPOUSE) == 0
+				  && dependent.getOccupationType().compareTo(NONE) == 0) {
 					empPayroll.addExemption(getExemptionType(exemptionsTypes, SUPPORTING_SPOUSE),
 							taxDetails.getExemption(TaxDetails.SUPPORTING_SPOUSE));
 				}

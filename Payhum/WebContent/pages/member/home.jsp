@@ -14,25 +14,23 @@
 		<tiles:insert page="../../pages/member/notices/index.jsp" />
 	</div>
 	
+	<div id="loan">
+		<tiles:insert page="../../pages/member/benefit/loan/index.jsp" />
+	</div>
+	
 	<div id="leave">
 		<tiles:insert page="../../pages/member/leave/index.jsp" />
 	</div>
 
-
-
 	<div id="benefitPack">
 		<tiles:insert page="../../pages/member/benefit/overtime/index.jsp" />
 	</div>
-	
-	
-	
+		
 	<div id="deductions">
 		<tiles:insert page="../../pages/member/deductions/deductionsdecmember.jsp" />
 	</div>	
 
-	<div id="loan">
-		<tiles:insert page="../../pages/member/benefit/loan/index.jsp" />
-	</div>	
+		
 </div>
 
 
