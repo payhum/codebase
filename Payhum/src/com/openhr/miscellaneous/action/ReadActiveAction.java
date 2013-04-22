@@ -55,8 +55,8 @@ public class ReadActiveAction  extends Action{
 					if (!(s2.length > 2)) {
 						System.out.println(p.getId() + "---p.hashCode()---"
 								+ p.hashCode());
-						Double d = p.getSalary();
-						p.setSalary(((d) * 12));
+						Double d = p.getLowSal();
+						p.setLowSal(((d) * 12));
 
 					}
 					

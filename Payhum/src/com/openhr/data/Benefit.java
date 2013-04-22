@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Benefit.findAll", query = "SELECT b FROM Benefit b"),
     @NamedQuery(name = "Benefit.findById", query = "SELECT b FROM Benefit b WHERE b.id = ?"),
+    @NamedQuery(name = "Benefit.findByEmpId", query = "SELECT b FROM Benefit b WHERE b.employeeId = ?"),
     @NamedQuery(name = "Benefit.findByAmount", query = "SELECT b FROM Benefit b WHERE b.amount = ?")})
 public class Benefit implements Serializable {
     private static final long serialVersionUID = 1L;

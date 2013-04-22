@@ -19,7 +19,7 @@ import org.apache.struts.actions.DispatchAction;
 import com.openhr.data.PayPeriodData;
 import com.openhr.data.TaxRatesData;
 import com.openhr.factories.PayPeriodFactory;
-import com.openhr.factories.TaxratesFactory;
+import com.openhr.factories.TaxFactory;
 
 public class CommanPayPeriodAction extends DispatchAction {
 

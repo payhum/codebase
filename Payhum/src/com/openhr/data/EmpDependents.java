@@ -35,18 +35,18 @@ public class EmpDependents  implements Serializable {
     @Basic(optional = false)
     @Column(name = "name", nullable = false, length = 45)
 	private String name;
-    @Basic(optional = false)
-    @Column(name = "occupationType", nullable = false, length = 20)
-	private Integer occupationType;
-    @Basic(optional = false)
-    @Column(name = "depType", nullable = false, length = 20)
-	private Integer depType;
+    @JoinColumn(name = "occupationType", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private TypesData occupationType;
+    @JoinColumn(name = "depType", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private TypesData depType;
     
     public EmpDependents() {
     	
     }
 
-	public EmpDependents(Integer id, Employee employeeId, int age, String name, Integer occType, Integer dType) {
+	public EmpDependents(Integer id, Employee employeeId, int age, String name, TypesData occType, TypesData dType) {
 		this.id = id;
 		this.employeeId = employeeId;
 		this.age = age;
@@ -55,11 +55,11 @@ public class EmpDependents  implements Serializable {
 		this.depType = dType;
 	}
 	
-	public Integer getOccupationType() {
+	public TypesData getOccupationType() {
 		return this.occupationType;
 	}
 
-	public void setOccupationType(Integer occupationType) {
+	public void setOccupationType(TypesData occupationType) {
 		this.occupationType = occupationType;
 	}
 
@@ -67,11 +67,11 @@ public class EmpDependents  implements Serializable {
 		this.age = age;
 	}
 
-	public void setType(Integer depType) {
+	public void setType(TypesData depType) {
 		this.depType = depType;
 	}
 
-	public Integer getType() {
+	public TypesData getType() {
 		return this.depType;
 	}
 

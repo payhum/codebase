@@ -5,7 +5,6 @@
 </style>
 
 <%@page import="com.openhr.factories.LeaveTypeFactory"%>
-<%@page import="com.openhr.data.Leave" %>
 <%@page import="com.openhr.data.LeaveType" %>
 <%@page import="com.openhr.data.Users" %>
 <%@page import="java.util.List" %>
@@ -262,7 +261,7 @@
 		 	 }); 
 	    }
 	    else{
-	    	alert("Approved Leaves cannot be deleted.");
+	    	alert("Approved/Rejected Leaves cannot be deleted.");
  	    }
  		 
   	});

@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.openhr.data.LeaveApproval;
 import com.openhr.data.LeaveRequest;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
@@ -19,6 +20,7 @@ public class LeaveRequestFactory {
 	private static Session session;
     private static Query query;
     private static List<LeaveRequest> leaveRequests;
+    private static List<LeaveApproval> appLeaves;
 
     public LeaveRequestFactory() {
     }
@@ -165,4 +167,33 @@ public class LeaveRequestFactory {
         }
         return done;
     }
+    
+    public static List<LeaveApproval> findByLeaveId(Integer leaveId) {
+ 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("LeaveApproval.findById");
+		query.setInteger(0, leaveId);
+		appLeaves = query.list();
+		session.getTransaction().commit();
+
+		return appLeaves;
+	}
+    
+	public static boolean insert(LeaveApproval l) {
+		boolean done = false;
+
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		try {
+			session.save(l);
+			session.getTransaction().commit();
+			done = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
+		}
+		return done;
+	}
+
 }

@@ -105,9 +105,9 @@ public class Employee implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId", fetch=FetchType.EAGER)
     private List<EmpDependents> dependents;
     
-    @Basic(optional = false)
-    @Column(name = "residentType", nullable = false, length = 20)
-    private Integer residentType;
+    @JoinColumn(name = "residentType", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private TypesData residentType;
     
 	@JoinColumn(name = "companyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
@@ -256,18 +256,8 @@ public class Employee implements Serializable {
 		this.status = status;
 	}
 
-	public ResidentType getResidentType() {
-		if(this.residentType != null) {
-			if(residentType == ResidentType.LOCAL.getValue()) {
-				return ResidentType.LOCAL;
-			} else if(residentType == ResidentType.RESIDENT_FOREIGNER.getValue()) {
-				return ResidentType.RESIDENT_FOREIGNER;
-			} else if(residentType == ResidentType.NON_RESIDENT_FOREIGNER.getValue()) {
-				return ResidentType.NON_RESIDENT_FOREIGNER;
-			}
-		} 
-		
-		return null;
+	public TypesData getResidentType() {
+		return residentType;
 	}
 
 	public List<EmpDependents> getDependents() {
@@ -286,7 +276,7 @@ public class Employee implements Serializable {
 		this.dependents = deps;
 	}
 	
-	public void setResidentType(Integer resType) {
+	public void setResidentType(TypesData resType) {
 		this.residentType = resType;
 	}
 	

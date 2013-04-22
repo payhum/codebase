@@ -27,29 +27,65 @@ DROP TABLE IF EXISTS `position`;
 CREATE TABLE `position` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(45) NOT NULL,
-  `salary` double NOT NULL,
-  `raisePerYear` double NOT NULL,
-  `version` int(11) NOT NULL default '1',
-  PRIMARY KEY  (`id`)
+  `lowsal` double NOT NULL,
+  `highsal` double NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Definition of table `company`
 --
-
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `companyId` varchar(45) NOT NULL,
   `name` varchar(45) NOT NULL,
-  `address` varchar(90) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Definition of table `branch`
+--
+DROP TABLE IF EXISTS `branch`;
+CREATE TABLE `branch` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) NOT NULL,
+  `address` varchar(45) NOT NULL,
+  `companyId` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_branch_company` (`companyId`),
+  CONSTRAINT `FK_branch_company` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `department`
+--
+DROP TABLE IF EXISTS `department`;
+CREATE TABLE `department` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `deptname` varchar(45) NOT NULL,
+  `branchId` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_dept_branch` (`branchId`),
+  CONSTRAINT `FK_dept_branch` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `types`
+-- 
+DROP TABLE IF EXISTS `types`;
+create table `types`
+(
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(45) NOT NULL,
+  `desc` varchar(256) NOT NULL,
+  `type` varchar(45) NOT NULL,
+  PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Definition of table `employee`
 --
-
 DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
   `id` int(10) unsigned NOT NULL auto_increment,
@@ -65,15 +101,17 @@ CREATE TABLE `employee` (
   `status` varchar(20) NOT NULL,
   `version` int(11) NOT NULL default '1',
   `married` varchar(6) NOT NULL,
-  `residentType` int(11) NOT NULL default '0',
+  `residentType` int(10) unsigned NOT NULL,
   `companyId` int(10) unsigned NOT NULL,
   `empNationalID` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_employee_position` (`positionId`),
   KEY `FK_employee_id` (`employeeId`),
   KEY `FK_employee_company` (`companyId`),
+  KEY `FK_employee_res` (`residentType`),
   CONSTRAINT `FK_employee_position` FOREIGN KEY (`positionId`) REFERENCES `position` (`id`),
-  CONSTRAINT `FK_employee_company` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`)
+  CONSTRAINT `FK_employee_company` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`),
+  CONSTRAINT `FK_employee_res` FOREIGN KEY (`residentType`) REFERENCES `types` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -95,13 +133,15 @@ CREATE TABLE `emp_payroll_view` (
   `bonus` double default 0,
   `accomodationAmount` double default 0,
   `employerSS` double default 0,
-  `accomodationType` int(10) NOT NULL,
+  `accomodationType` int(10) unsigned NOT NULL,
   `netPay` double default 0,
   `totalDeductions` double default 0,
   `overtimeamt` double default 0,
   PRIMARY KEY  (`id`),
   KEY `FK_emp_payroll_emp` (`employeeId`),
-  CONSTRAINT `FK_emp_payroll_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
+  KEY `FK_emp_payroll_acc` (`accomodationType`),
+  CONSTRAINT `FK_emp_payroll_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`),
+  CONSTRAINT `FK_emp_payroll_acc` FOREIGN KEY (`accomodationType`) REFERENCES `types` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -288,25 +328,6 @@ CREATE TABLE `roles` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Definition of table `tbl_leave`
---
-
-DROP TABLE IF EXISTS `tbl_leave`;
-CREATE TABLE `tbl_leave` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `leaveType` int(10) unsigned NOT NULL,
-  `unuseddays` int(10) unsigned NOT NULL,
-  `employeeId` int(10) unsigned NOT NULL,
-  `year` int(10) unsigned NOT NULL,
-  `version` int(11) NOT NULL default '1',
-  PRIMARY KEY  (`id`),
-  KEY `FK_leave_leavetype` USING BTREE (`leaveType`),
-  KEY `FK_tbl_leave_employee` (`employeeId`),
-  CONSTRAINT `FK_leave_leavetype` FOREIGN KEY (`leaveType`) REFERENCES `leavetype` (`id`),
-  CONSTRAINT `FK_tbl_leave_employee` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
 -- Definition of table `users`
 --
 
@@ -346,9 +367,9 @@ CREATE TABLE `payroll` (
 --
 -- Definition of view `emp_benefit_view`
 --
-DROP TABLE IF EXISTS `emp_benefit_view`;
 DROP VIEW IF EXISTS `emp_benefit_view`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `payhumrepo`.`emp_benefit_view` AS select `payhumrepo`.`employee`.`employeeId` AS `EMP_ID`,`payhumrepo`.`position`.`salary` AS `SALARY`,`payhumrepo`.`benefit`.`amount` AS `BENEFIT_AMNT`,`payhumrepo`.`benefitype`.`name` AS `BENEFIT_TYPE` from (((`payhumrepo`.`employee` join `payhumrepo`.`position`) join `payhumrepo`.`benefit`) join `payhumrepo`.`benefitype`) where ((`payhumrepo`.`employee`.`positionId` = `payhumrepo`.`position`.`id`) and (`payhumrepo`.`employee`.`id` = `payhumrepo`.`benefit`.`employeeId`) and (`payhumrepo`.`benefit`.`typeId` = `payhumrepo`.`benefitype`.`id`));
+DROP TABLE IF EXISTS `emp_benefit_view`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `payhumrepo`.`emp_benefit_view` AS select `payhumrepo`.`employee`.`employeeId` AS `EMP_ID`,`payhumrepo`.`position`.`lowsal` AS `SALARY`,`payhumrepo`.`benefit`.`amount` AS `BENEFIT_AMNT`,`payhumrepo`.`benefitype`.`name` AS `BENEFIT_TYPE` from (((`payhumrepo`.`employee` join `payhumrepo`.`position`) join `payhumrepo`.`benefit`) join `payhumrepo`.`benefitype`) where ((`payhumrepo`.`employee`.`positionId` = `payhumrepo`.`position`.`id`) and (`payhumrepo`.`employee`.`id` = `payhumrepo`.`benefit`.`employeeId`) and (`payhumrepo`.`benefit`.`typeId` = `payhumrepo`.`benefitype`.`id`));
 
 --
 -- Definition of table `deduction_decl`
@@ -414,7 +435,11 @@ CREATE TABLE `emp_dependents` (
   `depType` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_dependents_emp` (`employeeId`),
-  CONSTRAINT `FK_dependents_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
+  KEY `FK_dependents_occ` (`occupationType`),
+  KEY `FK_dependents_type` (`depType`),
+  CONSTRAINT `FK_dependents_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`),
+  CONSTRAINT `FK_dependents_occ` FOREIGN KEY (`occupationType`) REFERENCES `types` (`id`),
+  CONSTRAINT `FK_dependents_type` FOREIGN KEY (`depType`) REFERENCES `types` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -548,7 +573,7 @@ create table `overtime`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Definition of table `overtime`
+-- Definition of table `taxrates`
 -- 
 DROP TABLE IF EXISTS `taxrates`;
 create table `taxrates`
@@ -556,7 +581,24 @@ create table `taxrates`
   `id` int(10) unsigned NOT NULL auto_increment,
   `income_from` double NOT NULL,
   `income_to` double NOT NULL,
-  `income_percnt` double NOT NULL,
-  `version` int(11) NOT NULL default '1',
-  PRIMARY KEY  (`id`)
+  `income_percent` double NOT NULL,
+  `residentTypeId` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_taxrates_type` (`residentTypeId`),
+  CONSTRAINT `FK_taxrates_type` FOREIGN KEY (`residentTypeId`) REFERENCES `types` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `taxdetails`
+-- 
+DROP TABLE IF EXISTS `taxdetails`;
+create table `taxdetails`
+(
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `typeId` int(10) unsigned NOT NULL,
+  `amount` double NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_taxdetails_type` (`typeId`),
+  CONSTRAINT `FK_taxdetails_type` FOREIGN KEY (`typeId`) REFERENCES `types` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

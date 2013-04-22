@@ -12,7 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Expression;
 
 import com.openhr.data.Benefit;
-import com.openhr.data.Benefit;
+import com.openhr.data.Employee;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
@@ -86,6 +86,17 @@ public class BenefitFactory {
         return benefits;
     }
 
+    public static List<Benefit> findByEmpId(Employee emp) {
+        session = OpenHRSessionFactory.getInstance().getCurrentSession();
+        session.beginTransaction();
+        query = session.getNamedQuery("Benefit.findByEmpId");
+        query.setParameter(0, emp);
+        benefits = query.list();
+        session.getTransaction().commit();
+        
+        return benefits;
+    }
+    
     public static List<Benefit> findByName(Double amount) {
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();

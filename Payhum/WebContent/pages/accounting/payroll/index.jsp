@@ -68,7 +68,7 @@ span.k-tooltip {
 									width=100 height=75 src="" /></td>
 								<td><label id="empId" style="font-size: 16px;">No
 										employee selected</label></td>
-								<td><label id="fullName" style="font-size: 16px;">No
+								<td><label id="fullNames" style="font-size: 16px;">No
 										employee selected</label></td>
 							</tr>
 						</table>
@@ -86,7 +86,7 @@ span.k-tooltip {
 
 		<div id="calculations" style="display: none">
 
-			<div class="k-content">
+			<div id="example" class="k-content">
 
 				<fieldset>
 					<legend>General Summary</legend>
@@ -94,7 +94,7 @@ span.k-tooltip {
 					<table id="employeeSummaryGrid">
 						<thead>
 							<tr>
-								<th>Employee ID</th>
+								<th>Employee National ID</th>
 								<th>Gross Salary</th>
 								<th>Worked for</th>
 
@@ -103,147 +103,199 @@ span.k-tooltip {
 							</tr>
 						</thead>
 
-						<tbody>
-							<tr>
-								<td>MODETH-0001/2012</td>
-								<td><input disabled="disabled" style="width: 60px"
-									type="text" value="5500" />ETB</td>
-								<td><input disabled="disabled" style="width: 60px"
-									type="text" value="20" />days<br> <a href="#">View
-										Time sheet</a></td>
 
-								<td><input disabled="disabled" type="text"
-									style="width: 60px" value="4500" />ETB</td>
-								<td><input disabled="disabled" style="width: 60px"
-									type="text" value="528.45" />ETB<br> <a href="#"
-									id="showOvertimeSheet">View Overtime sheet</a></td>
-							</tr>
+
+
+						<tbody data-template="row-template" data-bind="source: products">
 						</tbody>
+
+
+						<script id="row-template" type="text/x-kendo-template">
+        
+
+
+<tr>
+								<td data-bind="text: employeeId.empNationalID">
+			 <td >#=kendo.toString(grossSalary, "n2")#</td>
+								 <td >#=kendo.toString(grossSalary, "n2")#</td>
+
+							 <td >#=kendo.toString(grossSalary, "n2")#</td>
+					 <td >#=kendo.toString(overtimeamt, "n2")#</td>
+							</tr>
+    </script>
+
+
 					</table>
 				</fieldset>
 			</div>
 
 			<div>
 				<div style="float: left; width: 440px" id="allowances">
+				<div id="exampleAllowancesList" class="k-content">
 					<fieldset>
-						<legend>Allowances</legend>
-						<p class="information_msg"
-							style="font-size: 14px; padding: 5px; background-color: #006699; color: #fff; border: 1px solid yellow">
-							UnCheck on <i>Allowance</i> to exculde from payroll
-						</p>
-						<div style="padding: 10px;">
-							<div style="float: left; width: 200px">
-								<input type="checkbox" checked="checked" value="0" />Transport
-								Allowance<br> <input type="text" value="1000"
-									disabled="disabled" />
-							</div>
-
-							<div style="margin-left: 200px">
-								<input type="checkbox" checked="checked" value="0" />House
-								Allowance<br> <input type="text" value="2000"
-									disabled="disabled" />
-							</div>
-							<p style="clear: both"></p>
-						</div>
-
-						<div style="padding: 10px;">
-							<div style="float: left; width: 200px">
-								<input type="checkbox" checked="checked" value="0" />Bonus<br>
-								<input type="text" value="550" disabled="disabled" />
-							</div>
-
-							<div style="margin-left: 200px"></div>
-							<p style="clear: both"></p>
-						</div>
-
-						<div style="padding: 10px;">
-							<div style="float: left; width: 200px">
-								<h2 style="font-size: 20px">Sub total</h2>
-								<input type="text" style="width: 80px; font-size: 18px"
-									value="3550" disabled="disabled" />ETB
-							</div>
-
-							<div style="margin-left: 200px">
+						<legend>Income Details</legend>
+<table id="IncomeGrid">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Amount</th>
+								
+							</tr>
+						</thead>
 
 
-								<input type="button" value="Edit" id="editAllowances" />
 
-							</div>
-							<p style="clear: both"></p>
-						</div>
+
+<tbody data-template="row-AllowancesLis"  data-bind="source: AllowancesList"></tbody>
+			
+
+						
+
+						
+
+
+							<script id="row-AllowancesLis" type="text/x-kendo-template">
+
+  
+<tr>
+								<td >Allowances</td>
+			 <td >#=kendo.toString(allowances, "n2")#</td>
+							</tr>
+<tr>
+								<td >accomodation</td>
+			 <td >#=kendo.toString(accomodationAmount, "n2")#</td>
+							</tr>
+       
+<tr>
+								<td >employerSS</td>
+
+								 <td >#=kendo.toString(employerSS, "n2")#</td></tr>
+
+
+<tr>
+								<td >taxableOverseasIncome</td>
+		
+								 <td >#=kendo.toString(taxableOverseasIncome, "n2")#</td></tr>
+
+
+
+    </script>
+
+						
+						
+					</table>
 					</fieldset>
+					</div>
 				</div>
 
 
 
 				<div style="margin-left: 440px" id="deductions">
+				<div id="exampleDeductionList" class="k-content">
 					<fieldset>
 						<legend>Deductions</legend>
-						<p class="information_msg"
-							style="font-size: 14px; padding: 5px; background-color: #006699; color: #fff; border: 1px solid yellow;">
-							un check on <i>Deduction</i> to exclude from payroll
-						</p>
-						<div style="padding: 10px;">
-							<div style="float: left; width: 200px">
-								<input type="checkbox" checked="checked" value="0" />Pension(6%)<br>
-								<input type="text" value="300" disabled="disabled" />
-							</div>
+						<table id="DeducListGrid">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Amount</th>
+								
+							</tr>
+						</thead>
 
-							<div style="margin-left: 200px">
-								<input type="checkbox" checked="checked" value="0" />Income
-								TAX(15%)<br> <input type="text" value="950"
-									disabled="disabled" />
-							</div>
-							<p style="clear: both"></p>
-						</div>
+							
 
-						<div style="padding: 10px;">
-							<div style="float: left; width: 200px">
-								<input type="checkbox" checked="checked" value="0" />Staff
-								Loan(10%)<br> <input type="text" value="550"
-									disabled="disabled" />
-							</div>
+<tbody data-template="row-DeductionList" data-bind="source: DeductionList"></tbody>
 
-							<div style="margin-left: 200px"></div>
-							<p style="clear: both"></p>
-						</div>
+							<script id="row-DeductionList" type="text/x-kendo-template">
 
-						<div style="padding: 10px;">
-							<div style="float: left; width: 200px">
-								<h2 style="font-size: 20px">Sub total</h2>
-								<input type="text" style="width: 80px; font-size: 18px"
-									value="1800" disabled="disabled" />ETB
-							</div>
-
-							<div style="margin-left: 200px">
-
-
-								<input type="button" value="Edit" id="editDeductions" />
-
-							</div>
-							<p style="clear: both"></p>
-						</div>
+ 	
+						
+       <tr>
+								<td >#=type.name#</td>
+			 <td >#=kendo.toString(amount, "n2")#</td>
+							</tr>
+       
+    </script>
+						</table>
 					</fieldset>
+					</div>
 				</div>
 				<p style="clear: both"></p>
 			</div>
 
 
 			<div style="float: left; width: 440px">
+					<div id="exampleNetpay" class="k-content">
 				<fieldset>
 					<legend>Net payable</legend>
-					<div style="padding: 10px;">
-						<div style="float: left; width: 200px">
+			<table id="NetListGrid">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Amount</th>
+								
+							</tr>
+						</thead>
 
-							<input type="text" style="width: 80px; font-size: 18px"
-								value="6250" disabled="disabled" /><label>ETB</label>
-						</div>
+						
 
-						<p style="clear: both"></p>
-					</div>
+<tbody data-template="row-NetpayList"  data-bind="source: NetpayLists"></tbody>
+						<script id="row-NetpayList" type="text/x-kendo-template">
+					
+       
+       <tr>
+								<td >TaxableIncome</td>
+			 <td >#=kendo.toString(taxableIncome, "n2")#</td>
+							</tr>
 
+<tr>
+								<td >TaxAmount</td>
+			 <td >#=kendo.toString(taxAmount, "n2")#</td>
+							</tr>
+
+<tr>
+								<td >Netpay</td>
+			 <td >#=kendo.toString(netPay, "n2")#</td>
+							</tr>
+    </script>
+					</table>
 				</fieldset>
+				</div>
 			</div>
+			
+				<div style="margin-left: 440px" id="deductions">
+				<div id="exampleExempList" class="k-content">
+					<fieldset>
+						<legend>Exemptions</legend>
+						<table id="ExempListGrid">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Amount</th>
+								
+							</tr>
+						</thead>
+
+							
+
+<tbody data-template="row-ExempList" data-bind="source: ExempLists"></tbody>
+
+							<script id="row-ExempList" type="text/x-kendo-template">
+
+ 	
+						
+       <tr>
+								<td >#=type.name#</td>
+			 <td >#=kendo.toString(amount, "n2")#</td>
+							</tr>
+       
+    </script>
+						</table>
+					</fieldset>
+					
+					</div>
+				</div>
 		</div>
 	</div>
 </div>
@@ -281,7 +333,7 @@ span.k-tooltip {
 				<td>128.45</td>
 			</tr>
 			<tr>
-				<td><a href="#" class="otDatepicker">Aug 08, 2012</a></td>
+				<td><a href="#" class="otDatepicker">Bug 08, 2012</a></td>
 				<td>3.25</td>
 				<td>
 					<div>
@@ -420,11 +472,29 @@ span.k-tooltip {
 </div>
 
 <div id="pay_summary_cont" style="width: 650px; display: none">
+	
+	
+	
+	
+
 	<div style="clear: both">
-		<input type="button" value="Print" />
+		<input type="button" class="print" value="Print" />
+	
+		<img  height="42" width="80"  src="<%=request.getContextPath() + "/css/images/companyLogo/logo.jpg"%>" /> 
 	</div>
-	<div>
-		<h3 style="float: right">Anthony Williams</h3>
+					<div id="exampleSalryListWin" class="k-content">
+
+						<div data-template="row-SalryListWin"
+							data-bind="source: SalryListWins"></div>
+
+
+						<script id="row-SalryListWin" type="text/x-kendo-template">
+					
+       
+       
+<h3 style="float: right">#=employeeId.companyId.name#</h3>
+<hr style="clear: both">
+		<h3 style="float: right">#=employeeId.firstname#</h3>
 		<hr style="clear: both">
 	</div>
 	<div>
@@ -436,48 +506,82 @@ span.k-tooltip {
 			<p style="width: 400px; font-size: 13px; text-align: right">Salary</p>
 		</div>
 		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 16px;">2569.56</strong>
+<h3 style="float: right">#=kendo.toString(employeeId.positionId.salary, "n2")#</h3>
+
+
 		</div>
 		<div style="clear: both"></div>
 	</div>
-
-
+    </script>
+		</div>		
+	
 
 
 	<div>
-		<h3 style="float: left">Allowances</h3>
+		<h3 style="float: left">Income Details</h3>
 		<hr style="clear: both" />
 	</div>
+	
+	
+	
+					<div id="exampleIncomeWin" class="k-content">
+
+						<div data-template="row-IncomeWin"
+							data-bind="source: IncomeWins"></div>
+
+
+						<script id="row-IncomeWin" type="text/x-kendo-template">
+					
+              
+	
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">House</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">Allowances</p>
 		</div>
 		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 16px;">251.26</strong>
+			MMK #=kendo.toString(allowances, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
 
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Fuel</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">Accomodationtion</p>
 		</div>
 		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 16px;">452</strong>
+	MMK #=kendo.toString(accomodationAmount, "n2")#
+		</div>
+		<div style="clear: both"></div>
+	</div>
+	<div>
+		<div style="float: left">
+			<p style="width: 400px; font-size: 13px; text-align: right">taxableOverseasIncome</p>
+		</div>
+		<div style="float: right">
+	  	MMK #=kendo.toString(taxableOverseasIncome, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
 
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Representation</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">employerSS</p>
 		</div>
 		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 16px;">236.9</strong>
+			 	MMK #=kendo.toString(employerSS, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
-	<hr>
+				
+			
+ </script>
+		</div>	
+	
+	
+	
+	
+
+	
 
 
 
@@ -488,46 +592,75 @@ span.k-tooltip {
 		<h3 style="float: left">Deductions</h3>
 		<hr style="clear: both" />
 	</div>
-	<div>
-		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Income
-				Tax(35%)</p>
-		</div>
-		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 16px;">652.26</strong>
-		</div>
-		<div style="clear: both"></div>
+	
+		<div id="exampleDeducWin" class="k-content">
+
+						<div data-template="row-DeducWin"
+							data-bind="source: DeducWins"></div>
+
+
+						<script id="row-DeducWin" type="text/x-kendo-template"> 
+<div>
+		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">#=type.name#</p></div>
+		<div style="float:right">
+MMK #=kendo.toString(amount, "n2")#
+</div>
+		<div style="clear:both"></div>
 	</div>
 
+
+</script>
+		</div>	
+
+
 	<div>
-		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Pension(6%)</p>
-		</div>
-		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 16px;">142.45</strong>
-		</div>
-		<div style="clear: both"></div>
+		<h3 style="float: left">Exemptions</h3>
+		<hr style="clear: both" />
 	</div>
-	<div>
-		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Staff
-				Loan</p>
-		</div>
-		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 16px;">520.25</strong>
-		</div>
-		<div style="clear: both"></div>
+	
+		<div id="exampleExempWin" class="k-content">
+
+						<div data-template="row-ExempWin"
+							data-bind="source: ExempWins"></div>
+
+
+						<script id="row-ExempWin" type="text/x-kendo-template"> 
+<div>
+		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">#=type.name#</p></div>
+		<div style="float:right">
+MMK #=kendo.toString(amount, "n2")#
+</div>
+		<div style="clear:both"></div>
 	</div>
+
+
+</script>
+		</div>	
+
 	<hr>
 	<div>
 		<div style="float: left">
 			<h3>Total</h3>
 		</div>
+		
+		<div id="exampleTotalWin" class="k-content">
+
+						<div data-template="row-TotalWin"
+							data-bind="source: TotalWins"></div>
+
+
+						<script id="row-TotalWin" type="text/x-kendo-template"> 
+
+
 		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 18px;">2397.56</strong>
+		
+MMK #=kendo.toString(totalDeductions, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
+	
+	
+	
 	<hr>
 
 	<div>
@@ -535,17 +668,25 @@ span.k-tooltip {
 			<h3>Net Pay</h3>
 		</div>
 		<div style="float: right">
-			<strong style="color: #0f0; font-style: underline; font-size: 18px;">1500.56</strong>
+			
+MMK #=kendo.toString(netPay, "n2")#
 			<hr>
 			<hr>
 		</div>
 		<div style="clear: both"></div>
 	</div>
 
+</script>
+		</div>	
+		
+		
 
 </div>
 
 
+
+
+</div>
 <style scoped>
 h3 {
 	font-size: 18px;
@@ -620,9 +761,16 @@ var percentSelect=null;
 	//var  decdiv=$(".decdiv").html();
 	//alert(df);
 
+	$("#employeeSummaryGrid").kendoGrid();
 	
-	
-		$("#employeeSummaryGrid").kendoGrid();
+		$("#IncomeGrid").kendoGrid();
+		
+		$("#DeducListGrid").kendoGrid();
+		
+		$("#NetListGrid").kendoGrid();
+		
+		
+		$("#ExempListGrid").kendoGrid();
 		$("#calculations_payroll_menu").kendoMenu();
 
 		$("#showOvertimeSheet").click(function() {
@@ -686,7 +834,7 @@ var percentSelect=null;
             	$("ul.list li:nth-child(1)").removeClass("k-state-active");
             	$("ul.list li:nth-child(4)").addClass("k-state-active");
             break;
-            default:
+         
                 
         }
 		
@@ -1536,20 +1684,27 @@ $("#searchByName").data("kendoAutoComplete").placeholder("Start typing");
 			$("#calculations").css("display", "none");
         	$("#view_pay_summary").css("display", "none");
 		});
+		var jsonObject;
+		
+		var jsonExemp;
+		
+		var jsonDeduc;
 		
 		$("#searchByName").kendoAutoComplete({
 		
 	        dataSource: new kendo.data.DataSource({
 	            transport: {
-	                read: "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>"
+	                read: "<%=request.getContextPath() + "/do/AccountPayrollAtuo"%>"
 														}
 													}),
 											select : function(e) {
-												alert("hello");
+												//alert("hello");
 												////////////////////////////////////////////////////
 												var dataItem = this
 														.dataItem(e.item
 																.index());
+												
+												jsonObject=dataItem;
 												////////////////////////////////////////////////////
 												$("#employeeHeader").css(
 														"display", "block");
@@ -1558,29 +1713,144 @@ $("#searchByName").data("kendoAutoComplete").placeholder("Start typing");
 												$("#view_pay_summary").css(
 														"display", "block");
 												////////////////////////////////////////////////////
-												$("#empId").text(
-														dataItem.employeeId);
-												$("#fullName")
+												$("#empId")
 														.text(
-																dataItem.firstname
+																dataItem.employeeId.employeeId);
+												$("#fullNames")
+														.text(
+																dataItem.employeeId.firstname
 																		+ ' '
-																		+ dataItem.middlename
+																		+ dataItem.employeeId.middlename
 																		+ ' '
-																		+ dataItem.lastname);
+																		+ dataItem.employeeId.lastname);
 												$("#photo")
 														.attr(
 																"src",
 																"/OpenHR"
 																		+ dataItem.photo);
 												//output selected dataItem
-												alert(kendo.stringify(dataItem));       
+												//var d=kendo.stringify(dataItem.deductionsDeclared);   
+
+												//alert(d);
+												var viewModel = kendo
+														.observable({
+
+															products : dataItem
+														});
+												kendo.bind($("#example"),
+														viewModel);
+
+												var AllowancesList = kendo
+														.observable({
+															AllowancesList : dataItem
+														});
+												kendo
+														.bind(
+																$("#exampleAllowancesList"),
+																AllowancesList);
+												//var sbsss = new StringBuilder();
+												//alert(kendo.stringify(dataItem.deductionsDeclared));
+												var array = dataItem.deductionsDone;
+												//  alert(dataItem.deductionsDeclared.length);
+												// sb.append("sravan");
+												var decTxt = "[";
+												for ( var i = 0; i < array.length; i++) {
+
+													// alert(kendo.stringify(dataItem.deductionsDeclared[i]));
+													if (i == array.length - 1) {
+														decTxt = decTxt
+																+ kendo
+																		.stringify(dataItem.deductionsDone[i]);
+													} else {
+														decTxt = decTxt
+																+ kendo
+																		.stringify(dataItem.deductionsDone[i])
+																+ ",";
+													}
+
+												}
+												decTxt = decTxt + "]";
+												
+												var sss = decTxt;
+												// alert("XXXXXXXXXXXXXXXXXXXXXXX"+sss);
+												var result = JSON.parse(sss);
+												
+												jsonDeduc=JSON.parse(sss);
+												//  alert(result);
+												var DeducsList = kendo
+														.observable({
+															DeductionList : result
+														});
+												kendo
+														.bind(
+																$("#exampleDeductionList"),
+																DeducsList);
+												
+												
+												
+												
+												
+												
+												
+												
+
+												var NetpayList = kendo
+														.observable({
+															NetpayLists : dataItem
+														});
+												kendo.bind($("#exampleNetpay"),
+														NetpayList);
+												
+												
+												
+												
+												
+												var arrayExemp = dataItem.exemptionsDone;
+												//  alert(dataItem.deductionsDeclared.length);
+												// sb.append("sravan");
+												var excemTxt = "[";
+												for ( var i = 0; i < arrayExemp.length; i++) {
+
+													// alert(kendo.stringify(dataItem.deductionsDeclared[i]));
+													if (i == arrayExemp.length - 1) {
+														excemTxt = excemTxt
+																+ kendo
+																		.stringify(dataItem.exemptionsDone[i]);
+													} else {
+														excemTxt = excemTxt
+																+ kendo
+																		.stringify(dataItem.exemptionsDone[i])
+																+ ",";
+													}
+
+												}
+												excemTxt = excemTxt + "]";
+												
+												var exs = excemTxt;
+												// alert("XXXXXXXXXXXXXXXXXXXXXXX"+sss);
+												var resultExemp = JSON.parse(exs);
+												
+												jsonExemp=JSON.parse(exs);
+												//  alert(result);
+												var ExempList = kendo
+														.observable({
+															ExempLists : resultExemp
+														});
+												kendo
+														.bind(
+																$("#exampleExempList"),
+																ExempList);
+												
+												
+
 											},
-											dataTextField : "firstname",
+											dataTextField : "fullName",
 											placeholder : 'Start typing',
 											template : kendo
 													.template($(
 															"#searchByNameAutoComplete")
 															.html())
+
 										});
 
 						$("#printPaySlip").click(
@@ -1613,7 +1883,45 @@ $("#searchByName").data("kendoAutoComplete").placeholder("Start typing");
 											.center();
 									$("#pay_summary_cont").data("kendoWindow")
 											.open();
-								});
+									//alert(jsonObject);
+									var SalryListWin= kendo.observable({
+										SalryListWins : jsonObject
+									});
+							kendo.bind($("#exampleSalryListWin"),
+									SalryListWin);
+							
+							var IncomeWin= kendo.observable({
+								IncomeWins : jsonObject
+							});
+					kendo.bind($("#exampleIncomeWin"),
+							IncomeWin);
+							
+							
+							
+					//alert(jsonDeduc);
+					var DeducWin= kendo.observable({
+						DeducWins : jsonDeduc
+					});
+			kendo.bind($("#exampleDeducWin"),
+					DeducWin);
+			
+			var ExempWin= kendo.observable({
+				ExempWins : jsonExemp
+			});
+	kendo.bind($("#exampleExempWin"),
+			ExempWin);
+			
+			
+			var TotalWin= kendo.observable({
+				TotalWins : jsonObject
+			});
+	kendo.bind($("#exampleTotalWin"),
+			TotalWin);
+	
+	
+});
+						
+						
 
 						$("#editAllowances")
 								.click(
@@ -1663,15 +1971,34 @@ $("#searchByName").data("kendoAutoComplete").placeholder("Start typing");
 													"kendoWindow").open();
 
 										});
+						
+						
+						function PrintDiv() {    
+							$(".print").hide();
+					        var divToPrint = document.getElementById('pay_summary_cont');
+					        var popupWin = window.open('', '_blank', 'width=300,height=300');
+					        popupWin.document.open();
+					        popupWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</html>');
+					        
+					        popupWin.document.close();
+					             }
+								$(".print").bind("click",function(){
+									
+									//alert("print");
+								PrintDiv();
+								$(".print").show();
+								});
 					});
 </script>
 
 
 <script id="searchByNameAutoComplete" type="text/x-kendo-tmpl"> 	
+
 <table>
 	<tr>
-	    <td><img width=75 height=60 class='image_preview'  src="#='/OpenHR'+photo#"/></td>
-        <td><p style="font-family:'Century Gothic'">#=firstname+' '+middlename+' '+lastname#</p></td>    
+	    
+     
+<td><p style="font-family:'Century Gothic'">#=employeeId.firstname+' '+employeeId.middlename+' '+employeeId.lastname#</p></td>    
     </tr>
 </table>	 
 </script>
@@ -1693,23 +2020,3 @@ img.image_preview {
 	float: right;
 }
 </style>
-<script type="text/x-kendo-template" id="employeeTemplate">
-				
-	<div class="field">
-<div class="label">%Of Income</div>
-				<input type="hidden" class="eperid" value="#=id#"/>
-                
-				<input type="text" class="k-input k-textbox incomePersentEdit"   value="#=incomePersent#" />
-			</div>
-			<div class="clear"></div>
-
-		<div>
-			<div class="field">
-				<a class="k-button k-icontext editTaxPercent" ><span class="k-icon k-update"></span>Update</a> <a
-					class="k-button k-icontext cancelTax"><span class="k-icon k-cancel"></span>Cancel</a>
-			</div>
-			<div class="clear"></div>
-		</div>
-		</div>
-</script>
-

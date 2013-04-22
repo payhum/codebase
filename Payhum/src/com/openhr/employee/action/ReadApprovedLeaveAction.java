@@ -16,7 +16,6 @@ import org.apache.struts.action.ActionMapping;
 
 import com.openhr.data.LeaveApproval;
 import com.openhr.data.LeaveRequest;
-import com.openhr.factories.LeaveFactory;
 import com.openhr.factories.LeaveRequestFactory;
 
 public class ReadApprovedLeaveAction extends Action {
@@ -35,7 +34,7 @@ public class ReadApprovedLeaveAction extends Action {
         	 List<LeaveApproval> list = new ArrayList<LeaveApproval>();
         	 
         	 for(int i=0;i<applicationList.size();i++){
-        		 List<LeaveApproval> appLeaveList = LeaveFactory.findByLeaveId(applicationList.get(i).getId());
+        		 List<LeaveApproval> appLeaveList = LeaveRequestFactory.findByLeaveId(applicationList.get(i).getId());
         		 if(appLeaveList != null && !appLeaveList.isEmpty()) {
 	        		 LeaveApproval l = appLeaveList.get(0);
 	        		 if(l != null){

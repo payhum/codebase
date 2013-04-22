@@ -36,10 +36,6 @@ public class Company implements Serializable {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
     
-    @Basic(optional = false)
-    @Column(name = "address", nullable = false, length = 90)
-    private String address;
-    
 	public Company () {
 	}
 	
@@ -67,11 +63,4 @@ public class Company implements Serializable {
 		this.name = name;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
 }

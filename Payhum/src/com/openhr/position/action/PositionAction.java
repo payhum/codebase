@@ -40,8 +40,8 @@ public class PositionAction extends Action {
         Position p = new Position();
         for (Position pFromJSON : aCollection) {
             p.setName(pFromJSON.getName());
-            p.setSalary(pFromJSON.getSalary());
-            p.setRaisePerYear(pFromJSON.getRaisePerYear());
+            p.setLowSal(pFromJSON.getLowSal());
+            p.setHighSal(pFromJSON.getHighSal());
             PositionFactory.insert(p);
         }
 

@@ -6,9 +6,8 @@
 package com.openhr.data;
 
 import java.io.Serializable;
-import java.util.List;
+
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,21 +15,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
  *
- * @author Mekbib
+ * @author Vijay
  */
 @Entity
 @Table(name = "position", catalog = "payhumrepo", schema = "")
 @NamedQueries({
     @NamedQuery(name = "Position.findAll", query = "FROM Position p"),
     @NamedQuery(name = "Position.findById", query = "FROM Position p WHERE id = ?"),
-    @NamedQuery(name = "Position.findByName", query = "SELECT p FROM Position p WHERE p.name = :name"),
-    @NamedQuery(name = "Position.findBySalary", query = "SELECT p FROM Position p WHERE p.salary = :salary"),
-    @NamedQuery(name = "Position.findByRaisePerYear", query = "SELECT p FROM Position p WHERE p.raisePerYear = :raisePerYear")})
+    @NamedQuery(name = "Position.findByName", query = "SELECT p FROM Position p WHERE p.name = ?"),
+    @NamedQuery(name = "Position.findByLowSal", query = "SELECT p FROM Position p WHERE p.lowsal= ?"),
+    @NamedQuery(name = "Position.findByHighSal", query = "SELECT p FROM Position p WHERE p.highsal = ?")})
 public class Position implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,13 +40,11 @@ public class Position implements Serializable {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
     @Basic(optional = false)
-    @Column(name = "salary", nullable = false)
-    private double salary;
+    @Column(name = "lowsal", nullable = false)
+    private Double lowsal;
     @Basic(optional = false)
-    @Column(name = "raisePerYear", nullable = false)
-    private double raisePerYear;
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "positionId")
-    //private List<Employee> employeeCollection;
+    @Column(name = "highsal", nullable = false)
+    private Double highsal;
 
     public Position() {
     }
@@ -57,11 +53,11 @@ public class Position implements Serializable {
         this.id = id;
     }
 
-    public Position(Integer id, String name, double salary, double raisePerYear) {
+    public Position(Integer id, String name, Double ls, Double hs) {
         this.id = id;
         this.name = name;
-        this.salary = salary;
-        this.raisePerYear = raisePerYear;
+        this.lowsal = ls;
+        this.highsal = hs;
     }
 
     public Integer getId() {
@@ -80,29 +76,21 @@ public class Position implements Serializable {
         this.name = name;
     }
 
-    public double getSalary() {
-        return salary;
+    public Double getLowSal() {
+        return lowsal;
     }
 
-    public void setSalary(double salary) {
-        this.salary = salary;
+    public void setLowSal(Double salary) {
+        this.lowsal = salary;
     }
 
-    public double getRaisePerYear() {
-        return raisePerYear;
+    public Double getHighSal() {
+        return highsal;
     }
 
-    public void setRaisePerYear(double raisePerYear) {
-        this.raisePerYear = raisePerYear;
+    public void setHighSal(Double sal) {
+        this.highsal = sal;
     }
-/*
-    public List<Employee> getEmployeeCollection() {
-        return employeeCollection;
-    }
-
-    public void setEmployeeCollection(List<Employee> employeeCollection) {
-        this.employeeCollection = employeeCollection;
-    }*/
 
     @Override
     public int hashCode() {

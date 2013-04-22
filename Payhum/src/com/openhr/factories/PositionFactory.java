@@ -4,13 +4,14 @@
  */
 package com.openhr.factories;
 
-import com.openhr.data.Position;
-import com.openhr.factories.common.OpenHRSessionFactory;
-
 import java.io.Serializable;
 import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
+
+import com.openhr.data.Position;
+import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
  * 
@@ -118,8 +119,8 @@ public class PositionFactory implements Serializable {
 
 		Position pos = (Position) session.get(Position.class, p.getId());
 		pos.setName(p.getName());
-		pos.setSalary(p.getSalary());
-		pos.setRaisePerYear(p.getRaisePerYear());
+		pos.setLowSal(p.getLowSal());
+		pos.setHighSal(p.getHighSal());
 		session.getTransaction().commit();
 		done = true;
 

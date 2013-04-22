@@ -20,7 +20,6 @@ import com.openhr.data.Employee;
 import com.openhr.data.LeaveApproval;
 import com.openhr.data.LeaveRequest;
 import com.openhr.factories.EmployeeFactory;
-import com.openhr.factories.LeaveFactory;
 import com.openhr.factories.LeaveRequestFactory;
 
 public class ApproveLeaveAction extends Action {
@@ -58,7 +57,7 @@ public class ApproveLeaveAction extends Action {
 				.get("approvedbydate")));
  		leaveApprove.setApproverId(approveEmployee);
 		leaveApprove.setRequestId(leaveRequest);
-		LeaveFactory.insert(leaveApprove);
+		LeaveRequestFactory.insert(leaveApprove);
 		return null;
 	}
 }

@@ -6,19 +6,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
 import com.openhr.data.DeductionsType;
 import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Exemptionstype;
-import com.openhr.data.ResidentType;
+import com.openhr.data.TypesData;
 import com.openhr.factories.DeductionFactory;
 import com.openhr.taxengine.DeductionsDone;
 import com.openhr.taxengine.ExemptionsDone;
 import com.openhr.taxengine.TaxEngine;
-import com.openhr.taxengine.impl.BaseDC;
-import com.openhr.taxengine.impl.BaseEC;
 
 public class TestTaxEngine {
 	public static void main(String[] args) {
@@ -26,15 +25,40 @@ public class TestTaxEngine {
 
 		System.setProperty("DRYRUN", "true");
 
+		TypesData residentType = new TypesData();
+		residentType.setDesc(PayhumConstants.LOCAL);
+		residentType.setName(PayhumConstants.LOCAL);
+		residentType.setType(PayhumConstants.TYPE_RESIDENTTYPE);
+		
 		// First Create the dummy Employee data
 		Employee emp = new Employee(2, "E1", "John", "", "Lui", "male", new Date(), new Date());
-		emp.setResidentType(ResidentType.LOCAL.getValue());
+		emp.setResidentType(residentType);
 		emp.setMarried("true");
 
-		EmpDependents dep1 = new EmpDependents(1, emp, 45, "T", BaseEC.NONE, BaseEC.SPOUSE);
-		EmpDependents dep2 = new EmpDependents(2, emp, 5, "E", BaseEC.STUDENT, BaseEC.CHILD);
-		EmpDependents dep3 = new EmpDependents(3, emp, 15, "F", BaseEC.STUDENT, BaseEC.CHILD);
-		EmpDependents dep4 = new EmpDependents(4, emp, 12, "G", BaseEC.STUDENT, BaseEC.CHILD);
+		TypesData depSpouse= new TypesData();
+		depSpouse.setDesc(PayhumConstants.DEP_SPOUSE);
+		depSpouse.setName(PayhumConstants.DEP_SPOUSE);
+		depSpouse.setType(PayhumConstants.TYPE_DEPENDENTTYPE);
+		
+		TypesData depChild = new TypesData();
+		depChild.setDesc(PayhumConstants.DEP_CHILD);
+		depChild.setName(PayhumConstants.DEP_CHILD);
+		depChild.setType(PayhumConstants.TYPE_DEPENDENTTYPE);
+		
+		TypesData occpNone = new TypesData();
+		occpNone.setDesc(PayhumConstants.OCCUP_NONE);
+		occpNone.setName(PayhumConstants.OCCUP_NONE);
+		occpNone.setType(PayhumConstants.TYPE_OCCUPATIONTYPE);
+
+		TypesData occpStu = new TypesData();
+		occpStu.setDesc(PayhumConstants.OCCUP_STUDENT);
+		occpStu.setName(PayhumConstants.OCCUP_STUDENT);
+		occpStu.setType(PayhumConstants.TYPE_OCCUPATIONTYPE);
+		
+		EmpDependents dep1 = new EmpDependents(1, emp, 45, "T", occpNone, depSpouse);
+		EmpDependents dep2 = new EmpDependents(2, emp, 5, "E", occpStu, depChild);
+		EmpDependents dep3 = new EmpDependents(3, emp, 15, "F", occpStu, depChild);
+		EmpDependents dep4 = new EmpDependents(4, emp, 12, "G", occpStu, depChild);
 
 		List<EmpDependents> deps = new ArrayList<EmpDependents>();
 		deps.add(dep1);
@@ -62,13 +86,13 @@ public class TestTaxEngine {
 			System.out.println("Personal Details :");
 			System.out.println("==================");
 			System.out.println("Employee Name - " + emp.getFirstname());
-			System.out.println("Resident Type - " + emp.getResidentType());
+			System.out.println("Resident Type - " + emp.getResidentType().getName());
 			System.out.println("Married - " + emp.isMarried());
 
 			List<EmpDependents> dependents = emp.getDependents();
 			int noOfChildren = 0;
 			for(EmpDependents dep : dependents ) {
-				if(dep.getType().compareTo(BaseEC.CHILD) == 0) {
+				if(dep.getType().getName().equalsIgnoreCase(PayhumConstants.DEP_CHILD)) {
 					noOfChildren++;
 				}
 			}
@@ -80,7 +104,7 @@ public class TestTaxEngine {
 			System.out.println("Base Salary - " + new DecimalFormat("MMK ###,###.###").format(empPay.getBaseSalary()));
 			System.out.println("Bonus - " + new DecimalFormat("MMK ###,###.###").format(empPay.getBonus()));
 			System.out.println("Allowance - " + new DecimalFormat("MMK ###,###.###").format(empPay.getAllowancesAmount()));
-			System.out.println("Accomodation Type - " + empPay.getAccomodationType());
+			System.out.println("Accomodation Type - " + empPay.getAccomodationType().getName());
 			System.out.println("Accomodation Amount - " + new DecimalFormat("MMK ###,###.###").format(empPay.getAccomodationAmount()));
 			System.out.println("Employer Social Security - " + new DecimalFormat("MMK ###,###.###").format(empPay.getEmployerSS()));
 			System.out.println("GROSS SALARY - " + new DecimalFormat("MMK ###,###.###").format(empPay.getGrossSalary()));
@@ -97,17 +121,17 @@ public class TestTaxEngine {
 			Double basicAllow = 0D;
 			
 			for(DeductionsDone dd : ddone) {
-				if(dd.getType().getId().compareTo(getDeductionsType(deductionsTypes, BaseDC.EMPLOYEE_SS).getId()) == 0) {
+				if(dd.getType().getId().compareTo(getDeductionsType(deductionsTypes, PayhumConstants.EMPLOYEE_SOCIAL_SECURITY).getId()) == 0) {
 					empSS = dd.getAmount();
 				}
 			}
 			
 			for(ExemptionsDone ed : edone) {
-				if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, BaseEC.SUPPORTING_SPOUSE).getId()) == 0) {
+				if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, PayhumConstants.SUPPORTING_SPOUSE).getId()) == 0) {
 					suppSpouse = ed.getAmount();
-				} else if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, BaseEC.CHILDREN).getId()) == 0) {
+				} else if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, PayhumConstants.CHILDREN).getId()) == 0) {
 					children = ed.getAmount();
-				} else if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, BaseEC.BASIC_ALLOWANCE).getId()) == 0) {
+				} else if(ed.getType().getId().compareTo(getExemptionsType(exemptionsTypes, PayhumConstants.BASIC_ALLOWANCE).getId()) == 0) {
 					basicAllow = ed.getAmount();
 				}
 			}

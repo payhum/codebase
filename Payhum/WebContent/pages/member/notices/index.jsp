@@ -15,12 +15,13 @@
 				<label>Order by :</label>
 				<select id="type" onchange="test();">
 				 
-					<option>
-						Leave
-					</option>
 					<option selected>
 						Overtime
 					</option>
+					<option >
+						Leave
+					</option>
+					
 				</select>			
 			</div>
 			
@@ -30,8 +31,8 @@
 			<div style="clear:both"></div>
 		
 		</div><br/><br/>
- 		<div id="grid2"> </div><br/>
-		<div id="grid3"></div>
+ 		<div id="overtimegrid"> </div>
+		<div id="leavegrid"></div>
  		 
 	</div>
 	<div style="clear:both"></div>
@@ -86,7 +87,7 @@
 				}
 	        });		
 			
-			$("#grid2").kendoGrid({
+			$("#overtimegrid").kendoGrid({
 				dataSource : {
 					transport : {
 						read : {
@@ -200,7 +201,7 @@
 	           
 	        });		
 			
-			$("#grid3").kendoGrid({
+			$("#leavegrid").kendoGrid({
 				dataSource : {
 					transport : {
 						read : {
@@ -249,15 +250,15 @@
 			%>
 			   type = $("#type").val();
 				if(type == "Leave"){
-					$("#grid2").empty();
-					$("#grid2").attr('style','display:none;');
-					$("#grid3").attr('style','display:blcok;');
+					$("#overtimegrid").empty();
+					$("#overtimegrid").attr('style','display:none;');
+					$("#leavegrid").attr('style','display:block;');
 					getLeaves();
 				}
 				else{
-					$("#grid3").empty();
-					$("#grid3").attr('style','display:none;');
-					$("#grid2").attr('style','display:block;');
+					$("#leavegrid").empty();
+					$("#leavegrid").attr('style','display:none;');
+					$("#overtimegrid").attr('style','display:block;');
 					getEmployeeLeaves1();
 				}
  		}

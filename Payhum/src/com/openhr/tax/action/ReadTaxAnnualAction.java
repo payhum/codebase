@@ -60,8 +60,8 @@ public class ReadTaxAnnualAction extends Action {
 				if (!(s2.length > 2)) {
 					System.out.println(p.getId() + "---p.hashCode()---"
 							+ p.hashCode());
-					Double d = p.getSalary();
-					p.setSalary(((d) * 12));
+					Double d = p.getLowSal();
+					p.setLowSal(((d) * 12));
 
 				}
 				
@@ -79,7 +79,7 @@ public class ReadTaxAnnualAction extends Action {
 				
 				ta.setFreeacom(0);
 				ta.setDisburse(0);
-				ta.setSumsalary(e.getPositionId().getSalary()+0+0);
+				ta.setSumsalary(e.getPositionId().getLowSal()+0+0);
 				ta.setLifeinsurance(0);
 				ta.setSumGPF(0);
 				ta.setSvaingsGovt(0);

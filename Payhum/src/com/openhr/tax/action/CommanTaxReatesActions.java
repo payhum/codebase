@@ -20,7 +20,7 @@ import com.openhr.data.Employee;
 import com.openhr.data.TaxRatesData;
 import com.openhr.employee.form.EmployeeForm;
 import com.openhr.factories.EmployeeFactory;
-import com.openhr.factories.TaxratesFactory;
+import com.openhr.factories.TaxFactory;
 
 public class CommanTaxReatesActions extends DispatchAction{
 
@@ -34,7 +34,7 @@ public class CommanTaxReatesActions extends DispatchAction{
 	
 		 JSONArray result = null;
 		 try {
-			 TaxRatesData  txd=TaxratesFactory.findFromIncome();
+			 TaxRatesData  txd=TaxFactory.findFromIncome();
 			 
 			 List<TaxRatesData> txl=new ArrayList<TaxRatesData>();
 			 if(txd==null)
@@ -75,7 +75,7 @@ public class CommanTaxReatesActions extends DispatchAction{
 		 try {
 			
 			 
-			 List<TaxRatesData> txl=TaxratesFactory.findAll();
+			 List<TaxRatesData> txl=TaxFactory.findAll();
 		
 			 
 			 
@@ -118,7 +118,7 @@ public class CommanTaxReatesActions extends DispatchAction{
 		
 		//Employee e = new Employee();
 		for (TaxRatesData eFromJSON : aCollection) {
-			flag=TaxratesFactory.updatePercent(eFromJSON);
+			flag=TaxFactory.updatePercent(eFromJSON);
 			
 			// result = JSONArray.fromObject(txl);
 		}
@@ -162,8 +162,8 @@ public class CommanTaxReatesActions extends DispatchAction{
 			if(eFromJSON.getIncomeTo()!=-1)
 			{
 				
-				if(TaxratesFactory.delete(eFromJSON))
-				{flag=TaxratesFactory.upDateDelete(useIncomeTo,useIncomeFrom);}
+				if(TaxFactory.delete(eFromJSON))
+				{flag=TaxFactory.upDateDelete(useIncomeTo,useIncomeFrom);}
 				
 			}
 			

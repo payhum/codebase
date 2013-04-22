@@ -29,9 +29,6 @@ public class ReadPositionAction extends Action {
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        PositionForm positionForm = (PositionForm) form;
-
-
         JSONArray result = null;
         try {
             List<Position> positions = PositionFactory.findAll();
@@ -40,13 +37,12 @@ public class ReadPositionAction extends Action {
             e.printStackTrace();
         }
         
-        System.out.print(result.toString());
-        
-        response.setContentType("application/json; charset=utf-8");
-        PrintWriter out = response.getWriter();
-        out.print(result.toString());
-        out.flush();
-
+        if(result != null) {
+	        response.setContentType("application/json; charset=utf-8");
+	        PrintWriter out = response.getWriter();
+	        out.print(result.toString());
+	        out.flush();
+        }
 
         return map.findForward("");
     }

@@ -1,21 +1,16 @@
 package com.openhr.factories;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.openhr.data.DeductionsType;
 import com.openhr.data.EmpPayTax;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.OverTimePayRateData;
-
 import com.openhr.data.TaxRatesData;
-import com.openhr.data.Users;
-import com.openhr.data.Leave;
 import com.openhr.factories.common.OpenHRSessionFactory;
 import com.openhr.taxengine.DeductionsDone;
 import com.openhr.taxengine.ExemptionsDone;

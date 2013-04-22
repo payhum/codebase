@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.taxengine.DeductionsDeclared;
 import com.openhr.taxengine.DeductionsDone;
 import com.openhr.taxengine.ExemptionsDone;
@@ -98,9 +99,10 @@ public class EmployeePayroll implements Serializable {
     @Column(name = "employerSS")
     private Double employerSS;
     
-    @Basic(optional = false)
-    @Column(name = "accomodationType", nullable = false)
-    private Integer accomodationType;
+    @JoinColumn(name = "accomodationType", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private TypesData accomodationType;
+    
     @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private List<DeductionsDeclared> deductionsDeclared;
@@ -279,16 +281,8 @@ public class EmployeePayroll implements Serializable {
 		return this.bonus;
 	}
 
-	public AccomodationType getAccomodationType() {
-		if(this.accomodationType != null) {
-			if(accomodationType == AccomodationType.FREE_ACCOM_FROM_EMPLOYER_FULLY_FURNISHED.getValue()) {
-				return AccomodationType.FREE_ACCOM_FROM_EMPLOYER_FULLY_FURNISHED;
-			} else if(accomodationType == AccomodationType.FREE_ACCOM_FROM_EMPLOYER_NOT_FURNISHED.getValue()) {
-				return AccomodationType.FREE_ACCOM_FROM_EMPLOYER_NOT_FURNISHED;
-			}
-		} 
-		
-		return null;
+	public TypesData getAccomodationType() {
+		return accomodationType;
 	}
 
 	public void setTotalIncome(Double totalIncome) {
@@ -324,20 +318,30 @@ public class EmployeePayroll implements Serializable {
 		this.bonus = bonus;
 	}
 
-	public void setAccomodationType(Integer accomodationType) {
+	public void setAccomodationType(TypesData accomodationType) {
 		this.accomodationType = accomodationType;
 	}
 	
 	//Testing method
 	private static EmployeePayroll populateTestData() {
+		TypesData accomType = new TypesData();
+		accomType.setDesc(PayhumConstants.FULLY_FURNISHED_ACCOM);
+		accomType.setName(PayhumConstants.FULLY_FURNISHED_ACCOM);
+		accomType.setType(PayhumConstants.TYPE_ACCOMODATIONTYPE);
+		
 		EmployeePayroll ePayroll = new EmployeePayroll();
-		ePayroll.setAccomodationType(AccomodationType.FREE_ACCOM_FROM_EMPLOYER_FULLY_FURNISHED.getValue());
+		ePayroll.setAccomodationType(accomType);
 		ePayroll.setAllowances((double) 50000);
 		ePayroll.setBaseSalary((double) 30000000);
 		ePayroll.setBonus((double) 4000000);
 		
-		Employee emp = new Employee(0, "E1", "John", "", "Lui", "male", new Date(), new Date());
-		emp.setResidentType(ResidentType.LOCAL.getValue());
+		TypesData residentType = new TypesData();
+		residentType.setDesc(PayhumConstants.LOCAL);
+		residentType.setName(PayhumConstants.LOCAL);
+		residentType.setType(PayhumConstants.TYPE_RESIDENTTYPE);
+		
+		Employee emp = new Employee(2, "E1", "John", "", "Lui", "male", new Date(), new Date());
+		emp.setResidentType(residentType);
 		emp.setMarried("true");
 		
 		ePayroll.setEmployeeId(emp);

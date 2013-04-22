@@ -39,9 +39,6 @@
 						href="<%=request.getContextPath() + "/do/LeaveType"%>"> Define
 							Leave Type</a></li>
 					<li class="gradient_menuitem gradient31 last_item"><a
-						href="<%=request.getContextPath() + "/do/Leave"%>"> Assign
-							Leave</a></li>
-					<li class="gradient_menuitem gradient31 last_item"><a
 						href="<%=request.getContextPath() + "/do/ApproveLeave"%>">
 							Approve Leave</a></li>
 				</ul>

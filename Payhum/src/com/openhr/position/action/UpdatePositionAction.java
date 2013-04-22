@@ -32,8 +32,6 @@ public class UpdatePositionAction extends Action {
             HttpServletResponse reponse) throws Exception {
         PositionForm positionForm = (PositionForm) form;
         //JSONSerializer.toJava(json);
-        System.out.println("FROM UPDATE POSITION ACTION CLASS : ");
-        //System.out.println("SIZE OF THE COLLECTION : " + aCollection.size());
         BufferedReader bf = request.getReader();
         StringBuffer sb = new StringBuffer();
         String line = null;
@@ -50,15 +48,12 @@ public class UpdatePositionAction extends Action {
 
         Collection<Position> aCollection = JSONArray.toCollection(n, Position.class);
 
-        System.out.println(" Size of List for Update " + aCollection.size());
-
-
         Position p = new Position();
         for (Position pFromJSON : aCollection) {
             p.setId(pFromJSON.getId());
             p.setName(pFromJSON.getName());
-            p.setSalary(pFromJSON.getSalary());
-            p.setRaisePerYear(pFromJSON.getRaisePerYear());
+            p.setLowSal(pFromJSON.getLowSal());
+            p.setHighSal(pFromJSON.getHighSal());
             PositionFactory.update(p);
         }
 

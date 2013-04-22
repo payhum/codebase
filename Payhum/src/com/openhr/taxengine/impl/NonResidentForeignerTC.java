@@ -23,7 +23,7 @@ public class NonResidentForeignerTC extends BaseTC {
 			for(TaxRates.Slabs slab : slabs) {
 				Double toValue = slab.getTo();
 				Double fromValue = slab.getFrom() - 1;
-				Float ratePercentage = slab.getRatePercentage();
+				Double ratePercentage = slab.getRatePercentage();
 				
 				if(slab.isLast()) {
 					if(amountYetToBeTaxed == 0)

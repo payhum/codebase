@@ -92,7 +92,7 @@
                 { field: "amount", title:"Amount", width: 100}
                 
             ], 
-            toolbar : [{"name" : "create",text : "Add Asign Benefit"}], 
+            toolbar : [{"name" : "create",text : "Add Assign Benefit"}], 
             editable: "popup",
             sortable: true,
             scrollable: true,

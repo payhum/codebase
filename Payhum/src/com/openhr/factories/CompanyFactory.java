@@ -115,7 +115,6 @@ public class CompanyFactory implements Serializable {
 
 		comp.setCompanyId(e.getCompanyId());
 		comp.setName(e.getName());
-		comp.setAddress(e.getAddress());
 		
 		session.update(comp);
 		session.getTransaction().commit();
