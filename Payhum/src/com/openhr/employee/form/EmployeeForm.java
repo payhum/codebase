@@ -6,8 +6,8 @@
 package com.openhr.employee.form;
 
 import java.util.Date;
+
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.upload.FormFile;
 
 import com.openhr.data.Position;
 import com.openhr.data.Roles;

@@ -5,10 +5,13 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import com.openhr.data.EmpPayTax;
 import com.openhr.data.Employee;
+import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
+import com.openhr.data.EmployeeSalary;
 import com.openhr.data.OverTimePayRateData;
 import com.openhr.data.TaxRatesData;
 import com.openhr.factories.common.OpenHRSessionFactory;
@@ -34,9 +37,56 @@ public class EmpPayTaxFactroy implements Serializable {
 		query = session.getNamedQuery("EmpPayTax.findAll");
 		employees = query.list();
 
-
 		return employees;
 	}
+	
+	public static boolean save(EmployeePayroll ep) throws Exception {
+	boolean done = false;
+
+        session = OpenHRSessionFactory.getInstance().getCurrentSession();
+        session.beginTransaction();
+        try {
+        	session.save(ep);            
+            session.getTransaction().commit();
+            done = true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }finally{
+        	
+        }
+        return done;
+		
+	}
+	
+	
+	
+		
+	
+	
+	
+	public static boolean insertEmpPaytax(Employee e,EmployeePayroll ep) {
+	boolean done = false;
+
+        session = OpenHRSessionFactory.getInstance().getCurrentSession();
+        Transaction   tx = session.beginTransaction();
+        try {
+        	session.save(e);
+        	
+        	session.save(ep);
+        	tx.commit();
+            done = true;
+        } catch (Exception ex) {
+        	
+        	tx.rollback();
+            ex.printStackTrace();
+        }finally{
+        	
+        }
+        return done;
+		
+	}
+	
+	
 	
 	public static List<OverTimePayRateData> getOverTimeRate(OverTimePayRateData ovu)
 
@@ -44,62 +94,57 @@ public class EmpPayTaxFactroy implements Serializable {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("OverTimePayRateData.findById");
-		
+
 		query.setInteger(0, ovu.getId());
-	List<OverTimePayRateData> lov=query.list();
-	session.getTransaction().commit();
-	return lov;
+		List<OverTimePayRateData> lov = query.list();
+		session.getTransaction().commit();
+		return lov;
 
 	}
-	
-	
+
 	public static boolean updateOverTimeRate(OverTimePayRateData ovu)
 
 	{
-		 boolean done = false;
-	       // List<DeductionsType> matchingName =DeductionFactory.findByNameOverRate(dt.getName());
-	        
-	        session = OpenHRSessionFactory.getInstance().getCurrentSession();
-	        session.beginTransaction();
+		boolean done = false;
+		// List<DeductionsType> matchingName
+		// =DeductionFactory.findByNameOverRate(dt.getName());
 
-	        try {
-	        	OverTimePayRateData ovus = null;
-	        	
-	        	if(ovu.getId() != null) {
-	        		ovus = (OverTimePayRateData) session.get(OverTimePayRateData.class, ovu.getId()); ;
-	        	}
-	        	
-	        	
-	        	ovus.setGrossPercent(ovu.getGrossPercent());
-	            
-	          
-	            
-	            
-	           session.update(ovus);
-	            session.getTransaction().commit();
-	            done = true;
-	        } catch (Exception ex) {
-	            ex.printStackTrace();
-	        }finally{
-	        	
-	        }
-	        return done;
-	    }
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
 
-	
-public static List<OverTimePayRateData> findOverTimeRateAll()
+		try {
+			OverTimePayRateData ovus = null;
 
-{
-	session = OpenHRSessionFactory.getInstance().getCurrentSession();
-	session.beginTransaction();
-	query = session.getNamedQuery("OverTimePayRateData.findAll");
-List<OverTimePayRateData> lov=query.list();
-session.getTransaction().commit();
-return lov;
+			if (ovu.getId() != null) {
+				ovus = (OverTimePayRateData) session.get(
+						OverTimePayRateData.class, ovu.getId());
+				;
+			}
 
-}
-	public static List<EmployeePayroll> findAllEmpPayroll() 
+			ovus.setGrossPercent(ovu.getGrossPercent());
+
+			session.update(ovus);
+			session.getTransaction().commit();
+			done = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+
+		}
+		return done;
+	}
+
+	public static List<OverTimePayRateData> findOverTimeRateAll()
 	{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("OverTimePayRateData.findAll");
+		List<OverTimePayRateData> lov = query.list();
+		session.getTransaction().commit();
+		return lov;
+	}
+
+	public static List<EmployeePayroll> findAllEmpPayroll() {
 		Session session1 = OpenHRSessionFactory.getInstance().openSession();
 		session1.beginTransaction();
 		session1.evict(empsum);
@@ -110,27 +155,26 @@ return lov;
 		return empsum;
 	}
 
-	public static EmployeePayroll findEmpPayrollbyEmpID(Employee empID) 
-	{
-		if(System.getProperty("DRYRUN") != null 
-		&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
+	public static EmployeePayroll findEmpPayrollbyEmpID(Employee empID) {
+		if (System.getProperty("DRYRUN") != null
+				&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
 			EmployeePayroll empP = EmployeePayroll.loadEmpPayroll(empID);
 			return empP;
 		}
-		
-		EmployeePayroll ePayroll = null; 
+
+		EmployeePayroll ePayroll = null;
 		boolean found = false;
-		if(empsum != null && empsum.size() > 0) {
-			for(EmployeePayroll ePay : empsum) {
-				if(ePay.getEmployeeId().getId().equals(empID.getId())) {
+		if (empsum != null && empsum.size() > 0) {
+			for (EmployeePayroll ePay : empsum) {
+				if (ePay.getEmployeeId().getId().equals(empID.getId())) {
 					ePayroll = ePay;
 					found = true;
 					break;
 				}
 			}
-		} 
-		
-		if(!found) {
+		}
+
+		if (!found) {
 			session = OpenHRSessionFactory.getInstance().getCurrentSession();
 			session.beginTransaction();
 			query = session.getNamedQuery("EmployeePayroll.findByEmployeeId");
@@ -139,12 +183,12 @@ return lov;
 			ePayroll = empsum.get(0);
 			session.getTransaction().commit();
 		}
-		
+
 		return ePayroll;
 	}
 
-	public synchronized static List<ExemptionsDone> exemptionsDone(Integer payrollId)
-			throws Exception {
+	public synchronized static List<ExemptionsDone> exemptionsDone(
+			Integer payrollId) throws Exception {
 		EmployeePayroll ePay = new EmployeePayroll();
 		ePay.setId(payrollId);
 		Session session2 = OpenHRSessionFactory.getInstance().openSession();
@@ -154,12 +198,12 @@ return lov;
 		List<ExemptionsDone> empsum1 = query.list();
 
 		session2.getTransaction().commit();
-        session2.close();
+		session2.close();
 		return empsum1;
 	}
-	
-	public synchronized static List<DeductionsDone> deductionsDone(Integer payrollId)
-			throws Exception {
+
+	public synchronized static List<DeductionsDone> deductionsDone(
+			Integer payrollId) throws Exception {
 		EmployeePayroll ePay = new EmployeePayroll();
 		ePay.setId(payrollId);
 		Session session1 = OpenHRSessionFactory.getInstance().openSession();
@@ -169,35 +213,36 @@ return lov;
 		List<DeductionsDone> empsum2 = query.list();
 
 		session1.getTransaction().commit();
-        session1.close();
+		session1.close();
 		return empsum2;
 	}
 
 	public static boolean insertTaxRates(TaxRatesData txr) {
-        boolean done = false;
+		boolean done = false;
 
-        session = OpenHRSessionFactory.getInstance().getCurrentSession();
-        session.beginTransaction();
-        try {
-        	session.save(txr);            
-            session.getTransaction().commit();
-            done = true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }finally{
-        	
-        }
-        return done;
-        
-    }
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		try {
+			session.save(txr);
+			session.getTransaction().commit();
+			done = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+
+		}
+		return done;
+
+	}
 
 	public static boolean update(EmployeePayroll empPayroll) {
 		boolean done = false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		
+
 		try {
-			EmployeePayroll ePayroll = (EmployeePayroll) session.get(EmployeePayroll.class, empPayroll.getId());
+			EmployeePayroll ePayroll = (EmployeePayroll) session.get(
+					EmployeePayroll.class, empPayroll.getId());
 			ePayroll.setTotalIncome(empPayroll.getTotalIncome());
 			ePayroll.setAccomodationAmount(empPayroll.getAccomodationAmount());
 			ePayroll.setAllowances(empPayroll.getAllowances());
@@ -210,19 +255,40 @@ return lov;
 			ePayroll.setDeductionsDone(empPayroll.getDeductionsDone());
 			ePayroll.setExemptionsDone(empPayroll.getExemptionsDone());
 			ePayroll.setOvertimeamt(empPayroll.getOvertimeamt());
-			ePayroll.setTaxableOverseasIncome(empPayroll.getTaxableOverseasIncome());
-			
+			ePayroll.setTaxableOverseasIncome(empPayroll
+					.getTaxableOverseasIncome());
+
 			session.update(ePayroll);
-			//session.getTransaction().commit();
-			
+			// session.getTransaction().commit();
+
 			done = true;
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-
-		}
+		} 
 		return done;
-		
 	}
+
+	public static List<EmployeeSalary> findEmpSalary(Employee emp)
+	{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmployeeSalary.findByEmpId");
+		query.setParameter(0, emp);
+		List<EmployeeSalary> empSalList = query.list();
+		session.getTransaction().commit();
+		return empSalList;
+	}
+
+	public static List<EmployeeBonus> findEmpBonus(Employee emp)
+	{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmployeeBonus.findByEmpId");
+		query.setParameter(0, emp);
+		List<EmployeeBonus> empBonusList = query.list();
+		session.getTransaction().commit();
+		return empBonusList;
+	}
+
 	
 }

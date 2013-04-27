@@ -8,18 +8,6 @@ CREATE DATABASE IF NOT EXISTS payhumrepo;
 USE payhumrepo;
 
 --
--- Temporary table structure for view `emp_benefit_view`
---
-DROP TABLE IF EXISTS `emp_benefit_view`;
-DROP VIEW IF EXISTS `emp_benefit_view`;
-CREATE TABLE `emp_benefit_view` (
-  `EMP_ID` varchar(45),
-  `SALARY` double,
-  `BENEFIT_AMNT` double,
-  `BENEFIT_TYPE` varchar(45)
-);
-
---
 -- Definition of table `position`
 --
 
@@ -96,21 +84,22 @@ CREATE TABLE `employee` (
   `sex` varchar(6) NOT NULL,
   `birthdate` datetime NOT NULL,
   `hiredate` datetime NOT NULL,
+  `inactiveDate` datetime,
   `positionId` int(10) unsigned NOT NULL,
   `photo_path` varchar(255) NOT NULL,
   `status` varchar(20) NOT NULL,
   `version` int(11) NOT NULL default '1',
   `married` varchar(6) NOT NULL,
   `residentType` int(10) unsigned NOT NULL,
-  `companyId` int(10) unsigned NOT NULL,
+  `deptId` int(10) unsigned NOT NULL,
   `empNationalID` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_employee_position` (`positionId`),
   KEY `FK_employee_id` (`employeeId`),
-  KEY `FK_employee_company` (`companyId`),
+  KEY `FK_employee_dept` (`deptId`),
   KEY `FK_employee_res` (`residentType`),
   CONSTRAINT `FK_employee_position` FOREIGN KEY (`positionId`) REFERENCES `position` (`id`),
-  CONSTRAINT `FK_employee_company` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`),
+  CONSTRAINT `FK_employee_dept` FOREIGN KEY (`deptId`) REFERENCES `department` (`id`),
   CONSTRAINT `FK_employee_res` FOREIGN KEY (`residentType`) REFERENCES `types` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -129,7 +118,7 @@ CREATE TABLE `emp_payroll_view` (
   `totalIncome` double default 0,
   `taxableOverseasIncome` double default 0,
   `allowances` double default 0,
-  `baseSalary` double NOT NULL,
+  `baseSalary` double default 0,
   `bonus` double default 0,
   `accomodationAmount` double default 0,
   `employerSS` double default 0,
@@ -137,6 +126,8 @@ CREATE TABLE `emp_payroll_view` (
   `netPay` double default 0,
   `totalDeductions` double default 0,
   `overtimeamt` double default 0,
+  `pendingTaxAmt` double default 0,
+  `pendingNetPay` double default 0,
   PRIMARY KEY  (`id`),
   KEY `FK_emp_payroll_emp` (`employeeId`),
   KEY `FK_emp_payroll_acc` (`accomodationType`),
@@ -368,7 +359,6 @@ CREATE TABLE `payroll` (
 -- Definition of view `emp_benefit_view`
 --
 DROP VIEW IF EXISTS `emp_benefit_view`;
-DROP TABLE IF EXISTS `emp_benefit_view`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `payhumrepo`.`emp_benefit_view` AS select `payhumrepo`.`employee`.`employeeId` AS `EMP_ID`,`payhumrepo`.`position`.`lowsal` AS `SALARY`,`payhumrepo`.`benefit`.`amount` AS `BENEFIT_AMNT`,`payhumrepo`.`benefitype`.`name` AS `BENEFIT_TYPE` from (((`payhumrepo`.`employee` join `payhumrepo`.`position`) join `payhumrepo`.`benefit`) join `payhumrepo`.`benefitype`) where ((`payhumrepo`.`employee`.`positionId` = `payhumrepo`.`position`.`id`) and (`payhumrepo`.`employee`.`id` = `payhumrepo`.`benefit`.`employeeId`) and (`payhumrepo`.`benefit`.`typeId` = `payhumrepo`.`benefitype`.`id`));
 
 --
@@ -602,3 +592,33 @@ create table `taxdetails`
   CONSTRAINT `FK_taxdetails_type` FOREIGN KEY (`typeId`) REFERENCES `types` (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Definition of table `emp_salary`
+-- 
+DROP TABLE IF EXISTS `emp_salary`;
+create table `emp_salary`
+(
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `employeeId` int(10) unsigned NOT NULL,
+  `fromdate` datetime NOT NULL,
+  `todate` datetime,
+  `basesalary` double NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_empsal_emp` (`employeeId`),
+  CONSTRAINT `FK_empsal_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `emp_bonus`
+-- 
+DROP TABLE IF EXISTS `emp_bonus`;
+create table `emp_bonus`
+(
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `employeeId` int(10) unsigned NOT NULL,
+  `givendate` datetime NOT NULL,
+  `amount` double NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_empbonus_emp` (`employeeId`),
+  CONSTRAINT `FK_empbonus_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -49,6 +49,15 @@ INSERT INTO `branch` (`id`,`name`,`address`,`companyId`) VALUES
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 
 --
+-- Dumping data for table `department`
+--
+/*!40000 ALTER TABLE `department` DISABLE KEYS */;
+INSERT INTO `department` (`id`,`deptname`,`branchId`) VALUES 
+ (1,'Finance',1),
+ (2,'Sales',1);
+/*!40000 ALTER TABLE `department` ENABLE KEYS */;
+
+--
 -- Dumping data for table types
 --
 /*!40000 ALTER TABLE `types` DISABLE KEYS */;
@@ -80,7 +89,7 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 -- Dumping data for table `employee`
 --
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`companyId`,`empNationalID`) VALUES 
+INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`) VALUES 
  (2,'MODETH-0002','JOHN','B','WIN','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',4,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1'),
  (3,'MODETH-0001','Desta','Abebe','Muluken','Male','1987-01-05 00:00:00','2012-07-02 00:00:00',3,'/data/photo/418446_185246901607959_1591185693_n.jpg','IN ACTIVE',1,'true',11,1,'N2'),
  (4,'MODETH-0004','AMAN','DEKSISO','DEKSISO','Male','1980-09-06 00:00:00','2012-07-04 00:00:00',4,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N3'),
@@ -88,7 +97,7 @@ INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`s
  (6,'ETHMTN-0006','Abebe','Abebe','Abebe','Male','1994-06-14 00:00:00','2012-07-09 00:00:00',5,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N5'),
  (7,'EEPCO-0007','James','Smith','Mailman','Male','1989-05-16 00:00:00','2012-07-16 00:00:00',5,'/data/photo/placeholder-pic.png','IN ACTIVE',1,'true',11,1,'N6'),
  (8,'HOF-0008','Haile','Gebre','Silasie','Male','1980-06-10 00:00:00','2012-07-16 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N7');
-INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`companyId`,`empNationalID`) VALUES 
+INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`) VALUES 
  (12,'MODETH-0012','Anderson','Neyo','Mick','Female','1980-08-01 00:00:00','2012-08-01 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',12,1,'N8'),
  (13,'MODETH-0013','Abera','Girma','Lemma','Female','2012-08-02 00:00:00','2012-08-02 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',12,1,'N9'),
  (14,'MODETH-0014','James','Gasolin','Chant','Male','1940-08-05 23:44:45','2012-08-06 00:00:00',2,'employees.bmp','ACTIVE',1,'true',12,1,'N10'),
@@ -165,24 +174,23 @@ INSERT INTO `users` (`id`,`username`,`password`,`employeeId`,`roleId`,`version`)
 -- Dumping data for table emp_payroll_view
 --
 /*!40000 ALTER TABLE `emp_payroll_view` DISABLE KEYS */;
-INSERT INTO `emp_payroll_view` (`id`, `employeeId`, `FULL_NAME`, `baseSalary`, `accomodationType`,`bonus`) VALUES
- (1,2,'JohnBWin',30000000,14,4000000);
-INSERT INTO `emp_payroll_view` (`id`, `employeeId`, `FULL_NAME`, `baseSalary`, `accomodationType`) VALUES
- (2,3,'Desta',2000000,14),
- (3,4,'AMAN_DEKSISO',3000000,15),
- (4,5,'New_Employee',2500000,15),
- (5,6,'Abebe',1500000,15),
- (6,7,'JamesSmith',40000000,15),
- (7,8,'HaileGebre',3500000,14),
- (8,12,'AndersonNeyo',2346777555,14),
- (9,13,'AberaGirma',33300000,14),
- (10,14,'JamesGasolin',45000000,15),
- (11,15,'asdfasd',1000000,15),
- (12,16,'asdf', 200000,14),
- (13,17,'ssxdfere',12312312,15),
- (14,18,'Asdfs',45643545,14),
- (15,19,'Mesay1Solomon',12312311,15),
- (16,20,'BirukAbebe',1000000,15);
+INSERT INTO `emp_payroll_view` (`id`, `employeeId`, `FULL_NAME`, `accomodationType`) VALUES
+ (1,2,'JohnBWin',14),
+ (2,3,'Desta',14),
+ (3,4,'AMAN_DEKSISO',15),
+ (4,5,'New_Employee',15),
+ (5,6,'Abebe',15),
+ (6,7,'JamesSmith',15),
+ (7,8,'HaileGebre',14),
+ (8,12,'AndersonNeyo',14),
+ (9,13,'AberaGirma',14),
+ (10,14,'JamesGasolin',15),
+ (11,15,'asdfasd',15),
+ (12,16,'asdf', 14),
+ (13,17,'ssxdfere',15),
+ (14,18,'Asdfs',14),
+ (15,19,'Mesay1Solomon',15),
+ (16,20,'BirukAbebe',15);
 /*!40000 ALTER TABLE `emp_payroll_view` ENABLE KEYS */;
 
 
@@ -322,3 +330,35 @@ INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 (9,9,10),
 (10,10,2.5);
 /*!40000 ALTER TABLE `taxdetails` ENABLE KEYS */;
+
+
+--
+-- Dumping data for table emp_salary
+--
+/*!40000 ALTER TABLE `emp_salary` DISABLE KEYS */;
+INSERT INTO `emp_salary` (`id`, `employeeId`, `fromdate`,`basesalary`) VALUES
+(1,2,'2013-04-01 00:00:00',30000000),
+(2,3,'2013-04-01 00:00:00',2000000),
+(3,4,'2013-04-01 00:00:00',3000000),
+(4,5,'2013-04-01 00:00:00',2500000),
+(5,6,'2013-04-01 00:00:00',1500000),
+(6,7,'2013-04-01 00:00:00',40000000),
+(7,8,'2013-04-01 00:00:00',3500000),
+(8,12,'2013-04-01 00:00:00',2346777555),
+(9,13,'2013-04-01 00:00:00',33300000),
+(10,14,'2013-04-01 00:00:00',45000000),
+(11,15,'2013-04-01 00:00:00',1000000),
+(12,16,'2013-04-01 00:00:00', 200000),
+(13,17,'2013-04-01 00:00:00',12312312),
+(14,18,'2013-04-01 00:00:00',45643545),
+(15,19,'2013-04-01 00:00:00',12312311),
+(16,20,'2013-04-01 00:00:00',1000000);
+/*!40000 ALTER TABLE `emp_salary` ENABLE KEYS */;
+
+--
+-- Dumping data for table emp_bonus
+--
+/*!40000 ALTER TABLE `emp_bonus` DISABLE KEYS */;
+INSERT INTO `emp_bonus` (`id`, `employeeId`, `givendate`,`amount`) VALUES
+(1,2,'2013-04-01 00:00:00',4000000);
+/*!40000 ALTER TABLE `emp_bonus` ENABLE KEYS */;

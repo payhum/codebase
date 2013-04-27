@@ -35,6 +35,8 @@ public class ApproveLeaveAction extends Action {
 		}
 		JSONObject json = JSONObject.fromObject(sb.toString());
 		String approverId = json.getString("approverId");
+		String stat = json.getString("status");
+		int status = Integer.parseInt(stat);
 		
 		List<LeaveRequest> list = LeaveRequestFactory.findByEmployeeId(json.getInt("requestId"));
 		LeaveRequest leaveRequest = null;
@@ -50,14 +52,16 @@ public class ApproveLeaveAction extends Action {
 		}
  		
   		Employee approveEmployee = EmployeeFactory.findById(Integer.parseInt(approverId)).get(0);
- 		leaveRequest.setStatus(1);
+ 		leaveRequest.setStatus(status);
 		LeaveRequestFactory.update(leaveRequest);
-		LeaveApproval leaveApprove = new LeaveApproval();
-		leaveApprove.setApprovedbydate(new Date((Long) json
-				.get("approvedbydate")));
- 		leaveApprove.setApproverId(approveEmployee);
-		leaveApprove.setRequestId(leaveRequest);
-		LeaveRequestFactory.insert(leaveApprove);
+		if(status == 1){
+			LeaveApproval leaveApprove = new LeaveApproval();
+			leaveApprove.setApprovedbydate(new Date((Long) json
+					.get("approvedbydate")));
+	 		leaveApprove.setApproverId(approveEmployee);
+			leaveApprove.setRequestId(leaveRequest);
+			LeaveRequestFactory.insert(leaveApprove);
+		}
 		return null;
 	}
 }

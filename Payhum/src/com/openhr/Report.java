@@ -3,6 +3,7 @@ package com.openhr;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +60,7 @@ public class Report extends Action {
 					// License has expired and throw an error
 					throw new Exception("License has expired");
 				} else {
-					// License enddate is valid, so lets check the key.
+					// License end date is valid, so lets check the key.
 					String licenseKeyStr = LicenseValidator.formStringToEncrypt(compName, endDate);
 					if(LicenseValidator.encryptAndCompare(licenseKeyStr, lis.getLicensekey())) {
 						// License key is valid, so proceed.
@@ -71,11 +72,16 @@ public class Report extends Action {
 			}
 		}
 		
+		// TODO: Get the processing date.
+		Calendar salaryProcessDate = Calendar.getInstance();
+		
 		// License validation is done and there is a active license, lets proceed and run the tax engine
 		// to compute the payroll for the current pay period
-		List<Employee> empList = EmployeeFactory.findByCompanyID(comp.getId());
-		TaxEngine taxEngine = new TaxEngine(comp, empList);
-		taxEngine.execute();
+		List<Employee> activeEmpList = EmployeeFactory.findActiveByCompanyID(comp.getId());
+		List<Employee> inActiveEmpList = EmployeeFactory.findInActiveByCompanyIDAndDate(comp.getId(), salaryProcessDate.getTime());
+		
+		TaxEngine taxEngine = new TaxEngine(comp, activeEmpList, inActiveEmpList);
+		taxEngine.execute(salaryProcessDate);
 		
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		String fileName = compName + "_Payroll_" + monthYear + ".csv";

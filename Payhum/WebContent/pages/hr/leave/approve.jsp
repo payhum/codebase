@@ -91,7 +91,7 @@
 	            { field : "description", title : "Description", width : 100 },
 	            { field : "status", title : "Status", template : "#= status == 0 ? 'New' : 'In Process' #", width : 100 },
 	            {
-                    command: [{name : "approve", text: "Approve", className: "approve"}, {name : "reject", text : "Reject", className: "approve" }], width:200, filterable:false
+                    command: [{name : "approve", text: "Approve", className: "approve"}, {name : "reject", text : "Reject", className: "reject" }], width:200, filterable:false
                 }
             ], 
             sortable: true,
@@ -140,7 +140,7 @@
         	leaveId = employeeId;
        		approverId = "<%=(request.getSession().getAttribute("employeeId")!=null ? request.getSession().getAttribute("employeeId") : "")%>";
         	approvedByDate = new Date().getTime(); 
-       		approvalData = JSON.stringify({"approvedbydate" : approvedByDate, "approverId" : approverId, "requestId" : leaveId, "leaveDate" : leaveDate}); 
+       		approvalData = JSON.stringify({"approvedbydate" : approvedByDate, "approverId" : approverId, "requestId" : leaveId, "leaveDate" : leaveDate, "status" : "1"}); 
         	 
        		if(approverId!=''){
  	       		 $.ajax({
@@ -162,6 +162,35 @@
    			} 
        			
         });  
+		 
+		 $("#grid").delegate(".reject", "click", function(e) {
+	 			employeeId = $('.k-state-selected').find('td').eq(0).text();
+	 			leaveDate = $('.k-state-selected').find('td').eq(3).text();
+	        	leaveId = employeeId;
+	       		var approverId = "<%=(request.getSession().getAttribute("employeeId")!=null ? request.getSession().getAttribute("employeeId") : "")%>";
+	       		var approvedByDate = new Date().getTime(); 
+	       		var rejectData = JSON.stringify({"approvedbydate" : approvedByDate, "approverId" : approverId, "requestId" : leaveId, "leaveDate" : leaveDate, "status" : "2"}); 
+	        	 
+	       		if(approverId!=''){
+	 	       		 $.ajax({
+		       		  	url 		: "<%=request.getContextPath() + "/do/ApproveLeaveAction"%>",
+		       			type 		: 'POST',
+						dataType 	: 'json',
+						contentType : 'application/json; charset=utf-8',
+						data 		: rejectData,
+						success 	: function(){
+							$("#grid").empty();
+							getLeaveRequests();
+						}
+		       		 });  
+	       		}
+	       		else {
+	     			document.body = "<div style='border:1px solid #f00; height : 60px; width : 70px;font-size:24px;'>Browser Session has expired</div>";
+	       			alert("Your browser's session have expired!\nPlease login again to continue");
+	     			window.location.href = "<%=request.getContextPath()+"/do/LogoutAction"%>";
+	   			} 
+	       			
+	        });  
 		
 	 
 		

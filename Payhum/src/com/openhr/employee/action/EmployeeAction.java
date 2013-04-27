@@ -5,23 +5,30 @@
 
 package com.openhr.employee.action;
 
-import com.openhr.data.Employee;
-import com.openhr.data.EmployeeForm; 
-import com.openhr.data.Position;
-import com.openhr.factories.EmployeeFactory; 
-import com.openhr.factories.PositionFactory;
-
-import java.io.BufferedReader; 
+import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONArray;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping; 
+import org.apache.struts.action.ActionMapping;
+
+import com.openhr.data.DepartBrachData;
+import com.openhr.data.Employee;
+import com.openhr.data.EmployeeForm;
+import com.openhr.data.EmployeePayroll;
+import com.openhr.data.Position;
+import com.openhr.data.TypesData;
+import com.openhr.factories.EmpPayTaxFactroy;
+import com.openhr.factories.EmployeeFactory;
+import com.openhr.factories.PositionFactory;
 
 /**
  * 
@@ -32,6 +39,7 @@ public class EmployeeAction extends Action {
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse reponse)
 			throws Exception {
+		boolean flag=false;
 		BufferedReader bf = null;
 		bf = request.getReader();   
 		 
@@ -45,10 +53,15 @@ public class EmployeeAction extends Action {
 		Collection<EmployeeForm> aCollection = JSONArray.toCollection(json, EmployeeForm.class);
 		
 		System.out.println("EMployee JSON "+json.toString());
-		
+		String empID=null;
+		Integer acomId=null;
+		String lastName=null;
 		Employee e = new Employee();
 		for (EmployeeForm eFromJSON : aCollection) {
-			e.setEmployeeId(eFromJSON.getEmployeeId());
+			empID=eFromJSON.getEmployeeId();
+			acomId=eFromJSON.getAccommodationVal();
+			lastName=eFromJSON.getLastname();
+			e.setEmployeeId(empID);
 			e.setFirstname(eFromJSON.getFirstname());
 			e.setMiddlename(eFromJSON.getMiddlename());
 			e.setLastname(eFromJSON.getLastname());
@@ -56,6 +69,16 @@ public class EmployeeAction extends Action {
 			e.setBirthdate(new Date(eFromJSON.getBirthdate()));
 			System.out.println("BIRTHDATE "+ eFromJSON.getBirthdate());
 			e.setHiredate(new Date(eFromJSON.getHiredate()));
+			
+			
+			e.setEmpNationalID(eFromJSON.getNationID());
+			e.setMarried(eFromJSON.getFamly());
+			
+			e.setStatus(eFromJSON.getStatus());
+			
+			TypesData tyd=EmployeeFactory.findTypesById(eFromJSON.getResidentVal());
+			e.setResidentType(tyd);
+			
 			Position p = null;
 			if(PositionFactory.findById(eFromJSON.getPositionId())!=null)
 			p = PositionFactory.findById(eFromJSON.getPositionId()).get(0);
@@ -66,9 +89,27 @@ public class EmployeeAction extends Action {
 				e.setPhoto(eFromJSON.getPhoto());
 			}
 			e.setStatus(eFromJSON.getStatus());
-			EmployeeFactory.insert(e);
+			DepartBrachData  db = EmployeeFactory.findDepartById(eFromJSON.getDepartId());
+			
+			if(db!=null)
+			{
+				e.setCompanyId(db);
+			}
+			
+			
+				EmployeePayroll epl=new EmployeePayroll();
+				TypesData acomTyds=EmployeeFactory.findTypesById(acomId);
+				
+				epl.setAccomodationType(acomTyds);
+				epl.setFullName(lastName);
+				epl.setEmployeeId(e);
+				//flag=EmpPayTaxFactroy.save(epl);
+				flag=EmpPayTaxFactroy.insertEmpPaytax(e,epl);
+			
 		}
-
+		PrintWriter out = reponse.getWriter();
+		out.print(flag);
+		out.flush();
 		return map.findForward("");
 	}
 }

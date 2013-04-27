@@ -12,13 +12,17 @@ import com.openhr.company.CompanyPayroll;
 import com.openhr.company.Licenses;
 import com.openhr.data.Benefit;
 import com.openhr.data.BenefitType;
+import com.openhr.data.BrachData;
 import com.openhr.data.DeductionsType;
+import com.openhr.data.DepartBrachData;
 import com.openhr.data.Dtest;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpBenefitView;
 import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
+import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
+import com.openhr.data.EmployeeSalary;
 import com.openhr.data.Etest;
 import com.openhr.data.Exemptionstype;
 import com.openhr.data.GLEmployee;
@@ -83,6 +87,10 @@ public class OpenHRSessionFactory {
         config.addAnnotatedClass(PayPeriodData.class);
         config.addAnnotatedClass(TaxDetailsData.class);
         config.addAnnotatedClass(TypesData.class);
+        config.addAnnotatedClass(BrachData.class);
+        config.addAnnotatedClass(DepartBrachData.class);
+        config.addAnnotatedClass(EmployeeBonus.class);
+        config.addAnnotatedClass(EmployeeSalary.class);
         sessionFactory = config.buildSessionFactory();
     }
 

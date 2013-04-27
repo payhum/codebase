@@ -36,7 +36,8 @@ public class ApproveOverTimeAction extends Action {
 		}
 		JSONObject json = JSONObject.fromObject(sb.toString());
 		String approverId = json.getString("approverId");
-		
+		String stat = json.getString("status");
+		int status = Integer.parseInt(stat);
 		List<OverTime> list = OverTimeFactory.findByEmployeeId(
 				json.getInt("employeeId"));
 		OverTime overTime = null;
@@ -52,7 +53,7 @@ public class ApproveOverTimeAction extends Action {
 		}
  		
   		Employee approveEmployee = EmployeeFactory.findById(Integer.parseInt(approverId)).get(0);
- 		overTime.setStatus(1);
+ 		overTime.setStatus(status);
  		overTime.setApprovedBy(approveEmployee.getEmployeeId());
  		overTime.setApprovedDate(new Date());
 		OverTimeFactory.update(overTime);

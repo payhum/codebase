@@ -303,6 +303,21 @@
 	
 	
         <!-- start of Employee actions -->
+        
+        					<action path="/PieChartCommanActions" parameter="parameter"
+    type="com.openhr.employee.action.PieChartCommanActions">
+    <forward name="success" path="/UserSuccess.jsp" />
+    <forward name="failure" path="/UserSuccess.jsp" />
+    
+</action>
+        						<action path="/CommantypesAction" parameter="parameter"
+    type="com.openhr.employee.action.CommantypesAction">
+    <forward name="success" path="/UserSuccess.jsp" />
+    <forward name="failure" path="/UserSuccess.jsp" />
+    
+</action>
+        
+        
 		<action path="/EmployeePhotoAction" name="employeePhotoForm"
 			type="com.openhr.employee.action.EmployeePhotoAction" input="employee.form">
 			<forward name="continue" path="employee.form" />
@@ -570,7 +585,10 @@
 			<forward name="continue" path="leave.form" />
 		</action>
 
-
+		<action path="/ReadOverTimeReq" 
+			type="com.openhr.overtime.action.ReadOverTimeRequests" >
+			<forward name="continue" path="leave.form" />
+		</action>
 
 		<!-- start of Logout actions -->
 		<action path="/LogoutAction" name="logoutForm"

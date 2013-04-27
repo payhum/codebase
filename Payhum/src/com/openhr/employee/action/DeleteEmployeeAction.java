@@ -6,12 +6,14 @@
 package com.openhr.employee.action;
 
 import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -19,7 +21,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import com.openhr.data.Employee;
-import com.openhr.employee.form.EmployeeForm;
+import com.openhr.data.EmployeeForm; 
 import com.openhr.factories.EmployeeFactory;
 
 /**
@@ -33,22 +35,24 @@ public class DeleteEmployeeAction extends Action{
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         //EmployeeForm EmployeeForm = (EmployeeForm) form;
+		
+		boolean flag=false;
 		BufferedReader bf = request.getReader();
 		StringBuffer sb = new StringBuffer();
 		String line = null;
 		while ((line = bf.readLine()) != null) {
 			sb.append(line);
 		}
-		JSONArray json = JSONArray.fromObject(sb.toString());
-		Collection<EmployeeForm> aCollection = JSONArray.toCollection(json, EmployeeForm.class);
+		JSONObject json = JSONObject.fromObject(sb.toString());
+		Integer ids= json.getInt("id");	
+		//Collection<EmployeeForm> aCollection = JSONArray.toCollection(json, EmployeeForm.class);
 		
 		System.out.println("Employee JSON "+json.toString());
+		flag=EmployeeFactory.deleteGridId(ids);
 		
-		Employee e = new Employee();
-		for (EmployeeForm eFromJSON : aCollection) {
-			e.setId(eFromJSON.getId()); 
-			EmployeeFactory.delete(e);
-		}
+		PrintWriter out = response.getWriter();
+		  out.println(flag);
+		
     return map.findForward("");    
 	}
 }

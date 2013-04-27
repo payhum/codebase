@@ -1,3 +1,9 @@
+<style>
+
+.k-grouping-header
+
+{display:none;}
+</style>
 <%@include file="../../common/jspHeader.jsp" %>
 <h2 class="legend">Employee Form</h2> 
 <div id="grid">
@@ -11,13 +17,12 @@ var empDataSource;
 var empWindow;
 var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeForm.jsp";
 
-status= [{"id":"ACTIVE","value": "ACTIVE"},{"id": "IN ACTIVE", "value" : "IN ACTIVE"}];    	
-sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
+
 	
     $(document).ready(function(e){	
     	
 	        var employeeModel = kendo.data.Model.define({
-	        	id : "id",
+	        	
 	        	fields :{        		
 	        		employeeId : {
 	        			type : "string",
@@ -44,20 +49,20 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 	        			}
 	        		},
 	        		sex : {
-	        			type : "String",
+	        			type : "string",
 	        			validation : {
 	        				required : true
 	        			},
 	        			defaultValue :  "Male" 
 	        		},
 	        		birthdate : {
-	        			type : "date",
+	        		
 	        			validation : {
 	        				required : true
 	        			}
 	        		},
 	        		hiredate : {
-	        			type : "date",
+	        			
 	        			validation : {
 	        				required : true
 	        			}
@@ -121,18 +126,27 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 	         var grid = $("#grid").kendoGrid({
 	            dataSource : empDataSource, 
 	            columns : [
-					{ command : [{"name" : "edit", className : "editEmp"}, "destroy"], width : 100, filterable :false },
-	                { field : "photo", title : "Photo" ,template : "<img width=67 height=50 src='#='/OpenHR'+photo#'/>", width : 100},
-					{ field : "employeeId", title : "Id", width : 120 },
-	                { field : "firstname", title : "First Name", width : 100 },
-	                { field : "middlename", title : "Middle Name", width : 100 },
-	                { field : "lastname", title : "Last Name", width : 100 },
-	                { field : "sex", title : "Sex", editor : sexDropDownEditor, width : 80 },
-	                { field : "positionId", title : "Title",  editor : positionDropDownEditor, groupable : false, template: '#=positionId ? positionId.name: ""#', width : 100  },
-	                { field : "birthdate", title : "Birth date", template : "#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy') #", width : 100  },
-	                { field : "hiredate", title : "Hired date", template : "#= kendo.toString(new Date(hiredate) , 'MMM, dd yyyy') #", width : 100 },
-	                { field : "status", title : "Status",editor : statusDropDownEditor, width : 100 }
+					{command : [{"name" : "edit", className : "editEmp"},{ text:"AddDep", className:"delTax"}], width : 40, filterable :false },
+	               
+					 { hidden:true,field : "id", title : "id"},
+					
+					{ field : "photo", title : "Photo" ,template : "<img width=67 height=50 src='#='/OpenHR'+photo#'/>", width : 40},
+					{field : "employeeId",  title:"Id",width : 50 },
+	                { field : "firstname", title : "First Name", width : 50 },
+	                { hidden :true,field : "middlename", title : "Middle Name", width : 50 },
+	               
+	                { hidden :true,field :"empNationalID", title : "empNationalID",  width : 20 },
+	                { hidden :true,field : "married", title : "married",  width : 20 },
 	                
+	                { hidden :true,field : "married", title : "married",  width : 20 },
+	                { field : "sex", title : "Sex",  width : 30 },
+	                { field : "positionId", title : "Title",  template: '#=positionId ? positionId.name: ""#', width : 40  },
+	                { hidden:true, field : "birthdate", title : "Birth date", template : "#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy') #" },
+	                {hidden:true,  field : "hiredate", title : "Hired date", template : "#= kendo.toString(new Date(hiredate) , 'MMM, dd yyyy') #" },
+	                { field : "companyId", title : "Branch", template: '#=companyId ? companyId.brchId.name: ""#',  width : 40 },
+	                
+	                { field : "status", title : "Status", width : 30 },
+	                { field : "residentType", title : "residentType",  template: '#=residentType ? residentType.name: ""#', width : 40 }
 	            ],             
 	            dataBound : function(){
 	            	$.each(empDataSource.data(), function(){  
@@ -140,30 +154,75 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 	            		this.hiredate = new Date(this.hiredate);	            		
 	            	});
 	            },
+	            
 	            toolbar : [{"name" : "create", className : "newEmp", text : "Add New Employee" }],
 	            sortable: true,  
 	            scrollable : true,
 	            height : 400,
 	            pageable:true,
-	            filterable: true,
-	            groupable : true,
+	           
 	            resizeable : true,
 	            reorderable: true,
-	            selectable : "row", 
-	            editable : "popup" 
+	            selectable : "row"
+	            
 	        }).data("kendoGrid");
 	         
-	         
-	         
-	         
+	        
+	        
+	         //grid.hideColumn("photo");
+	       // grid.hideColumn(2);
+	        // alert( "heeloo"+grid.hideColumn(2));
 	         $("#grid").delegate(".newEmp", "click", function(e) {
 	        	 e.preventDefault();	        	 
         		 createNewEmpForm();
         		 empWindow.open();
         		 empWindow.center();        	 
 	         });
-	         
-	         
+	         $("#grid").delegate(".delTax", "click", function(e) {
+	        	 e.preventDefault();
+				 var dataItem = grid.dataItem($(this).closest("tr"));
+				 
+				 alert(dataItem.id);
+				 
+				  var  id = dataItem.id; 
+            	 
+            	  
+            	  var editData = JSON.stringify({
+  					"id" : id,
+  					
+  				 }); 
+				 var r=confirm("Are you sure you to delete this record!");
+				 if (r==true)
+				   {
+				  alert("hello true");
+				  
+				  $.ajax({
+	      				 type : "POST",
+	      				 url : "<%=request.getContextPath() + "/do/DeleteEmployeeAction"%>",
+	     				 dataType : 'json',
+	     				 contentType : 'application/json; charset=utf-8',
+	     				 data : editData,
+	     				 success : function(datas){ 
+	     					 alert(datas);
+	     					 
+	     					
+	                    	 
+	     					//wnd2.close();
+	     					
+	     					//$("#employeeTemplate").html('');
+	     					
+	     				 }	        				
+	     			});	
+				  
+				   }
+				 else
+				   {
+					 alert("hello false");
+				   }
+				 
+				 
+				 
+	         });
 	        createNewEmpForm = function (){        	         	 
 	        	if(empWindow)
 	        		empWindow.content("");
@@ -202,9 +261,23 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 	                
 	                var selectedSex = dataItem.sex; 
 	                var selectedStatus = dataItem.status;
+	                
+	                var selectedFamily= dataItem.married;
+	                //alert("selectedSex"+selectedSex);
+	            	var viewModel1 = kendo.observable({
+	            		selectedSex: selectedSex,
+	            		selectedStatus: selectedStatus,
+	            		selectedFamily:selectedFamily
+	    			});
+	    			kendo.bind($("input"), viewModel1);
+	               // var selectedStatus = dataItem.status;
+	                
+	         
+	                
 	                var selectedPos = JSON.stringify(dataItem.positionId.id); 
+	              //  alert(dataItem.empNationalID);
 	     			 $("#positions").kendoDropDownList({
-	     				editor : positionDropDownEditor,
+	     				
 	     				dataTextField: "name",
 	     			    dataValueField: "id",
 	     			   	dataSource : {
@@ -215,25 +288,175 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 	     				} 
 	     			});    
 	     			 
-	     			if(!$("#sex").data("kendoDropDownList"))
-	     			$("#sex").kendoDropDownList({
-	     				editor: sexDropDownEditor,
-	     				dataTextField: "value",
-	     			    dataValueField: "id",
-	     			    dataSource :{ data : sex}
-	     			});
+	     			 var branchDataSource1= new kendo.data.DataSource({
+	   				  
+	   				  transport : {
+	   			  
+	            		read : {
+	          			type: 'POST',
+	          			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getBranch"%>',
+	      				 dataType : 'json',
+	      				 contentType : 'application/json; charset=utf-8',
+	      				 cache: false
+	      				 
+	          		}
+	   			  
+	   				  },
+	          		autoSync : true,
+	                 	batch : true 
+	                 	
+	   			  });
+
+	   			 
+	   			 var residentDataSource1= new kendo.data.DataSource({
+					  
+					  transport : {
+				  
+	        		read : {
+	      			type: 'POST',
+	      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getResident"%>',
+	  				 dataType : 'json',
+	  				 contentType : 'application/json; charset=utf-8',
+	  				 cache: false
+	  				 
+	      		}
+				  
+					  },
+	      		autoSync : true,
+	             	batch : true 
+	             	
+				  });
+				 
+				 var accommodationDataSource1= new kendo.data.DataSource({
+					  
+					  transport : {
+				  
+	        		read : {
+	      			type: 'POST',
+	      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getAccommodation"%>',
+	  				 dataType : 'json',
+	  				 contentType : 'application/json; charset=utf-8',
+	  				 cache: false
+	  				 
+	      		}
+				  
+					  },
+	      		autoSync : true,
+	             	batch : true 
+	             	
+				  });
+				 
+				  $(".residentDropDownList").kendoDropDownList({
+					  
+					  dataTextField : "name",
+						dataValueField : "id",
+						optionLabel: "Select Resident",
+						dataSource :residentDataSource1
+						
+			       }).data("kendoDropDownList"); 
+				 
+				  var selectedResident = JSON.stringify(dataItem.residentType.id); 
+				  //alert("residentVal"+selectedResident);
+					 $("#residentVal").data("kendoDropDownList").value(selectedResident);
+					 
+					 
+				  $("#brachDropDownList").kendoDropDownList({
+					  
+					  dataTextField : "name",
+						dataValueField : "id",
+						optionLabel: "Select Brach",
+						dataSource :branchDataSource1
+						
+				  }).data("kendoDropDownList");
+							  
+				  var selectedBranch = JSON.stringify(dataItem.companyId.brchId.id); 
+				 // alert("residentVal"+selectedResident);
+					 $("#brachDropDownList").data("kendoDropDownList").value(selectedBranch);
+					 
+					 
+					 $("#brachDropDownList").change(function() {
+							$(".departDropDownList").html('');
+							
+							//alert("value"+$(this).val());
+							var dId = $(this).val();
+							
+							   
+							
+							alert(dId);
+							var BrachData = JSON.stringify({
+							
+						
+								"Id":dId
+							 });  
+							branDep(BrachData);
+							
+						});
+					 
+					 
+					 
+					 function branDep (BrachData){
+						 
+						 var 	branchDepartDataSource1 = new kendo.data.DataSource({
+		                	 transport : {
+		                    		read : {
+		                    			type: 'POST',
+		                    			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getAllBrachDepart"%>',
+				        				 dataType : 'json',
+				        				 contentType : 'application/json; charset=utf-8',
+				        				 cache: false,
+				        				 
+				        				 
+		                    		},
+		                     
+		                    		parameterMap: function (data, type) {
+		                    			if(type = "read"){
+		                    				//alert(BrachData+"hello updateData");
+		                    				return BrachData;
+		                    			}
+		                    			
+		                    		}
+		                    	},
+		                   
+		                      
+		                       	autoSync : true,
+		                       	batch : true 
+		                    });
+					
+					 
+					  
+					$(".departDropDownList").kendoDropDownList({
+						dataTextField : "name",
+						dataValueField : "id",
+						optionLabel: "Select Depart",
+						dataSource :branchDepartDataSource1
+					
+				       }).data("kendoDropDownList");
+					
+						 
+					 }
+					var bid=dataItem.companyId.brchId.id;
+					var BrachData = JSON.stringify({
+						
+						
+						"Id":bid
+					 });  
+					 branDep(BrachData);
+					 
+					 var selectedDepart = JSON.stringify(dataItem.companyId.id); 
+					 // alert("residentVal"+selectedResident);
+						 $("#departVal").data("kendoDropDownList").value(selectedDepart);
+					 
+	 $(".accommodationDropDownList").kendoDropDownList({
+					  
+					  dataTextField : "name",
+						dataValueField : "id",
+						optionLabel: "Select Accommodation",
+						dataSource :accommodationDataSource1
+						
+			       }).data("kendoDropDownList");
+   
 	     			
-	     			//if(!$("#status1").data("kendoDropDownList"))
-	     			$("#status1").kendoDropDownList(/*{
-	     				editor: statusDropDownEditor,
-	     				dataTextField: "value",
-	     			    dataValueField: "id",
-	     			    dataSource :{ data : status}
-	     			}*/);
-	     			
-	     			$("#sex").data("kendoDropDownList").value(selectedSex);	
-	     			
-	     			$("#status1").data("kendoDropDownList").value(selectedStatus);
+	     			//$("#status1").data("kendoDropDownList").value(selectedStatus);
 	     			
 					$("#positions").data("kendoDropDownList").value(selectedPos);	                 	 
 	     			$("#birthdate").kendoDatePicker();
@@ -380,41 +603,7 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
     
     
     
-    function sexDropDownEditor(container, options) {
-    	$('<input data-text-field="value" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
-            autoBind: false,
-            dataSource: {
-            	data:sex
-            },
-            dataTextField: "id",
-            dataValueField: "value"
-        }); 
-    }
-    
-    
-    function statusDropDownEditor(container, options) {
-    	$('<input data-text-field="value" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
-            autoBind: false,
-            dataSource: {
-            	data: status
-            },
-            dataTextField: "id",
-            dataValueField: "value"
-        }); 
-    }
-    
-    
-    function positionDropDownEditor(container, options) {
-        $('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
-            autoBind: false,
-            dataSource: {
-                type: "json",
-                transport: {
-                    read: "<%=request.getContextPath() + "/do/ReadPositionAction"%>"
-                }
-            }
-        }); 
-    } 
+
      
 </script>  
 
@@ -460,13 +649,23 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 			</div>
 			<div class="clear"></div>
 		</div>
-
+	
+			
 
 
 		<div>
 			<div class="label">Sex</div>
 			<div class="field">
-				<input class="sex_input" id="sex" value="#=sex#"/>
+				
+
+	<label for="sexmale">
+				<input  type="radio" id="sexm" value="Male" name="sex" data-bind="checked: selectedSex" />
+			Male
+			</label>
+				<label for="sexfemale">
+				<input  type="radio" id="inactive" value="Female" name="sex"   data-bind="checked: selectedSex"/>
+			Female
+			</label>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -478,7 +677,7 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 			<div class="field">
 				<input type="text" data-type="date" data-role="datepicker" class="k-input k-textbox" 
 					id="birthdate" value="#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy')#" />
-			</div>
+				</div>
 			<div class="clear"></div>
 		</div>
 
@@ -504,17 +703,31 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 		</div>
 
 
-		<div>
-			<div class="label">Status</div>
+		<div> <div class="label">Branch</div>
 			<div class="field">
-				<select id="status1">
-                   <option value="ACTIVE">ACTIVE</option>
-                   <option value="IN ACTIVE">IN ACTIVE</option>
-                </select> 	
+				<input id="brachDropDownList" value="#=companyId ? companyId.brchId.name: ''#"/>
+			</div>
+			<div class="clear"></div></div>
+		
+		
+		
+
+
+
+		<div id="dp1">
+			<div class="label">Department</div>
+			<div class="field">
+				<input class="departDropDownList" id="departVal" value="#=companyId ? companyId.name: ''#"/>
 			</div>
 			<div class="clear"></div>
 		</div>
-
+<div >
+			<div class="label">Resident Type </div>
+			<div class="field">
+				<input class="residentDropDownList" id="residentVal" value="#=residentType ? residentType.name: ''#"/>
+			</div>
+			<div class="clear"></div>
+		</div>
 		<div>
 			<div class="field">
 				<a class="k-button k-icontext" id="saveEmp"><span class="k-icon k-update"></span>Update</a> <a
@@ -540,7 +753,57 @@ sex= [{"id":"Male","value": "Male"},{"id": "Female", "value" : "Female"}];
 			</div>
 			<div class="clear"></div>
 		</div>
+<div>
+<div class="label">Family</div>
+			<label for="family_single">
+				<input  type="radio" id="family_single" value="false" name="family" data-bind="checked: selectedFamily" />
+				Single
+			</label>
+			<label for="family_married">
+				<input  type="radio" id="family_married" value="true" name="family" data-bind="checked: selectedFamily" />
+				Married
+			</label>
+		<div class="clear"></div>	
+	</div>	
 
+
+<div>
+			<div class="label">Employee National ID</div> 
+			<div class="field">
+				<input type="text"  class="k-input k-textbox" id="nationID"  value="#=empNationalID#" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		<div>
+<div class="label">Emergency Contact Number</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+<div>
+			<div class="label">Status</div>
+			<div class="field">
+				<label for="statusactive">
+				<input  type="radio" id="active" value="ACTIVE" name="status" data-bind="checked: selectedStatus" />
+			ACTIVE
+			</label>
+				<label for="statusInactive">
+				<input  type="radio" id="inactive" value="IN ACTIVE" name="status"  data-bind="checked: selectedStatus" />
+				IN ACTIVE
+			</label>
+			</div>
+			<div class="clear"></div>
+		</div>
+
+		<div >
+			<div class="label">AccommodationType </div>
+			<div class="field">
+				<input class="accommodationDropDownList" id="accommodationVal"/>
+			</div>
+			<div class="clear"></div>
+		</div>
 	</div>
 	<div class="clear"></div>
 

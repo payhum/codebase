@@ -1011,7 +1011,7 @@ var percentSelect=null;
 	            dataSource : empDataSource,
 	            pageable: true,
 	            columns: [
-                          { field:"id",hidden:true, title: "id" ,width: "1px"},
+                          { hidden:true,field:"id", title: "id" ,width: "1px"},
                           { field: "incomeFrom", title:"From", width: "30px" },
                           { field: "incomeTo", title:"To", width: "30px" },
                           { field: "incomePersent", title:"%",width: "30px" },

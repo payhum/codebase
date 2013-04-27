@@ -7,7 +7,12 @@
 		<div style="clear: both"></div>
 	</div>
 	<script>
-		function createChart() {
+		function createChart(data) {
+			
+			
+	
+		
+			
 			$("#chart").kendoChart({
 				theme : $(document).data("kendoSkin") || "default",
 				title : {
@@ -16,49 +21,60 @@
 				legend : {
 					position : "bottom",
 					labels : {
-						template : "#= text # (#= value #%)"
+						template : "#= category # (#= value #)"
 					}
 				},
 				seriesDefaults : {
 					labels : {
 						visible : true,
-						format : "{0}%"
+						format : "{0}"
 					}
 				},
 				series : [ {
 					type : "pie",
-					data : [ {
-						category : "Development",
-						value : 22
-					}, {
-						category : "Management",
-						value : 54
-					}, {
-						category : "Design",
-						value : 49
-					}, {
-						category : "Sales",
-						value : 33
-					}, {
-						category : "Maintenace",
-						value : 27
-					} ]
+					data :data
 				} ],
 				tooltip : {
 					visible : true,
-					format : "{0}%"
+					format : "{0}"
 				}
 			});
+			
+			
 		}
 
 		$(document).ready(function() {
+			var d=null;
 			setTimeout(function() {
 				// Initialize the chart with a delay to make sure
 				// the initial animation is visible
-				createChart();
-
+				
+				$.ajax({
+					 type : "POST",
+					 url:'<%=request.getContextPath()+ "/do/PieChartCommanActions?parameter=getPieChart"%>',
+					 dataType : 'json',
+					 contentType : 'application/json; charset=utf-8',
+					 
+					 success : function(data){ 
+						 d=data;
+						//alert(d);
+						 createChart(data);     					 	        					 
+					 }	        				
+				});
 				$("#dashboard").bind("kendo:skinChange", function(e) {
-					createChart();
+					
+					$.ajax({
+						 type : "POST",
+						 url:'<%=request.getContextPath()+ "/do/PieChartCommanActions?parameter=getPieChart"%>',
+						 dataType : 'json',
+						 contentType : 'application/json; charset=utf-8',
+						 
+						 success : function(data){ 
+							 d=data;
+							// alert(d);
+							 createChart(data);     					 	        					 
+						 }	        				
+					});
 				});
 			}, 400);
 		});
@@ -104,9 +120,9 @@
 		}
 
 		$(document).ready(function() {
+			
 			setTimeout(function() {
 				createRevenueBarChart();
-
 				// Initialize the chart with a delay to make sure
 				// the initial animation is visible
 			}, 400);

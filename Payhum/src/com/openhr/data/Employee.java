@@ -26,6 +26,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import com.openhr.company.Company;
 
 
@@ -45,7 +48,10 @@ import com.openhr.company.Company;
     @NamedQuery(name = "Employee.findBySex", query = "SELECT e FROM Employee e WHERE e.sex = ?"),
     @NamedQuery(name = "Employee.findByBirthdate", query = "SELECT e FROM Employee e WHERE e.birthdate = ?"),
     @NamedQuery(name = "Employee.findByCompanyID", query = "SELECT e FROM Employee e WHERE e.companyId = ?"),
-    @NamedQuery(name = "Employee.findByHiredate", query = "SELECT e FROM Employee e WHERE e.hiredate = ?")})
+    @NamedQuery(name = "Employee.findByHiredate", query = "SELECT e FROM Employee e WHERE e.hiredate = ?"),
+    @NamedQuery(name = "Employee.findActiveByCompanyID", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE' AND e.companyId = ?"),
+    @NamedQuery(name = "Employee.findInActiveByCompanyIDAndDate", query = "SELECT e FROM Employee e WHERE e.status = 'INACTIVE' AND e.companyId = ? AND" +
+    		" MONTH(e.inactiveDate) = MONTH(?) AND YEAR(e.inactiveDate) = YEAR(?)")})
 @NamedNativeQuery(name = "Employee.findLastId", query = "SELECT * FROM Employee WHERE Employee.id = (SELECT max(Employee.id) FROM EMPLOYEE)",
 			resultClass=Employee.class)
 public class Employee implements Serializable {
@@ -90,10 +96,11 @@ public class Employee implements Serializable {
     @Column(name = "hiredate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date hiredate;
-   /* @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
-    private List<Users> usersCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "employeeId")
-    private List<Leave> leaveCollection;*/
+   
+    @Basic(optional = false)
+    @Column(name = "inactiveDate")
+    private Date inactiveDate;
+   
     @JoinColumn(name = "positionId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Position positionId;
@@ -109,9 +116,9 @@ public class Employee implements Serializable {
     @ManyToOne(optional = false)
     private TypesData residentType;
     
-	@JoinColumn(name = "companyId", referencedColumnName = "id", nullable = false)
+	@JoinColumn(name = "deptId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Company companyId;
+    private DepartBrachData companyId;
 
     @Basic(optional = false)
     @Column(name = "empNationalID", nullable = false, length = 45)
@@ -280,11 +287,19 @@ public class Employee implements Serializable {
 		this.residentType = resType;
 	}
 	
-    public Company getCompanyId() {
+    public DepartBrachData getCompanyId() {
 		return companyId;
 	}
 
-	public void setCompanyId(Company companyId) {
+	public void setCompanyId(DepartBrachData companyId) {
 		this.companyId = companyId;
+	}
+
+	public Date getInactiveDate() {
+		return inactiveDate;
+	}
+
+	public void setInactiveDate(Date inactiveDate) {
+		this.inactiveDate = inactiveDate;
 	}
 }

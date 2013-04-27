@@ -42,21 +42,39 @@
 			<div class="clear"></div>
 		</div>
 
-
-
+	<div>
+			<div class="label">Employee National ID</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+<div>
+			<div class="label">Emergency Contact Name</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="contName"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
 		<div>
 			<div class="label">Sex</div>
 			<div class="field" >
-				<select id="sex" >
-					<option value="Male">Male</option>
-					<option value="Female">Female</option>
-				</select>
+					<label for="sexmale">
+				<input  type="radio" id="sexm" value="Male" name="sex" />
+			Male
+			</label>
+				<label for="sexfemale">
+				<input  type="radio" id="inactive" value="Female" name="sex"  />
+			Female
+			</label>
+			
+			
 			</div>
 			<div class="clear"></div>
 		</div>
 
-
-
+	
+			
 		<div>
 			<div class="label">Birth date</div>
 			<div class="field">
@@ -68,42 +86,46 @@
 
 
 
+		
 		<div>
-			<div class="label">Hire date</div>
+			<div class="label">Position</div>
 			<div class="field">
-				<input type="text" class="k-input k-textbox" 
-					id="hiredate" value="" />
+				<input id="postDropDownList"/>
 			</div>
 			<div class="clear"></div>
 		</div>
+		
+		<div> <div class="label">Branch</div>
+			<div class="field">
+				<input id="brachDropDownList"/>
+			</div>
+			<div class="clear"></div></div>
+		
+		
+		
 
-<div>
+
+
+		<div id="dp1">
 			<div class="label">Department</div>
 			<div class="field">
-				<input id="deprtDropDownList"/>
+				<input class="departDropDownList" id="departVal"/>
 			</div>
 			<div class="clear"></div>
 		</div>
-
-		<div>
-			<div class="label">Position/ Title</div>
+<div >
+			<div class="label">Resident Type </div>
 			<div class="field">
-				<input id="positionDropDownList"/>
+				<input class="residentDropDownList" id="residentVal"/>
 			</div>
 			<div class="clear"></div>
 		</div>
+		
+		
+		
+		
 
-
-		<div>
-			<div class="label">Status</div>
-			<div class="field">
-				<select id="status">
-					<option value="ACTIVE">Active</option>
-					<option value="IN ACTIVE">In Active</option>
-				</select>
-			</div>
-			<div class="clear"></div>
-		</div>
+	
 
 		<div>
 			<div class="field">
@@ -130,9 +152,72 @@
 			<div class="clear"></div>
 		</div>
 
+<div>
+			<div class="label">Employee National ID</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		<div>
+<div class="label">Emergency Contact Number</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		
+		
+<div>
+<div class="label">Family</div>
+			<label for="family_single">
+				<input  type="radio" id="family_single" value="false" name="family"  />
+				Single
+			</label>
+			<label for="family_married">
+				<input  type="radio" id="family_married" value="true" name="family" />
+				Married
+			</label>
+		<div class="clear"></div>	
+	</div>		
+			
 
 
 
+		<div>
+			<div class="label">Hire date</div>
+			<div class="field">
+				<input type="text" class="k-input k-textbox" 
+					id="hiredate" value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+
+
+	<div>
+			<div class="label">Status</div>
+			
+			<label for="statusactive">
+				<input  type="radio" id="active" value="ACTIVE" name="status" />
+			ACTIVE
+			</label>
+				<label for="statusInactive">
+				<input  type="radio" id="inactive" value="IN ACTIVE" name="status"  />
+				IN ACTIVE
+			</label>
+			<div class="clear"></div>
+		</div>
+
+
+		<div >
+			<div class="label">AccommodationType </div>
+			<div class="field">
+				<input class="accommodationDropDownList" id="accommodationVal"/>
+			</div>
+			<div class="clear"></div>
+		</div>
 
 	</div>
 	<div class="clear"></div>
@@ -145,8 +230,10 @@
 
 
 		$(document).ready(function(){
+			//$('input:radio[name=family]').val('false');
+			$("#dp1").hide();
 			var today = new Date();
-			
+		
 			//$("#employeeId").mask("aaaaaa-9999" , {placeholder:"-"});
 			
 			
@@ -162,9 +249,166 @@
 				 empWindow.content('');
 				 empWindow.close();	                	 
              }); 
-			$("#saveEmp").bind("click", function() {    				
-     				
-                	var id='', employeeId, firstname, middlename, lastname, sex, birthdate, hiredate, positionId, photo;
+			 
+			 
+			 
+			 $("#brachDropDownList").change(function() {
+					$(".departDropDownList").html('');
+					$("#dp1").show();
+					//alert("value"+$(this).val());
+					var dId = $(this).val();
+					
+					   
+					
+					alert(dId);
+					var BrachData = JSON.stringify({
+					
+				
+						"Id":dId
+					 });  
+					  var 	branchDepartDataSource1 = new kendo.data.DataSource({
+		                	 transport : {
+		                    		read : {
+		                    			type: 'POST',
+		                    			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getAllBrachDepart"%>',
+				        				 dataType : 'json',
+				        				 contentType : 'application/json; charset=utf-8',
+				        				 cache: false,
+				        				 
+				        				 
+		                    		},
+		                     
+		                    		parameterMap: function (data, type) {
+		                    			if(type = "read"){
+		                    				alert(BrachData+"hello updateData");
+		                    				return BrachData;
+		                    			}
+		                    			
+		                    		}
+		                    	},
+		                   
+		                      
+		                       	autoSync : true,
+		                       	batch : true 
+		                    });
+					
+					 
+					  
+					$(".departDropDownList").kendoDropDownList({
+						dataTextField : "name",
+						dataValueField : "id",
+						optionLabel: "Select Depart",
+						dataSource :branchDepartDataSource1
+					
+				       }).data("kendoDropDownList");
+					
+					
+				});
+			 
+			 
+			 var branchDataSource1= new kendo.data.DataSource({
+				  
+				  transport : {
+			  
+         		read : {
+       			type: 'POST',
+       			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getBranch"%>',
+   				 dataType : 'json',
+   				 contentType : 'application/json; charset=utf-8',
+   				 cache: false
+   				 
+       		}
+			  
+				  },
+       		autoSync : true,
+              	batch : true 
+              	
+			  });
+			 
+			
+			 var residentDataSource1= new kendo.data.DataSource({
+				  
+				  transport : {
+			  
+        		read : {
+      			type: 'POST',
+      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getResident"%>',
+  				 dataType : 'json',
+  				 contentType : 'application/json; charset=utf-8',
+  				 cache: false
+  				 
+      		}
+			  
+				  },
+      		autoSync : true,
+             	batch : true 
+             	
+			  });
+			 
+			 var accommodationDataSource1= new kendo.data.DataSource({
+				  
+				  transport : {
+			  
+        		read : {
+      			type: 'POST',
+      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getAccommodation"%>',
+  				 dataType : 'json',
+  				 contentType : 'application/json; charset=utf-8',
+  				 cache: false
+  				 
+      		}
+			  
+				  },
+      		autoSync : true,
+             	batch : true 
+             	
+			  });
+			 
+			  $(".residentDropDownList").kendoDropDownList({
+				  
+				  dataTextField : "name",
+					dataValueField : "id",
+					optionLabel: "Select Resident",
+					dataSource :residentDataSource1
+					
+		       }).data("kendoDropDownList");
+			 
+			 
+			  
+			  
+ $(".accommodationDropDownList").kendoDropDownList({
+				  
+				  dataTextField : "name",
+					dataValueField : "id",
+					optionLabel: "Select Accommodation",
+					dataSource :accommodationDataSource1
+					
+		       }).data("kendoDropDownList");
+ 
+ 
+ $("#brachDropDownList").kendoDropDownList({
+	  
+	  dataTextField : "name",
+		dataValueField : "id",
+		optionLabel: "Select Brach",
+		dataSource :branchDataSource1
+		
+  }).data("kendoDropDownList");
+			  
+			  
+			  
+			 
+			$("#saveEmp").bind("click", function() {   
+				
+				
+     				alert("hello");
+                	var id='',status,famly,postDropDownList,nationID,contName,contNumber,
+                	
+                	sex,accommodationVal,residentVal,employeeId, departId,
+                	
+                	firstname, middlename, lastname, 
+                	
+                	birthdate, hiredate,  photo;
          			//crop variables
          			var x, y, width, height;
                 	//id = $("#id").val(); 
@@ -172,11 +416,29 @@
          			firstname = $("#firstname").val(); 
          			middlename = $("#middlename").val(); 
          			lastname = $("#lastname").val(); 
-         			sex = $("#sex").val();
+         			//sex = $("#sex").val();
+         			residentVal=$("#residentVal").val();
          			
+         			accommodationVal=$("#accommodationVal").val();
+         			departId=$("#departVal").val();
+         			sex=$('input:radio[name=sex]:checked').val();
          			
+         			status=$('input:radio[name=status]:checked').val();
+         			famly=$('input:radio[name=family]:checked').val();
          			
-         			
+         			contName=$("#contName").val();
+         			contNumber=$("#contNumber").val();
+         		nationID=$("#nationID").val();
+         		postDropDownList=$("#postDropDownList").val();
+         		
+         		alert("employeeId"+employeeId+"-----"+"firstname"+firstname
+         				
+         			+"middlename"+middlename+"lastname"	+lastname+"residentVal"+residentVal
+         			+"accommodationVal"+accommodationVal+"postDropDownList"+postDropDownList
+         			+"sex"+sex+"status"+status+"famly"+famly+"nationID"+nationID
+         		 +"contName"+contName+"contNumber"+contNumber
+         		
+         		);
          			var bdate = new Date($("#birthdate").val());
          			var hdate = new Date($("#hiredate").val());
          			birthdate = bdate.getTime();
@@ -193,9 +455,9 @@
 	     				return;
          			}
          			
-         			positionId = $("#positionDropDownList").val();
          			
-         			status = $("#status").val();
+         			
+         			//status = $("#status").val();
          			
          			x = $('#x').val();
     				y = $('#y').val();
@@ -265,20 +527,29 @@
     					"sex" : sex,
     					"birthdate" : birthdate,
     					"hiredate" : hiredate,
-    					"positionId" : positionId,
+    					"positionId" : postDropDownList,
     					"photo" : photo,
-    					"status" : status
+    					"status" : status,
+    					"famly":famly,
+    					"accommodationVal":accommodationVal,
+    					"nationID":nationID,
+    					"residentVal":residentVal,
+    					"contNumber":contNumber,
+    					"contName":contName,
+    					"departId":departId
+    					
     				 }]);       			
          			
          			
          			
          			$.ajax({
          				 type : "POST",
-        				 url:'<%=request.getContextPath()+ "/do/EmployeeAction"%>',
+         				 url:'<%=request.getContextPath()+ "/do/EmployeeAction"%>',
         				 dataType : 'json',
         				 contentType : 'application/json; charset=utf-8',
         				 data : updateData,
-        				 success : function(){
+        				 success : function(data){
+        					 alert(data);
         					 empWindow.close(); 
         					 empDataSource.read();	
         				 }
@@ -287,26 +558,18 @@
 			});
 		
 			
-			$("#positionDropDownList").kendoDropDownList({
+
+			
+			
+		
+			$("#postDropDownList").kendoDropDownList({
 				dataTextField : "name",
 				dataValueField : "id",
+				optionLabel: "Select Designation",
 				dataSource : {
 					type : "json",
 					transport : {
 						read : "<%=request.getContextPath()+ "/do/ReadPositionAction"%>"
-					}
-				}
-			});
-			
-			
-		
-			$("#deprtDropDownList").kendoDropDownList({
-				dataTextField : "name",
-				dataValueField : "id",
-				dataSource : {
-					type : "json",
-					transport : {
-						read : "<%=request.getContextPath()+ "/do/ReadRoleAction"%>"
 					}
 				}
 			});

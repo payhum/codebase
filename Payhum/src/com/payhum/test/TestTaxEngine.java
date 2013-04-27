@@ -2,6 +2,7 @@ package com.payhum.test;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,16 +71,18 @@ public class TestTaxEngine {
 
 		Company comp = new Company();
 		
-		List<Employee> empList = new ArrayList<Employee>();
-		empList.add(emp);
+		List<Employee> empList1 = new ArrayList<Employee>();
+		List<Employee> empList2 = new ArrayList<Employee>();
+		empList1.add(emp);
 		
 		// Run through the engine
 		System.out.println("Running the Tax Engine in DRYRUN Mode.");
 		System.out.println("======================================");
-
-		TaxEngine taxEngine = new TaxEngine(comp, empList);
-		Map<Employee, EmployeePayroll> retData = taxEngine.testExecute();
-
+		Calendar currCal = Calendar.getInstance();
+		
+		TaxEngine taxEngine = new TaxEngine(comp, empList1, empList2);
+		Map<Employee, EmployeePayroll> retData = taxEngine.testExecute(currCal);
+		
 		for(Employee ei : retData.keySet()) {
 			EmployeePayroll empPay = retData.get(ei);
 

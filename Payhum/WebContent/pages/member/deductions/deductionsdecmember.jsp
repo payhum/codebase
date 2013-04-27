@@ -30,7 +30,7 @@
 	
 	
 	 	<div id="wholeDeduc">
- 		<div class="k-content">
+ 	
  			<div class="legend">
  				<div style="float:right" >
 					<input type="submit" class="applyDeduc" value="New"/>
@@ -63,12 +63,13 @@
                
                
  					</div>
+ 					
  				</span>
-  			</div><br/><br/>
+  			</div>
 
   	<div id="grid3"> </div>
  		</div>
-	</div>
+
 				
 	
 	  		
@@ -115,11 +116,11 @@ var wholeDeduc;
 	  
 	       var grid33=$("#grid3").kendoGrid({
 	            dataSource : empDataSource3, 
-	            columns : [{ field : "id", title : "id", width :1 },
-	                       {field : "type", title : "Name",template:'#=type ? type.name: ""#', width : 100 },
+	            columns : [{hidden:true, field : "id", title : "id", },
+	                       {field : "type", title : "Name",template:'#=type ? type.name: ""#', width : 50 },
 	                       
-	                      {field : "amount", title : "Amount", width : 100},
-	                       {field : "description", title : "Description", width : 100}
+	                      {field : "amount", title : "Amount", width : 50},
+	                       {field : "description", title : "Description", width : 50}
 	                ],             
 	        
 	            

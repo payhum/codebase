@@ -86,7 +86,7 @@ $("#grid").kendoGrid({
 	            columns : [
 					
 	                
-					{ field : "id", title : "Id", width : 120 },
+					{hidden:true, field : "id", title : "Id", width : 120 },
 	                { field : "depname", title : "DepartName", width : 100 },
 	                
 
@@ -168,12 +168,14 @@ detailRow.find(".orders").kendoGrid(
 					columns : [
 
 							{
+								
 								field : "employeeId",
 								title : "Id",
 								template : '#=employeeId ? employeeId.employeeId: ""#',
 								width : 120
 							},
 							{
+								
 								field : "employeeId",
 								title : "Name",
 								template : '#=employeeId ? employeeId.firstname+" "+employeeId.middlename: ""#',

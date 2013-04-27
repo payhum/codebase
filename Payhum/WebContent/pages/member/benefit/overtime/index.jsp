@@ -114,8 +114,8 @@ function getEmployeeOverTimes(){
 			columns: [
  				{ field : "overTimeDate", title : "Requested Date", template : "#= kendo.toString(new Date(overTimeDate), 'MMM, dd yyyy') #", width : 100  },
  	            { field : "noOfHours", title : "Hours", width : 100 },
- 	            { field : "status", title : "Status", template : "#= status == 0 ? 'Pending' : 'Approved' #", width : 100 },
- 	           	{ field : "approvedDate", title : "Approved Date", template : "#= approvedBy == 'PayHum' ? '-' : kendo.toString(new Date(approvedDate), 'MMM, dd yyyy') #", width : 100 },
+		        { field : "status", title : "Status", template : "#= status != 2 ? (status == 0 ? 'New' : 'Approved')  : 'Rejected' #", width : 100 },
+ 	           	{ field : "approvedDate", title : "Processed Date", template : "#= approvedBy == 'PayHum' ? '-' : kendo.toString(new Date(approvedDate), 'MMM, dd yyyy') #", width : 100 },
              ], 
           sortable: true,
           scrollable: true,
@@ -176,23 +176,27 @@ function getEmployeeOverTimes(){
 	$("#deleteOverTime").click(function(){
 		 employeeId 	= <%=request.getSession().getAttribute("employeeId")%>;
 		 requestOnDate  = $(".k-state-selected").find('td').eq(0).text();
-  	  	 deleteOverTime = JSON.stringify({
+		 status1 = $(".k-state-selected").find('td').eq(2).text();
+		 deleteOverTime = JSON.stringify({
 	   		"employeeId"	  : employeeId,
 	   		"requestOnDate"   : requestOnDate 
  	 	 }); 
-	    	
-	  	 $.ajax({
-	   		url 		: "<%=request.getContextPath() + "/do/DeleteOverTime"%>",
-	    	type 		: 'POST',
-			dataType 	: 'json',
-			contentType : 'application/json; charset=utf-8',
-			data 		: deleteOverTime,
-			success     : function(){
- 				$("#grid1").empty();
- 				getEmployeeOverTimes();
-			}
-	 	 });  
- 		 
+	    
+  	  	if(status1 == "New"){
+		  	 $.ajax({
+		   		url 		: "<%=request.getContextPath() + "/do/DeleteOverTime"%>",
+		    	type 		: 'POST',
+				dataType 	: 'json',
+				contentType : 'application/json; charset=utf-8',
+				data 		: deleteOverTime,
+				success     : function(){
+	 				$("#grid1").empty();
+	 				getEmployeeOverTimes();
+				}
+		 	 }); 
+  	  	} else {
+  	  		alert("Approved/Rejected Overtime records cannot be deleted.");
+  	  	} 
   	});
 	
 	

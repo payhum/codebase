@@ -160,7 +160,7 @@
   		            { field : "returnDate", title : "Return Date", template : "#= kendo.toString(new Date(returnDate) , 'MMM, dd yyyy') #", width : 100 },
   		            { field : "noOfDays", title : "No of Days", width : 100 },
   		            { field : "description", title : "Description", width : 100 },
-  		            { field : "status", title : "Status", template : "#= status == 0 ? 'New' : 'Accepted' #", width : 100 },
+  		            { field : "status", title : "Status", template : "#= status != 2 ? (status == 0 ? 'New' : 'Approved')  : 'Rejected' #", width : 100 },
    	            ], 
   	            sortable: true,
   	            scrollable: true,

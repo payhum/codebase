@@ -57,11 +57,6 @@ public class EmployeePayroll implements Serializable {
     @Basic(optional = false)
     @Column(name = "GROSS_SALARY")
     private Double grossSalary;
-    /*@Column(name = "BENEFIT_TYPE", length = 45)
-    private String benefitType;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "BENEFIT_AMNT", precision = 22)
-    private Double benefitAmnt;*/
 
     @Basic(optional = false)
     @Column(name = "taxableIncome")
@@ -127,6 +122,14 @@ public class EmployeePayroll implements Serializable {
     @Column(name = "overtimeamt")
     private Double overtimeamt;
     
+    @Basic(optional = false)
+    @Column(name = "pendingTaxAmt")
+    private Double pendingTaxAmt;
+    
+    @Basic(optional = false)
+    @Column(name = "pendingNetPay")
+    private Double pendingNetPay;
+    
     
 	public EmployeePayroll() {
     	this.taxableIncome = 0D;
@@ -145,6 +148,7 @@ public class EmployeePayroll implements Serializable {
         this.grossSalary = 0D;
         this.netPay = 0D;
         this.totalDeductions = 0D;
+        this.overtimeamt=0D;
     }
     
     public Double getAccomodationAmount() {
@@ -331,9 +335,9 @@ public class EmployeePayroll implements Serializable {
 		
 		EmployeePayroll ePayroll = new EmployeePayroll();
 		ePayroll.setAccomodationType(accomType);
-		ePayroll.setAllowances((double) 50000);
-		ePayroll.setBaseSalary((double) 30000000);
-		ePayroll.setBonus((double) 4000000);
+		//ePayroll.setAllowances((double) 50000);
+		//ePayroll.setBaseSalary((double) 30000000);
+		//ePayroll.setBonus((double) 4000000);
 		
 		TypesData residentType = new TypesData();
 		residentType.setDesc(PayhumConstants.LOCAL);
@@ -419,5 +423,21 @@ public class EmployeePayroll implements Serializable {
 
 	public void setOvertimeamt(Double overtimeamt) {
 		this.overtimeamt = overtimeamt;
+	}
+
+	public Double getPendingTaxAmt() {
+		return pendingTaxAmt;
+	}
+
+	public void setPendingTaxAmt(Double pendingTaxAmt) {
+		this.pendingTaxAmt = pendingTaxAmt;
+	}
+
+	public Double getPendingNetPay() {
+		return pendingNetPay;
+	}
+
+	public void setPendingNetPay(Double pendingNetPay) {
+		this.pendingNetPay = pendingNetPay;
 	}
 }

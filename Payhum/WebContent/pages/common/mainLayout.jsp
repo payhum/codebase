@@ -19,7 +19,8 @@
         
         
         <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/jquery.min.js"%>"></script>
-        <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/kendo.web.min.js"%>"></script>
+           <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/kendo.all.min.js"%>"></script>
+
         <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/kendo.chart.min.js"%>"></script>
         <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/jquery.maskedinput-1.2.2.js"%>"></script>
         <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/ajaxfileupload.js"%>"></script>
