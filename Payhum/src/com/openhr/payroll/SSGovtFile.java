@@ -20,14 +20,14 @@ import com.openhr.company.CompanyPayroll;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
 
-public class BankFile extends Action {
-	
+
+public class SSGovtFile extends Action {
 	private static final String COMMA = ",";
 	
 	@Override
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+			throws Exception { 
 		// TODO Get the company id
 		Integer compId = 1;
 		List<Company> comps = CompanyFactory.findById(compId);
@@ -41,21 +41,16 @@ public class BankFile extends Action {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-
         
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		
-		String fileName = "Bank_" + compName + "_Payroll_" + monthYear + ".csv";
+		String fileName = "Govt_" + compName + "_Payroll_" + monthYear + ".csv";
 		
 		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		response.setContentType("application/force-download");
 		
 		// Columns in the file will be:
-		// EmployeeName,BankName,Branch,AccountNumber,NetPay
-		// Total Tax Amount : XXX
-		// Total Social Security Amount : XXX		
-		Double totalTaxAmt = 0D;
-		Double totalSSAmt = 0D;
+		// EmployeeName,EmpNationalID,SocialSecAmt
 		
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByProcessedDate(cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
@@ -63,23 +58,13 @@ public class BankFile extends Action {
 			StringBuilder empPayStr = new StringBuilder();
 			empPayStr.append(compPay.getEmpFullName());
 			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getBankName());
+			empPayStr.append(compPay.getEmpNationalID());
 			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getBankBranch());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getAccountNo());
-			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("MMK ###.##").format(compPay.getNetPay()));
+			empPayStr.append(new DecimalFormat("MMK ###.##").format(compPay.getSocialSec()));
 			empPayStr.append("\n");
-			
-			totalTaxAmt += compPay.getTaxAmount();
-			totalSSAmt += compPay.getSocialSec();
 			
 			allEmpPayStr.append(empPayStr);
 		}
-		
-		allEmpPayStr.append("Total Tax Amount : " + new DecimalFormat("MMK ###.##").format(totalTaxAmt));
-		allEmpPayStr.append("Total Social Security Amount : " + new DecimalFormat("MMK ###.##").format(totalSSAmt));
 		
 		OutputStream os = response.getOutputStream();
 		os.write(allEmpPayStr.toString().getBytes());

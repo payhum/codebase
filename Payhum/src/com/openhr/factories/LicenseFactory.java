@@ -10,6 +10,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.openhr.company.Company;
 import com.openhr.company.Licenses;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
@@ -76,13 +77,13 @@ public class LicenseFactory implements Serializable {
 		
 	public static boolean delete(Licenses e) throws Exception{
 		boolean done = false;
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-
-		Licenses license = (Licenses) session.get(Licenses.class, e.getId());
-		session.delete(license);
-		session.getTransaction().commit();
-		session.flush();
+ 		Session session1 = OpenHRSessionFactory.getInstance().openSession();
+		session1.beginTransaction();
+ 		Licenses license = (Licenses) session1.get(Licenses.class, e.getId());
+		session1.delete(license);
+		session1.getTransaction().commit();
+		session1.flush();
+		session1.close();
 		done = true;
 
 		return done;
@@ -103,20 +104,18 @@ public class LicenseFactory implements Serializable {
 	
 	public static boolean update(Licenses e) throws Exception {
 		boolean done = false;
-
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
+ 
+		Licenses comp = (Licenses) session.get(Licenses.class, e.getId());
+		comp.setActive(0);
+		 
 		
-		Licenses lis = (Licenses) session.get(Licenses.class, e.getId());
-
-		lis.setCompanyId(e.getCompanyId());
-		lis.setActive(e.getActive());
-		
-		session.update(lis);
+		session.update(comp);
 		session.getTransaction().commit();
+		
 		done = true;
 
-		return done;
-	}
+		return done;	}
 
 }

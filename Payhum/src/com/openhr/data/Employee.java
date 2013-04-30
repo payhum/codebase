@@ -47,11 +47,20 @@ import com.openhr.company.Company;
     @NamedQuery(name = "Employee.findByLastname", query = "SELECT e FROM Employee e WHERE e.lastname = ?"),
     @NamedQuery(name = "Employee.findBySex", query = "SELECT e FROM Employee e WHERE e.sex = ?"),
     @NamedQuery(name = "Employee.findByBirthdate", query = "SELECT e FROM Employee e WHERE e.birthdate = ?"),
-    @NamedQuery(name = "Employee.findByCompanyID", query = "SELECT e FROM Employee e WHERE e.companyId = ?"),
+    @NamedQuery(name = "Employee.findByDeptID", query = "SELECT e FROM Employee e WHERE e.deptId = ?"),
     @NamedQuery(name = "Employee.findByHiredate", query = "SELECT e FROM Employee e WHERE e.hiredate = ?"),
-    @NamedQuery(name = "Employee.findActiveByCompanyID", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE' AND e.companyId = ?"),
-    @NamedQuery(name = "Employee.findInActiveByCompanyIDAndDate", query = "SELECT e FROM Employee e WHERE e.status = 'INACTIVE' AND e.companyId = ? AND" +
-    		" MONTH(e.inactiveDate) = MONTH(?) AND YEAR(e.inactiveDate) = YEAR(?)")})
+    @NamedQuery(name = "Employee.findActiveByDeptID", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE' AND e.deptId = ?"),
+    @NamedQuery(name = "Employee.findAllActive", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE'"),
+    @NamedQuery(name = "Employee.findAllActiveByBranch", query = "SELECT e FROM Employee e, Department d WHERE e.status = 'ACTIVE' AND d.branchId = ? " + 
+    		" AND e.deptId = d.id"),
+    @NamedQuery(name = "Employee.findInActiveByDeptIDAndDate", query = "SELECT e FROM Employee e WHERE e.status = 'IN ACTIVE' AND e.deptId = ? AND" +
+    		" MONTH(e.inactiveDate) = MONTH(?) AND YEAR(e.inactiveDate) = YEAR(?)"),
+    @NamedQuery(name = "Employee.findInActiveByDate", query = "SELECT e FROM Employee e WHERE e.status = 'IN ACTIVE' AND" +
+    		" MONTH(e.inactiveDate) = MONTH(?) AND YEAR(e.inactiveDate) = YEAR(?)"),
+    @NamedQuery(name = "Employee.findInActiveByDateAndBranch", query = "SELECT e FROM Employee e, Department d WHERE e.status = 'IN ACTIVE' AND" +
+    		" MONTH(e.inactiveDate) = MONTH(?) AND YEAR(e.inactiveDate) = YEAR(?)" + 
+    		" AND d.branchId = ? AND e.deptId = d.id")
+    })
 @NamedNativeQuery(name = "Employee.findLastId", query = "SELECT * FROM Employee WHERE Employee.id = (SELECT max(Employee.id) FROM EMPLOYEE)",
 			resultClass=Employee.class)
 public class Employee implements Serializable {
@@ -118,7 +127,7 @@ public class Employee implements Serializable {
     
 	@JoinColumn(name = "deptId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private DepartBrachData companyId;
+    private Department deptId;
 
     @Basic(optional = false)
     @Column(name = "empNationalID", nullable = false, length = 45)
@@ -198,16 +207,16 @@ public class Employee implements Serializable {
         this.sex = sex;
     }
 
-    public long getBirthdate(){    	
-    	return birthdate.getTime(); 
+    public Date getBirthdate(){    	
+    	return birthdate; 
     }
 
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
     }
 
-    public long getHiredate(){
-    	return hiredate.getTime();
+    public Date getHiredate(){
+    	return hiredate;
     }
 
     public void setHiredate(Date hiredate) {
@@ -287,12 +296,12 @@ public class Employee implements Serializable {
 		this.residentType = resType;
 	}
 	
-    public DepartBrachData getCompanyId() {
-		return companyId;
+    public Department getDeptId() {
+		return deptId;
 	}
 
-	public void setCompanyId(DepartBrachData companyId) {
-		this.companyId = companyId;
+	public void setDeptId(Department did) {
+		this.deptId = did;
 	}
 
 	public Date getInactiveDate() {

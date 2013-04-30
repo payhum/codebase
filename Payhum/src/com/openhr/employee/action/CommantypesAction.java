@@ -18,12 +18,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
-import com.openhr.data.BrachData;
+import com.openhr.data.Branch;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.TypesData;
 import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.EmployeeFactory;
-import com.openhr.data.DepartBrachData;
+import com.openhr.data.Department;
 
 public class CommantypesAction extends DispatchAction {
 
@@ -38,7 +38,7 @@ public class CommantypesAction extends DispatchAction {
 			//config.setIgnoreDefaultExcludes(false);
 			//config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 			
-			List<BrachData> eptx = EmployeeFactory.findBrachAll();
+			List<Branch> eptx = EmployeeFactory.findBrachAll();
 			result = JSONArray.fromObject(eptx);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,7 +131,7 @@ public class CommantypesAction extends DispatchAction {
 			//config.setIgnoreDefaultExcludes(false);
 			//config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 			Integer ids= json.getInt("Id");	
-			List<DepartBrachData> dpList = EmployeeFactory.findBrachDepart(ids);
+			List<Department> dpList = EmployeeFactory.findBrachDepart(ids);
 			result = JSONArray.fromObject(dpList);
 		} catch (Exception e) {
 			e.printStackTrace();

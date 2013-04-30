@@ -22,8 +22,6 @@ public class ReadRequestedLeaveAction extends Action {
             HttpServletRequest request,
             HttpServletResponse response) throws Exception { 
 		
-		
-		
 		JSONArray result = null;
         try {
         	List applicationList = LeaveRequestFactory.findByStatus(0);
@@ -33,7 +31,7 @@ public class ReadRequestedLeaveAction extends Action {
             e.printStackTrace();
         }
         
-        System.out.print(result);
+        System.out.print("Result is " + result);
         
         response.setContentType("application/json; charset=utf-8");
         PrintWriter out = response.getWriter();

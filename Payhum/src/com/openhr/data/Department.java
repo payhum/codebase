@@ -1,5 +1,7 @@
 package com.openhr.data;
 
+import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,36 +10,38 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-import com.openhr.company.Company;
-
 @Entity
 @Table(name = "department", catalog = "payhumrepo", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "DepartBrachData.findAll", query = "FROM DepartBrachData db"),
-    @NamedQuery(name = "DepartBrachData.findByBrachId", query = "FROM DepartBrachData db WHERE brchId = ?"),
-    @NamedQuery(name = "DepartBrachData.findById", query = "FROM DepartBrachData db WHERE id = ?"),
-    @NamedQuery(name = "DepartBrachData.findByName", query = "SELECT db FROM DepartBrachData db WHERE db.name = ?")})
-public class DepartBrachData {
-	@Id
+    @NamedQuery(name = "Department.findAll", query = "FROM Department db"),
+    @NamedQuery(name = "Department.findByBrachId", query = "FROM Department db WHERE branchId = ?"),
+    @NamedQuery(name = "Department.findById", query = "FROM Department db WHERE id = ?"),
+    @NamedQuery(name = "Department.findByName", query = "SELECT db FROM Department db WHERE db.deptname = ?")})
+    @NamedNativeQuery(name = "Department.findLastId", query = "SELECT * FROM Department WHERE Department.id = (SELECT max(Department.id) FROM Department)",
+	resultClass=Department.class)
+
+public class Department implements Serializable {
+	private static final long serialVersionUID = 1L;
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+    
     @Basic(optional = false)
     @Column(name = "deptname", nullable = false, length = 45)
-    private String name;
+    private String deptname;
   
 
     @JoinColumn(name = "branchId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private BrachData brchId;
-    
-    
-    
+    private Branch branchId;
+     
     
     public Integer getId() {
 		return id;
@@ -47,20 +51,20 @@ public class DepartBrachData {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getDeptname() {
+		return deptname;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDeptname(String deptname) {
+		this.deptname = deptname;
 	}
 
-	public BrachData getBrchId() {
-		return brchId;
+	public Branch getBranchId() {
+		return branchId;
 	}
 
-	public void setBrchId(BrachData brchId) {
-		this.brchId = brchId;
+	public void setBranchId(Branch branchId) {
+		this.branchId = branchId;
 	}
 
 	@Override
@@ -73,10 +77,10 @@ public class DepartBrachData {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof DepartBrachData)) {
+        if (!(object instanceof Department)) {
             return false;
         }
-        DepartBrachData other = (DepartBrachData) object;
+        Department other = (Department) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -85,6 +89,6 @@ public class DepartBrachData {
 
     @Override
     public String toString() {
-        return "com.openhr.data.DepartBrachData[id=" + id + "]";
+        return "com.openhr.data.Department[id=" + id + "]";
     }
 }

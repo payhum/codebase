@@ -1,3 +1,4 @@
+<%@page import="com.openhr.data.LeaveRequest"%>
 <style>
 .displayClass{
 	display : none;
@@ -35,10 +36,14 @@
  						<input type="hidden" name="employeeId" id="employeeId" />
 						<input type="hidden" id="leaveKinds" value="" />
 						<input type="hidden" name="userType" value="Employee"/>
-						<select name="leaveTypeId" id="TypeOfLeave"> </select>&nbsp;&nbsp;&nbsp;&nbsp;
+						<select name="leaveTypeId" id="TypeOfLeave" > </select>&nbsp;&nbsp;&nbsp;&nbsp;
   					</span>
  					<span><label>Description : &nbsp;&nbsp;</label></span>
 					<span><input type="textarea" style="width:130px !important;" name="description" id="description" /></span><br/><br/>
+					<div>
+						<span>Available : </span>&nbsp;&nbsp;&nbsp;
+						<span id="remaining"></span>
+ 					</div>
   					<div style="float:right;">
 	  					<span><input type="submit" id="addLeave" value="Apply"/></span>&nbsp;&nbsp;
 						<span><input type="button" id="canceLeave" value="Cancel"/></span>
@@ -50,36 +55,33 @@
 </div>
 
 <script type="text/javascript">
-
-	function getEmployeeLeaves(){
-  	
-  		
-  			function employeeDropDownEditor(container, options) {
-	            $('<input data-text-field="employeeId" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
-	                autoBind: false,
-	                dataSource: {
-	                    type: "json",
-	                    transport: {
-	                        read: "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>"
-	                    }
+ 	function getEmployeeLeaves(){
+   		function employeeDropDownEditor(container, options) {
+	   		$('<input data-text-field="employeeId" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
+	         	autoBind: false,
+	            dataSource: {
+	           		type: "json",
+	             	transport: {
+	                 	read: "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>"
 	                }
-	            }); 
-	        }
+	            }
+	        }); 
+	     }
 	        
-	        function leaveTypeDropDownEditor(container, options) {
-	            $('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
-	                autoBind: false,
-	                dataSource: {
-	                    type: "json",
-	                    transport: {
-	                        read: "<%=request.getContextPath() + "/do/ReadLeaveTypeAction"%>"
-	                    }
+	     function leaveTypeDropDownEditor(container, options) {
+	     	$('<input data-text-field="name" data-value-field="id" data-bind="value:' + options.field + '"/>').appendTo(container).kendoDropDownList({
+	        	autoBind: false,
+	           	dataSource: {
+	            	type: "json",
+	          		transport: {
+	                	read: "<%=request.getContextPath() + "/do/ReadLeaveTypeAction"%>"
 	                }
-	            }); 
-	        }	
+	            }
+	        }); 
+	     }	
 	       		
    			
-  			var leaveApprovalModel = kendo.data.Model.define({
+  		var leaveApprovalModel = kendo.data.Model.define({
   	        	id: "id",            
   	            fields: {
   	            	leaveDate : {
@@ -132,7 +134,7 @@
   				dataSource : {
   					transport : {
   						read : {
-  	                        url : "<%=request.getContextPath() + "/do/ReadRequestedAction"%>",
+  	                        url : "<%=request.getContextPath() + "/do/ReadRequestedLeaveAction"%>",
   	                        dataType : 'json',
   	                        cache : false
   	                    },
@@ -170,102 +172,139 @@
   			});	
   		}
   			
-  		$(document).ready(function() {		
-   			 getEmployeeLeaves();
-  
-     	$("#leaveFrom").kendoDatePicker();
-    	$("#leaveTo").kendoDatePicker();
-     	<% List<LeaveType>	list =  (List<LeaveType>) request.getAttribute("leaveTypes");   
-    	 LeaveType myleave = null;
-         for (Iterator iterator = list.iterator(); iterator.hasNext();) {  
-             myleave = (LeaveType)iterator.next();  
-         %>
-            leaveTypes = "<%=myleave.getName()%>";
-            leaveValue = "<%=myleave.getId()%>"; 
-            $('#TypeOfLeave').append('<option name='+leaveTypes+' value='+leaveValue+'>'+leaveTypes+'</option>');
-          <% } %>     
+  		$(document).ready(function() {	
+    		getEmployeeLeaves();
+      		$("#leaveFrom").kendoDatePicker();
+    		$("#leaveTo").kendoDatePicker();
+  			$("#TypeOfLeave").kendoDropDownList({
+				dataTextField : "name",
+				dataValueField : "id",
+				optionLabel: "Select Leave Type",
+				dataSource : {
+					type : "json",
+					transport : {
+						read : "<%=request.getContextPath() + "/do/ReadLeaveTypes"%>"
+					}
+				}
+		    });
+      		<% List<LeaveType>	list =  (List<LeaveType>) request.getAttribute("leaveTypes");   
+    		LeaveType myleave = null;
+         	for (Iterator iterator = list.iterator(); iterator.hasNext();) {  
+            	 myleave = (LeaveType)iterator.next();  
+         		%>
+	            leaveTypes = "<%=myleave.getName()%>";
+	            leaveValue = "<%=myleave.getId()%>"; 
+            <% } %>     
       		employeeId = <%=request.getSession().getAttribute("employeeId")%>;
      		$('#employeeId').val(employeeId);
- 	});
+ 		});
  	
-	$('#applyLeave, #canceLeave').click(function(){
-		isDisplayed = $("#addLeaveDiv").hasClass("displayClass");
-		if(isDisplayed){
-			 $("#leaveFrom").val('');
-			 $("#leaveTo").val('');
-			 $("#description").val('');
-			 $("#addLeaveDiv").removeClass("displayClass");
-		}
-		else{
-			 $("#leaveFrom").val('');
-			 $("#leaveTo").val('');
-			 $("#description").val('');
-			$("#addLeaveDiv").addClass("displayClass");
-		}
- 	});    
-	
-	$("#addLeave").click(function(){
- 
-		leaveFrom   = $("#leaveFrom").val();
-		leaveTo     = $("#leaveTo").val();
-		leaveType   = $("#TypeOfLeave").val();
-		description = $("#description").val();
-		employeeId  = $("#employeeId").val();
- 		 
-   		leaveApply = JSON.stringify({
-   			"leaveFrom"	  : leaveFrom,
-   			"leaveTo" 	  : leaveTo, 
-   			"leaveType"   : leaveType, 
-   			"description" : description,
-   			"employeeId"  : employeeId
-   		}); 
-    	
-   		$.ajax({
-       		url 		: "<%=request.getContextPath() + "/do/LeaveApplicationAction"%>",
-       		type 		: 'POST',
-			dataType 	: 'json',
-			contentType : 'application/json; charset=utf-8',
-			data 		: leaveApply,
-			success     : function(){
-			    $("#leaveFrom").val('');
-				$("#leaveTo").val('');
- 				$("#description").val('');
- 			 		 
-				$("#addLeaveDiv").addClass("displayClass");
-				$("#grid").empty();
-				getEmployeeLeaves();
+		$('#applyLeave, #canceLeave').click(function(){
+			isDisplayed = $("#addLeaveDiv").hasClass("displayClass");
+			if(isDisplayed){
+				 $("#leaveFrom").val('');
+				 $("#leaveTo").val('');
+				 $("#description").val('');
+				 $("#addLeaveDiv").removeClass("displayClass");
 			}
-        });  
-	});
+			else{
+				 $("#leaveFrom").val('');
+				 $("#leaveTo").val('');
+				 $("#description").val('');
+				$("#addLeaveDiv").addClass("displayClass");
+			}
+ 		});    
 	
-	$("#deleteLeave").click(function(){
-		 employeeId = $(".k-state-selected").find('td').eq(0).text();
-		 leaveDate  = $(".k-state-selected").find('td').eq(3).text();
-		 status1 = $(".k-state-selected").find('td').eq(7).text();
-		 
- 	  	 deleteLeaveAction = JSON.stringify({
-	   		"employeeId"	  : employeeId,
-	   		"leaveDate" 	  : leaveDate 
- 	 	 }); 
-	    if(status1 == "New"){	
-		  	 $.ajax({
-		   		url 		: "<%=request.getContextPath() + "/do/DeleteLeaveApplication"%>",
-		    	type 		: 'POST',
+		$("#addLeave").click(function(){
+	 		leaveremain = $('#remaining').text().split('/')[0];
+			if(leaveremain < 0){
+				alert("Requested number of days is not available. If you proceed there will be loss of pay.");
+			}
+	 		leaveFrom   = $("#leaveFrom").val();
+			leaveTo     = $("#leaveTo").val();
+			leaveType   = $("#TypeOfLeave").val();
+			description = $("#description").val();
+			employeeId  = $("#employeeId").val();
+	 		 
+	   		leaveApply = JSON.stringify({
+	   			"leaveFrom"	  : leaveFrom,
+	   			"leaveTo" 	  : leaveTo, 
+	   			"leaveType"   : leaveType, 
+	   			"description" : description,
+	   			"employeeId"  : employeeId
+	   		}); 
+    	
+	   		$.ajax({
+	       		url 		: "<%=request.getContextPath() + "/do/LeaveApplicationAction"%>",
+	       		type 		: 'POST',
 				dataType 	: 'json',
 				contentType : 'application/json; charset=utf-8',
-				data 		: deleteLeaveAction,
+				data 		: leaveApply,
 				success     : function(){
-	 				$("#grid").empty();
+				    $("#leaveFrom").val('');
+					$("#leaveTo").val('');
+	 				$("#description").val('');
+	 			 		 
+					$("#addLeaveDiv").addClass("displayClass");
+					$("#grid").empty();
 					getEmployeeLeaves();
 				}
-		 	 }); 
-	    }
-	    else{
-	    	alert("Approved/Rejected Leaves cannot be deleted.");
- 	    }
- 		 
-  	});
+	        });  
+		});
+	
+		$("#deleteLeave").click(function(){
+			 employeeId = $(".k-state-selected").find('td').eq(0).text();
+			 leaveDate  = $(".k-state-selected").find('td').eq(3).text();
+			 status1 = $(".k-state-selected").find('td').eq(7).text();
+ 	 	  	 deleteLeaveAction = JSON.stringify({
+		   		"employeeId"	  : employeeId,
+		   		"leaveDate" 	  : leaveDate 
+	 	 	 }); 
+ 	 	  	 
+		     if(status1 == "New"){	
+			  	 $.ajax({
+			   		url 		: "<%=request.getContextPath() + "/do/DeleteLeaveApplication"%>",
+			    	type 		: 'POST',
+					dataType 	: 'json',
+					contentType : 'application/json; charset=utf-8',
+					data 		: deleteLeaveAction,
+					success     : function(){
+		 				$("#grid").empty();
+						getEmployeeLeaves();
+					}
+			 	 }); 
+		     }
+		     else{
+		    	alert("Approved/Rejected Leaves cannot be deleted.");
+	 	     }
+ 	  	});
+	
+		$("#TypeOfLeave").change(function(){
+  				var leaveId = $("#TypeOfLeave").val(); 
+ 				leavetype = JSON.stringify({
+		   			"leaveTypeId"	   : $("#TypeOfLeave").val(),
+		    		 "employeeId"  : $('#employeeId').val()
+		   		}); 
+				
+ 				$.ajax({
+		       		url 		: "<%=request.getContextPath() + "/do/CheckLeaveAvail"%>",
+		       		type 		: 'POST',
+					dataType 	: 'json',
+					contentType : 'application/json; charset=utf-8',
+					data 		: leavetype,
+					success     : function(data){
+						available = data[0]+'/'+data[1]
+						$('#remaining').text(''+available);
+  		 			},
+					error : function(){
+						alert('error');
+					}
+		        });  
+ 		});
+
 	
 	
     
 </script>
+ 
+

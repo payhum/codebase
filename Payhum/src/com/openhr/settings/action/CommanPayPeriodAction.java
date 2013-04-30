@@ -51,7 +51,6 @@ public class CommanPayPeriodAction extends DispatchAction {
 	public ActionForward upDatePayPeriod(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		// EmployeeForm EmployeeForm = (EmployeeForm) form;
 		BufferedReader bf = request.getReader();
 		StringBuffer sb = new StringBuffer();
 		String line = null;
@@ -64,15 +63,10 @@ public class CommanPayPeriodAction extends DispatchAction {
 		Collection<PayPeriodData> aCollection = JSONArray.toCollection(json,
 				PayPeriodData.class);
 
-		System.out.println("Employee JSON " + json.toString());
-
-		// Employee e = new Employee();
 		for (PayPeriodData eFromJSON : aCollection) {
 			flag = PayPeriodFactory.update(eFromJSON);
-
-			// result = JSONArray.fromObject(txl);
 		}
-		// response.setContentType("application/json; charset=utf-8");
+
 		PrintWriter out = response.getWriter();
 		out.print(flag);
 		out.flush();

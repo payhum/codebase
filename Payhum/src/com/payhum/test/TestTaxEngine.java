@@ -14,7 +14,10 @@ import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Exemptionstype;
+import com.openhr.data.Payroll;
+import com.openhr.data.PayrollDate;
 import com.openhr.data.TypesData;
+import com.openhr.data.Users;
 import com.openhr.factories.DeductionFactory;
 import com.openhr.taxengine.DeductionsDone;
 import com.openhr.taxengine.ExemptionsDone;
@@ -80,8 +83,23 @@ public class TestTaxEngine {
 		System.out.println("======================================");
 		Calendar currCal = Calendar.getInstance();
 		
+		PayrollDate payrollDate = new PayrollDate();
+		payrollDate.setId(1);
+		payrollDate.setRunDate(new Date());
+		
+		Payroll payroll = new Payroll();
+		payroll.setRunOnDate(currCal.getTime());
+		payroll.setRunBy(new Users());
+		payroll.setPayDateId(payrollDate);
+		
 		TaxEngine taxEngine = new TaxEngine(comp, empList1, empList2);
-		Map<Employee, EmployeePayroll> retData = taxEngine.testExecute(currCal);
+		Map<Employee, EmployeePayroll> retData = null;
+		try {
+			retData = taxEngine.testExecute(payroll);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		for(Employee ei : retData.keySet()) {
 			EmployeePayroll empPay = retData.get(ei);

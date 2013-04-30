@@ -219,4 +219,10 @@
     	<put name="body" value="/pages/masteradmin/masterhome.jsp" />
 	</definition>
 
+	<definition name="masterCompany.form" extends="adminHome">
+    	<put name="navigation" value="/pages/masteradmin/nav_masteradmin.jsp" />
+    	<put name="body" value="/pages/masteradmin/masterCompany.jsp" />
+	</definition>
+
+
 </tiles-definitions>

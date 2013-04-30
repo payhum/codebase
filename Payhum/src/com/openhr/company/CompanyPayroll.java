@@ -23,7 +23,6 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "CompanyPayroll.findAll", query = "SELECT e FROM CompanyPayroll e"),
     @NamedQuery(name = "CompanyPayroll.findById", query = "SELECT e FROM CompanyPayroll e WHERE e.id = ?"),
     @NamedQuery(name = "CompanyPayroll.findByProcessedDate", query = "SELECT e FROM CompanyPayroll e WHERE e.processedDate = ?"),
-    @NamedQuery(name = "CompanyPayroll.findByCompIdMonthYear", query = "SELECT e FROM CompanyPayroll e WHERE e.companyId= ? AND e.month=? AND e.year=?"),
     @NamedQuery(name = "CompanyPayroll.findByCompanyId", query = "SELECT e FROM CompanyPayroll e WHERE e.companyId = ?")})
 public class CompanyPayroll implements Serializable {
 
@@ -56,6 +55,10 @@ public class CompanyPayroll implements Serializable {
     private Double netPay;
     
     @Basic(optional = false)
+    @Column(name = "socialSec", nullable = false)
+    private Double socialSec;
+    
+    @Basic(optional = false)
     @Column(name = "empFullName", nullable = false, length=60)
     private String empFullName;
 
@@ -75,31 +78,7 @@ public class CompanyPayroll implements Serializable {
     @Column(name = "accountNo", nullable = false, length=45)
     private String accountNo;
 
-    @Basic(optional = false)
-    @Column(name = "month", nullable = false)
-    private Integer month;
-
-    @Basic(optional = false)
-    @Column(name = "year", nullable = false)
-    private Integer year;
-
-	public Integer getMonth() {
-		return month;
-	}
-
-	public void setMonth(Integer month) {
-		this.month = month;
-	}
-
-	public Integer getYear() {
-		return year;
-	}
-
-	public void setYear(Integer year) {
-		this.year = year;
-	}
-
-	public String getEmpFullName() {
+    public String getEmpFullName() {
 		return empFullName;
 	}
 
@@ -109,6 +88,14 @@ public class CompanyPayroll implements Serializable {
 
 	public String getBankName() {
 		return bankName;
+	}
+
+	public Double getSocialSec() {
+		return socialSec;
+	}
+
+	public void setSocialSec(Double socialSec) {
+		this.socialSec = socialSec;
 	}
 
 	public void setBankName(String bankName) {

@@ -23,13 +23,19 @@
 		<br><br>
 		<div>
 		    <form method="post" action="<%=request.getContextPath() + "/do/GenerateBankFile"%>" enctype="multipart/form-data">
-		    	<input type="submit" value="Generate Bank File"/> to be sent to Bank for crediting the Salary to Employees and Tax to Government.<br>
+		    	<input type="submit" value="Generate Bank File"/> to be sent to Bank for crediting the Salary to Employees.<br>
 	        </form> <br>
 		</div>
 		
 		<div>
 			<form method="post" action="<%=request.getContextPath() + "/do/GenerateGovtFile"%>" enctype="multipart/form-data">
-		    	<input type="submit" value="Generate Government File"/> to be sent to Government to inform the Tax being credited on behalf of the Employees of the Company.
+		    	<input type="submit" value="Generate Tax File"/> to be sent to IRD office to inform the Tax being credited on behalf of the Employees of the Company.
+	        </form> <br>
+		</div>
+
+		<div>
+			<form method="post" action="<%=request.getContextPath() + "/do/GenerateSSGovtFile"%>" enctype="multipart/form-data">
+		    	<input type="submit" value="Generate Social Security File"/> to be sent to Social Security office to inform the Social Security amount being credited on behalf of the Employees of the Company.
 	        </form> <br>
 		</div>
 		

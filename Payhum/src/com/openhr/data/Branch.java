@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -18,23 +19,29 @@ import com.openhr.company.Company;
 @Entity
 @Table(name = "branch", catalog = "payhumrepo", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "BrachData.findAll", query = "FROM BrachData br"),
-    @NamedQuery(name = "BrachData.findById", query = "FROM BrachData br WHERE id = ?"),
-    @NamedQuery(name = "BrachData.findByName", query = "SELECT br FROM BrachData br WHERE br.name = ?")})
+    @NamedQuery(name = "Branch.findAll", query = "FROM Branch br"),
+    @NamedQuery(name = "Branch.findById", query = "FROM Branch br WHERE id = ?"),
+    @NamedQuery(name = "Branch.findByName", query = "SELECT br FROM Branch br WHERE br.name = ?")})
+	@NamedNativeQuery(name = "Branch.findLastId", query = "SELECT * FROM Branch WHERE Branch.id = (SELECT max(Branch.id) FROM Branch)",
+	resultClass=Branch.class)
 
-public class BrachData implements Serializable {
+public class Branch implements Serializable {
 	
-	@Id
+    private static final long serialVersionUID = 1L;
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+    
     @Basic(optional = false)
     @Column(name = "name", nullable = false, length = 45)
     private String name;
+    
     @Basic(optional = false)
     @Column(name = "address", nullable = false)
-    private String brachAddrs;
+    private String address;
+
     @JoinColumn(name = "companyId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Company companyId;
@@ -57,12 +64,12 @@ public class BrachData implements Serializable {
 		this.name = name;
 	}
 
-	public String getBrachAddrs() {
-		return brachAddrs;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setBrachAddrs(String brachAddrs) {
-		this.brachAddrs = brachAddrs;
+	public void setAddress(String brachAddrs) {
+		this.address = brachAddrs;
 	}
 
 	public Company getCompanyId() {
@@ -83,10 +90,10 @@ public class BrachData implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof BrachData)) {
+        if (!(object instanceof Branch)) {
             return false;
         }
-        BrachData other = (BrachData) object;
+        Branch other = (Branch) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -95,7 +102,7 @@ public class BrachData implements Serializable {
 
     @Override
     public String toString() {
-        return "com.openhr.data.BrachData[id=" + id + "]";
+        return "com.openhr.data.Branch[id=" + id + "]";
     }
 
 }

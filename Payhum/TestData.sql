@@ -11,8 +11,7 @@ USE payhumrepo;
 INSERT INTO `benefitype` (`id`,`name`,`cap`) VALUES 
  (1,'Transport Allowance',599),
  (2,'House Allowance',1500),
- (3,'Cash Indeminty Allowance',200),
- (4,'fuel',1500);
+ (3,'Cash Indeminty Allowance',200);
 /*!40000 ALTER TABLE `benefitype` ENABLE KEYS */;
 
 --
@@ -34,8 +33,7 @@ INSERT INTO `position` (`id`,`name`,`lowsal`,`highsal`) VALUES
 
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
 INSERT INTO `company` (`id`,`companyId`,`name`) VALUES 
- (1,'C1',"ABC Solutions"),
- (2,'C2',"DEF LLC");
+ (1,'C1',"ABC Solutions");
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 
 --
@@ -44,8 +42,7 @@ INSERT INTO `company` (`id`,`companyId`,`name`) VALUES
 
 /*!40000 ALTER TABLE `branch` DISABLE KEYS */;
 INSERT INTO `branch` (`id`,`name`,`address`,`companyId`) VALUES 
- (1,'MAIN',"#10, XYZ Road, Avenue Park", 1),
- (2,'MAIN',"#20, ADF Marg", 2);
+ (1,'MAIN',"#10, XYZ Road, Avenue Park", 1);
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 
 --
@@ -125,11 +122,11 @@ INSERT INTO `benefit` (`id`,`typeId`,`amount`,`employeeId`) VALUES
 --
 
 /*!40000 ALTER TABLE `leavetype` DISABLE KEYS */;
-INSERT INTO `leavetype` (`id`,`name`,`day_cap`,`version`) VALUES 
- (1,'Sick Leave',9,1),
- (2,'Maternity Leave',90,1),
- (3,'Leave of Absence',6,1),
- (4,'Paternity Leave',10,1);
+INSERT INTO `leavetype` (`id`,`name`,`day_cap`) VALUES 
+ (1,'Sick Leave',9),
+ (2,'Maternity Leave',90),
+ (3,'Vacation Leave',6),
+ (4,'Paternity Leave',10);
 /*!40000 ALTER TABLE `leavetype` ENABLE KEYS */;
 
 --
@@ -173,8 +170,8 @@ INSERT INTO `users` (`id`,`username`,`password`,`employeeId`,`roleId`,`version`)
 --
 -- Dumping data for table emp_payroll_view
 --
-/*!40000 ALTER TABLE `emp_payroll_view` DISABLE KEYS */;
-INSERT INTO `emp_payroll_view` (`id`, `employeeId`, `FULL_NAME`, `accomodationType`) VALUES
+/*!40000 ALTER TABLE `emp_payroll` DISABLE KEYS */;
+INSERT INTO `emp_payroll` (`id`, `employeeId`, `FULL_NAME`, `accomodationType`) VALUES
  (1,2,'JohnBWin',14),
  (2,3,'Desta',14),
  (3,4,'AMAN_DEKSISO',15),
@@ -191,7 +188,7 @@ INSERT INTO `emp_payroll_view` (`id`, `employeeId`, `FULL_NAME`, `accomodationTy
  (14,18,'Asdfs',14),
  (15,19,'Mesay1Solomon',15),
  (16,20,'BirukAbebe',15);
-/*!40000 ALTER TABLE `emp_payroll_view` ENABLE KEYS */;
+/*!40000 ALTER TABLE `emp_payroll` ENABLE KEYS */;
 
 
 --
@@ -244,8 +241,7 @@ INSERT INTO `exemptions_done` (`id`, `payrollId`, `type`, `amount`) VALUES
 --
 /*!40000 ALTER TABLE `licenses` DISABLE KEYS */;
 INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`,`licensekey`) VALUES
-(1,'2012-08-22 16:22:59','2013-08-22 16:22:59',1,1,'123'),
-(2,'2012-08-22 16:22:59','2014-08-22 16:22:59',2,1,'123');
+(1,'2012-08-22 16:22:59','2013-08-22 16:22:59',1,1,'123');
 /*!40000 ALTER TABLE `licenses` ENABLE KEYS */;
 
 --
@@ -362,3 +358,11 @@ INSERT INTO `emp_salary` (`id`, `employeeId`, `fromdate`,`basesalary`) VALUES
 INSERT INTO `emp_bonus` (`id`, `employeeId`, `givendate`,`amount`) VALUES
 (1,2,'2013-04-01 00:00:00',4000000);
 /*!40000 ALTER TABLE `emp_bonus` ENABLE KEYS */;
+
+--
+-- Dumping data for table paycycle
+--
+/*!40000 ALTER TABLE `paycycle` DISABLE KEYS */;
+INSERT INTO `emp_bonus` (`id`, `name`, `selected`) VALUES
+(1,'Monthly',3);
+/*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;

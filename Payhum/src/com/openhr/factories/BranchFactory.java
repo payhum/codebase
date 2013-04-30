@@ -10,14 +10,14 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.openhr.company.Company;
+import com.openhr.data.Branch;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
  * 
- * @author Vijay
+ * @author Venkat
  */
-public class CompanyFactory implements Serializable {
+public class BranchFactory implements Serializable {
 
 	/**
 	 * 
@@ -26,60 +26,65 @@ public class CompanyFactory implements Serializable {
 
 	private static Session session;
 	private static Query query;
-	private static List<Company> comps;
+	private static List<Branch> comps;
 
-	public CompanyFactory() {
+	public BranchFactory() {
 	}
 
-	public static List<Company> findAll() throws Exception{
+	@SuppressWarnings("unchecked")
+	public static List<Branch> findAll() throws Exception{
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("Company.findAll");
+		query = session.getNamedQuery("Branch.findAll");
+		comps = query.list();
+		session.getTransaction().commit();
+ 		return comps;
+	}
+
+	public static List<Branch> findById(Integer branchId) throws Exception{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Branch.findById");
+		query.setInteger(0, branchId);
 		comps = query.list();
 		session.getTransaction().commit();
 
 		return comps;
 	}
 
-	public static List<Company> findById(Integer compId) throws Exception{
+	public static List<Branch> findByCompanyId(Integer compId) throws Exception{
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("Company.findById");
+		query = session.getNamedQuery("Branch.findByCompanyId");
 		query.setInteger(0, compId);
 		comps = query.list();
 		session.getTransaction().commit();
 
 		return comps;
 	}
-
-	public static List<Company> findByCompanyId(String compId) throws Exception{
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("Company.findByCompanyId");
-		query.setString(0, compId);
-		comps = query.list();
-		session.getTransaction().commit();
-
-		return comps;
-	}
 	
-	public static List<Company> findByName(String name) throws Exception{
+	public static Integer findBranchLastId() throws Exception{
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("Company.findByName");
-		query.setString(0, name);
-		comps = query.list();
-		session.getTransaction().commit();
-
-		return comps;
+		query = session.getNamedQuery("Branch.findLastId");
+		List<Branch> lastId = query.list();
+ 		session.getTransaction().commit();
+		if (lastId.size() != 0) {
+			return lastId.get(0).getId();
+		} else {
+			return 0;
+		}
 	}
+
+	
+	 
 		
 
-	public static boolean delete(Company e) throws Exception{
+	public static boolean delete(Branch e) throws Exception{
 		boolean done = false;
 		Session session1 = OpenHRSessionFactory.getInstance().openSession();
 		session1.beginTransaction();
- 		Company comp = (Company) session1.get(Company.class, e.getId());
+		Branch comp = (Branch) session1.get(Branch.class, e.getId());
 		session1.delete(comp);
 		session1.getTransaction().commit();
 		session1.flush();
@@ -88,7 +93,7 @@ public class CompanyFactory implements Serializable {
 		return done;
 	}
 
-	public static boolean insert(Company e) throws Exception {
+	public static boolean insert(Branch e) throws Exception {
 		boolean done = false;
 
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
@@ -102,7 +107,7 @@ public class CompanyFactory implements Serializable {
 	}
 	
 
-	public static boolean update(Company e) throws Exception {
+	public static boolean update(Branch e) throws Exception {
 		boolean done = false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
@@ -110,11 +115,12 @@ public class CompanyFactory implements Serializable {
 		// System.out.println("ALREADY IN SESSION : "+session.contains(session.get(Employee.class,
 		// e.getId())));
 
-		Company comp = (Company) session.get(Company.class, e.getId());
+		Branch comp = (Branch) session.get(Branch.class, e.getId());
 
 		comp.setCompanyId(e.getCompanyId());
 		comp.setName(e.getName());
-				
+		comp.setAddress(e.getAddress());
+		
 		session.update(comp);
 		session.getTransaction().commit();
 		

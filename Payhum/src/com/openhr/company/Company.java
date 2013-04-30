@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -19,8 +20,12 @@ import javax.persistence.Table;
     @NamedQuery(name = "Company.findById", query = "SELECT e FROM Company e WHERE e.id = ?"),
     @NamedQuery(name = "Company.findByCompanyId", query = "SELECT e FROM Company e WHERE e.companyId = ?"),
     @NamedQuery(name = "Company.findByName", query = "SELECT e FROM Company e WHERE e.name = ?")})
+	@NamedNativeQuery(name = "Company.findLastId", query = "SELECT * FROM Company WHERE Company.id = (SELECT max(Company.id) FROM Company)",
+	resultClass=Company.class)
+
 public class Company implements Serializable {
 
+	
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +40,8 @@ public class Company implements Serializable {
     @Basic(optional = false)
     @Column(name = "name", nullable = false, length = 45)
     private String name;
+    
+    
     
 	public Company () {
 	}
@@ -63,4 +70,5 @@ public class Company implements Serializable {
 		this.name = name;
 	}
 
+	 
 }

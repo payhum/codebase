@@ -6,20 +6,33 @@ package com.openhr.data;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.*;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author xmen
+ * @author Vijay
  */
 @Entity
 @Table(name = "payroll", catalog = "payhumrepo", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Payroll.findAll", query = "SELECT p FROM Payroll p"),
-    @NamedQuery(name = "Payroll.findById", query = "SELECT p FROM Payroll p WHERE p.id = :id"),
-    @NamedQuery(name = "Payroll.findByRunOnDate", query = "SELECT p FROM Payroll p WHERE p.runOnDate = :runOnDate")})
+    @NamedQuery(name = "Payroll.findById", query = "SELECT p FROM Payroll p WHERE p.id = ?"),
+    @NamedQuery(name = "Payroll.findByRunOnDate", query = "SELECT p FROM Payroll p WHERE p.runOnDate = ?")})
 public class Payroll implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -27,17 +40,19 @@ public class Payroll implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
+    
     @Basic(optional = false)
     @Column(name = "runOnDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date runOnDate;
-    @Basic(optional = false)
-    @Lob
-    @Column(name = "file", nullable = false)
-    private byte[] file;
+    
     @JoinColumn(name = "runBy", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Users runBy;
+
+    @JoinColumn(name = "payDateId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private PayrollDate payDateId;
 
     public Payroll() {
     }
@@ -46,10 +61,9 @@ public class Payroll implements Serializable {
         this.id = id;
     }
 
-    public Payroll(Integer id, Date runOnDate, byte[] file) {
+    public Payroll(Integer id, Date runOnDate) {
         this.id = id;
         this.runOnDate = runOnDate;
-        this.file = file;
     }
 
     public Integer getId() {
@@ -67,15 +81,7 @@ public class Payroll implements Serializable {
     public void setRunOnDate(Date runOnDate) {
         this.runOnDate = runOnDate;
     }
-
-    public byte[] getFile() {
-        return file;
-    }
-
-    public void setFile(byte[] file) {
-        this.file = file;
-    }
-
+    
     public Users getRunBy() {
         return runBy;
     }
@@ -108,5 +114,13 @@ public class Payroll implements Serializable {
     public String toString() {
         return "com.openhr.data.Payroll[ id=" + id + " ]";
     }
+
+	public PayrollDate getPayDateId() {
+		return payDateId;
+	}
+
+	public void setPayDateId(PayrollDate payDateId) {
+		this.payDateId = payDateId;
+	}
     
 }

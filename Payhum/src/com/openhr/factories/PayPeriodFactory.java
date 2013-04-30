@@ -26,9 +26,6 @@ public class PayPeriodFactory {
 
 	public static boolean update(PayPeriodData prds) {
 		boolean done = false;
-		// List<Users> matchingUsrs =
-		// UsersFactory.findByUserName(usrs.getUsername());
-
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 
@@ -43,21 +40,15 @@ public class PayPeriodFactory {
 
 				session.update(prd);
 				done = true;
-			}
-			else
-				
-			{
-				
+			} else {
 				session.save(prds);
 				done = true;
 			}
-			
+
 			session.getTransaction().commit();
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		} finally {
-
 		}
 		return done;
 	}

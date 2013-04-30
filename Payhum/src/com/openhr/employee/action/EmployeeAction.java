@@ -20,7 +20,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
-import com.openhr.data.DepartBrachData;
+import com.openhr.data.Department;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeForm;
 import com.openhr.data.EmployeePayroll;
@@ -89,11 +89,11 @@ public class EmployeeAction extends Action {
 				e.setPhoto(eFromJSON.getPhoto());
 			}
 			e.setStatus(eFromJSON.getStatus());
-			DepartBrachData  db = EmployeeFactory.findDepartById(eFromJSON.getDepartId());
+			Department  db = EmployeeFactory.findDepartById(eFromJSON.getDepartId());
 			
 			if(db!=null)
 			{
-				e.setCompanyId(db);
+				e.setDeptId(db);
 			}
 			
 			

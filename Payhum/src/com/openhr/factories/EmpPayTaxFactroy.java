@@ -204,12 +204,10 @@ public class EmpPayTaxFactroy implements Serializable {
 
 	public synchronized static List<DeductionsDone> deductionsDone(
 			Integer payrollId) throws Exception {
-		EmployeePayroll ePay = new EmployeePayroll();
-		ePay.setId(payrollId);
 		Session session1 = OpenHRSessionFactory.getInstance().openSession();
 		session1.beginTransaction();
 		query = session1.getNamedQuery("DeductionsDone.findByEmpPayrollId");
-		query.setParameter(0, ePay);
+		query.setParameter(0, payrollId);
 		List<DeductionsDone> empsum2 = query.list();
 
 		session1.getTransaction().commit();

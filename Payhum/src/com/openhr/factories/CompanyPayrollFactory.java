@@ -74,19 +74,6 @@ public class CompanyPayrollFactory implements Serializable {
 
 		return compPayrolls;
 	}
-		
-	public static List<CompanyPayroll> findByCompMonthYear(Integer compID, Integer month, Integer year) throws Exception{
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("CompanyPayroll.findByCompIdMonthYear");
-		query.setInteger(0, compID);
-		query.setInteger(1, month);
-		query.setInteger(2, year);
-		compPayrolls = query.list();
-		session.getTransaction().commit();
-
-		return compPayrolls;
-	}
 
 	public static boolean delete(CompanyPayroll e) throws Exception{
 		boolean done = false;

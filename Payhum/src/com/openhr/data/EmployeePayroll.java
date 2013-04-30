@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,7 @@ import com.openhr.taxengine.ExemptionsDone;
  * @author xmen
  */
 @Entity
-@Table(name = "emp_payroll_view", catalog = "payhumrepo", schema = "")
+@Table(name = "emp_payroll", catalog = "payhumrepo", schema = "")
 @XmlRootElement
 @NamedQueries({
 	@NamedQuery(name = "EmployeePayroll.findByEmployeeId", query = "SELECT e FROM EmployeePayroll e WHERE e.employeeId = ?"),
@@ -98,15 +99,15 @@ public class EmployeePayroll implements Serializable {
     @ManyToOne(optional = false)
     private TypesData accomodationType;
     
-    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private List<DeductionsDeclared> deductionsDeclared;
     
-    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private List<DeductionsDone> deductionsDone;
     
-    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @Fetch(FetchMode.SELECT)
     private List<ExemptionsDone> exemptionsDone;
 
@@ -123,13 +124,24 @@ public class EmployeePayroll implements Serializable {
     private Double overtimeamt;
     
     @Basic(optional = false)
-    @Column(name = "pendingTaxAmt")
-    private Double pendingTaxAmt;
+    @Column(name = "paidTaxAmt")
+    private Double paidTaxAmt;
     
     @Basic(optional = false)
-    @Column(name = "pendingNetPay")
-    private Double pendingNetPay;
+    @Column(name = "paidNetPay")
+    private Double paidNetPay;
+
+    @Basic(optional = false)
+    @Column(name = "paidSS")
+    private Double paidSS;
     
+    @Basic(optional = false)
+    @Column(name = "otherIncome")
+    private Double otherIncome;
+    
+    @Basic(optional = false)
+    @Column(name = "leaveLoss")
+    private Double leaveLoss;
     
 	public EmployeePayroll() {
     	this.taxableIncome = 0D;
@@ -149,6 +161,12 @@ public class EmployeePayroll implements Serializable {
         this.netPay = 0D;
         this.totalDeductions = 0D;
         this.overtimeamt=0D;
+        this.netPay = 0D;
+        this.leaveLoss = 0D;
+        this.paidNetPay = 0D;
+        this.paidSS = 0D;
+        this.paidTaxAmt = 0D;
+        this.otherIncome = 0D;
     }
     
     public Double getAccomodationAmount() {
@@ -425,19 +443,44 @@ public class EmployeePayroll implements Serializable {
 		this.overtimeamt = overtimeamt;
 	}
 
-	public Double getPendingTaxAmt() {
-		return pendingTaxAmt;
+	public Double getPaidTaxAmt() {
+		return paidTaxAmt;
 	}
 
-	public void setPendingTaxAmt(Double pendingTaxAmt) {
-		this.pendingTaxAmt = pendingTaxAmt;
+	public void setPaidTaxAmt(Double paidTaxAmt) {
+		this.paidTaxAmt = paidTaxAmt;
 	}
 
-	public Double getPendingNetPay() {
-		return pendingNetPay;
+	public Double getPaidNetPay() {
+		return paidNetPay;
 	}
 
-	public void setPendingNetPay(Double pendingNetPay) {
-		this.pendingNetPay = pendingNetPay;
+	public void setPaidNetPay(Double paidNetPay) {
+		this.paidNetPay = paidNetPay;
 	}
+
+	public Double getOtherIncome() {
+		return otherIncome;
+	}
+
+	public void setOtherIncome(Double otherIncome) {
+		this.otherIncome = otherIncome;
+	}
+
+	public Double getLeaveLoss() {
+		return leaveLoss;
+	}
+
+	public void setLeaveLoss(Double leaveLoss) {
+		this.leaveLoss = leaveLoss;
+	}
+
+	public Double getPaidSS() {
+		return paidSS;
+	}
+
+	public void setPaidSS(Double paidSS) {
+		this.paidSS = paidSS;
+	}
+	
 }

@@ -96,9 +96,7 @@ public class UploadFile extends Action {
             	    currDtCal.set(Calendar.MILLISECOND, 0);
 
             	    Date now = currDtCal.getTime();
-            	    int month = currDtCal.get(Calendar.MONTH);
-                    int year = currDtCal.get(Calendar.YEAR);
-                    
+            	    
                     //Read File Line By Line
                     while ((strLine = br.readLine()) != null)   {
                     	System.out.print("Processing line - " + strLine);
@@ -112,7 +110,7 @@ public class UploadFile extends Action {
                     		throw new Exception("The required columns are missing in the line - " + strLine);
                     	}
                     	
-                    	// Format is - CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,AccountNo,TaxAmount,NetPay
+                    	// Format is - CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,AccountNo,TaxAmount,SS,NetPay
                     	if(comp == null || comp.getId() != Integer.parseInt(lineColumns[0])) {
                     		List<Company> comps = CompanyFactory.findById(Integer.parseInt(lineColumns[0]));
                     		
@@ -166,11 +164,10 @@ public class UploadFile extends Action {
                     	compPayroll.setBankName(lineColumns[4]);
                     	compPayroll.setBankBranch(lineColumns[5]);
                     	compPayroll.setAccountNo(lineColumns[6]);
-                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[7]));
-                    	compPayroll.setNetPay(Double.parseDouble(lineColumns[8]));
+                    	compPayroll.setNetPay(Double.parseDouble(lineColumns[7]));
+                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[8]));
+                    	compPayroll.setSocialSec(Double.parseDouble(lineColumns[9]));
                     	compPayroll.setProcessedDate(now);
-                    	compPayroll.setMonth(month);
-                    	compPayroll.setYear(year);
                     	CompanyPayrollFactory.insert(compPayroll);
                     }
                     

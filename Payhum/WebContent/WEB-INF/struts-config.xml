@@ -51,6 +51,8 @@
 		<action path="/Report" forward="report.form" />
 		<action path="/Payroll" forward="financeHome" />
         <action path="/MasterHome" forward="masterhome.form" />
+        <action path="/MasterCompany" forward="masterCompany.form" />
+        
         
 		<!-- start of Report actions -->
 		<action path="/GLReportsEmployee" forward="glreportemployee.form" />
@@ -574,11 +576,6 @@
 		</action>
 		
 		<!-- start of Settings actions -->
-
-		<action path="/ReadRequestedAction" name="leaveForm"
-			type="com.openhr.employee.action.ReadRequestedLeaveAction" input="leave.form">
-			<forward name="continue" path="leave.form" />
-		</action>
 		
 		<action path="/ReadOverTimeInfo" 
 			type="com.openhr.overtime.action.ReadOvertimeAction" >
@@ -589,6 +586,91 @@
 			type="com.openhr.overtime.action.ReadOverTimeRequests" >
 			<forward name="continue" path="leave.form" />
 		</action>
+
+
+		<action path="/ReadCompanyAction" name="applyLeave"
+			type="com.openhr.company.ReadCompanyAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/CreateCompany" name="applyLeave"
+			type="com.openhr.company.CreateCompanyAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/EditCompany"  
+			type="com.openhr.company.UpdateCompanyAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/DeleteCompany"  
+			type="com.openhr.company.DeleteCompanyAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/ReadBranches" 
+			type="com.openhr.company.ReadBranchAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		
+		<action path="/CreateBranch"  
+			type="com.openhr.company.CreateBranchAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/CreateDepartment"  
+			type="com.openhr.company.CreateDepartmentAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/BranchDetails" 
+			type="com.openhr.company.BranchDetails">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/DepartmentDetails" 
+			type="com.openhr.company.DepartmentDetails">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/EditBranch"  
+			type="com.openhr.company.UpdateBranchAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/DeleteBranch"  
+			type="com.openhr.company.DeleteBranchAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/UpdateDept"  
+			type="com.openhr.company.UpdateDepartmentAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/DeleteDept"  
+			type="com.openhr.company.DeleteDepartmentAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/EditLicense"  
+			type="com.openhr.company.LicenseAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		
+		
+		<action path="/ReadLeaveTypes"
+			type="com.openhr.leave.action.ReadLeaveTypesAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/CheckLeaveAvail"
+			type="com.openhr.leave.action.CheckLeavesAction">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+
 
 		<!-- start of Logout actions -->
 		<action path="/LogoutAction" name="logoutForm"
@@ -611,6 +693,9 @@
 		</action>
 
 		<action path="/GenerateGovtFile" type="com.openhr.payroll.GovtFile" scope="request">
+		</action>
+
+		<action path="/GenerateSSGovtFile" type="com.openhr.payroll.SSGovtFile" scope="request">
 		</action>
 
 		<action path="/ChangeLanguage" type="com.openhr.ChangeLanguageAction"

@@ -1,6 +1,7 @@
 package com.openhr.user.action;
 
 import java.io.BufferedReader;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +28,8 @@ public class UpdateUserAction extends Action {
 		while ((line = bf.readLine()) != null) {
 			sb.append(line);
 		}
-		JSONArray json = JSONArray.fromObject(sb.toString());
+		JSONArray json,result;
+		json = JSONArray.fromObject(sb.toString());
 		System.out.println("EMployee JSON "+json.toString());
 		
 		/*Collection<UserForm> aCollection = JSONArray.toCollection(json, UserForm.class);
@@ -41,7 +43,7 @@ public class UpdateUserAction extends Action {
 			u.setRoleId(uFromJSON.getRoleId());
 			UsersFactory.update(u);
 		}*/
-		
+		int a[] = {10,20};
 		Users u = new Users();
 		for(int i = 0; i < json.size(); i++) {
 			JSONObject jObj = json.getJSONObject(i);
@@ -55,13 +57,22 @@ public class UpdateUserAction extends Action {
 					UsersFactory.update(u);
 				}
 				else {
-					throw new IllegalArgumentException("Passwords don't match");
-				}
+					a[0] = 0;
+ 				}
 			}
 			else {
-				throw new IllegalArgumentException("Invalid old password");
-			}
+				a[1] = 1;
+ 			}
 		}
+		result = JSONArray.fromObject(a);
+    	response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		if (result == null) {
+			out.print("");
+		} else {
+			out.print(result.toString());
+		}
+		out.flush();
 				
 		return null; 
 	}

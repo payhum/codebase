@@ -153,8 +153,18 @@
                     type : 'POST',
                     data : userUpdateDataJSON,
 					success : function(data){
-						alert('Account settings saved successfully');
-					}
+ 						if(data[0] == 0){
+							alert('Passwords do not match.');
+						}
+					    if(data[1] == 1){
+							alert('Old Password is incorrect.');
+						}
+					    if(data[0] != 0 && data[1] != 1){
+					    	alert('Account settings saved successfully');
+					    }
+						
+					} 
+                    
 				});		
 				
 				$("#oldPassword").attr('disabled', 'disabled');

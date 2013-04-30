@@ -37,8 +37,10 @@ public class GovtFile extends Action {
 		Date now = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
-        int month = cal.get(Calendar.MONTH);
-        int year = cal.get(Calendar.YEAR);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		
@@ -50,7 +52,7 @@ public class GovtFile extends Action {
 		// Columns in the file will be:
 		// EmployeeName,EmpNationalID,TaxAmount
 		
-		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompMonthYear(compId, month, year);
+		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByProcessedDate(cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
 		for(CompanyPayroll compPay : compPayroll) {
 			StringBuilder empPayStr = new StringBuilder();

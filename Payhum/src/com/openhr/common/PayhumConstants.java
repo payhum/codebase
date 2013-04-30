@@ -37,4 +37,16 @@ public class PayhumConstants {
 	public static final String TYPE_OCCUPATIONTYPE = "OCCUPATIONTYPE";
 	public static final String TYPE_DEPENDENTTYPE = "DEPENDENTTYPE";
 	public static final String TYPE_ACCOMODATIONTYPE = "ACCOMODATIONTYPE";
+	
+	public static final int APPROVED = 1;
+	public static final int NEW = 0;
+	public static final int REJECTED = 2;
+	
+	public static final String WEEKDAY = "Weekday";
+	public static final String WEEKEND = "Weekend";
+	public static final String HOLIDAYS = "Holidays";
+	
+	public static final String MONTHLY = "Monthly";
+	public static final String BIWEEKLY = "Bi-weekly";
+	public static final String WEEKLY = "Weekly";
 }

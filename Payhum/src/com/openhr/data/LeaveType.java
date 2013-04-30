@@ -5,10 +5,17 @@
 package com.openhr.data;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.persistence.*;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -24,7 +31,7 @@ import javax.xml.bind.annotation.XmlTransient;
 public class LeaveType implements Serializable {
     @Basic(optional = false)
     @Column(name = "day_cap", nullable = false)
-    private double dayCap;
+    private Integer dayCap;
     /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "leaveType")
     private List<Leave> leaveList;*/
     private static final long serialVersionUID = 1L;
@@ -90,21 +97,12 @@ public class LeaveType implements Serializable {
         return "com.openhr.data.LeaveType[ id=" + id + " ]";
     }
 
-    public double getDayCap() {
+    public Integer getDayCap() {
         return dayCap;
     }
 
-    public void setDayCap(double dayCap) {
+    public void setDayCap(Integer dayCap) {
         this.dayCap = dayCap;
     }
-/*
-    @XmlTransient
-    public List<Leave> getLeaveList() {
-        return leaveList;
-    }
-
-    public void setLeaveList(List<Leave> leaveList) {
-        this.leaveList = leaveList;
-    }*/
-    
+   
 }

@@ -3,6 +3,7 @@ package com.openhr.taxengine;
 import java.io.Serializable;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import org.hibernate.engine.Cascade;
 
 import com.openhr.data.DeductionsType;
 import com.openhr.data.EmployeePayroll;
@@ -29,7 +32,8 @@ public class DeductionsDone implements Serializable {
     @Basic(optional = false)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @ManyToOne(targetEntity=DeductionsType.class)
+    
+    @ManyToOne(targetEntity=DeductionsType.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "type", referencedColumnName="id")
 	private DeductionsType type;
 
@@ -37,7 +41,7 @@ public class DeductionsDone implements Serializable {
     @Column(name = "amount", nullable = false)
 	private Double amount;
     
-    @ManyToOne(targetEntity=EmployeePayroll.class)
+    @ManyToOne(targetEntity=EmployeePayroll.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "payrollId", referencedColumnName="id")
     private EmployeePayroll payrollId;
 
