@@ -37,17 +37,17 @@ public class ReadNoticeAction extends Action {
         			list.add(l);
         		}
         	}
-        	
-        	
             result = JSONArray.fromObject(list);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
-        response.setContentType("application/json; charset=utf-8");
-        PrintWriter out = response.getWriter();
-        out.print(result.toString());
-        out.flush();
+        if(result != null) {
+	        response.setContentType("application/json; charset=utf-8");
+	        PrintWriter out = response.getWriter();
+	        out.print(result.toString());
+	        out.flush();
+        }
  		return null;
 	}
 }

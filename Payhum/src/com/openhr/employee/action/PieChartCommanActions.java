@@ -50,6 +50,39 @@ public class PieChartCommanActions extends DispatchAction {
 
 		System.out.print(result.toString());
 
+	response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+
+		return map.findForward("");
+	}
+	public ActionForward getPieChartBranch(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+		JSONArray result = new JSONArray();
+		try {
+	
+			List<PieChartForm> l=new ArrayList<PieChartForm>();
+		List <Object[]> lobb=EmployeeFactory.findAllBranchEmpChart();
+		PieChartForm pb=null;
+		for(Object[] bb:lobb)
+			
+		{
+			pb=new PieChartForm();
+			pb.setCategory((String)bb[1]);
+			
+			pb.setValue((Long)bb[0]);
+			l.add(pb);
+		}
+			result = JSONArray.fromObject(l);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.print(result.toString());
+
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.print(result.toString());
@@ -57,5 +90,4 @@ public class PieChartCommanActions extends DispatchAction {
 
 		return map.findForward("");
 	}
-
 }

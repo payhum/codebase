@@ -23,6 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "EmployeeSalary.findAll", query = "SELECT tr FROM EmployeeSalary tr"),
+    @NamedQuery(name = "EmployeeSalary.findSal", query = "SELECT tr FROM EmployeeSalary tr where tr.fromdate=tr.todate and tr.employeeId=?"),
     @NamedQuery(name = "EmployeeSalary.findById", query = "SELECT tr FROM EmployeeSalary tr WHERE tr.id = ?"),
     @NamedQuery(name = "EmployeeSalary.findByEmpId", query = "SELECT tr FROM EmployeeSalary tr WHERE tr.employeeId = ?")
 })

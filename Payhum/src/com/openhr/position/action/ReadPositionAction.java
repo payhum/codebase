@@ -8,6 +8,7 @@ import com.openhr.data.Position;
 import com.openhr.factories.PositionFactory;
 import com.openhr.position.form.PositionForm;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,9 +31,20 @@ public class ReadPositionAction extends Action {
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         JSONArray result = null;
+        PositionForm pf=null;
         try {
+        	List<PositionForm> pfl=new ArrayList<PositionForm>();
             List<Position> positions = PositionFactory.findAll();
-            result = JSONArray.fromObject(positions);
+            
+            for(Position pp:positions)
+            {
+            	
+            	pf=new PositionForm();
+            	pf.setName(pp.getName());
+            	pf.setCoantcatVal(pp.getId()+"-"+pp.getLowSal()+"-"+pp.getHighSal());
+            	pfl.add(pf);
+            }
+            result = JSONArray.fromObject(pfl);
         } catch (Exception e) {
             e.printStackTrace();
         }

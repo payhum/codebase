@@ -64,7 +64,7 @@ public class EmpPayTaxFactroy implements Serializable {
 	
 	
 	
-	public static boolean insertEmpPaytax(Employee e,EmployeePayroll ep) {
+	public static boolean insertEmpPaytax(Employee e,EmployeePayroll ep,EmployeeSalary empsal) {
 	boolean done = false;
 
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
@@ -73,6 +73,7 @@ public class EmpPayTaxFactroy implements Serializable {
         	session.save(e);
         	
         	session.save(ep);
+        	session.save(empsal);
         	tx.commit();
             done = true;
         } catch (Exception ex) {
@@ -203,7 +204,7 @@ public class EmpPayTaxFactroy implements Serializable {
 	}
 
 	public synchronized static List<DeductionsDone> deductionsDone(
-			Integer payrollId) throws Exception {
+			EmployeePayroll payrollId) throws Exception {
 		Session session1 = OpenHRSessionFactory.getInstance().openSession();
 		session1.beginTransaction();
 		query = session1.getNamedQuery("DeductionsDone.findByEmpPayrollId");
@@ -235,34 +236,21 @@ public class EmpPayTaxFactroy implements Serializable {
 
 	public static boolean update(EmployeePayroll empPayroll) {
 		boolean done = false;
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		lsession.clear();
+		
 		try {
-			EmployeePayroll ePayroll = (EmployeePayroll) session.get(
-					EmployeePayroll.class, empPayroll.getId());
-			ePayroll.setTotalIncome(empPayroll.getTotalIncome());
-			ePayroll.setAccomodationAmount(empPayroll.getAccomodationAmount());
-			ePayroll.setAllowances(empPayroll.getAllowances());
-			ePayroll.setEmployerSS(empPayroll.getEmployerSS());
-			ePayroll.setGrossSalary(empPayroll.getGrossSalary());
-			ePayroll.setNetPay(empPayroll.getNetPay());
-			ePayroll.setTaxableIncome(empPayroll.getTaxableIncome());
-			ePayroll.setTaxAmount(empPayroll.getTaxAmount());
-			ePayroll.setTotalDeductions(empPayroll.getTotalDeductions());
-			ePayroll.setDeductionsDone(empPayroll.getDeductionsDone());
-			ePayroll.setExemptionsDone(empPayroll.getExemptionsDone());
-			ePayroll.setOvertimeamt(empPayroll.getOvertimeamt());
-			ePayroll.setTaxableOverseasIncome(empPayroll
-					.getTaxableOverseasIncome());
-
-			session.update(ePayroll);
-			// session.getTransaction().commit();
+			
+			lsession.saveOrUpdate(empPayroll);
+			lsession.getTransaction().commit();
 
 			done = true;
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
+		} finally{
+			lsession.close();
+		}
 		return done;
 	}
 
@@ -286,6 +274,66 @@ public class EmpPayTaxFactroy implements Serializable {
 		List<EmployeeBonus> empBonusList = query.list();
 		session.getTransaction().commit();
 		return empBonusList;
+	}
+
+	public static void updateDeductionsDone(DeductionsDone dd) {
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		try {
+			DeductionsDone existDD = (DeductionsDone) lsession.get(DeductionsDone.class, dd.getId());
+			existDD.setAmount(dd.getAmount());
+			lsession.update(existDD);
+			
+			lsession.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			lsession.close();
+		}
+	}
+
+	public static void insertDeductionsDone(DeductionsDone dd) {
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		try {
+			lsession.save(dd);
+			lsession.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			lsession.close();
+		}
+		
+	}
+
+	public static void updateExemptionsDone(ExemptionsDone ed) {
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		try {
+			ExemptionsDone existED = (ExemptionsDone) lsession.get(ExemptionsDone.class, ed.getId());
+			existED.setAmount(ed.getAmount());
+			lsession.update(existED);
+			
+			lsession.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			lsession.close();
+		}
+	}
+
+	public static void insertExemptionsDone(ExemptionsDone ed) {
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		try {
+			lsession.save(ed);
+			lsession.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			lsession.close();
+		}
+		
 	}
 
 	

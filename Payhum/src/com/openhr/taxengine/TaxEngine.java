@@ -143,14 +143,12 @@ public class TaxEngine {
 		int mode = 0; 
 		
 		for(PayPeriodData pp : payPeriods) {
-			if (pp.getPeriodValue().compareTo(new Integer(1)) == 0) {
-				if(pp.getPeriodName().equalsIgnoreCase(PayhumConstants.MONTHLY)) {
-					mode = 0;
-				} else if(pp.getPeriodName().equalsIgnoreCase(PayhumConstants.BIWEEKLY)) {
-					mode = 1;
-				} else if(pp.getPeriodName().equalsIgnoreCase(PayhumConstants.WEEKLY)) {
-					mode = 2;
-				}
+			if (pp.getPeriodValue().compareTo(new Integer(3)) == 0) {
+				mode = 0;
+			} else if(pp.getPeriodValue().compareTo(new Integer(2)) == 0) {
+				mode = 1;
+			} else if(pp.getPeriodValue().compareTo(new Integer(1)) == 0) {
+				mode = 2;
 			}
 		}
 		
@@ -160,7 +158,7 @@ public class TaxEngine {
 			Double totalEmpSS = empPayroll.getEmployerSS();
 			
 			// get employee contribution of SS
-			List<DeductionsDone> deductionsList = EmpPayTaxFactroy.deductionsDone(empPayroll.getId());
+			List<DeductionsDone> deductionsList = empPayroll.getDeductionsDone();
 			
 			for(DeductionsDone dd: deductionsList) {
 				if(dd.getType().getName().equalsIgnoreCase(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY)) {
@@ -177,7 +175,7 @@ public class TaxEngine {
 			EmpPayrollMap empPayMap = new EmpPayrollMap();
 			empPayMap.setEmppayId(empPayroll);
 			empPayMap.setNetPay(totalNeyPay / 12);
-			empPayMap.setTaxAmt(totalTaxAmt / 12);
+			empPayMap.setTaxAmount(totalTaxAmt / 12);
 			empPayMap.setSocialSec(totalEmpSS / 12);
 			empPayMap.setPayrollId(payroll);
 			

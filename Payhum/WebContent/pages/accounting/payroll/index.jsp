@@ -975,9 +975,7 @@ var percentSelect=null;
 						
 						
 						
-						
-				//$("#payperiodval :selected").text(d[0].periodName);
-						//$("#payperiodval").val(d[0].periodValue);
+		
 						
 						
 						paydrop.value(d[0].periodValue);
@@ -1204,8 +1202,8 @@ if(taxbutton=="Update")
 				"id":idTax,
 				"incomeFrom" :incomeFrom,
 				"incomeTo":incomeTo,
-			"incomePersent":taxpercnt
-				
+			"incomePercentage":taxpercnt
+			
 				
 			 }]);
 	if(taxbutton=="Save")

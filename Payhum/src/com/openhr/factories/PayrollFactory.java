@@ -1,6 +1,7 @@
 package com.openhr.factories;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,37 +20,62 @@ public class PayrollFactory implements Serializable {
 	private static Session session;
 	private static Query query;
 	private static List<PayrollDate> payrollDateList;
+	private static List<EmpPayrollMap> empPayrollMapList;
 	
 	public static List<EmpPayrollMap> findAllEmpPayrollMaps() throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("EmpPayrollMap.findAll");
-		List<EmpPayrollMap> empPayrollMapList = query.list();
+		empPayrollMapList = query.list();
 
 		return empPayrollMapList;
 	}
 
 	public static List<EmpPayrollMap> findEmpPayrollMapByEmpPayroll(EmployeePayroll empPayroll) throws Exception {
+		List<EmpPayrollMap> retList = new ArrayList<EmpPayrollMap>();
+		
+		if(empPayrollMapList != null || !empPayrollMapList.isEmpty()) {
+			for(EmpPayrollMap ep: empPayrollMapList) {
+				if(ep.getEmppayId().getId().compareTo(empPayroll.getId()) == 0) {
+					retList.add(ep);
+				}
+			}
+			
+			if(! retList.isEmpty()) {
+				return retList;
+			}
+		}
+		
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("EmpPayrollMap.findByEmpPayrollId");
 		query.setParameter(0, empPayroll);
 		
-		List<EmpPayrollMap> empPayrollMapList = query.list();
+		empPayrollMapList = query.list();
 
 		return empPayrollMapList;
 	}
 
 	public static EmpPayrollMap findEmpPayrollMapByEmpPayrollDate(EmployeePayroll empPayroll,
 			Payroll payroll) throws Exception {
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("EmpPayrollMap.findByEmpPayrollId");
+		if(empPayrollMapList != null && !empPayrollMapList.isEmpty()) {
+			for(EmpPayrollMap ep: empPayrollMapList) {
+				if(ep.getEmppayId().getId().compareTo(empPayroll.getId()) == 0
+				&& ep.getPayrollId().getId().compareTo(payroll.getId()) == 0) {
+					return ep;
+				}
+			}
+		}
+		
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		query = lsession.getNamedQuery("EmpPayrollMap.findByEmpPayrollIdAndPayrollId");
 		query.setParameter(0, empPayroll);
 		query.setParameter(1, payroll);
 		
 		List<EmpPayrollMap> empPayrollMapList = query.list();
-
+		lsession.close();
+		
 		return empPayrollMapList.get(0);
 	}
 
@@ -74,9 +100,6 @@ public class PayrollFactory implements Serializable {
 	}
 	
 	public static List<PayrollDate> findAllPayrollDate() throws Exception {
-		if(payrollDateList != null && !payrollDateList.isEmpty()) {
-			return payrollDateList;
-		}
 		
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
@@ -86,31 +109,43 @@ public class PayrollFactory implements Serializable {
 		return payrollDateList;
 	}
 
-	public static void insertPayrollDate(Date rDate) {
-		PayrollDate payDate = new PayrollDate();
-		payDate.setRunDate(rDate);
-		session = OpenHRSessionFactory.getInstance().openSession();
-		session.beginTransaction();
+	public static void insertPayrollDate(PayrollDate rDate) {
+
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
 		try {
-			session.save(payDate);
-			session.getTransaction().commit();
+			lsession.save(rDate);
+			lsession.getTransaction().commit();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
-			session.close();
+			lsession.close();
 		}
 	}
 
 	public static void insertEmpPayrollMap(EmpPayrollMap empPayMap) {
-		session = OpenHRSessionFactory.getInstance().openSession();
-		session.beginTransaction();
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
 		try {
-			session.save(empPayMap);
-			session.getTransaction().commit();
+			lsession.save(empPayMap);
+			lsession.getTransaction().commit();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
-			session.close();
+			lsession.close();
+		}
+	}
+
+	public static void insertPayroll(Payroll payroll) {
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		try {
+			lsession.save(payroll);
+			lsession.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			lsession.close();
 		}
 	}
 }

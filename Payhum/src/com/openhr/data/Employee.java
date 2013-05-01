@@ -96,6 +96,13 @@ public class Employee implements Serializable {
     @Column(name = "status", nullable = false, length = 20)
     private String status;
     
+    @Basic(optional = false)
+    @Column(name = "emerContactName", nullable = false, length = 20)
+    private String emerContactName;
+    
+    @Basic(optional = false)
+    @Column(name = "emerContactNo", nullable = false, length = 20)
+    private String emerContactNo;
     
     @Basic(optional = false)
     @Column(name = "birthdate", nullable = false)
@@ -311,4 +318,21 @@ public class Employee implements Serializable {
 	public void setInactiveDate(Date inactiveDate) {
 		this.inactiveDate = inactiveDate;
 	}
+	
+	   public String getEmerContactName() {
+			return emerContactName;
+		}
+
+		public void setEmerContactName(String emerContactName) {
+			this.emerContactName = emerContactName;
+		}
+
+		public String getEmerContactNo() {
+			return emerContactNo;
+		}
+
+		public void setEmerContactNo(String emerContactNo) {
+			this.emerContactNo = emerContactNo;
+		}
+	
 }

@@ -18,7 +18,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "emp_dependents", catalog = "payhumrepo", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "EmpDependents.findAll", query = "SELECT e FROM  EmpDependents e")})
+    @NamedQuery(name = "EmpDependents.findAll", query = "SELECT e FROM  EmpDependents e"),
+    @NamedQuery(name = "EmpDependents.findIndual", query = "SELECT e FROM  EmpDependents e WHERE e.employeeId=?")}
+		)
 public class EmpDependents  implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -55,6 +57,38 @@ public class EmpDependents  implements Serializable {
 		this.depType = dType;
 	}
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Employee getEmployeeId() {
+		return employeeId;
+	}
+
+	public void setEmployeeId(Employee employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public TypesData getDepType() {
+		return depType;
+	}
+
+	public void setDepType(TypesData depType) {
+		this.depType = depType;
+	}
+
 	public TypesData getOccupationType() {
 		return this.occupationType;
 	}

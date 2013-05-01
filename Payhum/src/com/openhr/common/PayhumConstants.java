@@ -12,8 +12,6 @@ public class PayhumConstants {
 	public static final String DONATION = "Donation";
 	public static final String EMPLOYEE_SOCIAL_SECURITY = "Employee Social Security";
 	public static final String INCOME_LIMIT_FOR_NO_TAX = "Income Limit for no Tax";
-	public static final String NOT_FURNISHED_ACCOM = "Not Furnished Accomodation";
-	public static final String FULLY_FURNISHED_ACCOM = "Fully Furnished Accomodation";
 	public static final String EMPLOYER_SOCIAL_SECURITY = "Employer contribution for Social Security";
 
 	public static final String LIFE_INSURANCE = "Life Insurance";

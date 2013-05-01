@@ -261,7 +261,7 @@ public class BaseIC implements IncomeCalculator {
 		    toDtCal.set(Calendar.DAY_OF_MONTH, 1);
 		    
 		    
-			if(toDate != null) {
+			if(toDate.compareTo(effectiveDate) != 0) {
 				// Not a last record
 				int toDtMonth = toDtCal.get(Calendar.MONTH) + 1; 
 				int effDtMonth = effDtCal.get(Calendar.MONTH) + 1;
@@ -375,8 +375,9 @@ public class BaseIC implements IncomeCalculator {
 
 		for(EmployeeSalary empSal : empSalList) {
 			Date effectiveDate = empSal.getTodate();
+			Date fromDate = empSal.getFromdate();
 			
-			if(effectiveDate == null)
+			if(effectiveDate.compareTo(fromDate) == 0)
 				continue;
 			
 		    Calendar effDtCal = Calendar.getInstance();

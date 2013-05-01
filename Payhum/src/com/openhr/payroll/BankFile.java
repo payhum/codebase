@@ -59,6 +59,18 @@ public class BankFile extends Action {
 		
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByProcessedDate(cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
+		// Populate the header.
+		allEmpPayStr.append("Employee Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Bank Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Bank Branch");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Account Number");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Amount (MMK)");
+		allEmpPayStr.append("\n");
+		
 		for(CompanyPayroll compPay : compPayroll) {
 			StringBuilder empPayStr = new StringBuilder();
 			empPayStr.append(compPay.getEmpFullName());
@@ -69,7 +81,7 @@ public class BankFile extends Action {
 			empPayStr.append(COMMA);
 			empPayStr.append(compPay.getAccountNo());
 			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("MMK ###.##").format(compPay.getNetPay()));
+			empPayStr.append(new DecimalFormat("###.##").format(compPay.getNetPay()));
 			empPayStr.append("\n");
 			
 			totalTaxAmt += compPay.getTaxAmount();
@@ -79,6 +91,7 @@ public class BankFile extends Action {
 		}
 		
 		allEmpPayStr.append("Total Tax Amount : " + new DecimalFormat("MMK ###.##").format(totalTaxAmt));
+		allEmpPayStr.append("\n");
 		allEmpPayStr.append("Total Social Security Amount : " + new DecimalFormat("MMK ###.##").format(totalSSAmt));
 		
 		OutputStream os = response.getOutputStream();

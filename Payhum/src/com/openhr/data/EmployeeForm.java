@@ -2,6 +2,15 @@ package com.openhr.data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.apache.struts.action.ActionForm;
 
@@ -26,7 +35,7 @@ public class EmployeeForm extends ActionForm implements Serializable {
 
 	private String contName;
 
-	private Integer contNumber;
+	private String contNumber;
 
 	private Integer residentVal;
 
@@ -35,6 +44,116 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	private Integer accommodationVal;
 
 	private Integer departId;
+
+	private Double baseSalry;
+
+	private String emerContactName;
+
+	private String emerContactNo;
+
+	private Date inactiveDate;
+
+	private Position positionIds;
+
+	private boolean married;
+
+	private EmployeeSalary empsal;
+
+	private EmployeePayroll payrol;
+
+	private TypesData residentType;
+
+	private Department deptId;
+
+	private String empNationalID;
+
+	public String getEmerContactName() {
+		return emerContactName;
+	}
+
+	public void setEmerContactName(String emerContactName) {
+		this.emerContactName = emerContactName;
+	}
+
+	public String getEmerContactNo() {
+		return emerContactNo;
+	}
+
+	public void setEmerContactNo(String emerContactNo) {
+		this.emerContactNo = emerContactNo;
+	}
+
+	public Date getInactiveDate() {
+		return inactiveDate;
+	}
+
+	public void setInactiveDate(Date inactiveDate) {
+		this.inactiveDate = inactiveDate;
+	}
+
+	public Position getPositionIds() {
+		return positionIds;
+	}
+
+	public void setPositionIds(Position positionIds) {
+		this.positionIds = positionIds;
+	}
+
+	public  boolean getMarried() {
+		return married;
+	}
+
+	public void setMarried(boolean married) {
+		this.married = married;
+	}
+
+	public EmployeeSalary getEmpsal() {
+		return empsal;
+	}
+
+	public void setEmpsal(EmployeeSalary empsal) {
+		this.empsal = empsal;
+	}
+
+	public EmployeePayroll getPayrol() {
+		return payrol;
+	}
+
+	public void setPayrol(EmployeePayroll payrol) {
+		this.payrol = payrol;
+	}
+
+	public TypesData getResidentType() {
+		return residentType;
+	}
+
+	public void setResidentType(TypesData residentType) {
+		this.residentType = residentType;
+	}
+
+	public Department getDeptId() {
+		return deptId;
+	}
+
+	public void setDeptId(Department companyId) {
+		this.deptId = companyId;
+	}
+
+	public String getEmpNationalID() {
+		return empNationalID;
+	}
+
+	public void setEmpNationalID(String empNationalID) {
+		this.empNationalID = empNationalID;
+	}
+
+	public Double getBaseSalry() {
+		return baseSalry;
+	}
+
+	public void setBaseSalry(Double baseSalry) {
+		this.baseSalry = baseSalry;
+	}
 
 	public Integer getAccommodationVal() {
 		return accommodationVal;
@@ -48,7 +167,7 @@ public class EmployeeForm extends ActionForm implements Serializable {
 		return contName;
 	}
 
-	public Integer getContNumber() {
+	public String getContNumber() {
 		return contNumber;
 	}
 
@@ -120,7 +239,7 @@ public class EmployeeForm extends ActionForm implements Serializable {
 		this.contName = contName;
 	}
 
-	public void setContNumber(Integer contNumber) {
+	public void setContNumber(String contNumber) {
 		this.contNumber = contNumber;
 	}
 

@@ -111,6 +111,66 @@ public class CommantypesAction extends DispatchAction {
 		return map.findForward("");
 	}
 	
+	
+	public ActionForward getdepdentType(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+	JSONArray result = new JSONArray();
+		try {
+			
+			//JsonConfig config = new JsonConfig();
+			//config.setIgnoreDefaultExcludes(false);
+			//config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			
+			List<TypesData> eptx = EmployeeFactory.findTypes("DEPENDENTTYPE");
+			result = JSONArray.fromObject(eptx);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.print(result.toString());
+
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+
+		return map.findForward("");
+	}
+	
+	public ActionForward getOccupationType(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+	JSONArray result = new JSONArray();
+		try {
+			
+			//JsonConfig config = new JsonConfig();
+			//config.setIgnoreDefaultExcludes(false);
+			//config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			
+			List<TypesData> eptx = EmployeeFactory.findTypes("OCCUPATIONTYPE");
+			result = JSONArray.fromObject(eptx);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.print(result.toString());
+
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+
+		return map.findForward("");
+	}
+	
+	
+	
+	
+	
+	
 	public ActionForward getAllBrachDepart(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {

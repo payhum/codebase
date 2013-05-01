@@ -93,6 +93,8 @@ CREATE TABLE `employee` (
   `residentType` int(10) unsigned NOT NULL,
   `deptId` int(10) unsigned NOT NULL,
   `empNationalID` varchar(45) NOT NULL,
+  `emerContactName` varchar(45) NOT NULL,
+  `emerContactNo` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_employee_position` (`positionId`),
   KEY `FK_employee_id` (`employeeId`),
@@ -599,4 +601,14 @@ CREATE TABLE `emp_payroll_map` (
   KEY `FK_emppaymap_payroll` (`payrollId`),
   CONSTRAINT `FK_emppaymap_emp` FOREIGN KEY (`emppayId`) REFERENCES `emp_payroll` (`id`),
   CONSTRAINT `FK_emppaymap_payroll` FOREIGN KEY (`payrollId`) REFERENCES `payroll` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Definition of table `payhum_config`
+--
+DROP TABLE IF EXISTS `payhum_config`;
+CREATE TABLE `payhum_config` (
+  `configName` varchar(45) NOT NULL,
+  `configValue` varchar(45) NOT NULL,
+  PRIMARY KEY  (`configName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -90,13 +90,9 @@ background-image: url(../css/images/pd.gif);
 }
 #rpsm1
 {
-	height: 30px;
-width: 100px;
 position: absolute;
-left: 850px;
-top: -1px;
-z-index: 9999;
-
+left: 150px;
+top: 2px;
 }
 
 #rpex

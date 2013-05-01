@@ -86,24 +86,24 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 -- Dumping data for table `employee`
 --
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`) VALUES 
- (2,'MODETH-0002','JOHN','B','WIN','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',4,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1'),
- (3,'MODETH-0001','Desta','Abebe','Muluken','Male','1987-01-05 00:00:00','2012-07-02 00:00:00',3,'/data/photo/418446_185246901607959_1591185693_n.jpg','IN ACTIVE',1,'true',11,1,'N2'),
- (4,'MODETH-0004','AMAN','DEKSISO','DEKSISO','Male','1980-09-06 00:00:00','2012-07-04 00:00:00',4,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N3'),
- (5,'ECOMEX-0005','New','Employee','Name','Male','2000-02-01 00:00:00','2012-07-09 00:00:00',2,'/data/photo/Photo-0002.jpg','ACTIVE',1,'true',11,1,'N4'),
- (6,'ETHMTN-0006','Abebe','Abebe','Abebe','Male','1994-06-14 00:00:00','2012-07-09 00:00:00',5,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N5'),
- (7,'EEPCO-0007','James','Smith','Mailman','Male','1989-05-16 00:00:00','2012-07-16 00:00:00',5,'/data/photo/placeholder-pic.png','IN ACTIVE',1,'true',11,1,'N6'),
- (8,'HOF-0008','Haile','Gebre','Silasie','Male','1980-06-10 00:00:00','2012-07-16 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N7');
-INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`) VALUES 
- (12,'MODETH-0012','Anderson','Neyo','Mick','Female','1980-08-01 00:00:00','2012-08-01 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',12,1,'N8'),
- (13,'MODETH-0013','Abera','Girma','Lemma','Female','2012-08-02 00:00:00','2012-08-02 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',12,1,'N9'),
- (14,'MODETH-0014','James','Gasolin','Chant','Male','1940-08-05 23:44:45','2012-08-06 00:00:00',2,'employees.bmp','ACTIVE',1,'true',12,1,'N10'),
- (15,'MODETH-0015','asdfasd','fasdf','asdfadsf','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',1,'/data/photo/Koala.jpg','ACTIVE',1,'true',12,1,'N11'),
- (16,'MODETH-0016','asdf','dsdd','ddd','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',12,1,'N12'),
- (17,'MODETH-0017','ssxdfere','adfa','zxcavdfadsf','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',1,'/data/photo/Tulips.jpg','ACTIVE',1,'true',12,1,'N13'),
- (18,'MODETH-0018','Asdfs','asdf','asdfwerwer','Male','1989-02-07 00:00:00','2012-08-10 00:00:00',1,'/data/photo/placeholder-pic.png','IN ACTIVE',1,'true',13,1,'N14'),
- (19,'MODETH-0019','Mesay1','Solomon','Solomon','Male','1980-01-01 00:00:00','2012-08-10 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',13,1,'N15'),
- (20,'MODETH-0020','Biruk','Abebe','Degu','Male','1975-02-02 00:00:00','2012-08-10 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N16');
+INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`) VALUES 
+ (2,'MODETH-0002','JOHN','B','WIN','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',4,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1'),
+ (3,'MODETH-0001','Desta','Abebe','Muluken','Male','1987-01-05 00:00:00','2012-07-02 00:00:00',3,'/data/photo/418446_185246901607959_1591185693_n.jpg','IN ACTIVE',1,'true',11,1,'N2','A','1'),
+ (4,'MODETH-0004','AMAN','DEKSISO','DEKSISO','Male','1980-09-06 00:00:00','2012-07-04 00:00:00',4,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N3','A','1'),
+ (5,'ECOMEX-0005','New','Employee','Name','Male','2000-02-01 00:00:00','2012-07-09 00:00:00',2,'/data/photo/Photo-0002.jpg','ACTIVE',1,'true',11,1,'N4','A','1'),
+ (6,'ETHMTN-0006','Abebe','Abebe','Abebe','Male','1994-06-14 00:00:00','2012-07-09 00:00:00',5,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N5','A','1'),
+ (7,'EEPCO-0007','James','Smith','Mailman','Male','1989-05-16 00:00:00','2012-07-16 00:00:00',5,'/data/photo/placeholder-pic.png','IN ACTIVE',1,'true',11,1,'N6','A','1'),
+ (8,'HOF-0008','Haile','Gebre','Silasie','Male','1980-06-10 00:00:00','2012-07-16 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N7','A','1');
+INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`) VALUES 
+ (12,'MODETH-0012','Anderson','Neyo','Mick','Female','1980-08-01 00:00:00','2012-08-01 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',12,1,'N8','A','1'),
+ (13,'MODETH-0013','Abera','Girma','Lemma','Female','2012-08-02 00:00:00','2012-08-02 00:00:00',1,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',12,1,'N9','A','1'),
+ (14,'MODETH-0014','James','Gasolin','Chant','Male','1940-08-05 23:44:45','2012-08-06 00:00:00',2,'employees.bmp','ACTIVE',1,'true',12,1,'N10','A','1'),
+ (15,'MODETH-0015','asdfasd','fasdf','asdfadsf','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',1,'/data/photo/Koala.jpg','ACTIVE',1,'true',12,1,'N11','A','1'),
+ (16,'MODETH-0016','asdf','dsdd','ddd','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',12,1,'N12','A','1'),
+ (17,'MODETH-0017','ssxdfere','adfa','zxcavdfadsf','Male','2012-08-09 00:00:00','2012-08-09 00:00:00',1,'/data/photo/Tulips.jpg','ACTIVE',1,'true',12,1,'N13','A','1'),
+ (18,'MODETH-0018','Asdfs','asdf','asdfwerwer','Male','1989-02-07 00:00:00','2012-08-10 00:00:00',1,'/data/photo/placeholder-pic.png','IN ACTIVE',1,'true',13,1,'N14','A','1'),
+ (19,'MODETH-0019','Mesay1','Solomon','Solomon','Male','1980-01-01 00:00:00','2012-08-10 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',13,1,'N15','A','1'),
+ (20,'MODETH-0020','Biruk','Abebe','Degu','Male','1975-02-02 00:00:00','2012-08-10 00:00:00',2,'/data/photo/placeholder-pic.png','ACTIVE',1,'true',11,1,'N16','A','1');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 
 --
@@ -332,23 +332,23 @@ INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 -- Dumping data for table emp_salary
 --
 /*!40000 ALTER TABLE `emp_salary` DISABLE KEYS */;
-INSERT INTO `emp_salary` (`id`, `employeeId`, `fromdate`,`basesalary`) VALUES
-(1,2,'2013-04-01 00:00:00',30000000),
-(2,3,'2013-04-01 00:00:00',2000000),
-(3,4,'2013-04-01 00:00:00',3000000),
-(4,5,'2013-04-01 00:00:00',2500000),
-(5,6,'2013-04-01 00:00:00',1500000),
-(6,7,'2013-04-01 00:00:00',40000000),
-(7,8,'2013-04-01 00:00:00',3500000),
-(8,12,'2013-04-01 00:00:00',2346777555),
-(9,13,'2013-04-01 00:00:00',33300000),
-(10,14,'2013-04-01 00:00:00',45000000),
-(11,15,'2013-04-01 00:00:00',1000000),
-(12,16,'2013-04-01 00:00:00', 200000),
-(13,17,'2013-04-01 00:00:00',12312312),
-(14,18,'2013-04-01 00:00:00',45643545),
-(15,19,'2013-04-01 00:00:00',12312311),
-(16,20,'2013-04-01 00:00:00',1000000);
+INSERT INTO `emp_salary` (`id`, `employeeId`, `fromdate`,`todate`,`basesalary`) VALUES
+(1,2,'2013-04-01 00:00:00','2013-04-01 00:00:00',30000000),
+(2,3,'2013-04-01 00:00:00','2013-04-01 00:00:00',2000000),
+(3,4,'2013-04-01 00:00:00','2013-04-01 00:00:00',3000000),
+(4,5,'2013-04-01 00:00:00','2013-04-01 00:00:00',2500000),
+(5,6,'2013-04-01 00:00:00','2013-04-01 00:00:00',1500000),
+(6,7,'2013-04-01 00:00:00','2013-04-01 00:00:00',40000000),
+(7,8,'2013-04-01 00:00:00','2013-04-01 00:00:00',3500000),
+(8,12,'2013-04-01 00:00:00','2013-04-01 00:00:00',2346777555),
+(9,13,'2013-04-01 00:00:00','2013-04-01 00:00:00',33300000),
+(10,14,'2013-04-01 00:00:00','2013-04-01 00:00:00',45000000),
+(11,15,'2013-04-01 00:00:00','2013-04-01 00:00:00',1000000),
+(12,16,'2013-04-01 00:00:00','2013-04-01 00:00:00', 200000),
+(13,17,'2013-04-01 00:00:00','2013-04-01 00:00:00',12312312),
+(14,18,'2013-04-01 00:00:00','2013-04-01 00:00:00',45643545),
+(15,19,'2013-04-01 00:00:00','2013-04-01 00:00:00',12312311),
+(16,20,'2013-04-01 00:00:00','2013-04-01 00:00:00',1000000);
 /*!40000 ALTER TABLE `emp_salary` ENABLE KEYS */;
 
 --
@@ -363,6 +363,15 @@ INSERT INTO `emp_bonus` (`id`, `employeeId`, `givendate`,`amount`) VALUES
 -- Dumping data for table paycycle
 --
 /*!40000 ALTER TABLE `paycycle` DISABLE KEYS */;
-INSERT INTO `emp_bonus` (`id`, `name`, `selected`) VALUES
+INSERT INTO `paycycle` (`id`, `name`, `selected`) VALUES
 (1,'Monthly',3);
+/*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;
+
+
+--
+-- Dumping data for table payhum_config
+--
+/*!40000 ALTER TABLE `payhum_config` DISABLE KEYS */;
+INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
+('EMODE','CMODE');
 /*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;

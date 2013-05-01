@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
    @NamedQuery(name = "EmpPayrollMap.findAll", query = "SELECT p FROM EmpPayrollMap p"),
    @NamedQuery(name = "EmpPayrollMap.findByEmpPayrollId", query = "SELECT p FROM EmpPayrollMap p WHERE p.emppayId = ?"),
-   @NamedQuery(name = "EmpPayrollMap.findByEmpPayrollId", query = "SELECT p FROM EmpPayrollMap p WHERE p.emppayId = ? AND p.payrollId = ?")})
+   @NamedQuery(name = "EmpPayrollMap.findByEmpPayrollIdAndPayrollId", query = "SELECT p FROM EmpPayrollMap p WHERE p.emppayId = ? AND p.payrollId = ?")})
 public class EmpPayrollMap implements Serializable {
    private static final long serialVersionUID = 1L;
    
@@ -44,8 +44,8 @@ public class EmpPayrollMap implements Serializable {
    private Payroll payrollId;
    
    @Basic(optional = false)
-   @Column(name = "taxAmt", nullable = false)
-   private Double taxAmt;
+   @Column(name = "taxAmount", nullable = false)
+   private Double taxAmount;
    
    @Basic(optional = false)
    @Column(name = "netPay", nullable = false)
@@ -87,12 +87,12 @@ public class EmpPayrollMap implements Serializable {
 		this.payrollId = payrollId;
 	}
 		
-	public Double getTaxAmt() {
-		return taxAmt;
+	public Double getTaxAmount() {
+		return taxAmount;
 	}
 	
-	public void setTaxAmt(Double taxAmt) {
-		this.taxAmt = taxAmt;
+	public void setTaxAmount(Double taxAmt) {
+		this.taxAmount = taxAmt;
 	}
 	
 	public Double getNetPay() {

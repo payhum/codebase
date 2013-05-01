@@ -64,10 +64,10 @@ public class TaxDetails {
 				td.addExemption(PayhumConstants.CHILDREN, tdd.getAmount());
 			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.SUPPORTING_SPOUSE)) {
 				td.addExemption(PayhumConstants.SUPPORTING_SPOUSE, tdd.getAmount());
-			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.FULLY_FURNISHED_ACCOM)) {
-				td.addAccomodationPercentage(PayhumConstants.FULLY_FURNISHED_ACCOM, tdd.getAmount());
-			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.NOT_FURNISHED_ACCOM)) {
-				td.addAccomodationPercentage(PayhumConstants.NOT_FURNISHED_ACCOM, tdd.getAmount());
+			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.ACCOM_FULLY_FURNISHED)) {
+				td.addAccomodationPercentage(PayhumConstants.ACCOM_FULLY_FURNISHED, tdd.getAmount());
+			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.ACCOM_NOT_FURNISHED)) {
+				td.addAccomodationPercentage(PayhumConstants.ACCOM_NOT_FURNISHED, tdd.getAmount());
 			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.EMPLOYER_SOCIAL_SECURITY)) {
 				td.setEmployerSocialSecurityPercentage(tdd.getAmount());
 			}
@@ -144,8 +144,8 @@ public class TaxDetails {
 		td.addExemption(PayhumConstants.CHILDREN, 200000D);
 		td.addExemption(PayhumConstants.SUPPORTING_SPOUSE, 300000D);
 		
-		td.addAccomodationPercentage(PayhumConstants.FULLY_FURNISHED_ACCOM, 12.5D);
-		td.addAccomodationPercentage(PayhumConstants.NOT_FURNISHED_ACCOM, 10D);
+		td.addAccomodationPercentage(PayhumConstants.ACCOM_FULLY_FURNISHED, 12.5D);
+		td.addAccomodationPercentage(PayhumConstants.ACCOM_NOT_FURNISHED, 10D);
 		
 		td.setEmployerSocialSecurityPercentage(2.5D);
 		

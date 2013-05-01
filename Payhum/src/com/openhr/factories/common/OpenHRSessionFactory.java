@@ -18,6 +18,7 @@ import com.openhr.data.Department;
 import com.openhr.data.Dtest;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpDependents;
+import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
@@ -32,6 +33,8 @@ import com.openhr.data.LeaveType;
 import com.openhr.data.OverTime;
 import com.openhr.data.OverTimePayRateData;
 import com.openhr.data.PayPeriodData;
+import com.openhr.data.Payroll;
+import com.openhr.data.PayrollDate;
 import com.openhr.data.Position;
 import com.openhr.data.Roles;
 import com.openhr.data.TaxDetailsData;
@@ -87,6 +90,9 @@ public class OpenHRSessionFactory {
         config.addAnnotatedClass(Department.class);
         config.addAnnotatedClass(EmployeeBonus.class);
         config.addAnnotatedClass(EmployeeSalary.class);
+        config.addAnnotatedClass(PayrollDate.class);
+        config.addAnnotatedClass(Payroll.class);
+        config.addAnnotatedClass(EmpPayrollMap.class);
         sessionFactory = config.buildSessionFactory();
     }
 

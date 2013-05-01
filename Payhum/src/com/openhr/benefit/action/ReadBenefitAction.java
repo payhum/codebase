@@ -22,10 +22,8 @@ public class ReadBenefitAction extends Action {
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        //LeaveTypeForm leaveTypeForm = (LeaveTypeForm) form;
-
-
-        JSONArray result = null;
+       
+		JSONArray result = null;
         try {
             List<Benefit> benefits = BenefitFactory.findAll();
             result = JSONArray.fromObject(benefits);
@@ -33,13 +31,12 @@ public class ReadBenefitAction extends Action {
             e.printStackTrace();
         }
         
-        System.out.print(result.toString());
-        
-        response.setContentType("application/json; charset=utf-8");
-        PrintWriter out = response.getWriter();
-        out.print(result.toString());
-        out.flush();
-
+        if(result != null) {
+	        response.setContentType("application/json; charset=utf-8");
+	        PrintWriter out = response.getWriter();
+	        out.print(result.toString());
+	        out.flush();
+        }
 
         return map.findForward("");
     }

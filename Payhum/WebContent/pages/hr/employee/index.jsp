@@ -6,8 +6,159 @@
 </style>
 <%@include file="../../common/jspHeader.jsp" %>
 <h2 class="legend">Employee Form</h2> 
+
+<div id="depdentsWinId" style=" display: none">
+
+<div>
+	<div id="gridDepdent"></div>		
+			
+	<div id="left-col">
+			<div class="label">Name</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="depdentName"  value="" />
+			</div>
+			<div class="clear"></div>
+				<div class="label">Age</div>
+			<div class="field">
+				
+				
+				 <input id="depdentAge" type="number" class="k-input k-textbox"   step="2"  value="" min="1"  max="90" />
+			</div>
+			<div class="clear"></div>
+		</div>
+			</div>
+		<div id="right-col">
+		<div class="label">Occupation</div>
+			<div class="field">
+				<input   id="occupationTypeDepdent" class="occupationTypeDepdent"  />
+			</div>
+			<div class="clear"></div>
+				<div class="label">DependentType</div>
+			<div class="field">
+				<input   id="depdentTypeDepdent" class="depdentTypeDepdent"  />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		<div>
+			<div class="field">
+				<a class="k-button k-icontext"  id="addDepdent"><span class="k-add k-icon"></span>Save</a> <a
+					class="k-button k-icontext"  id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
+			</div>
+			<div class="clear"></div>
+			
+		</div>
+		
+</div>
+<div id="changeSalryWinId" style=" display: none">
+
+<div>
+<div class="label">Current Salary</div><div class="field"><input type="text"  class="k-input k-textbox" id="curSalary"  readonly />
+</div>
+	<div class="clear"></div>
+</div>
+<div>
+
+
+			<div class="label">Change Salary</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="chageSal"   value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div>
+			<div class="label">Change Date</div>
+			<div class="field">
+		<input id="changeSalaryDate"   />
+		</div>
+			<div class="clear"></div>
+		</div>
+				<div>
+			<div class="field">
+				<a class="k-button k-icontext"  id="addchangeSal"><span class="k-add k-icon"></span>Save</a> <a
+					class="k-button k-icontext"  id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
+			</div>
+			<div class="clear"></div>
+			
+		</div>
+
+</div>
+<div id="giveBonusWinId" style=" display: none">
+
+<div>
+			<div class="label">Amount</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="bonusAmont"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+	<div>
+			<div class="label">Given Date</div>
+			<div class="field">
+		<input id="bonusDate"    />
+		</div>
+			<div class="clear"></div>
+		</div>
+			<div>
+			<div class="field">
+				<a class="k-button k-icontext"  id="addBonus"><span class="k-add k-icon"></span>Save</a> <a
+					class="k-button k-icontext"  id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
+			</div>
+			<div class="clear"></div>
+			
+		</div>
+</div>
+<div id="bankAccountWinId" style=" display: none">
+
+<div>
+			<div class="label">BankName</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="bankName"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+
+<div>
+			<div class="label">BankBrach</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="bankBranch"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		
+		<div>
+			<div class="label">Account No</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="accNo"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+			<div>
+			<div class="field">
+				<a class="k-button k-icontext"  id="addBank"><span class="k-add k-icon"></span>Save</a> <a
+					class="k-button k-icontext"  id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
+			</div>
+			<div class="clear"></div>
+			
+		</div>
+</div>
+
 <div id="grid">
-	</div>
+
+<span id="rpsm1">
+<a class="k-button"  id="depdentsId"  href='#'><span class="k-icon "></span>Dependents</a>
+
+<a class="k-button" href='#' id="changeSalryId"><span class="k-icon "></span>ChangeSalary</a>
+
+<a class="k-button" href='#' id="giveBonusId"><span class="k-icon"></span>Give Bonus</a>
+
+<a class="k-button" href='#' id="bankAccountId" ><span class="k-icon "></span>Bank Account</a>
+<a class="k-button" href='#' id="editEmp1" ><span class="k-icon "></span>Edit</a>
+</span>
+
+</div>
 <div id="empForm">
 </div>
 <script> 
@@ -15,12 +166,29 @@ var createNewEmpForm;
 var dropDownURL = "<%=request.getContextPath()%>" + "/do/ReadPositionAction"; 
 var empDataSource;
 var empWindow;
+var wndDepdent;
+var wndBankAccount;
+var wndChangeSalary;
+var wndBonus;
+var dependWindow;
 var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeForm.jsp";
-
-
-	
+var tempEmpid;
+var croppingData;
+var depdentAge;
+ var depdentName;
+ var depdentTypeDepdent;
+ var prvsId;
+ var prvsSal;
+ var bankId;
+ 
+var postDropDownList;
+ var occupationTypeDepdent=  $("#occupationTypeDepdent").val();
     $(document).ready(function(e){	
     	
+ 		var today = new Date();
+ 		 $("#changeSalaryDate").kendoDatePicker({value : today});
+ 		 $("#bonusDate").kendoDatePicker({value : today});
+    	$("#rpsm1").hide();
 	        var employeeModel = kendo.data.Model.define({
 	        	
 	        	fields :{        		
@@ -126,7 +294,7 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 	         var grid = $("#grid").kendoGrid({
 	            dataSource : empDataSource, 
 	            columns : [
-					{command : [{"name" : "edit", className : "editEmp"},{ text:"AddDep", className:"delTax"}], width : 40, filterable :false },
+					{hidden:true ,command : [{"name" : "edit", className : "editEmp"}], width : 40, filterable :false },
 	               
 					 { hidden:true,field : "id", title : "id"},
 					
@@ -134,13 +302,13 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 					{field : "employeeId",  title:"Id",width : 50 },
 	                { field : "firstname", title : "First Name", width : 50 },
 	                { hidden :true,field : "middlename", title : "Middle Name", width : 50 },
-	               
+	                {field : "payrol",  title:"Accom", template: '#=payrol? payrol.accomodationType.name: ""#',width : 50 },
 	                { hidden :true,field :"empNationalID", title : "empNationalID",  width : 20 },
 	                { hidden :true,field : "married", title : "married",  width : 20 },
-	                
-	                { hidden :true,field : "married", title : "married",  width : 20 },
+	               
+	                { field : "empsal", title : "Salry", template: '#=empsal?empsal.basesalary: ""#', width : 30 },
 	                { field : "sex", title : "Sex",  width : 30 },
-	                { field : "positionId", title : "Title",  template: '#=positionId ? positionId.name: ""#', width : 40  },
+	                { field : "positionIds", title : "Role",  template: '#=positionIds ? positionIds.name: ""#', width : 40  },
 	                { hidden:true, field : "birthdate", title : "Birth date", template : "#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy') #" },
 	                {hidden:true,  field : "hiredate", title : "Hired date", template : "#= kendo.toString(new Date(hiredate) , 'MMM, dd yyyy') #" },
 	                { field : "companyId", title : "Branch", template: '#=companyId ? companyId.brchId.name: ""#',  width : 40 },
@@ -166,8 +334,542 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 	            selectable : "row"
 	            
 	        }).data("kendoGrid");
+	    
 	         
-	        
+	         function reuseDepGrid()
+	         {
+	        	 
+	        	 
+	        	 var BrachData = JSON.stringify({
+		 				
+		   				
+		 				"ID":tempEmpid
+		 			 });
+		       	var  depdentDataSource = new kendo.data.DataSource({
+		       	 pageSize:3,
+		         	 transport : {
+		             		read : {
+		             			type: 'POST',
+		             			url : "<%=request.getContextPath() + "/do/EmployeeCommanAction?parameter=getEmpDepdents"%>",
+		 	        				 dataType : 'json',
+		 	        				 contentType : 'application/json; charset=utf-8',
+		 	        				 cache: false,
+		 	        				 
+		 	        		          },
+		              
+		             		parameterMap: function (data, type) {
+		             			if(type = "read"){
+		             			//	alert(BrachData+"hello updateData");
+		             				return BrachData;
+		             			}
+		             			
+		             		}
+		             	},
+		            
+		               
+		                	autoSync : true,
+		                	batch : true 
+		             });
+		         	 
+		         	 
+		         	// alert(depdentDataSource);
+		 	        var dedd= $("#gridDepdent").kendoGrid({ 
+		 	        	
+		 	        	 dataSource : depdentDataSource, 
+		 		            columns : [
+		 						
+		 		               { field : "name", title :"name" ,width : 50},
+		 						{field : "age",  title:"age",width : 50 },
+		 		              {field : "occupationType",  template: '#=occupationType ? occupationType.name: ""#', title:"Occupation", width : 50 },
+		 		              
+		 						{ command: [ {"name" :"destroy", text:"", className:"delTax"}], title: "", width: "50px" }],
+		 	        	 
+		 	        	 
+		 						 sortable: true,  
+		 			            scrollable : true,
+		 			            
+		 			            pageable:true,
+		 			           
+		 			            resizeable : true,
+		 			            reorderable: true,
+		 			          
+		 		           
+		 		         
+		 		            selectable : "row"}).data("kendoGrid");
+	         }
+	         $("#depdentsId").bind("click", function (e) {        
+              e.preventDefault();
+              $("#depdentsWinId").css("display",
+				"block");
+            // alert(tempEmpid);
+      
+		         createWndDepdent();
+	        	 wndDepdent.open();
+	        	 wndDepdent.center();
+	        	 
+	$("#depdentAge").kendoNumericTextBox();
+	        	 
+	        	 reuseDepGrid();
+	
+	        	 
+	        	 
+		 	        
+		 	  	 var occupationTypeDepdentSource= new kendo.data.DataSource({
+					  
+					  transport : {
+				  
+	        		read : {
+	      			type: 'POST',
+	      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getOccupationType"%>',
+	  				 dataType : 'json',
+	  				 contentType : 'application/json; charset=utf-8',
+	  				 cache: false
+	  				 
+	      		}
+				  
+					  },
+	      		autoSync : true,
+	             	batch : true 
+	             	
+				  });
+		 	        
+		 	  	$(".occupationTypeDepdent").html('');
+		 	        
+		 	       $(".occupationTypeDepdent").kendoDropDownList({
+						  
+						  dataTextField : "name",
+							dataValueField : "id",
+							optionLabel: "Select Occupation",
+							dataSource :occupationTypeDepdentSource
+							
+				       }).data("kendoDropDownList");
+		 	      
+			 	  	 var depdentTypeDepdentSource= new kendo.data.DataSource({
+						  
+						  transport : {
+					  
+		        		read : {
+		      			type: 'POST',
+		      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getdepdentType"%>',
+		  				 dataType : 'json',
+		  				 contentType : 'application/json; charset=utf-8',
+		  				 cache: false
+		  				 
+		      		}
+					  
+						  },
+		      		autoSync : true,
+		             	batch : true 
+		             	
+					  });
+			 	        
+				 	  	$(".depdentTypeDepdent").html('');
+			 	        
+			 	       $(".depdentTypeDepdent").kendoDropDownList({
+							  
+							  dataTextField : "name",
+								dataValueField : "id",
+								optionLabel: "Select Depdent",
+								dataSource :depdentTypeDepdentSource
+								
+					       }).data("kendoDropDownList");
+			 	       
+			 	       
+	         });
+	             
+	         
+	         $("#addDepdent").bind("click", function () { 
+	 	    	  
+	 	    	  
+	        	 resueDep();
+	        	 
+		 	    
+		 	      });
+	         function resueDep()
+	 	       {
+	 	    	 //  alert("hello");
+depdentAge=$("#depdentAge").val();
+	 	    	 depdentName=  $("#depdentName").val();
+	 	  depdentTypeDepdent=$("#depdentTypeDepdent").val();
+	 	      
+	 	   occupationTypeDepdent=  $("#occupationTypeDepdent").val();
+	 	      
+	 	    croppingData = JSON.stringify([{
+	 	    		"id":tempEmpid,
+				"age" : depdentAge,
+				"name" : depdentName,
+				"depType" : depdentTypeDepdent,
+				"occupationType" : occupationTypeDepdent
+			}]);
+	 	       
+	 		$.ajax({
+	    		url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=saveDepdents"%>',
+			type : 'POST',
+			dataType : 'json',
+			contentType : 'application/json; charset=utf-8',
+			data : croppingData,
+			success : function(data){
+				//alert("cropping dimension successfully uploaded");
+				reuseDepGrid();
+				$("form")[0].reset();
+			},
+			failure : function(e){
+				alert(e.responseText);
+			}
+		});  
+	 	       }
+	         
+	         
+	         
+	         
+	         createWndDepdent = function (){        	         	 
+		 	        //alert("in window");
+		        		if(wndDepdent)
+		        			{wndDepdent.content('');}
+		         wndDepdent = $("#depdentsWinId").kendoWindow({
+						modal : true,
+						resizable : false,
+						width : 500,
+						height : 400,
+						title : "Depedents"
+					}).data("kendoWindow");
+		         
+		         wndDepdent.open();
+	        	 wndDepdent.center();
+	        	 
+	 	    
+	    };
+	         
+	         
+	    
+	      
+        $("#changeSalryId").bind("click", function (e) {   
+       	 e.preventDefault();
+       		$("#changeSalryWinId").css("display",
+				"block");
+       		// $("form")[0].reset();
+       		
+       		
+      
+		
+		
+       		 
+       		
+       		
+       		  getSal();
+              $("#changeSal").val();
+       	 createWndChangeSal();
+       	 wndChangeSalary.open();
+       	 wndChangeSalary.center();
+        //alert("hello changeSalryId");
+        
+      
+        
+        });
+    
+        
+        createWndChangeSal = function (){     
+       	 
+	 	      //  alert("in changeSalry window");
+	        		if(wndChangeSalary)
+	        			{wndChangeSalary.content("");}
+	        		var wndChangeSalary = $("#changeSalryWinId").kendoWindow({
+					modal : true,
+					resizable : false,
+					width : 400,
+					height : 250,
+					title : "Chage Salary"
+				}).data("kendoWindow");
+	        		wndChangeSalary.open();
+		        	 wndChangeSalary.center();
+			
+   
+   };
+   
+   
+   
+function getSal()
+{
+	
+	// alert("hello true");
+	var editData = JSON.stringify({
+		"id":tempEmpid,
+			
+		 }); 
+	
+	 
+	  
+	  $.ajax({
+				 type : "POST",
+					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=getCurrentSalry"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 data : editData,
+				 success : function(datas){ 
+					 //alert(datas.basesalary);
+					 
+					 prvsId=datas.id;
+					 prvsSal=datas.basesalary;
+					// alert("GSDSA"+$("#curSalary"));
+					 $("#curSalary").val(prvsSal);
+					//wnd2.close();
+					
+					//$("#employeeTemplate").html('');
+					
+				 }	        				
+			});	
+	
+	
+	
+	}
+$("#addchangeSal").bind("click", function () {     
+	
+
+	
+	var chageSal	=$("#chageSal").val();
+	var curSalary	=$("#curSalary").val(); 
+	
+		var changeSalaryDate = new Date($("#changeSalaryDate").val());
+		changeSalaryDate= changeSalaryDate.getTime();
+		
+	var editData = JSON.stringify([{
+	
+			"curSalry":chageSal,
+				"fromDate":changeSalaryDate,
+					"empId":tempEmpid,
+				"toDate":changeSalaryDate,
+				"prvsId":prvsId
+				
+		 }]); 
+	
+	
+	  
+	  $.ajax({
+				 type : "POST",
+					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=saveCurrentSalry"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 data : editData,
+				 success : function(datas){ 
+					 //alert(datas.id);
+					 
+					
+            	 
+					//wnd2.close();
+					
+					//$("#employeeTemplate").html('');
+					
+				 }	        				
+			});	
+	
+});
+
+	    
+	         
+	         $("#giveBonusId").bind("click", function (e) {        
+	            // alert("hello giveBonusId");
+e.preventDefault();
+$("#giveBonusWinId").css("display",
+"block"); 
+//$("form")[1].reset();
+             createWndBonus();
+	        	 wndBonus.open();
+	        	 wndBonus.center();
+	        	
+	        	 var bonusDate = new Date($("#bonusDate").val());
+	        	 bonusDate= bonusDate.getTime();
+	     		
+	         });
+	          
+	         
+	         createWndBonus = function (){        	         	 
+		 	      //  alert("in window");
+		        		if(wndBonus)
+		        			{wndBonus.content('');}
+		        		wndBonus = $("#giveBonusWinId").kendoWindow({
+						modal : true,
+						resizable : false,
+						width : 300,
+						height : 200,
+						title : "Bonus"
+					}).data("kendoWindow");
+		        		wndBonus.open();
+			        	 wndBonus.center();
+				
+	    
+	    };
+	    
+	    
+	    
+	    
+	    
+	    $("#addBonus").bind("click", function () {     
+	    	
+
+	    
+	    	var bonusAmont	=$("#bonusAmont").val();
+	    	var bonusDate = new Date($("#bonusDate").val());
+       	 bonusDate= bonusDate.getTime();
+	    	
+	    		
+	    		
+	    	var editData = JSON.stringify([{
+	    	
+	    			"bonusAmont":bonusAmont,
+	    				"bonusDate":bonusDate,
+	    					"empId":tempEmpid,
+	    				
+	    				
+	    		 }]); 
+	    	
+	    	
+	    	  
+	    	  $.ajax({
+	    				 type : "POST",
+	    					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=saveBonus"%>',
+	    				 dataType : 'json',
+	    				 contentType : 'application/json; charset=utf-8',
+	    				 data : editData,
+	    				 success : function(datas){ 
+	    					 //alert(datas.id);
+	    					 
+	    					
+	                	 
+	    					//wnd2.close();
+	    					
+	    					//$("#employeeTemplate").html('');
+	    					
+	    				 }	        				
+	    			});	
+	    	
+	    });
+
+	    
+	    
+	    
+	    //alert(document.forms.length);
+	         $("#bankAccountId").bind("click", function (e) {        
+	             //alert("hello bankAccountId");
+	             
+	             
+e.preventDefault();
+
+	        	 createWndBankAccount();
+	        	 wndBankAccount.open();
+	        	 wndBankAccount.center();
+	        	 
+	        	 getBankDetails();
+	         });
+	         
+	         createWndBankAccount = function (){        	         	 
+		 	       // alert("in window");
+		        		if(wndBankAccount)
+		        			{
+		        			
+		        			wndBankAccount.content('');
+		        			}
+		         wndBankAccount = $("#bankAccountWinId").kendoWindow({
+						modal : true,
+						resizable : false,
+						width : 300,
+						height : 200,
+						title : "Bank Details"
+					}).data("kendoWindow");
+		         wndBankAccount.open();
+	        	 wndBankAccount.center();
+				
+	    
+	    };
+	         
+	    function getBankDetails()
+	    
+	    {
+	    	
+	    	  var editData = JSON.stringify({
+	    		  "id":tempEmpid,
+					
+				 }); 
+	    	
+	    	 $.ajax({
+				 type : "POST",
+					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=getBankDetails"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 data : editData,
+				 success : function(data){ 
+					 //alert(datas.id);
+					bankId=data.id;
+					//alert(bankId);
+					if(bankId!=null)
+						{
+						$("#addBank").text("Update");
+					$("#bankBranch").val(data.bankBranch);
+            	$("#bankName").val(data.bankName);
+            	$("#accNo").val(data.accountNo);
+						}
+					
+            	
+            	
+            	
+					//wnd2.close();
+					
+					//$("#employeeTemplate").html('');
+					
+				 }	        				
+			});	
+	
+	    	
+	    	
+	    }
+	    
+    
+	    
+	    $("#addBank").bind("click", function () {     
+	    	//alert("hello");
+	    var bankBranch=	$("#bankBranch").val();
+        	var bankName=$("#bankName").val();
+        	var accNo=$("#accNo").val();
+	    		
+	    		
+	    	var editData = JSON.stringify([{
+	    	id:bankId,
+	    			"bankBranch":bankBranch,
+	    				"bankName":bankName,
+	    					"accNo":accNo,
+	    					"empId":tempEmpid
+	    				
+	    		 }]); 
+	    	
+	    	
+	    	  
+	    	  $.ajax({
+	    				 type : "POST",
+	    					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=saveBank"%>',
+	    				 dataType : 'json',
+	    				 contentType : 'application/json; charset=utf-8',
+	    				 data : editData,
+	    				 success : function(datas){ 
+	    					 //alert(datas.id);
+	    					 
+	    					
+	                	 
+	    					//wnd2.close();
+	    					
+	    					//$("#employeeTemplate").html('');
+	    					
+	    				 }	        				
+	    			});	
+	    	
+	    });
+	         
+	         $("#grid tbody").bind("click", function (e) {
+	        	 //alert("ee"+event.button);
+	        	 ///e.stopPropagation();
+	    		tempEmpid  = $(".k-state-selected").find('td').eq(1).text();
+	    		 //alert(ids);
+	    		 $("#rpsm1").show("slow");
+	         });
+         
 	        
 	         //grid.hideColumn("photo");
 	       // grid.hideColumn(2);
@@ -182,7 +884,7 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 	        	 e.preventDefault();
 				 var dataItem = grid.dataItem($(this).closest("tr"));
 				 
-				 alert(dataItem.id);
+				 //alert(dataItem.id);
 				 
 				  var  id = dataItem.id; 
             	 
@@ -224,24 +926,30 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 				 
 	         });
 	        createNewEmpForm = function (){        	         	 
-	        	if(empWindow)
-	        		empWindow.content("");
+	        
+	        		if(empWindow)
+	        			{empWindow.content("");}
+	        		
 	        	 	empWindow = $("#empForm").kendoWindow({
 	                 title: "EmployeeForm",
 	                 content: empFormPath,
 	                 modal : true,
-	                 resizable: false,
-	                 width : 650
+	                 resizable: true,
+	                 width : 700,
+	 				height : 500,
 	             }).data("kendoWindow");
-	        	 
+
 	        	 empWindow.open();
 	        	 empWindow.center();
 	        	 
 	         };
-	         
-	         $("#grid").delegate(".editEmp", "click", function(e) {
-	        	 	 e.preventDefault();
-		        	 var dataItem = grid.dataItem($(this).closest("tr"));
+	         $("#editEmp1").bind("click", function () {    
+				// alert("hello");
+	        // $("#grid").delegate(".editEmp", "click", function(e) {
+	        	 	 //e.preventDefault();
+		        	 var dataItem = grid.dataItem($(".k-state-selected").closest("tr"));
+		        	 
+		        	// alert(dataItem);
 		        	 var empTemplate= kendo.template($("#employeeTemplate").html());              
                  
                  
@@ -272,14 +980,15 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 	    			kendo.bind($("input"), viewModel1);
 	               // var selectedStatus = dataItem.status;
 	                
-	         
-	                
-	                var selectedPos = JSON.stringify(dataItem.positionId.id); 
+	       //  var d=10.33;
+	        
+	          
+	        //alert(selectedPos);
 	              //  alert(dataItem.empNationalID);
 	     			 $("#positions").kendoDropDownList({
 	     				
 	     				dataTextField: "name",
-	     			    dataValueField: "id",
+	     				dataValueField : "coantcatVal",
 	     			   	dataSource : {
 		         			   	type: "json",
 		         			   	transport: {
@@ -382,7 +1091,7 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 							
 							   
 							
-							alert(dId);
+							//alert(dId);
 							var BrachData = JSON.stringify({
 							
 						
@@ -454,15 +1163,49 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 						dataSource :accommodationDataSource1
 						
 			       }).data("kendoDropDownList");
-   
-	     			
+	 
+
+			 $("#accommodationVal").data("kendoDropDownList").value(JSON.stringify(dataItem.payrol.accomodationType.id));
+	// var selectedPos =JSON.stringify(dataItem.positionIds.id)+"-"+JSON.stringify(dataItem.positionIds.lowSal)+"-"+JSON.stringify(dataItem.positionIds.highSal);
+	// alert("jfadfj"+(dataItem.positionIds.lowsal).toString);
+  var selectedPos =JSON.stringify(dataItem.positionIds.id)+"-"+kendo.parseFloat(JSON.stringify(dataItem.positionIds.lowSal),1).toFixed(1)+"-"+kendo.parseFloat(JSON.stringify(dataItem.positionIds.highSal),1).toFixed(1);
 	     			//$("#status1").data("kendoDropDownList").value(selectedStatus);
-	     			
+	     			//alert("dd"+selectedPos);
 					$("#positions").data("kendoDropDownList").value(selectedPos);	                 	 
 	     			$("#birthdate").kendoDatePicker();
 	        		$("#hiredate").kendoDatePicker();
 	                
-	        		
+	                $("#positions").change(function() {
+	   				 
+		 alert("this"+$(this).val());
+					 var tempPos=$(this).val();
+					 
+					 var costpart = String(tempPos).split("-");
+					 postDropDownList=costpart[0];
+					 
+					 lowsal=kendo.parseFloat(costpart[1],1).toFixed(1);
+					 highsal=kendo.parseFloat(costpart[2],1).toFixed(1);
+					 alert(costpart[0]+"-"+lowsal+"-"+highsal);
+					 }); 
+					 
+					 $("#numericSal").blur(function(){
+						 //   alert("This input field has lost its focus.");
+						    
+						    numericSal=parseFloat($(this).val());
+						//    alert(lowsal+"-----"+highsal);
+						    if((numericSal<lowsal)||(numericSal>highsal))
+						    {
+						    	
+						    	rangeError=false;
+						    	 $("#s").show().text("no"+lowsal+"to"+highsal).fadeOut(5000);
+						    }
+						    else
+						    	{
+						    	rangeError=true;
+						    	 $("#s").show().text("ok"+lowsal+"to"+highsal).fadeOut(5000);
+						    	}
+						    
+						  });
 	                 wnd.open(); 
 	                 wnd.center();
 	                
@@ -579,7 +1322,7 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
         					"sex" : sex,
         					"birthdate" : birthdate,
         					"hiredate" : hiredate,
-        					"positionId" : positionId,
+        					"positionId" : postDropDownList,
         					"photo" : photo,
         					"status": status
         				 }]);
@@ -610,8 +1353,11 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 <script type="text/x-kendo-template" id="employeeTemplate">
 <div id="employeeForm">
 	<div class="clear"></div>
+
+
+
 	<div id="left-col">
-		<div>
+			<div>
 			<div class="label">EMP-ID</div>
 			<div class="field">
 				<input type="hidden" id="id" value="#=id#"/>
@@ -621,11 +1367,18 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 			<div class="clear"></div>
 		</div>
 
+<div>
+			<div class="label">EMP-NationalID</div>
+			<div class="field">
+				<input type="text"  class="k-input k-textbox" id="nationID"  value="#=empNationalID#" />
+			</div>
+			<div class="clear"></div>
+		</div>
 
 		<div>
 			<div class="label">First name</div>
 			<div class="field">
-				<input type="text" class="k-input k-textbox" id="firstname"  value="#=firstname#" />
+				<input type="text" required=required class="k-input k-textbox" id="firstname"  value="#=firstname#" />
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -635,7 +1388,7 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 		<div>
 			<div class="label">Middle name</div>
 			<div class="field">
-				<input type="text" class="k-input k-textbox"  id="middlename" value="#=middlename#" />
+				<input type="text" required=required class="k-input k-textbox" id="middlename"  value="#=middlename#"/>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -645,89 +1398,105 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 		<div>
 			<div class="label">Last name</div>
 			<div class="field">
-				<input type="text" class="k-input k-textbox" id="lastname"  value="#=lastname#" />
+				<input type="text" required=required class="k-input k-textbox" id="lastname" value="#=lastname#" />
 			</div>
 			<div class="clear"></div>
 		</div>
-	
-			
 
 
 		<div>
 			<div class="label">Sex</div>
-			<div class="field">
-				
-
-	<label for="sexmale">
+			<div class="field" >
+					<label for="sexmale">
 				<input  type="radio" id="sexm" value="Male" name="sex" data-bind="checked: selectedSex" />
 			Male
 			</label>
 				<label for="sexfemale">
-				<input  type="radio" id="inactive" value="Female" name="sex"   data-bind="checked: selectedSex"/>
+<input  type="radio" id="inactive" value="Female" name="sex"   data-bind="checked: selectedSex"/>
 			Female
 			</label>
+			
+			
 			</div>
 			<div class="clear"></div>
 		</div>
 
-
-
-		<div>
-			<div class="label">Birth date</div>
-			<div class="field">
-				<input type="text" data-type="date" data-role="datepicker" class="k-input k-textbox" 
-					id="birthdate" value="#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy')#" />
-				</div>
+			
+<div>
+<div class="label">Family</div>
+			<label for="family_single">
+				<input  type="radio" id="family_single" value="false" name="family" data-bind="checked: selectedFamily" />
+				Single
+			</label>
+			<label for="family_married">
+		<input  type="radio" id="family_married" value="true" name="family" data-bind="checked: selectedFamily" />
+				Married
+			</label>
+		<div class="clear"></div>	
+	</div>	
+	<div>
+			<div class="label">Status</div>
+			
+			<label for="statusactive">
+<input  type="radio" id="active" value="ACTIVE" name="status" data-bind="checked: selectedStatus" />
+			ACTIVE
+			</label>
+				<label for="statusInactive">
+<input  type="radio" id="inactive" value="IN ACTIVE" name="status"  data-bind="checked: selectedStatus" />
+				IN ACTIVE
+			</label>
 			<div class="clear"></div>
 		</div>
-
-
-
-		<div>
+	
+			<div>
 			<div class="label">Hire date</div>
 			<div class="field">
-				<input type="text" data-type="date" data-role="datepicker" class="k-input k-textbox" 
+				<input type="text" class="k-input k-textbox" 
 					id="hiredate" value="#= kendo.toString(new Date(hiredate), 'MMM, dd yyyy')#" />
 			</div>
 			<div class="clear"></div>
 		</div>
-
-
-
 		<div>
-			<div class="label">Position/ Title</div>
+			<div class="label">Birth date</div>
 			<div class="field">
-				<input id="positions" value="#=positionId ? positionId.name : ''#"/>
+				<input type="text" class="k-input k-textbox" 
+					id="birthdate" value="#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy')#" />
 			</div>
 			<div class="clear"></div>
 		</div>
 
-
+	<div>
+			<div class="label">Position</div>
+			<div class="field">
+		<input id="positions" value="#=positionIds ? positionIds.name : ''#"/>
+			</div>
+			<div class="clear"></div>
+		</div>
+				<div>
+   
+	                		
+			<div class="label">Basic Salary</div>
+			<div class="field">
+		
+		    <input id="numericSal" type="number"  class="k-input k-textbox"   min="0" value="#=empsal?empsal.basesalary : ''#""   />
+		    <span id="s"></span>
+		   	</div>
+			<div class="clear"></div>
+		</div> 
 		<div> <div class="label">Branch</div>
 			<div class="field">
-				<input id="brachDropDownList" value="#=companyId ? companyId.brchId.name: ''#"/>
+							<input id="brachDropDownList" value="#=companyId ? companyId.brchId.name: ''#"/>
 			</div>
 			<div class="clear"></div></div>
 		
-		
-		
-
-
-
-		<div id="dp1">
+			<div id="dp1">
 			<div class="label">Department</div>
 			<div class="field">
-				<input class="departDropDownList" id="departVal" value="#=companyId ? companyId.name: ''#"/>
+	<input class="departDropDownList" id="departVal" value="#=companyId ? companyId.name: ''#"/>
 			</div>
 			<div class="clear"></div>
 		</div>
-<div >
-			<div class="label">Resident Type </div>
-			<div class="field">
-				<input class="residentDropDownList" id="residentVal" value="#=residentType ? residentType.name: ''#"/>
-			</div>
-			<div class="clear"></div>
-		</div>
+
 		<div>
 			<div class="field">
 				<a class="k-button k-icontext" id="saveEmp"><span class="k-icon k-update"></span>Update</a> <a
@@ -738,7 +1507,9 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 	</div>
 
 
-	<div id="right-col">
+
+
+<div id="right-col">
 		<div style="height:150px;width:200px;overflow:hidden">
 			<img id="preview" class="k-image j-cropview"
 				height=150 width=200 src="#='/OpenHR'+photo#"/>
@@ -754,45 +1525,27 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeF
 			<div class="clear"></div>
 		</div>
 <div>
-<div class="label">Family</div>
-			<label for="family_single">
-				<input  type="radio" id="family_single" value="false" name="family" data-bind="checked: selectedFamily" />
-				Single
-			</label>
-			<label for="family_married">
-				<input  type="radio" id="family_married" value="true" name="family" data-bind="checked: selectedFamily" />
-				Married
-			</label>
-		<div class="clear"></div>	
-	</div>	
-
 
 <div>
-			<div class="label">Employee National ID</div> 
+			<div class="label">Emergency Contact Name</div>
 			<div class="field">
-				<input type="text"  class="k-input k-textbox" id="nationID"  value="#=empNationalID#" />
+				<input type="text" required=required class="k-input k-textbox" id="contName"  value="#=emerContactName#" />
 			</div>
 			<div class="clear"></div>
 		</div>
+
 		
 		<div>
 <div class="label">Emergency Contact Number</div>
 			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="" />
+				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="#=emerContactNo#" />
 			</div>
 			<div class="clear"></div>
 		</div>
-<div>
-			<div class="label">Status</div>
+<div >
+			<div class="label">Resident Type </div>
 			<div class="field">
-				<label for="statusactive">
-				<input  type="radio" id="active" value="ACTIVE" name="status" data-bind="checked: selectedStatus" />
-			ACTIVE
-			</label>
-				<label for="statusInactive">
-				<input  type="radio" id="inactive" value="IN ACTIVE" name="status"  data-bind="checked: selectedStatus" />
-				IN ACTIVE
-			</label>
+				<input class="residentDropDownList" id="residentVal" value="#=residentType ? residentType.name: ''#"/>
 			</div>
 			<div class="clear"></div>
 		</div>

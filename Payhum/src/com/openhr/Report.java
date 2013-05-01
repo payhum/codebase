@@ -43,7 +43,7 @@ public class Report extends Action {
 			throws Exception {
 		//TODO get logged in user, company, branch and dept details
 		Users runBy = new Users();
-		runBy.setId(2);
+		runBy.setId(1);
 		
 	    Calendar currDtCal = Calendar.getInstance();
 
@@ -62,6 +62,9 @@ public class Report extends Action {
 		
 		// Check for licenses
 		List<Licenses> compLicenses = LicenseFactory.findByCompanyId(comps.get(0).getId());
+		if(compLicenses.isEmpty()) {
+			throw new Exception("No License available.");
+		}
 		for(Licenses lis : compLicenses) {
 			if(lis.getActive() == 1) {
 				Date endDate = lis.getTodate();
@@ -82,9 +85,9 @@ public class Report extends Action {
 		}
 		
 		// If the payroll run dates is empty, it means this is first time, so lets populate.
-		populatePayrollDates();
+		List<PayrollDate> payrollDates = populatePayrollDates();
 
-		PayrollDate payrollDate = getTobeProcessedDate();
+		PayrollDate payrollDate = getTobeProcessedDate(payrollDates);
 		Calendar salaryProcessDate = Calendar.getInstance();
 		salaryProcessDate.setTime(payrollDate.getRunDate());
 		List<Employee> activeEmpList = new ArrayList<Employee>();
@@ -116,6 +119,7 @@ public class Report extends Action {
 		payroll.setRunOnDate(salaryProcessDate.getTime());
 		payroll.setRunBy(runBy);
 		payroll.setPayDateId(payrollDate);
+		PayrollFactory.insertPayroll(payroll);
 		
 		TaxEngine taxEngine = new TaxEngine(comp, activeEmpList, inActiveEmpList);
 		List<EmployeePayroll> empPayrollList = taxEngine.execute(payroll);
@@ -159,7 +163,7 @@ public class Report extends Action {
 			}
 			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getNetPay()));
 			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getTaxAmt()));
+			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getTaxAmount()));
 			empPayStr.append(COMMA);
 			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getSocialSec()));
 			empPayStr.append("\n");
@@ -174,8 +178,7 @@ public class Report extends Action {
 		return map.findForward("report.form");
 	}
 	
-	private PayrollDate getTobeProcessedDate() throws Exception {
-		List<PayrollDate> payDates = PayrollFactory.findAllPayrollDate();
+	private PayrollDate getTobeProcessedDate(List<PayrollDate> payDates) throws Exception {
 		List<Payroll> payRuns = PayrollFactory.findAllPayrollRuns();
 		
 		for(PayrollDate payDate: payDates) {
@@ -188,14 +191,15 @@ public class Report extends Action {
 			}
 			
 			if(!processed) {
-				// If this date is post the current date, then there is nothing pending, so it could be adhoc?
+				// If this date is post the current date, but its not processed, lets process it.
 				Date currDate = new Date();
 				if(currDate.after(payDate.getRunDate())
 				|| currDate.equals(payDate.getRunDate())) {
+					return payDate;
+				} else {
+					// Current date is before the next processing date, so its an adhoc
 					throw new Exception("All payroll dates are processed, should be an adhoc one.");
 				}
-				
-				return payDate;
 			}
 		}
 		
@@ -215,7 +219,7 @@ public class Report extends Action {
 	    return true;
 	}
 	
-	private void populatePayrollDates() throws Exception {
+	private List<PayrollDate> populatePayrollDates() throws Exception {
 		// Check if the payroll dates are calculated or not, if not default to Monthly and choose last friday of
 		// each month as payroll date.
 		List<PayrollDate> payrollDates = PayrollFactory.findAllPayrollDate();
@@ -225,21 +229,45 @@ public class Report extends Action {
 			int currYear = currCal.get(Calendar.YEAR);
 			
 			if(currMonth >= 3) {
+				// Populate from current month to december
 				for(int i = currMonth; i < 12; i++) {
 					Date rDate = getLastFriday(i, currYear);
-					PayrollFactory.insertPayrollDate(rDate);
+					PayrollDate payDate = new PayrollDate();
+					payDate.setRunDate(rDate);
+					PayrollFactory.insertPayrollDate(payDate);
+					
+					payrollDates.add(payDate);
 				}
+				
+				// Populate from current month to december
+				for(int i = 0; i < 3; i++) {
+					Date rDate = getLastFriday(i, currYear+1);
+					PayrollDate payDate = new PayrollDate();
+					payDate.setRunDate(rDate);
+					PayrollFactory.insertPayrollDate(payDate);
+					
+					payrollDates.add(payDate);
+				}
+				
 			} else {
 				for(int i = 0; i <= currMonth; i++) {
 					Date rDate = getLastFriday(i, currYear + 1);
-					PayrollFactory.insertPayrollDate(rDate);
+					PayrollDate payDate = new PayrollDate();
+					payDate.setRunDate(rDate);
+					PayrollFactory.insertPayrollDate(payDate);
+					
+					payrollDates.add(payDate);
 				}
 			}
 		}
+		
+		return payrollDates;
 	}
 	
 	private Date getLastFriday( int month, int year ) {
 		Calendar retCal = Calendar.getInstance();
+		retCal.set(Calendar.YEAR, year);
+		retCal.set(Calendar.MONTH, month);
 		retCal.set(Calendar.DAY_OF_WEEK,Calendar.FRIDAY);
 		retCal.set(Calendar.DAY_OF_WEEK_IN_MONTH, -1);
 		return retCal.getTime();

@@ -44,7 +44,7 @@ public class SSGovtFile extends Action {
         
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		
-		String fileName = "Govt_" + compName + "_Payroll_" + monthYear + ".csv";
+		String fileName = "SocialSec_" + compName + "_Payroll_" + monthYear + ".csv";
 		
 		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		response.setContentType("application/force-download");
@@ -54,13 +54,21 @@ public class SSGovtFile extends Action {
 		
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByProcessedDate(cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
+
+		allEmpPayStr.append("Employee Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Employee National ID");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Amount (MMK)");
+		allEmpPayStr.append("\n");
+		
 		for(CompanyPayroll compPay : compPayroll) {
 			StringBuilder empPayStr = new StringBuilder();
 			empPayStr.append(compPay.getEmpFullName());
 			empPayStr.append(COMMA);
 			empPayStr.append(compPay.getEmpNationalID());
 			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("MMK ###.##").format(compPay.getSocialSec()));
+			empPayStr.append(new DecimalFormat("###.##").format(compPay.getSocialSec()));
 			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);

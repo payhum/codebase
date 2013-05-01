@@ -11,13 +11,18 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-
+import org.hibernate.Transaction;
 
 import com.openhr.data.Branch;
 import com.openhr.data.Department;
+import com.openhr.data.EmpBankAccount;
+import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
+import com.openhr.data.EmployeeBonus;
+import com.openhr.data.EmployeeSalary;
 import com.openhr.data.TypesData;
 import com.openhr.company.Company;
+import com.openhr.data.Users;
 
 import com.openhr.factories.common.OpenHRSessionFactory;
 
@@ -36,23 +41,211 @@ public class EmployeeFactory implements Serializable {
 	private static Query query;
 	private static List<Employee> employees;
 
-
 	public EmployeeFactory() {
 	}
 
-    public static List<Object[]> findAllDepartEmpChart()
-	{
+	public static boolean saveUpdateBankDet(EmpBankAccount ebn) {
+		boolean done = false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		String hql=" select   count(d.id) as num, d.deptname from Employee e , Department d where e.deptId=d.id group by e.deptId";
-		
+
+		try {
+			if (ebn.getId() == null) {
+
+				session.save(ebn);
+			}
+
+			else {
+				// EmpBankAccount ebns= getBankEmpbyId(ebn.getId());
+
+				session.update(ebn);
+
+			}
+
+			session.getTransaction().commit();
+			done = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+
+		}
+		return done;
+	}
+
+	public static EmployeeSalary getEmpsalry(Employee ees) {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmployeeSalary.findSal");
+		// query.setInteger(0, id);
+		query.setParameter(0, ees);
+		EmployeeSalary empAcc = (EmployeeSalary) query.uniqueResult();
+		session.getTransaction().commit();
+		return empAcc;
+	}
+
+	public static EmpBankAccount getBankEmpbyId(Integer id) {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmpBankAccount.findById");
+		// query.setInteger(0, id);
+		query.setInteger(0, id);
+		EmpBankAccount empAcc = (EmpBankAccount) query.uniqueResult();
+		session.getTransaction().commit();
+		return empAcc;
+	}
+
+	public static EmpBankAccount getBankDetails(Employee id) {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmpBankAccount.findByEmployeeId");
+		// query.setInteger(0, id);
+		query.setParameter(0, id);
+		EmpBankAccount empAcc = (EmpBankAccount) query.uniqueResult();
+		session.getTransaction().commit();
+		return empAcc;
+	}
+
+	public static boolean saveBonus(EmployeeBonus usrs) {
+		boolean done = false;
+
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		try {
+			session.save(usrs);
+			session.getTransaction().commit();
+			done = true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+
+		}
+		return done;
+
+	}
+
+	public static EmployeeSalary getCurrentSalry(Employee id) {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmployeeSalary.findSal");
+		// query.setInteger(0, id);
+		query.setParameter(0, id);
+		EmployeeSalary empsal = (EmployeeSalary) query.uniqueResult();
+		session.getTransaction().commit();
+		return empsal;
+	}
+
+	public static boolean saveSal(EmployeeSalary id, Integer ids) {
+		boolean done = false;
+		Session session2 = OpenHRSessionFactory.getInstance().openSession();
+		Transaction t = session2.beginTransaction();
+
+		EmployeeSalary es;
+		try {
+			if (ids != null) {
+				es = findEmpSalryById(ids).get(0);
+				es.setTodate(new Date((id.getFromdate().getTime())));
+				boolean flag = empsalUpdate(es);
+				if (flag)
+
+				{
+
+					session2.save(id);
+				}
+
+			} else {
+
+				session2.save(id);
+			}
+
+			session2.flush();
+			t.commit();
+
+			done = true;
+		}
+
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			t.rollback();
+			session2.close();
+		}
+
+		// query.setInteger(0, id);
+		// query.setParameter(0, id);
+		// EmployeeSalary empsal= (EmployeeSalary) query.uniqueResult();
+
+		finally {
+			session2.close();
+		}
+		return done;
+	}
+
+	public static boolean empsalUpdate(EmployeeSalary empS) {
+
+		boolean done = false;
+
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+
+		session.update(empS);
+
+		session.getTransaction().commit();
+		done = true;
+
+		return done;
+
+	}
+
+	public static boolean saveDepdent(EmpDependents empD) {
+
+		boolean done = false;
+
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+
+		session.save(empD);
+		session.flush();
+		session.getTransaction().commit();
+		done = true;
+
+		return done;
+
+	}
+
+	public static List<EmpDependents> findEmpDepdentAll(Employee e) {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmpDependents.findIndual");
+		// query.setInteger(0, id);
+		query.setParameter(0, e);
+		List<EmpDependents> empDep = query.list();
+		session.getTransaction().commit();
+		return empDep;
+	}
+
+	public static List<Object[]> findAllDepartEmpChart() {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		String hql = " select   count(d.id) as num, d.deptname from Employee e , Department d where e.deptId=d.id group by e.deptId";
+
 		query = session.createQuery(hql);
-		List<Object[]> lob=query.list();
+		List<Object[]> lob = query.list();
 		session.getTransaction().commit();
 		return lob;
 	}
-	
-	public static Integer findLastId() throws Exception{
+
+	public static List<Object[]> findAllBranchEmpChart() {
+		Session session1 = OpenHRSessionFactory.getInstance().openSession();
+		session1.beginTransaction();
+		String hql = "select count(d.branchId), b.name from Department d,Branch b where d.branchId=b.id group by d.branchId";
+
+		Query query1 = session1.createQuery(hql);
+		List<Object[]> lob1 = query1.list();
+		session1.getTransaction().commit();
+		return lob1;
+	}
+
+	public static Integer findLastId() throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findLastId");
@@ -65,32 +258,43 @@ public class EmployeeFactory implements Serializable {
 		}
 	}
 
-	public static Integer findCompanyLastId() throws Exception{
+	public static Integer findCompanyLastId() throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Company.findLastId");
 		List<Company> lastId = query.list();
- 		session.getTransaction().commit();
+		session.getTransaction().commit();
 		if (lastId.size() != 0) {
 			return lastId.get(0).getId();
 		} else {
 			return 0;
 		}
 	}
-	public static List<Employee> findAll() throws Exception{
+
+	public static List<Employee> findAll() throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findAll");
 		employees = query.list();
-		
+
 		session.getTransaction().commit();
-		
-		
-		
+
 		return employees;
 	}
 
-	public static List<Employee> findById(Integer employeeId) throws Exception{
+	public static List<EmployeeSalary> findEmpSalryById(Integer Id)
+			throws Exception {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmployeeSalary.findById");
+		query.setInteger(0, Id);
+		List<EmployeeSalary> employees = query.list();
+		session.getTransaction().commit();
+
+		return employees;
+	}
+
+	public static List<Employee> findById(Integer employeeId) throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findById");
@@ -101,7 +305,8 @@ public class EmployeeFactory implements Serializable {
 		return employees;
 	}
 
-	public static List<Employee> findByEmployeeId(String employeeId) throws Exception{
+	public static List<Employee> findByEmployeeId(String employeeId)
+			throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findByEmployeeId");
@@ -111,9 +316,9 @@ public class EmployeeFactory implements Serializable {
 
 		return employees;
 	}
-	
-	
-	public static List<Employee> findByName(String EmployeeName) throws Exception{
+
+	public static List<Employee> findByName(String EmployeeName)
+			throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findByName");
@@ -123,8 +328,21 @@ public class EmployeeFactory implements Serializable {
 
 		return employees;
 	}
-	
-	public static List<Employee> findActiveByDeptID(Integer deptId) throws Exception{
+
+	public static List<Employee> findAllByCompanyID(Integer compID)
+			throws Exception {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Employee.findByCompanyID");
+		query.setInteger(0, compID);
+		employees = query.list();
+		session.getTransaction().commit();
+
+		return employees;
+	}
+
+	public static List<Employee> findActiveByDeptID(Integer deptId)
+			throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findActiveByDeptID");
@@ -134,8 +352,9 @@ public class EmployeeFactory implements Serializable {
 
 		return activeEmps;
 	}
-	
-	public static List<Employee> findInActiveByDeptIDAndDate(Integer deptId, Date currDate) throws Exception{
+
+	public static List<Employee> findInActiveByDeptIDAndDate(Integer deptId,
+			Date currDate) throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findInActiveByDeptIDAndDate");
@@ -147,8 +366,8 @@ public class EmployeeFactory implements Serializable {
 
 		return inactiveEmps;
 	}
-	
-	public static boolean delete(Employee e) throws Exception{
+
+	public static boolean delete(Employee e) throws Exception {
 		boolean done = false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
@@ -162,18 +381,16 @@ public class EmployeeFactory implements Serializable {
 		return done;
 	}
 
-	public static boolean deleteGridId(Integer e) throws Exception{
+	public static boolean deleteGridId(Integer e) throws Exception {
 		boolean done = false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		
-		try{
+
+		try {
 			Employee emp = (Employee) session.get(Employee.class, e);
 			session.delete(emp);
 			session.getTransaction().commit();
-		}
-		finally
-		{
+		} finally {
 			session.flush();
 		}
 		done = true;
@@ -228,19 +445,19 @@ public class EmployeeFactory implements Serializable {
 		session12.close();
 		return brd;
 	}
-	
-	public static List<Department> findBrachDepart(Integer compID) throws Exception{
+
+	public static List<Department> findBrachDepart(Integer compID)
+			throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Department.findByBrachId");
 		query.setInteger(0, compID);
-		List<Department>	depList = query.list();
+		List<Department> depList = query.list();
 		session.getTransaction().commit();
 
 		return depList;
 	}
-	
-	
+
 	public static List<TypesData> findTypes(String resd) {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
@@ -251,24 +468,24 @@ public class EmployeeFactory implements Serializable {
 
 		return tyd;
 	}
-	
-	public static Department findDepartById(Integer compID) throws Exception{
+
+	public static Department findDepartById(Integer compID) throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Department.findById");
 		query.setInteger(0, compID);
-	Department	depList = (Department) query.list().get(0);
+		Department depList = (Department) query.list().get(0);
 		session.getTransaction().commit();
 
 		return depList;
 	}
-	
-	public static TypesData findTypesById(Integer compID) throws Exception{
+
+	public static TypesData findTypesById(Integer compID) throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("TypesData.findById");
 		query.setInteger(0, compID);
-		TypesData	tyd = (TypesData) query.list().get(0);
+		TypesData tyd = (TypesData) query.list().get(0);
 		session.getTransaction().commit();
 
 		return tyd;
@@ -289,6 +506,7 @@ public class EmployeeFactory implements Serializable {
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findInActiveByDate");
 		query.setParameter(0, time);
+		query.setParameter(1, time);
 		List<Employee> inactiveEmps = query.list();
 		session.getTransaction().commit();
 
@@ -312,7 +530,8 @@ public class EmployeeFactory implements Serializable {
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findInActiveByDateAndBranch");
 		query.setParameter(0, time);
-		query.setParameter(1, branchId);
+		query.setParameter(1, time);
+		query.setParameter(2, branchId);
 		List<Employee> inactiveEmps = query.list();
 		session.getTransaction().commit();
 

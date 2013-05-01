@@ -57,7 +57,7 @@
 					 
 					 success : function(data){ 
 						 d=data;
-						//alert(d);
+					//alert(d);
 						 createChart(data);     					 	        					 
 					 }	        				
 				});
@@ -79,56 +79,79 @@
 			}, 400);
 		});
 
-		function createRevenueBarChart() {
+		function createRevenueBarChart(data1) {
 			$("#revenueChart").kendoChart({
 				theme : $(document).data("kendoSkin") || "default",
 				title : {
-					text : "Last Five Months Revenue share in percent per Department"
+					text : "Departments break up per Branch"
 				},
 				legend : {
-					position : "bottom"
-				},
-				seriesDefaults : {
-					type : "column"
-				},
-				series : [ {
-					name : "Development",
-					data : [ 15.7, 16.7, 20, 23.5, 26.6 ]
-				}, {
-					name : "Design",
-					data : [ 20.96, 82.93, 75, 74, 78 ]
-				}, {
-					name : "Sales",
-					data : [ 25.5, 39.5, 65.1, 11, 25.89 ]
-				}, {
-					name : "Maintenance",
-					data : [ 25.5, 39.5, 65.1, 11, 25.89 ]
-				} ],
-				valueAxis : {
+					position : "bottom",
 					labels : {
-						format : "{0}%"
+						template : "#= category # (#= value #)"
 					}
 				},
-				categoryAxis : {
-					categories : [ 'March', 'April', 'June', 'July', 'August' ]
+				seriesDefaults : {
+					labels : {
+						visible : true,
+						format : "{0}"
+					}
 				},
+				series : [ {
+					type : "pie",
+					data :data1
+				} ],
 				tooltip : {
 					visible : true,
-					format : "{0}%"
+					format : "{0}"
 				}
 			});
+			
 		}
 
 		$(document).ready(function() {
 			
 			setTimeout(function() {
-				createRevenueBarChart();
+				
+				
+				
+				$.ajax({
+					 type : "POST",
+					 url:'<%=request.getContextPath()+ "/do/PieChartCommanActions?parameter=getPieChartBranch"%>',
+					 dataType : 'json',
+					 contentType : 'application/json; charset=utf-8',
+					 
+					 success : function(data1){ 
+						
+					
+					createRevenueBarChart(data1);    					 	        					 
+					 }	        				
+				});
+				
+				
+				
 				// Initialize the chart with a delay to make sure
 				// the initial animation is visible
 			}, 400);
 
 			$(document).bind("kendo:skinChange", function(e) {
-				createRevenueBarChart();
+			
+				
+				
+				$.ajax({
+					 type : "POST",
+					 url:'<%=request.getContextPath()+ "/do/PieChartCommanActions?parameter=getPieChartBranch"%>',
+					 dataType : 'json',
+					 contentType : 'application/json; charset=utf-8',
+					 
+					 success : function(data1){ 
+						
+						// alert(d);
+							createRevenueBarChart(data1);  					 	        					 
+					 }	        				
+				});
+				
+				
 			});
 		});
 	</script>

@@ -24,6 +24,7 @@ import com.openhr.data.Department;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeForm;
 import com.openhr.data.EmployeePayroll;
+import com.openhr.data.EmployeeSalary;
 import com.openhr.data.Position;
 import com.openhr.data.TypesData;
 import com.openhr.factories.EmpPayTaxFactroy;
@@ -56,11 +57,16 @@ public class EmployeeAction extends Action {
 		String empID=null;
 		Integer acomId=null;
 		String lastName=null;
+		
+		
+		Date hireDate=null;
 		Employee e = new Employee();
 		for (EmployeeForm eFromJSON : aCollection) {
 			empID=eFromJSON.getEmployeeId();
 			acomId=eFromJSON.getAccommodationVal();
 			lastName=eFromJSON.getLastname();
+			hireDate=new Date(eFromJSON.getHiredate());
+			
 			e.setEmployeeId(empID);
 			e.setFirstname(eFromJSON.getFirstname());
 			e.setMiddlename(eFromJSON.getMiddlename());
@@ -68,13 +74,16 @@ public class EmployeeAction extends Action {
 			e.setSex(eFromJSON.getSex());
 			e.setBirthdate(new Date(eFromJSON.getBirthdate()));
 			System.out.println("BIRTHDATE "+ eFromJSON.getBirthdate());
-			e.setHiredate(new Date(eFromJSON.getHiredate()));
-			
+			e.setHiredate(hireDate);
+			e.setInactiveDate(hireDate);
 			
 			e.setEmpNationalID(eFromJSON.getNationID());
 			e.setMarried(eFromJSON.getFamly());
 			
 			e.setStatus(eFromJSON.getStatus());
+			e.setEmerContactName(eFromJSON.getContName());
+			
+			e.setEmerContactNo(eFromJSON.getContNumber());
 			
 			TypesData tyd=EmployeeFactory.findTypesById(eFromJSON.getResidentVal());
 			e.setResidentType(tyd);
@@ -104,7 +113,13 @@ public class EmployeeAction extends Action {
 				epl.setFullName(lastName);
 				epl.setEmployeeId(e);
 				//flag=EmpPayTaxFactroy.save(epl);
-				flag=EmpPayTaxFactroy.insertEmpPaytax(e,epl);
+				
+				EmployeeSalary empsal=new EmployeeSalary();
+				empsal.setBasesalary(eFromJSON.getBaseSalry());
+				empsal.setEmployeeId(e);
+				empsal.setFromdate(hireDate);
+				empsal.setTodate(hireDate);
+				flag=EmpPayTaxFactroy.insertEmpPaytax(e,epl,empsal);
 			
 		}
 		PrintWriter out = reponse.getWriter();

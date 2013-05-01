@@ -13,6 +13,13 @@
 			<div class="clear"></div>
 		</div>
 
+<div>
+			<div class="label">EMP-NationalID</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
 
 		<div>
 			<div class="label">First name</div>
@@ -42,20 +49,7 @@
 			<div class="clear"></div>
 		</div>
 
-	<div>
-			<div class="label">Employee National ID</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
-			</div>
-			<div class="clear"></div>
-		</div>
-<div>
-			<div class="label">Emergency Contact Name</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="contName"  value="" />
-			</div>
-			<div class="clear"></div>
-		</div>
+
 		<div>
 			<div class="label">Sex</div>
 			<div class="field" >
@@ -73,6 +67,32 @@
 			<div class="clear"></div>
 		</div>
 
+			
+<div>
+<div class="label">Family</div>
+			<label for="family_single">
+				<input  type="radio" id="family_single" value="false" name="family"  />
+				Single
+			</label>
+			<label for="family_married">
+				<input  type="radio" id="family_married" value="true" name="family" />
+				Married
+			</label>
+		<div class="clear"></div>	
+	</div>	
+	<div>
+			<div class="label">Status</div>
+			
+			<label for="statusactive">
+				<input  type="radio" id="active" value="ACTIVE" name="status" />
+			ACTIVE
+			</label>
+				<label for="statusInactive">
+				<input  type="radio" id="inactive" value="IN ACTIVE" name="status"  />
+				IN ACTIVE
+			</label>
+			<div class="clear"></div>
+		</div>
 	
 			
 		<div>
@@ -85,7 +105,14 @@
 		</div>
 
 
-
+<div>
+			<div class="label">Hire date</div>
+			<div class="field">
+				<input type="text" class="k-input k-textbox" 
+					id="hiredate" value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
 		
 		<div>
 			<div class="label">Position</div>
@@ -94,7 +121,16 @@
 			</div>
 			<div class="clear"></div>
 		</div>
+		<div>
+			<div class="label">Basic Salary</div>
+			<div class="field">
 		
+		    <input id="numericSal" type="number" value="" min="0"   />
+		    <span id="s"></span>
+		   	</div>
+			<div class="clear"></div>
+		</div> 
+		    
 		<div> <div class="label">Branch</div>
 			<div class="field">
 				<input id="brachDropDownList"/>
@@ -113,14 +149,7 @@
 			</div>
 			<div class="clear"></div>
 		</div>
-<div >
-			<div class="label">Resident Type </div>
-			<div class="field">
-				<input class="residentDropDownList" id="residentVal"/>
-			</div>
-			<div class="clear"></div>
-		</div>
-		
+
 		
 		
 		
@@ -152,14 +181,13 @@
 			<div class="clear"></div>
 		</div>
 
-<div>
-			<div class="label">Employee National ID</div>
+		<div>
+			<div class="label">Emergency Contact Name</div>
 			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
+				<input type="text" required=required class="k-input k-textbox" id="contName"  value="" />
 			</div>
 			<div class="clear"></div>
 		</div>
-		
 		<div>
 <div class="label">Emergency Contact Number</div>
 			<div class="field">
@@ -169,56 +197,21 @@
 		</div>
 		
 		
-		
-<div>
-<div class="label">Family</div>
-			<label for="family_single">
-				<input  type="radio" id="family_single" value="false" name="family"  />
-				Single
-			</label>
-			<label for="family_married">
-				<input  type="radio" id="family_married" value="true" name="family" />
-				Married
-			</label>
-		<div class="clear"></div>	
-	</div>		
-			
-
-
-
-		<div>
-			<div class="label">Hire date</div>
-			<div class="field">
-				<input type="text" class="k-input k-textbox" 
-					id="hiredate" value="" />
-			</div>
-			<div class="clear"></div>
-		</div>
-
-
-	<div>
-			<div class="label">Status</div>
-			
-			<label for="statusactive">
-				<input  type="radio" id="active" value="ACTIVE" name="status" />
-			ACTIVE
-			</label>
-				<label for="statusInactive">
-				<input  type="radio" id="inactive" value="IN ACTIVE" name="status"  />
-				IN ACTIVE
-			</label>
-			<div class="clear"></div>
-		</div>
-
-
-		<div >
+	<div >
 			<div class="label">AccommodationType </div>
 			<div class="field">
 				<input class="accommodationDropDownList" id="accommodationVal"/>
 			</div>
 			<div class="clear"></div>
 		</div>
-
+<div >
+			<div class="label">Resident Type </div>
+			<div class="field">
+				<input class="residentDropDownList" id="residentVal"/>
+			</div>
+			<div class="clear"></div>
+		</div>
+		
 	</div>
 	<div class="clear"></div>
 
@@ -230,6 +223,14 @@
 
 
 		$(document).ready(function(){
+			var lowsal;
+			var rangeError;
+			var highsal;
+			
+			var postDropDownList;
+			
+			var numericSal;
+			  $("#numericSal").kendoNumericTextBox();
 			//$('input:radio[name=family]').val('false');
 			$("#dp1").hide();
 			var today = new Date();
@@ -250,6 +251,39 @@
 				 empWindow.close();	                	 
              }); 
 			 
+			 $("#postDropDownList").change(function() {
+				 
+				// alert("this"+$(this).val());
+			 var tempPos=$(this).val();
+			 
+			 var costpart = String(tempPos).split("-");
+			 postDropDownList=costpart[0];
+			 
+			 lowsal=parseFloat(costpart[1]);
+			 highsal=parseFloat(costpart[2]);
+			 alert(costpart[0]+"-"+highsal+"-"+lowsal);
+			 }); 
+			 
+			 $("#numericSal").blur(function(){
+				 //   alert("This input field has lost its focus.");
+				    
+				    numericSal=parseFloat($(this).val());
+				//    alert(lowsal+"-----"+highsal);
+				    if((numericSal<lowsal)||(numericSal>highsal))
+				    {
+				    	
+				    	rangeError=false;
+				    	 $("#s").show().text("no"+lowsal+"to"+highsal).fadeOut(5000);
+				    }
+				    else
+				    	{
+				    	rangeError=true;
+				    	 $("#s").show().text("ok"+lowsal+"to"+highsal).fadeOut(5000);
+				    	}
+				    
+				  });
+			 
+			 
 			 
 			 
 			 $("#brachDropDownList").change(function() {
@@ -260,7 +294,7 @@
 					
 					   
 					
-					alert(dId);
+					//alert(dId);
 					var BrachData = JSON.stringify({
 					
 				
@@ -275,12 +309,11 @@
 				        				 contentType : 'application/json; charset=utf-8',
 				        				 cache: false,
 				        				 
-				        				 
-		                    		},
+				        		},
 		                     
 		                    		parameterMap: function (data, type) {
 		                    			if(type = "read"){
-		                    				alert(BrachData+"hello updateData");
+		                    			//	alert(BrachData+"hello updateData");
 		                    				return BrachData;
 		                    			}
 		                    			
@@ -401,8 +434,8 @@
 			$("#saveEmp").bind("click", function() {   
 				
 				
-     				alert("hello");
-                	var id='',status,famly,postDropDownList,nationID,contName,contNumber,
+     				//alert("hello");
+                	var id='',status,famly,nationID,contName,contNumber,
                 	
                 	sex,accommodationVal,residentVal,employeeId, departId,
                 	
@@ -429,7 +462,7 @@
          			contName=$("#contName").val();
          			contNumber=$("#contNumber").val();
          		nationID=$("#nationID").val();
-         		postDropDownList=$("#postDropDownList").val();
+         		postDropDownList=postDropDownList;
          		
          		alert("employeeId"+employeeId+"-----"+"firstname"+firstname
          				
@@ -536,7 +569,8 @@
     					"residentVal":residentVal,
     					"contNumber":contNumber,
     					"contName":contName,
-    					"departId":departId
+    					"departId":departId,
+    					"baseSalry":numericSal
     					
     				 }]);       			
          			
@@ -564,7 +598,7 @@
 		
 			$("#postDropDownList").kendoDropDownList({
 				dataTextField : "name",
-				dataValueField : "id",
+				dataValueField : "coantcatVal",
 				optionLabel: "Select Designation",
 				dataSource : {
 					type : "json",

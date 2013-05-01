@@ -25,6 +25,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import com.openhr.common.PayhumConstants;
+import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.taxengine.DeductionsDeclared;
 import com.openhr.taxengine.DeductionsDone;
 import com.openhr.taxengine.ExemptionsDone;
@@ -99,15 +100,15 @@ public class EmployeePayroll implements Serializable {
     @ManyToOne(optional = false)
     private TypesData accomodationType;
     
-    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private List<DeductionsDeclared> deductionsDeclared;
     
-    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private List<DeductionsDone> deductionsDone;
     
-    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "payrollId", fetch=FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     private List<ExemptionsDone> exemptionsDone;
 
@@ -204,23 +205,6 @@ public class EmployeePayroll implements Serializable {
     public void setGrossSalary(Double grossSalary) {
         this.grossSalary = grossSalary;
     }
-/*
-    public String getBenefitType() {
-        return benefitType;
-    }
-
-    public void setBenefitType(String benefitType) {
-        this.benefitType = benefitType;
-    }
-
-    public Double getBenefitAmnt() {
-        return benefitAmnt;
-    }
-
-    public void setBenefitAmnt(Double benefitAmnt) {
-        this.benefitAmnt = benefitAmnt;
-    }
-*/
 
 	public Double getTaxableIncome() {
 		return this.taxableIncome;
@@ -236,12 +220,16 @@ public class EmployeePayroll implements Serializable {
 		    if(ed.getType().getId() == eType.getId()) {
 				ed.setAmount(ed.getAmount() + exemption);
 				found = true;
+				
+				EmpPayTaxFactroy.updateExemptionsDone(ed);
 				break;
 			}
 		}
 		
 		if(!found) {
-			exemptionsDone.add(new ExemptionsDone(this, eType, exemption));
+			ExemptionsDone ed = new ExemptionsDone(this, eType, exemption); 
+			exemptionsDone.add(ed);
+			EmpPayTaxFactroy.insertExemptionsDone(ed);
 		}
 		
 		totalDeductions += exemption;
@@ -270,12 +258,16 @@ public class EmployeePayroll implements Serializable {
 			if(dd.getType().getId() == entity.getId()) {
 				dd.setAmount(dd.getAmount() + amount);
 				found = true;
+				
+				EmpPayTaxFactroy.updateDeductionsDone(dd);
 				break;
 			}
 		}
 		
 		if(!found) {
-			deductionsDone.add(new DeductionsDone(this, entity, amount));
+			DeductionsDone dd = new DeductionsDone(this, entity, amount); 
+			deductionsDone.add(dd);
+			EmpPayTaxFactroy.insertDeductionsDone(dd);
 		}
 		
 		totalDeductions += amount;
@@ -347,8 +339,8 @@ public class EmployeePayroll implements Serializable {
 	//Testing method
 	private static EmployeePayroll populateTestData() {
 		TypesData accomType = new TypesData();
-		accomType.setDesc(PayhumConstants.FULLY_FURNISHED_ACCOM);
-		accomType.setName(PayhumConstants.FULLY_FURNISHED_ACCOM);
+		accomType.setDesc(PayhumConstants.ACCOM_FULLY_FURNISHED);
+		accomType.setName(PayhumConstants.ACCOM_FULLY_FURNISHED);
 		accomType.setType(PayhumConstants.TYPE_ACCOMODATIONTYPE);
 		
 		EmployeePayroll ePayroll = new EmployeePayroll();

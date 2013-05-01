@@ -15,8 +15,17 @@ public class PositionForm extends ActionForm{
     private String name;
     private double salary;
     private double raisePerYear;
+    private String coantcatVal;
 
-    public String getName() {
+    public String getCoantcatVal() {
+		return coantcatVal;
+	}
+
+	public void setCoantcatVal(String coantcatVal) {
+		this.coantcatVal = coantcatVal;
+	}
+
+	public String getName() {
         return name;
     }
 

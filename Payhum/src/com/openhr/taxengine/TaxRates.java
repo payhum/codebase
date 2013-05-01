@@ -37,8 +37,13 @@ public class TaxRates {
 		TaxRates tr = new TaxRates();
 		for(TaxRatesData trd : taxRatesData) {
 			if(trd.getResidentTypeId().getName().equalsIgnoreCase(PayhumConstants.LOCAL)) {
-				Slabs slab = tr.new Slabs(trd.getIncomeFrom(), trd.getIncomeTo(), trd.getIncomePercentage(), false);
-				tr.addSlab(slab);
+				if(trd.getIncomeFrom().compareTo(trd.getIncomeTo()) == 0) {
+					Slabs slab = tr.new Slabs(trd.getIncomeFrom(), trd.getIncomeTo(), trd.getIncomePercentage(), true);
+					tr.addSlab(slab);	
+				} else {
+					Slabs slab = tr.new Slabs(trd.getIncomeFrom(), trd.getIncomeTo(), trd.getIncomePercentage(), false);
+					tr.addSlab(slab);
+				}
 			} else if(trd.getResidentTypeId().getName().equalsIgnoreCase(PayhumConstants.NON_RESIDENT_FOREIGNER)) {
 				Slabs slab = tr.new Slabs(trd.getIncomeFrom(), trd.getIncomeTo(), trd.getIncomePercentage(), true);
 				tr.addNonResidentForeignerSlabs(slab);

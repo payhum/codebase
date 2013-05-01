@@ -47,7 +47,7 @@ public class TestPayDeatils  extends DispatchAction{
 										eFromJSON.getMiddlename(), eFromJSON.getLastname(),eFromJSON.getSex(),
 										eFromJSON.getBirthdate(), eFromJSON.getHiredate());
 			EmployeePayroll ePayroll = EmpPayTaxFactroy.findEmpPayrollbyEmpID(emp);
-			List<DeductionsDone> eptx=EmpPayTaxFactroy.deductionsDone(ePayroll.getId());
+			List<DeductionsDone> eptx=EmpPayTaxFactroy.deductionsDone(ePayroll);
 			
 			JsonConfig config = new JsonConfig();
 			config.setIgnoreDefaultExcludes(false);
