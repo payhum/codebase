@@ -586,7 +586,7 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
 						pageable : true,
 						columns : [ 
 							{ field : "id", title : "department	Id",template: '#=id ? "D-"+id : "" #', width : 120}, 
-							{ field : "deptName", title : "Department Name", width : 120 },
+							{ field : "deptname", title : "Department Name", width : 120 },
 							{ field : "branchId.name", title : "Branch Name", width : 120 },
 							{ field : "branchId.companyId.name", title : "Company Name", width : 120 },
 							{

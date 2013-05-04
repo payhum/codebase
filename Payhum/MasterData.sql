@@ -41,12 +41,54 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 /*!40000 ALTER TABLE `types` ENABLE KEYS */;
 
 --
+-- Dumping data for table `company`
+--
+
+/*!40000 ALTER TABLE `company` DISABLE KEYS */;
+INSERT INTO `company` (`id`,`companyId`,`name`) VALUES 
+ (1,'C-0001','MasterComp');
+/*!40000 ALTER TABLE `company` ENABLE KEYS */;
+
+--
+-- Dumping data for table `branch`
+--
+
+/*!40000 ALTER TABLE `branch` DISABLE KEYS */;
+INSERT INTO `branch` (`id`,`name`,`address`,`companyId`) VALUES 
+ (1,'Main','Address1', 1);
+/*!40000 ALTER TABLE `branch` ENABLE KEYS */;
+
+--
+-- Dumping data for table `department`
+--
+/*!40000 ALTER TABLE `department` DISABLE KEYS */;
+INSERT INTO `department` (`id`,`deptname`,`branchId`) VALUES 
+ (1,'Administration',1);
+/*!40000 ALTER TABLE `department` ENABLE KEYS */;
+
+--
 -- Dumping data for table `employee`
 --
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
 INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`) VALUES 
- (1,'MAS-0001','Max','A','Leo','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',4,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1');
+ (1,'MAS-0001','Max','A','Leo','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',1,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+
+--
+-- Dumping data for table emp_payroll_view
+--
+/*!40000 ALTER TABLE `emp_payroll` DISABLE KEYS */;
+INSERT INTO `emp_payroll` (`id`, `employeeId`, `FULL_NAME`, `accomodationType`) VALUES
+ (1,1,'JohnBWin',14);
+/*!40000 ALTER TABLE `emp_payroll` ENABLE KEYS */;
+
+--
+-- Dumping data for table licenses
+--
+/*!40000 ALTER TABLE `licenses` DISABLE KEYS */;
+INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`,`licensekey`) VALUES
+(1,'2013-04-01 00:00:00','2014-03-31 00:00:00',1,1,'10-119-87-41109-76');
+/*!40000 ALTER TABLE `licenses` ENABLE KEYS */;
 
 --
 -- Dumping data for table `roles`

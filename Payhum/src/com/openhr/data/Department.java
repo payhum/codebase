@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Table(name = "department", catalog = "payhumrepo", schema = "")
 @NamedQueries({
     @NamedQuery(name = "Department.findAll", query = "FROM Department db"),
-    @NamedQuery(name = "Department.findByBrachId", query = "FROM Department db WHERE branchId = ?"),
+    @NamedQuery(name = "Department.findByBranchId", query = "FROM Department db WHERE branchId = ?"),
     @NamedQuery(name = "Department.findById", query = "FROM Department db WHERE id = ?"),
     @NamedQuery(name = "Department.findByName", query = "SELECT db FROM Department db WHERE db.deptname = ?")})
     @NamedNativeQuery(name = "Department.findLastId", query = "SELECT * FROM Department WHERE Department.id = (SELECT max(Department.id) FROM Department)",

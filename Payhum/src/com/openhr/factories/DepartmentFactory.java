@@ -10,6 +10,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.openhr.data.Branch;
 import com.openhr.data.Department;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
@@ -58,7 +59,9 @@ public class DepartmentFactory implements Serializable {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Department.findByBranchId");
-		query.setInteger(0, branchId);
+		Branch branch = new Branch();
+		branch.setId(branchId);
+		query.setParameter(0, branch);
 		comps = query.list();
 		session.getTransaction().commit();
 
