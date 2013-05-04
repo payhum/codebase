@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -32,7 +34,7 @@ public class ReadApprovedLeaveAction extends Action {
         try {
         	 List<LeaveRequest> applicationList = LeaveRequestFactory.findByEmployeeId(empId);
         	 List<LeaveApproval> list = new ArrayList<LeaveApproval>();
-        	 
+        	 System.out.println("Size is - " + applicationList.size());	 
         	 for(int i=0;i<applicationList.size();i++){
         		 List<LeaveApproval> appLeaveList = LeaveRequestFactory.findByLeaveId(applicationList.get(i).getId());
         		 if(appLeaveList != null && !appLeaveList.isEmpty()) {
@@ -43,11 +45,17 @@ public class ReadApprovedLeaveAction extends Action {
 	        		 }
         		 }
         	 }
-        	 result = JSONArray.fromObject(list);
+        	 
+        	 JsonConfig config = new JsonConfig();
+			 config.setIgnoreDefaultExcludes(false);
+			 config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			 
+        	 result = JSONArray.fromObject(list, config);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
+        System.out.println(result);
         response.setContentType("application/json; charset=utf-8");
         if(result != null) {
         	PrintWriter out = response.getWriter();

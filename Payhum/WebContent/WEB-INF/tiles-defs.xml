@@ -31,34 +31,34 @@
 	<!-- Common Module Containers -->
 	<definition name="index" extends="common">
 		<put name="navigation" value="login.navigation" />
-		<put name="title" value="Payhum Login" />
+		<put name="title" value="MPTS Login" />
 		<put name="body" value="/pages/login/login.jsp" />
 	</definition>
 
 
 	<definition name="adminHome" extends="common">
 		<put name="navigation" value="admin.navigation" />
-		<put name="title" value="Payhum Administration Page" />
+		<put name="title" value="MPTS Administration Page" />
 		<put name="body" value="/pages/admin/home.jsp" />
 	</definition>
 
 
 	<definition name="hrHome" extends="common">
 		<put name="navigation" value="hr.navigation" />
-		<put name="title" value="Payhum Human Resources Page" />
+		<put name="title" value="MPTS Human Resources Page" />
 		<put name="body" value="/pages/hr/home.jsp" />
 	</definition>
 
 
 	<definition name="accountingHome" extends="common">
 		<put name="navigation" value="accounting.navigation" />
-		<put name="title" value="Payhum Accounting Page" />
+		<put name="title" value="MPTS Accounting Page" />
 		<put name="body" value="/pages/accounting/home.jsp" />
 	</definition>
 
 	<definition name="memberHome" extends="common">
 		<put name="navigation" value="member.navigation" />
-		<put name="title" value="Payhum Employee Self Service Page" />
+		<put name="title" value="MPTS Employee Self Service Page" />
 		<put name="body" value="/pages/member/home.jsp" />
 	</definition>
 	<!-- End of Common Module Containers -->

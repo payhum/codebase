@@ -209,8 +209,8 @@ public class EmployeeCommanAction extends DispatchAction
 	        
 	        empban.setAccountNo(rFromJSON.getAccNo());
 	        empban.setBankBranch(rFromJSON.getBankBranch());
-	        	
-	        	empban. setBankName(rFromJSON.getBankName());
+	        empban.setBankName(rFromJSON.getBankName());
+	        empban.setRoutingNo(rFromJSON.getRoutingNo());
 	        
 	        empban.setId(rFromJSON.getId());
 	

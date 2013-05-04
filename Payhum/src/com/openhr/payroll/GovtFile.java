@@ -15,10 +15,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
+import com.openhr.data.ConfigData;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
+import com.openhr.factories.ConfigDataFactory;
 
 
 public class GovtFile extends Action {
@@ -28,10 +31,12 @@ public class GovtFile extends Action {
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception { 
-		// TODO Get the company id
-		Integer compId = 1;
+		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_COMPANY); 
+		int compId = Integer.parseInt(config.getConfigValue());
+		
 		List<Company> comps = CompanyFactory.findById(compId);
-		String compName = comps.get(0).getName();
+		Company comp = comps.get(0);
+		String compName = comp.getName();
 		compName = compName.replace(" ", "_");
 		
 		Date now = new Date();
@@ -51,28 +56,50 @@ public class GovtFile extends Action {
 		
 		// Columns in the file will be:
 		// EmployeeName,EmpNationalID,TaxAmount
+		Double totalAmt = 0D;
+		SimpleDateFormat sdf = new SimpleDateFormat("MMMyyyy");
 		
-		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByProcessedDate(cal.getTime());
+		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(comp, cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
-		
+		allEmpPayStr.append("Company Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Company ID");
+		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Employee Name");
 		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Employee ID");
+		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Employee National ID");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Payroll Cycle");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Amount (MMK)");
 		allEmpPayStr.append("\n");
 		
 		for(CompanyPayroll compPay : compPayroll) {
 			StringBuilder empPayStr = new StringBuilder();
+			empPayStr.append(compPay.getCompanyId().getName());
+			empPayStr.append(COMMA);
+			empPayStr.append(compPay.getCompanyId().getId());
+			empPayStr.append(COMMA);			
 			empPayStr.append(compPay.getEmpFullName());
 			empPayStr.append(COMMA);
+			empPayStr.append(compPay.getEmployeeId());
+			empPayStr.append(COMMA);
 			empPayStr.append(compPay.getEmpNationalID());
+			empPayStr.append(COMMA);
+			empPayStr.append(sdf.format(compPay.getProcessedDate()));
 			empPayStr.append(COMMA);
 			empPayStr.append(new DecimalFormat("###.##").format(compPay.getTaxAmount()));
 			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);
+			
+			totalAmt += compPay.getTaxAmount();
 		}
+		
+		allEmpPayStr.append("\n,,,,,TOTAL:,");
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalAmt));
 		
 		OutputStream os = response.getOutputStream();
 		os.write(allEmpPayStr.toString().getBytes());

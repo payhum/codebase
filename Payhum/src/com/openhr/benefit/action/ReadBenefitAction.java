@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -26,7 +28,12 @@ public class ReadBenefitAction extends Action {
 		JSONArray result = null;
         try {
             List<Benefit> benefits = BenefitFactory.findAll();
-            result = JSONArray.fromObject(benefits);
+            
+            JsonConfig config = new JsonConfig();
+            config.setIgnoreDefaultExcludes(false);
+            config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+            
+            result = JSONArray.fromObject(benefits, config);
         } catch (Exception e) {
             e.printStackTrace();
         }

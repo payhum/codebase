@@ -9,7 +9,7 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;  
 /**
  *
- * @author xmen
+ * @author Vijay
  */
 @Entity
 @Table(name = "benefit", catalog = "payhumrepo", schema = "")

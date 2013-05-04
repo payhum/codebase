@@ -1,11 +1,13 @@
 package com.openhr.mleave.action;
 
 import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.struts.action.Action;
@@ -44,17 +46,30 @@ public class LeaveApplicationAction extends Action {
 		long endDate = new Date(leaveTo).getTime();
 		long diffTime = endDate - startDate;
 		int diffDays = (int) diffTime / (1000 * 60 * 60 * 24);
-		Employee emp = EmployeeFactory.findById(employeeId).get(0);
-		LeaveType leaveType = LeaveTypeFactory.findById(typeLeave).get(0);
-		LeaveRequest leaveRequest = new LeaveRequest();
-		leaveRequest.setDescription(description);
-		leaveRequest.setEmployeeId(emp);
-		leaveRequest.setLeaveDate(new Date(leaveFrom));
-		leaveRequest.setReturnDate(new Date(leaveTo));
-		leaveRequest.setLeaveTypeId(leaveType);
-		leaveRequest.setNoOfDays(diffDays);
-		leaveRequest.setStatus(0);
-		LeaveRequestFactory.insert(leaveRequest);
+		
+		int a[] = {0};
+		if(diffDays < 0) {
+			a[0] = 0;
+		} else {
+			Employee emp = EmployeeFactory.findById(employeeId).get(0);
+			LeaveType leaveType = LeaveTypeFactory.findById(typeLeave).get(0);
+			LeaveRequest leaveRequest = new LeaveRequest();
+			leaveRequest.setDescription(description);
+			leaveRequest.setEmployeeId(emp);
+			leaveRequest.setLeaveDate(new Date(leaveFrom));
+			leaveRequest.setReturnDate(new Date(leaveTo));
+			leaveRequest.setLeaveTypeId(leaveType);
+			leaveRequest.setNoOfDays(diffDays);
+			leaveRequest.setStatus(0);
+			LeaveRequestFactory.insert(leaveRequest);
+		}
+		
+		JSONArray result = JSONArray.fromObject(a);
+    	response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+		
 		return null;
 	}
 }

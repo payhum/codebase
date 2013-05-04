@@ -43,6 +43,7 @@ public class ReadCompanyAction extends Action {
 
 		System.out.println("It took " + diff
 				+ " milli seconds to read the results");
+		System.out.println(result);
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		if (result == null) {

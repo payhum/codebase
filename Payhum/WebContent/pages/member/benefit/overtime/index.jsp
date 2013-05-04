@@ -1,40 +1,38 @@
 <style>
-.displayClass{
-	display : none;
+.displayClass {
+	display: none;
 }
 </style>
 
-	<div id="benefitTabs">
-		<ul> <li class="k-state-active">Make Request</li> </ul>
-	 	<div>
-	
+<div id="benefitTabs">
+	<div>
 		<div class="k-content">
-	 		<div class="legend">
-				<div style="float:right">
-					<input type="submit" value="New" id="addOverTime"/>
-					<input type="submit" id="deleteOverTime" value="Delete"/>
-					<input type="submit" value="Edit" style="display : none !important;"/>
+			<div class="legend">
+				<div style="float: right">
+					<input type="submit" value="New" id="addOverTime" /> <input
+						type="submit" id="deleteOverTime" value="Delete" /> <input
+						type="submit" value="Edit" style="display: none !important;" />
 				</div>
-				
-				<div style="float:left">
+
+				<div style="float: left">
 					<p>Your Overtime History</p>
 				</div>
-					<div style="clear:both"></div>
-				</div><br/><br/>
-				
-				<div id="addOverTimeDiv" class="displayClass">
-	 					<span><label>Request Date : &nbsp;&nbsp;</label></span>
-						<span><input type="text" name="leaveDate" id="requestOnDate" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 					<span><label>Hours : &nbsp;&nbsp;</label></span>
-						<span><input type="text" name="noofhours" id="noOfHours"/></span><br/><br/>
-	    				<div style="float:right;">
-		  					<span><input type="submit" id="overTimeReq" value="Apply"/></span>&nbsp;&nbsp;
-							<span><input type="button" id="canceOverTime" value="Cancel"/></span>
-	 					</div>
-	  			</div><br/><br/>
-	  			<div id="grid1"> </div>
-	 		</div>
+				<div style="clear: both"></div>
+			</div>
+			<div id="addOverTimeDiv" class="displayClass">
+				<span><label>Request Date : &nbsp;&nbsp;</label></span> <span><input
+					type="text" name="leaveDate" id="requestOnDate" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<span><label>Hours : &nbsp;&nbsp;</label></span> <span><input
+					type="text" name="noofhours" id="noOfHours" /></span><br /> <br />
+				<div style="float: right;">
+					<span><input type="submit" id="overTimeReq" value="Apply" /></span>&nbsp;&nbsp;
+					<span><input type="button" id="canceOverTime" value="Cancel" /></span>
+				</div>
+			</div>
+			<br /> <br />
+			<div id="grid1"></div>
 		</div>
+	</div>
 </div>
 <script>
 	
@@ -64,29 +62,7 @@ function getEmployeeOverTimes(){
         }); 
     }	
    		
-		
-		var leaveApprovalModel = kendo.data.Model.define({
-      	id: "id",            
-          fields: {
-          	overTimeDate : {
-          		type : "date"
-          	},
-          	 
-          	noOfHours : {
-          		type : "String"
-          	},
-          	
-          	status : {
-      			type : "string"
-      		},
-      		 
-      		ApprovedDate : {
-          		type : "date"
-          	},
-      		
-          }
-      });		
-		
+		 
 		$("#grid1").kendoGrid({
 			dataSource : {
 				transport : {
@@ -98,17 +74,14 @@ function getEmployeeOverTimes(){
                   parameterMap: function(options, operation) {
                       if (operation !== "read" && options.models) {
                       	$.each(options.models, function(){
-                      		/*this.leaveDate = new Date(this.leaveDate);
-                      		this.returnDate = new Date(this.returnDate);*/
+                      		 
                       	});
                           return JSON.stringify(options.models);
                       }
                   }
 				},
-				schema : {
-					model :leaveApprovalModel
-				},
-				batch : true,
+				
+			  batch : true,
               pageSize : 10
 			},
 			columns: [
@@ -185,23 +158,19 @@ function getEmployeeOverTimes(){
   	  	if(status1 == "New"){
 		  	 $.ajax({
 		   		url 		: "<%=request.getContextPath() + "/do/DeleteOverTime"%>",
-		    	type 		: 'POST',
-				dataType 	: 'json',
+				type : 'POST',
+				dataType : 'json',
 				contentType : 'application/json; charset=utf-8',
-				data 		: deleteOverTime,
-				success     : function(){
-	 				$("#grid1").empty();
-	 				getEmployeeOverTimes();
+				data : deleteOverTime,
+				success : function() {
+					$("#grid1").empty();
+					getEmployeeOverTimes();
 				}
-		 	 }); 
-  	  	} else {
-  	  		alert("Approved/Rejected Overtime records cannot be deleted.");
-  	  	} 
-  	});
-	
-	
-	
-	
+			});
+		} else {
+			alert("Approved/Rejected Overtime records cannot be deleted.");
+		}
+	});
 </script>
 
 <script id="searchByNameAutoComplete" type="text/x-kendo-tmpl">
@@ -211,8 +180,8 @@ function getEmployeeOverTimes(){
 	</div>
 </script>
 <style>
-div.autoCompleteDIV{
+div.autoCompleteDIV {
 	vertical-align: middle;
-	display:block;
+	display: block;
 }
 </style>

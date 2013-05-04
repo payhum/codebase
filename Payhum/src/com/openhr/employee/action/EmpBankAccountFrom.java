@@ -13,6 +13,8 @@ public class EmpBankAccountFrom extends ActionForm {
 	
 	private String accNo;
 	
+	private String routingNo;
+	
 	private Integer empId;
 
 	public Integer getId() {
@@ -53,6 +55,14 @@ public class EmpBankAccountFrom extends ActionForm {
 
 	public void setEmpId(Integer empId) {
 		this.empId = empId;
+	}
+
+	public String getRoutingNo() {
+		return routingNo;
+	}
+
+	public void setRoutingNo(String routingNo) {
+		this.routingNo = routingNo;
 	}
 	
 	

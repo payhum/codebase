@@ -33,6 +33,7 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	private Integer positionId;
 	private String status;
 
+
 	private String contName;
 
 	private String contNumber;
@@ -42,8 +43,6 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	private String nationID;
 
 	private Integer accommodationVal;
-
-	private Integer departId;
 
 	private Double baseSalry;
 
@@ -67,6 +66,17 @@ public class EmployeeForm extends ActionForm implements Serializable {
 
 	private String empNationalID;
 
+	
+	
+	private Long count;
+	public Long getCount() {
+	return count;
+}
+
+public void setCount(Long count) {
+	this.count = count;
+}
+
 	public String getEmerContactName() {
 		return emerContactName;
 	}
@@ -83,14 +93,27 @@ public class EmployeeForm extends ActionForm implements Serializable {
 		this.emerContactNo = emerContactNo;
 	}
 
-	public Date getInactiveDate() {
-		return inactiveDate;
+	public long getInactiveDate() {
+		if(this.inactiveDate!=null)
+		{
+			return inactiveDate.getTime();
+			
+		}
+		else
+		{return 0;}
+		
 	}
 
 	public void setInactiveDate(Date inactiveDate) {
 		this.inactiveDate = inactiveDate;
 	}
 
+
+	public void setInactiveDate(long inactiveDate) {
+		this.inactiveDate =new Date(inactiveDate);
+	}
+	
+	
 	public Position getPositionIds() {
 		return positionIds;
 	}
@@ -298,13 +321,4 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	public Integer getDepartId() {
-		return departId;
-	}
-
-	public void setDepartId(Integer departId) {
-		this.departId = departId;
-	}
-
 }

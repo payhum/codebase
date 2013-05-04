@@ -248,23 +248,23 @@ INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`,`licens
 -- Dumping data for table employee_account
 --
 /*!40000 ALTER TABLE `employee_account` DISABLE KEYS */;
-INSERT INTO `employee_account` (`id`, `employeeId`, `bankName`, `bankBranch`,`accountNo`) VALUES
- (1,2,'First Bank','J Colony','12345'),
- (2,3,'Yes Bank','Chruch Street','53421'),
- (3,4,'Citi Bank','Marks Road','00921312'),
- (4,5,'First Bank','J Colony','12345'),
- (5,6,'First Bank','J Colony','3244'),
- (6,7,'First Bank','J Colony','234'),
- (7,8,'First Bank','J Colony','34534'),
- (8,12,'First Bank','J Colony','45645'),
- (9,13,'First Bank','J Colony','2342'),
- (10,14,'First Bank','J Colony','45654'),
- (11,15,'First Bank','J Colony','231'),
- (12,16,'First Bank','J Colony','2342'),
- (13,17,'First Bank','J Colony','12312'),
- (14,18,'First Bank','J Colony','23424'),
- (15,19,'First Bank','J Colony','45456'),
- (16,20,'Yes Bank','J Colony','43534');
+INSERT INTO `employee_account` (`id`, `employeeId`, `bankName`, `bankBranch`,`accountNo`,`routingNo`) VALUES
+ (1,2,'First Bank','J Colony','12345','123'),
+ (2,3,'Yes Bank','Chruch Street','53421','123'),
+ (3,4,'Citi Bank','Marks Road','00921312','123'),
+ (4,5,'First Bank','J Colony','12345','123'),
+ (5,6,'First Bank','J Colony','3244','123'),
+ (6,7,'First Bank','J Colony','234','123'),
+ (7,8,'First Bank','J Colony','34534','123'),
+ (8,12,'First Bank','J Colony','45645','123'),
+ (9,13,'First Bank','J Colony','2342','123'),
+ (10,14,'First Bank','J Colony','45654','123'),
+ (11,15,'First Bank','J Colony','231','123'),
+ (12,16,'First Bank','J Colony','2342','123'),
+ (13,17,'First Bank','J Colony','12312','123'),
+ (14,18,'First Bank','J Colony','23424','123'),
+ (15,19,'First Bank','J Colony','45456','123'),
+ (16,20,'Yes Bank','J Colony','43534','123');
 /*!40000 ALTER TABLE `employee_account` ENABLE KEYS */;
 
 --

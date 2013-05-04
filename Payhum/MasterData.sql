@@ -155,5 +155,6 @@ INSERT INTO `paycycle` (`id`, `name`, `selected`) VALUES
 --
 /*!40000 ALTER TABLE `payhum_config` DISABLE KEYS */;
 INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
-('EMODE','MMODE');
+('EMODE','MMODE'),
+('PCOMP','0');
 /*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;

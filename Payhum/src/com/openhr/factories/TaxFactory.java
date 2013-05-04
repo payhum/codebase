@@ -1,6 +1,7 @@
 package com.openhr.factories;
 
 import java.io.Serializable;
+
 import java.util.List;
 
 import org.hibernate.Query;
@@ -85,13 +86,10 @@ public class TaxFactory implements Serializable {
 
 		try {
 			TaxRatesData trd = null;
-
-			if (trds.getId() != null) {
-				trd = (TaxRatesData) session.get(TaxRatesData.class,
-						trds.getId());
+ 			if (trds.getId() != null) {
+				trd = (TaxRatesData) session.get(TaxRatesData.class,trds.getId());
 			}
-
-			trd.setIncomePercentage(trds.getIncomePercentage());
+ 			trd.setIncomePercentage(trds.getIncomePercentage());
 
 			session.update(trd);
 			session.getTransaction().commit();
@@ -190,4 +188,14 @@ public class TaxFactory implements Serializable {
 		
 		return null;
 	}
+	
+	public static List<TaxRatesData> findAllTaxByType(int typeId) {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("TaxRatesData.findByResidentType");
+		query.setInteger(0, typeId);
+		trd = query.list();
+		session.getTransaction().commit();
+ 		return trd;
+ 	}
 }

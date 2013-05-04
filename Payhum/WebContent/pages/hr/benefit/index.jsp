@@ -1,6 +1,10 @@
 <%@include file="../../common/jspHeader.jsp" %>
-<div id="grid">
-</div>
+<script>
+	var addBengfitPath = "<%=request.getContextPath()%>"+ "/pages/hr/benefit/addBenfit.jsp";
+	var empWindow;
+</script>
+<div id="grid"> </div>
+<div id="benfit"> </div>
 <script>
 	var isCreating = false;
     $(document).ready(function(e){
@@ -87,13 +91,13 @@
 				{ title : "Photo", template: '<img  width=70 height=60 src="#=employeeId ? "/OpenHR" + employeeId.photo: ""#"/>',
 						width : 60, filterable : false, editable : false, sortable : false },
                 { field : "employeeId", title : "Employee Id",  editor : employeeDropDownEditor, template: '#=employeeId ? employeeId.employeeId: ""#', width : 120 },
-                { title : "Full name",template: '#=employeeId ? employeeId.firstname +" "+employeeId.middlename +" "+employeeId.lastname: ""#', width : 180 },               
+                { title : "Full name",  template: '#=employeeId ? employeeId.firstname +" "+employeeId.middlename +" "+employeeId.lastname: ""#', width : 180 },               
                 { field : "typeId" , title : "Benefit Type",  editor : benefitTypeDropDownEditor, template: '#=typeId ? typeId.name: ""#', width : 120 },
                 { field: "amount", title:"Amount", width: 100}
                 
             ], 
-            toolbar : [{"name" : "create",text : "Add Assign Benefit"}], 
-            editable: "popup",
+            toolbar : [{"name" : "AddAssignBenfit",text : "Add Assign Benefit", className : "AddBenfit"}], 
+           editable: "popup", 
             sortable: true,
             scrollable: true,
             filterable : true,
@@ -101,6 +105,33 @@
             pageable : true
             
         }).data('kendoGrid'); 
+        
+        
+        $("#grid").delegate(".AddBenfit", "click", function(e) {
+        	e.preventDefault();	
+ 	         createBenfitPopup();
+      		 empWindow.open();
+      		 empWindow.center();        
+	         });
+	         
+	         
+        createBenfitPopup = function (){   
+	        	if(empWindow)
+	        		empWindow.content("");
+	        	 	empWindow = $("#benfit").kendoWindow({
+	                 title: "Add Assign Benfit",
+	                 content: addBengfitPath,
+	                 modal : true,
+	                 resizable: false,
+	                 width : 650
+	             }).data("kendoWindow");
+	        	 
+	        	 empWindow.open();
+	        	$(".k-window-title").attr('style', "display:none !important;");
+	        	 
+	        	 empWindow.center();
+	         };
+	       
         
         
         
@@ -116,6 +147,8 @@
                 }
             }); 
         }
+        
+        
         
        
         function benefitTypeDropDownEditor(container, options) {        	

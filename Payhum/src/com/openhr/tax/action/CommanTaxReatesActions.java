@@ -10,171 +10,127 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
-import com.openhr.data.Employee;
 import com.openhr.data.TaxRatesData;
-import com.openhr.employee.form.EmployeeForm;
-import com.openhr.factories.EmployeeFactory;
 import com.openhr.factories.TaxFactory;
 
-public class CommanTaxReatesActions extends DispatchAction{
-
-	
-	
-	public ActionForward getTaxRate(ActionMapping map, ActionForm form,
-	
-			HttpServletRequest request, HttpServletResponse response)
-	
-			throws Exception {
-	
-		 JSONArray result = null;
-		 try {
-			 TaxRatesData  txd=TaxFactory.findFromIncome();
-			 
-			 List<TaxRatesData> txl=new ArrayList<TaxRatesData>();
-			 if(txd==null)
-			 {
-				 txd=new TaxRatesData();
-				 txd.setIncomeFrom(1.0);
-				 
-			 }
-			 
-			 txl.add(txd);
-			 
-			 
-			 result = JSONArray.fromObject(txl);
-			 
-		 }
-		catch(Exception e)
-		{
+public class CommanTaxReatesActions extends DispatchAction {
+ 	public ActionForward getTaxRate(ActionMapping map, ActionForm form,
+ 	HttpServletRequest request, HttpServletResponse response) throws Exception {
+ 		JSONArray result = null;
+		try {
+			TaxRatesData txd = TaxFactory.findFromIncome();
+ 			List<TaxRatesData> txl = new ArrayList<TaxRatesData>();
+			if (txd == null) {
+				txd = new TaxRatesData();
+				txd.setIncomeFrom(1.0);
+ 			}
+ 			txl.add(txd);
+ 			result = JSONArray.fromObject(txl);
+ 		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-		 
-		 response.setContentType("application/json; charset=utf-8");
-			PrintWriter out = response.getWriter();
-			out.print(result.toString());
-			out.flush();
+ 		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+ 		return map.findForward("");
+  	}
 
-			return map.findForward("");
-		
-			}
-	
-	
-	public ActionForward getAllTaxRates(ActionMapping map, ActionForm form,
-			
-			HttpServletRequest request, HttpServletResponse response)
-	
-			throws Exception {
-	
-		 JSONArray result = null;
-		 try {
-			
-			 
-			 List<TaxRatesData> txl=TaxFactory.findAll();
-		
-			 
-			 
-			 result = JSONArray.fromObject(txl);
-			 
-		 }
-		catch(Exception e)
-		{
+	public ActionForward getAllTaxRates(ActionMapping map, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+ 		JSONArray result = null;
+		try {
+  			List<TaxRatesData> txl = TaxFactory.findAllTaxByType(11);
+  			result = JSONArray.fromObject(txl);
+ 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		 
-		 response.setContentType("application/json; charset=utf-8");
-			PrintWriter out = response.getWriter();
-			out.print(result.toString());
-			out.flush();
+ 		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+ 		return map.findForward("");
+ 	}
 
-			return map.findForward("");
-		
-			}
-	
-	
-	
-	public ActionForward upDateTaxRate(ActionMapping map,
-            ActionForm form,
-            HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        //EmployeeForm EmployeeForm = (EmployeeForm) form;
-		BufferedReader bf = request.getReader();
+	public ActionForward upDateTaxRate(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+ 		BufferedReader bf = request.getReader();
 		StringBuffer sb = new StringBuffer();
 		String line = null;
 		JSONArray result = null;
-		boolean flag=false;
+		boolean flag = false;
 		while ((line = bf.readLine()) != null) {
 			sb.append(line);
 		}
 		JSONArray json = JSONArray.fromObject(sb.toString());
-		Collection<TaxRatesData> aCollection = JSONArray.toCollection(json, TaxRatesData.class);
-		
-		System.out.println("Employee JSON "+json.toString());
-		
-		//Employee e = new Employee();
-		for (TaxRatesData eFromJSON : aCollection) {
-			flag=TaxFactory.updatePercent(eFromJSON);
-			
-			// result = JSONArray.fromObject(txl);
+		Double percentage = 0.0;
+		Collection<TaxRatesData> aCollection = JSONArray.toCollection(json,TaxRatesData.class);
+		if(json.size() != 0){
+			JSONObject json1 = (JSONObject) json.get(0);
+			String percent = json1.getInt("incomePersent")+"";
+			percentage = Double.parseDouble(percent);
 		}
-	//	response.setContentType("application/json; charset=utf-8");
-		PrintWriter out = response.getWriter();
+ 		
+ 		
+ 		
+		for (TaxRatesData eFromJSON : aCollection) {
+			eFromJSON.setIncomePercentage(percentage);
+ 			flag = TaxFactory.updatePercent(eFromJSON);
+ 
+		}
+ 		PrintWriter out = response.getWriter();
 		out.print(flag);
 		out.flush();
 
 		return map.findForward("");
-	   
+
 	}
-	
-	
-	
-	public ActionForward deleteTaxRate(ActionMapping map,
-            ActionForm form,
-            HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        //EmployeeForm EmployeeForm = (EmployeeForm) form;
-		BufferedReader bf = request.getReader();
+
+	public ActionForward deleteTaxRate(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+ 		BufferedReader bf = request.getReader();
 		StringBuffer sb = new StringBuffer();
 		String line = null;
 		JSONArray result = null;
-		
-		Double useIncomeFrom=null;
-		Double useIncomeTo=null;
-		boolean flag=false;
+
+		Double useIncomeFrom = null;
+		Double useIncomeTo = null;
+		boolean flag = false;
 		while ((line = bf.readLine()) != null) {
 			sb.append(line);
 		}
 		JSONArray json = JSONArray.fromObject(sb.toString());
-		Collection<TaxRatesData> aCollection = JSONArray.toCollection(json, TaxRatesData.class);
-		
-		System.out.println("Employee JSON "+json.toString());
-		
-		//Employee e = new Employee();
-		for (TaxRatesData eFromJSON : aCollection) {
-			useIncomeFrom=eFromJSON.getIncomeFrom();
-			useIncomeTo=eFromJSON.getIncomeTo()+1;
-			
-			if(eFromJSON.getIncomeTo()!=-1)
-			{
-				
-				if(TaxFactory.delete(eFromJSON))
-				{flag=TaxFactory.upDateDelete(useIncomeTo,useIncomeFrom);}
-				
+		Collection<TaxRatesData> aCollection = JSONArray.toCollection(json,
+				TaxRatesData.class);
+
+		System.out.println("Employee JSON " + json.toString());
+  		for (TaxRatesData eFromJSON : aCollection) {
+			useIncomeFrom = eFromJSON.getIncomeFrom();
+			useIncomeTo = eFromJSON.getIncomeTo() + 1;
+
+			if (eFromJSON.getIncomeTo() != -1) {
+
+				if (TaxFactory.delete(eFromJSON)) {
+					flag = TaxFactory.upDateDelete(useIncomeTo, useIncomeFrom);
+				}
+
 			}
-			
-			// result = JSONArray.fromObject(txl);
-		}
-	//	response.setContentType("application/json; charset=utf-8");
-		PrintWriter out = response.getWriter();
+
+ 		}
+ 		PrintWriter out = response.getWriter();
 		out.print(flag);
 		out.flush();
 
 		return map.findForward("");
-	   
+
 	}
 }

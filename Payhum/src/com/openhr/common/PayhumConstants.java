@@ -47,4 +47,11 @@ public class PayhumConstants {
 	public static final String MONTHLY = "Monthly";
 	public static final String BIWEEKLY = "Bi-weekly";
 	public static final String WEEKLY = "Weekly";
+	
+	public static final String EMODE = "EMODE";
+	public static final String CMODE = "CMODE";
+	public static final String MMODE = "MMODE";
+	
+	public static final String PROCESS_COMPANY = "PCOMP";
+	public static final String PROCESS_BRANCH = "PBRANCH";
 }

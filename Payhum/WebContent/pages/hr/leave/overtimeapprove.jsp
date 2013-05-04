@@ -1,50 +1,12 @@
-<%@include file="../../common/jspHeader.jsp" %>
+<%@include file="../../common/jspHeader.jsp"%>
 <h2 class="legend">Approve Leave form</h2>
 
-<div id="grid"> </div>
+<div id="grid"></div>
 
 <script>
 
 	function getLeaveRequests(){
-		var leaveApprovalModel = kendo.data.Model.define({
-        	id: "id",            
-            fields: {
-            	overTimeDate : {
-              		type : "date"
-              	},
-              	 
-              	noOfHours : {
-              		type : "String"
-              	},
-              	
-              	status : {
-          			type : "string"
-          		},
-          		 
-                employeeId:{
-        			defaultValue : {
-        				id : 0,
-        				employeeId : "",
-        				firstname : "",
-        				middlename : "",
-        				lastname : "",        				
-        				sex : "",
-        				hiredate : "",
-        				birthdate : "",
-        				positionId : {
-        					defaultValue : {
-        						id : 0,
-        						name : "",
-        						salary : 0,
-        						raisePerYear : 0
-        					}
-        				},
-        				photo : "",
-        			}
-        		}
-        		 
-            }
-        });		
+		 
 		
 		$("#grid").kendoGrid({
 			dataSource : {
@@ -64,9 +26,7 @@
                         }
                     }
 				},
-				schema : {
-					model :leaveApprovalModel
-				},
+				 
 				batch : true,
                 pageSize : 10
 			},

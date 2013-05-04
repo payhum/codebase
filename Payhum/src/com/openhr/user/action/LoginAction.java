@@ -10,10 +10,13 @@ import java.util.List;
 
 import com.openhr.Config;
 import com.openhr.common.OpenHRAction;
+import com.openhr.common.PayhumConstants;
+import com.openhr.data.ConfigData;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.LeaveType;
 import com.openhr.data.Users;
+import com.openhr.factories.ConfigDataFactory;
 import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.EmployeeFactory;
 import com.openhr.factories.LeaveTypeFactory;
@@ -41,11 +44,16 @@ public class LoginAction extends OpenHRAction {
 		if (UsersFactory.findByUserName(loginForm.getUsername()).size() > 0) {
 			user = UsersFactory.findByUserName(loginForm.getUsername()).get(0);
 		}
+		
+		ConfigData payhumConfig = ConfigDataFactory.findByName(PayhumConstants.EMODE);
+		
 		if (null != user) {			
 			if (user.getPassword().equalsIgnoreCase(loginForm.getPassword())) {
 				
 				request.getSession().setAttribute("loggedUser",
 						loginForm.getUsername());
+				request.getSession().setAttribute("loggedRole",
+						loginForm.getRole());
 				Users u = UsersFactory.findByUserName(loginForm.getUsername())
 						.get(0);
 				String s = u.getEmployeeId().getEmployeeId();
@@ -80,7 +88,12 @@ public class LoginAction extends OpenHRAction {
 					return map.findForward("finance");
 				}
 				else if (loginForm.getRole().equalsIgnoreCase("MasterAdmin")) {
-					return map.findForward("masteradmin");
+					if(payhumConfig.getConfigValue().equalsIgnoreCase(PayhumConstants.MMODE)) {
+						return map.findForward("masteradmin");
+					} else {
+						request.getSession().setAttribute("loggedUser", null);
+						return map.findForward("login");
+					}
 				}
 			}
 		}else{

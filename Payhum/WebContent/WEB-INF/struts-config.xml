@@ -128,10 +128,32 @@
     <forward name="failure" path="/UserSuccess.jsp" />
     
 </action>
-						<!-- End PayperiodActions actions  -->
-		
-		
-		
+						<!-- End PayperiodActions actions   -->
+						
+						<!--  start
+		  ReadEmployeeAccumulators -->
+		<action path="/ReadEmployeeAccumulators" parameter="parameter"
+    type="com.openhr.employeereport.action.ReadEmployeeAccumulators">
+    <forward name="success" path="/UserSuccess.jsp" />
+    <forward name="failure" path="/UserSuccess.jsp" />
+    </action>
+					<!-- end 
+		  ReadEmployeeAccumulators -->
+		  
+		  
+		  
+		  
+		  	 <!-- ReadEmployeeAccumulators -->
+		<action path="/ReadEmployeEarnsreport" parameter="parameter"
+    type="com.openhr.employeereport.action.ReadEmployeEarnsreport">
+    <forward name="success" path="/UserSuccess.jsp" />
+    <forward name="failure" path="/UserSuccess.jsp" />
+    </action>
+					<!-- end 
+		  ReadEmployeeAccumulators -->
+		  
+		  
+		  
 		<!--Member Site Links -->
 		<action path="/MLeave" forward="mleave.form" />
 		<action path="/MAccount" forward="maccount.form" />
@@ -335,6 +357,11 @@
 			type="com.openhr.employee.action.ReadEmployeeAction" input="employee.form">
 			<forward name="continue" path="employee.form" />
 		</action>
+		
+		<action path="/ReadEmployeeDetails" name="employeeForm"
+			type="com.openhr.employee.action.ReadEmployeeDetails" input="employee.form">
+			<forward name="continue" path="employee.form" />
+		</action>
 
 		<action path="/UpdateEmployeeAction" name="employeeForm"
 			type="com.openhr.employee.action.UpdateEmployeeAction" input="employee.form">
@@ -457,10 +484,16 @@
 			<forward name="continue" path="leave.form" />
 		</action>
 
+		<action path="/ReadLeaveInfo" name="leaveForm"
+			type="com.openhr.leave.action.ReadLeaveAction" input="leave.form">
+			<forward name="continue" path="leave.form" />
+		</action>
+
 		<action path="/ReadRequestedLeaveAction" name="leaveForm"
 			type="com.openhr.leave.action.ReadRequestedLeaveAction" input="leave.form">
 			<forward name="continue" path="leave.form" />
 		</action>
+		
 
 		<action path="/ReadHolidays" 
 			type="com.openhr.ReadHolidaysAction">
@@ -576,6 +609,11 @@
 		</action>
 		
 		<!-- start of Settings actions -->
+
+		<action path="/ReadRequestedAction" name="leaveForm"
+			type="com.openhr.employee.action.ReadRequestedLeaveAction" input="leave.form">
+			<forward name="continue" path="leave.form" />
+		</action>
 		
 		<action path="/ReadOverTimeInfo" 
 			type="com.openhr.overtime.action.ReadOvertimeAction" >
@@ -670,6 +708,12 @@
 			type="com.openhr.leave.action.CheckLeavesAction">
 			<forward name="continue" path="mbenefit.form" />
 		</action>
+		
+		<action path="/validateUser"
+			type="com.openhr.user.action.ValidateUser">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		 
 
 
 		<!-- start of Logout actions -->
@@ -698,10 +742,18 @@
 		<action path="/GenerateSSGovtFile" type="com.openhr.payroll.SSGovtFile" scope="request">
 		</action>
 
+		<action path="/SaveCompanyToProcess" type="com.openhr.company.ProcessCompanyAction" scope="request">
+		</action>
+
+		<action path="/SaveBranchToProcess" type="com.openhr.company.ProcessBranchAction" scope="request">
+		</action>
+
 		<action path="/ChangeLanguage" type="com.openhr.ChangeLanguageAction"
 			scope="request" parameter="method" validate="false">
 			<forward name="continue" path="index" />
 		</action>
+
+		
 
 
 

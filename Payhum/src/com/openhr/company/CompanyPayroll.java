@@ -22,7 +22,8 @@ import javax.persistence.TemporalType;
 @NamedQueries({
     @NamedQuery(name = "CompanyPayroll.findAll", query = "SELECT e FROM CompanyPayroll e"),
     @NamedQuery(name = "CompanyPayroll.findById", query = "SELECT e FROM CompanyPayroll e WHERE e.id = ?"),
-    @NamedQuery(name = "CompanyPayroll.findByProcessedDate", query = "SELECT e FROM CompanyPayroll e WHERE e.processedDate = ?"),
+    @NamedQuery(name = "CompanyPayroll.findByCompAndProcessedDate", query = "SELECT e FROM CompanyPayroll e WHERE e.companyId = ? " + 
+    		" AND MONTH(e.processedDate) = MONTH(?) AND YEAR(e.processedDate) = YEAR(?)"),
     @NamedQuery(name = "CompanyPayroll.findByCompanyId", query = "SELECT e FROM CompanyPayroll e WHERE e.companyId = ?")})
 public class CompanyPayroll implements Serializable {
 
@@ -78,7 +79,19 @@ public class CompanyPayroll implements Serializable {
     @Column(name = "accountNo", nullable = false, length=45)
     private String accountNo;
 
-    public String getEmpFullName() {
+    @Basic(optional = false)
+    @Column(name = "routingNo", nullable = false, length=45)
+    private String routingNo;
+    
+    public String getRoutingNo() {
+		return routingNo;
+	}
+
+	public void setRoutingNo(String routingNo) {
+		this.routingNo = routingNo;
+	}
+
+	public String getEmpFullName() {
 		return empFullName;
 	}
 

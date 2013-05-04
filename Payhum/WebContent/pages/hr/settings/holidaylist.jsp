@@ -1,40 +1,45 @@
 <style>
-.displayClass{
-	display : none;
+.displayClass {
+	display: none;
 }
 </style>
 
-	<div id="benefitTabs">
-		 
-	 	<div>
-	
+<div id="benefitTabs">
+
+	<div>
+
 		<div class="k-content">
-	 		<div class="legend">
-				<div style="float:right">
-					<input type="submit" value="New" id="addHolidayDiv"/>
-					<input type="submit" id="deleteHoliday" value="Delete"/>
-					<input type="submit" value="Edit" style="display : none !important;"/>
+			<div class="legend">
+				<div style="float: right">
+					<input type="submit" value="New" id="addHolidayDiv" /> <input
+						type="submit" id="deleteHoliday" value="Delete" /> <input
+						type="submit" value="Edit" style="display: none !important;" />
 				</div>
-				
-				<div style="float:left">
+
+				<div style="float: left">
 					<p>Holidays History</p>
 				</div>
-					<div style="clear:both"></div>
-				</div><br/><br/>
-				
-				<div id="holidaysDiv" class="displayClass">
-	 					<span><label>Holiday Date : &nbsp;&nbsp;</label></span>
-						<span><input type="text" name="holidayDate" id="holidayDate" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 					<span><label>Holiday Name : &nbsp;&nbsp;</label></span>
-						<span><input type="text" name="holidayName" id="holidayName"/></span><br/><br/>
-	    				<div style="float:right;">
-		  					<span><input type="submit" id="addHoliday" value="Apply"/></span>&nbsp;&nbsp;
-							<span><input type="button" id="cancelHoliday" value="Cancel"/></span>
-	 					</div>
-	  			</div><br/><br/>
-	  			<div id="holidayListGrid"> </div>
-	 		</div>
+				<div style="clear: both"></div>
+			</div>
+			<br />
+			<br />
+
+			<div id="holidaysDiv" class="displayClass">
+				<span><label>Holiday Date : &nbsp;&nbsp;</label></span> <span><input
+					type="text" name="holidayDate" id="holidayDate" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<span><label>Holiday Name : &nbsp;&nbsp;</label></span> <span><input
+					type="text" name="holidayName" id="holidayName" /></span><br />
+				<br />
+				<div style="float: right;">
+					<span><input type="submit" id="addHoliday" value="Apply" /></span>&nbsp;&nbsp;
+					<span><input type="button" id="cancelHoliday" value="Cancel" /></span>
+				</div>
+			</div>
+			<br />
+			<br />
+			<div id="holidayListGrid"></div>
 		</div>
+	</div>
 </div>
 <script>
 
@@ -103,20 +108,7 @@
 
 	
 	function getHolidays(){
- 			
-			var holidayModal = kendo.data.Model.define({
-	      	id: "id",            
-	          fields: {
-	          	date : {
-	          		type : "date"
-	          	},
- 	           
-	          	name : {
-	      			type : "string"
-	      		},
-	      	 
-	          }
-	      });		
+ 			 
 			
 			$("#holidayListGrid").kendoGrid({
 				dataSource : {
@@ -136,9 +128,7 @@
 	                      }
 	                  }
 					},
-					schema : {
-						model :holidayModal
-					},
+					 
 					batch : true,
 	              pageSize : 10
 				},
@@ -163,8 +153,8 @@
 	</div>
 </script>
 <style>
-div.autoCompleteDIV{
+div.autoCompleteDIV {
 	vertical-align: middle;
-	display:block;
+	display: block;
 }
 </style>

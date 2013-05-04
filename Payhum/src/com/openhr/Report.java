@@ -16,9 +16,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
-import com.openhr.company.LicenseValidator;
-import com.openhr.company.Licenses;
+import com.openhr.data.ConfigData;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
@@ -27,10 +27,9 @@ import com.openhr.data.Payroll;
 import com.openhr.data.PayrollDate;
 import com.openhr.data.Users;
 import com.openhr.factories.CompanyFactory;
+import com.openhr.factories.ConfigDataFactory;
 import com.openhr.factories.EmpBankAccountFactory;
-import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.EmployeeFactory;
-import com.openhr.factories.LicenseFactory;
 import com.openhr.factories.PayrollFactory;
 import com.openhr.taxengine.TaxEngine;
 
@@ -60,34 +59,20 @@ public class Report extends Action {
 		String compName = comp.getName();
 		compName = compName.replace(" ", "_");
 		
-		// Check for licenses
-		List<Licenses> compLicenses = LicenseFactory.findByCompanyId(comps.get(0).getId());
-		if(compLicenses.isEmpty()) {
-			throw new Exception("No License available.");
+		boolean adhoc = false;
+		PayrollDate payrollDate = null;
+		try {
+			getTobeProcessedDate(now);
 		}
-		for(Licenses lis : compLicenses) {
-			if(lis.getActive() == 1) {
-				Date endDate = lis.getTodate();
-				if( ! isLicenseActive(now, endDate)) {
-					// License has expired and throw an error
-					throw new Exception("License has expired");
-				} else {
-					// License end date is valid, so lets check the key.
-					String licenseKeyStr = LicenseValidator.formStringToEncrypt(compName, endDate);
-					if(LicenseValidator.encryptAndCompare(licenseKeyStr, lis.getLicensekey())) {
-						// License key is valid, so proceed.
-						break;
-					} else {
-						throw new Exception("License is tampered. Contact Support.");
-					}
-				}
-			}
+		catch(Exception e) {
+			// Its an adhoc one.
+			adhoc = true;
+			payrollDate = new PayrollDate();
+			payrollDate.setRunDate(now);
+			
+			PayrollFactory.insertPayrollDate(payrollDate);
 		}
-		
-		// If the payroll run dates is empty, it means this is first time, so lets populate.
-		List<PayrollDate> payrollDates = populatePayrollDates();
 
-		PayrollDate payrollDate = getTobeProcessedDate(payrollDates);
 		Calendar salaryProcessDate = Calendar.getInstance();
 		salaryProcessDate.setTime(payrollDate.getRunDate());
 		List<Employee> activeEmpList = new ArrayList<Employee>();
@@ -97,7 +82,9 @@ public class Report extends Action {
 		// to compute the payroll for the current pay period
 		//TODO: Get dept ID
 		Integer deptId = 0; // Means All depts
-		Integer branchId = 0; // Means All branches
+		
+		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH); 
+		Integer branchId = Integer.parseInt(config.getConfigValue());
 		
 		if(branchId == 0) {
 			// Employees of all Branches
@@ -122,7 +109,7 @@ public class Report extends Action {
 		PayrollFactory.insertPayroll(payroll);
 		
 		TaxEngine taxEngine = new TaxEngine(comp, activeEmpList, inActiveEmpList);
-		List<EmployeePayroll> empPayrollList = taxEngine.execute(payroll);
+		List<EmployeePayroll> empPayrollList = taxEngine.execute(payroll, adhoc);
 		
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		String fileName = compName + "_" + branchId  + "_"  + deptId + "_Payroll_" + monthYear + ".csv";
@@ -131,7 +118,7 @@ public class Report extends Action {
 		response.setContentType("application/force-download");
 		
 		// Columns in the file will be:
-		// CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,AccountNo,NetPay,TaxAmt,SS
+		// CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,RoutingNo,AccountNo,NetPay,TaxAmt,SS
 		StringBuilder allEmpPayStr = new StringBuilder();
 		for(EmployeePayroll empPay : empPayrollList) {
 			EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPay.getEmployeeId().getId());
@@ -158,6 +145,8 @@ public class Report extends Action {
 				empPayStr.append(COMMA);
 				empPayStr.append(empBankAcct.getBankBranch());
 				empPayStr.append(COMMA);
+				empPayStr.append(empBankAcct.getRoutingNo());
+				empPayStr.append(COMMA);
 				empPayStr.append(empBankAcct.getAccountNo());
 				empPayStr.append(COMMA);
 			}
@@ -178,7 +167,8 @@ public class Report extends Action {
 		return map.findForward("report.form");
 	}
 	
-	private PayrollDate getTobeProcessedDate(List<PayrollDate> payDates) throws Exception {
+	private PayrollDate getTobeProcessedDate(Date currDate) throws Exception {
+		List<PayrollDate> payDates =  PayrollFactory.findAllPayrollDate();
 		List<Payroll> payRuns = PayrollFactory.findAllPayrollRuns();
 		
 		for(PayrollDate payDate: payDates) {
@@ -192,7 +182,6 @@ public class Report extends Action {
 			
 			if(!processed) {
 				// If this date is post the current date, but its not processed, lets process it.
-				Date currDate = new Date();
 				if(currDate.after(payDate.getRunDate())
 				|| currDate.equals(payDate.getRunDate())) {
 					return payDate;
@@ -208,68 +197,5 @@ public class Report extends Action {
 
 	public Report() {
 
-	}
-	
-	private boolean isLicenseActive(Date currentDate, Date endDate) {
-	    if (currentDate.after(endDate)) {
-	    	// License has expired
-	    	return false;
-	    }
-	    
-	    return true;
-	}
-	
-	private List<PayrollDate> populatePayrollDates() throws Exception {
-		// Check if the payroll dates are calculated or not, if not default to Monthly and choose last friday of
-		// each month as payroll date.
-		List<PayrollDate> payrollDates = PayrollFactory.findAllPayrollDate();
-		if(payrollDates == null || payrollDates.isEmpty()) {
-			Calendar currCal = Calendar.getInstance();
-			int currMonth = currCal.get(Calendar.MONTH);
-			int currYear = currCal.get(Calendar.YEAR);
-			
-			if(currMonth >= 3) {
-				// Populate from current month to december
-				for(int i = currMonth; i < 12; i++) {
-					Date rDate = getLastFriday(i, currYear);
-					PayrollDate payDate = new PayrollDate();
-					payDate.setRunDate(rDate);
-					PayrollFactory.insertPayrollDate(payDate);
-					
-					payrollDates.add(payDate);
-				}
-				
-				// Populate from current month to december
-				for(int i = 0; i < 3; i++) {
-					Date rDate = getLastFriday(i, currYear+1);
-					PayrollDate payDate = new PayrollDate();
-					payDate.setRunDate(rDate);
-					PayrollFactory.insertPayrollDate(payDate);
-					
-					payrollDates.add(payDate);
-				}
-				
-			} else {
-				for(int i = 0; i <= currMonth; i++) {
-					Date rDate = getLastFriday(i, currYear + 1);
-					PayrollDate payDate = new PayrollDate();
-					payDate.setRunDate(rDate);
-					PayrollFactory.insertPayrollDate(payDate);
-					
-					payrollDates.add(payDate);
-				}
-			}
-		}
-		
-		return payrollDates;
-	}
-	
-	private Date getLastFriday( int month, int year ) {
-		Calendar retCal = Calendar.getInstance();
-		retCal.set(Calendar.YEAR, year);
-		retCal.set(Calendar.MONTH, month);
-		retCal.set(Calendar.DAY_OF_WEEK,Calendar.FRIDAY);
-		retCal.set(Calendar.DAY_OF_WEEK_IN_MONTH, -1);
-		return retCal.getTime();
 	}
 }

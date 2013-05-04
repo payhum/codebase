@@ -401,6 +401,7 @@ CREATE TABLE `company_payroll` (
   `socialSec` double NOT NULL,
   `bankName` varchar(45) NOT NULL,
   `bankBranch` varchar(45) NOT NULL,
+  `routingNo` varchar(45) NOT NULL,
   `accountNo` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_comppay_comp` (`companyId`),
@@ -417,6 +418,7 @@ CREATE TABLE `employee_account` (
   `bankName` varchar(45) NOT NULL,
   `bankBranch` varchar(45) NOT NULL,
   `accountNo` varchar(45) NOT NULL,
+  `routingNo` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_empacc_emp` (`employeeId`),
   CONSTRAINT `FK_empacc_emp` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`id`) 

@@ -171,8 +171,8 @@ INSERT INTO `deductiontype` (`id`, `name`, `description`, `version`) VALUES
 -- Dumping data for table employee_account
 --
 /*!40000 ALTER TABLE `employee_account` DISABLE KEYS */;
-INSERT INTO `employee_account` (`id`, `employeeId`, `bankName`, `bankBranch`,`accountNo`) VALUES
- (1,1,'First Bank','J Colony','12345');
+INSERT INTO `employee_account` (`id`, `employeeId`, `bankName`, `bankBranch`,`accountNo`,`routingNo`) VALUES
+ (1,1,'First Bank','J Colony','12345','4567');
 /*!40000 ALTER TABLE `employee_account` ENABLE KEYS */;
 
 --
@@ -264,5 +264,6 @@ INSERT INTO `paycycle` (`id`, `name`, `selected`) VALUES
 --
 /*!40000 ALTER TABLE `payhum_config` DISABLE KEYS */;
 INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
-('EMODE','CMODE');
+('EMODE','CMODE'),
+('PBRANCH','0');
 /*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;

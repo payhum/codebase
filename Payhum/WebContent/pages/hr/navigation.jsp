@@ -146,20 +146,20 @@
 				<div class="buttonbg gradient_button gradient27"
 					style="width: auto;">
 					<div class="arrow">
-						<a class="button_2" style="color: #000">Earnings</a>
+						<a class="button_2" style="color: #000">Employee</a>
 					</div>
 				</div>
 
 				<ul class="gradient_menu gradient95">
-					<li class="gradient_menuitem gradient31"><a
+					<%-- <li class="gradient_menuitem gradient31"><a
 						href="<%=request.getContextPath() + "/do/EarningsPerCompany"%>">
-							Per Company</a></li>
-					<li class="gradient_menuitem gradient31 last_item"><a
+							Per Company</a></li> --%>
+			<li class="gradient_menuitem gradient31 last_item"><a
 						href="<%=request.getContextPath() + "/do/EarningsRecord"%>">
-							Record</a></li>
+							Accumulators</a></li> 
 					<li class="gradient_menuitem gradient31 last_item"><a
 						href="<%=request.getContextPath() + "/do/EarningsPerDepartment"%>">
-							Per Department</a></li>
+							Earnings</a></li>
 				</ul>
 			</li>
 			<li class="gradient_menuitem gradient31 first_item"><a

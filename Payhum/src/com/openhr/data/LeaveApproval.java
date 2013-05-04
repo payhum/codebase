@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LeaveApproval.findAll", query = "SELECT l FROM LeaveApproval l"),
-    @NamedQuery(name = "LeaveApproval.findById", query = "SELECT l FROM LeaveApproval l WHERE l.id = ?"),
+    @NamedQuery(name = "LeaveApproval.findById", query = "SELECT l FROM LeaveApproval l WHERE l.requestId = ?"),
     @NamedQuery(name = "LeaveApproval.findByApprovedbydate", query = "SELECT l FROM LeaveApproval l WHERE l.approvedbydate = ?")})
 public class LeaveApproval implements Serializable {
     private static final long serialVersionUID = 1L;

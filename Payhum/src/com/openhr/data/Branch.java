@@ -21,7 +21,8 @@ import com.openhr.company.Company;
 @NamedQueries({
     @NamedQuery(name = "Branch.findAll", query = "FROM Branch br"),
     @NamedQuery(name = "Branch.findById", query = "FROM Branch br WHERE id = ?"),
-    @NamedQuery(name = "Branch.findByName", query = "SELECT br FROM Branch br WHERE br.name = ?")})
+    @NamedQuery(name = "Branch.findByName", query = "SELECT br FROM Branch br WHERE br.name = ?"),
+    @NamedQuery(name = "Branch.findByCompanyId", query = "SELECT br FROM Branch br WHERE br.companyId = ?"),})
 	@NamedNativeQuery(name = "Branch.findLastId", query = "SELECT * FROM Branch WHERE Branch.id = (SELECT max(Branch.id) FROM Branch)",
 	resultClass=Branch.class)
 

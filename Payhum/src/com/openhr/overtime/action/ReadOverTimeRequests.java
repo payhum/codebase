@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -28,7 +30,12 @@ public class ReadOverTimeRequests extends Action {
         try {
         	
         	 List applicationList = OverTimeFactory.findByStatus(0);
-             result = JSONArray.fromObject(applicationList);
+        	 
+        	 JsonConfig config = new JsonConfig();
+			 config.setIgnoreDefaultExcludes(false);
+			 config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			 
+             result = JSONArray.fromObject(applicationList, config);
         } catch (Exception e) {
             e.printStackTrace();
         }         

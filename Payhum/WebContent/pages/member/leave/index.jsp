@@ -1,56 +1,54 @@
 <%@page import="com.openhr.data.LeaveRequest"%>
 <style>
-.displayClass{
-	display : none;
+.displayClass {
+	display: none;
 }
 </style>
 
 <%@page import="com.openhr.factories.LeaveTypeFactory"%>
-<%@page import="com.openhr.data.LeaveType" %>
-<%@page import="com.openhr.data.Users" %>
-<%@page import="java.util.List" %>
-<%@page import="java.util.*" %>
+<%@page import="com.openhr.data.LeaveType"%>
+<%@page import="com.openhr.data.Users"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.*"%>
 <div id="leaveTabs">
-	<ul> <li class="k-state-active">Make Request</li> </ul>
- 	<div>
- 		<div class="k-content">
- 			<div class="legend">
- 				<div style="float:right">
-					<input type="submit" id="applyLeave" value="New"/>
-					<input type="submit" value="Delete" id="deleteLeave"/>
-					<input type="submit" value="Edit" style="display:none !important;"/>
+	<div>
+		<div class="k-content">
+			<div class="legend">
+				<div style="float: right">
+					<input type="submit" id="applyLeave" value="New" /> <input
+						type="submit" value="Delete" id="deleteLeave" /> <input
+						type="submit" value="Edit" style="display: none !important;" />
 				</div>
- 				<div style="float:left">
+				<div style="float: left">
 					<p>Your Leave History</p>
 				</div>
-				<div style="clear:both"></div><br/>
-			</div><br/><br/>
- 			<div id="addLeaveDiv" class="displayClass">
- 					<span><label>Leave From : &nbsp;&nbsp;</label></span>
-					<span><input type="text" name="leaveDate" id="leaveFrom" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 					<span><label>Leave To : &nbsp;&nbsp;</label></span>
-					<span><input type="text" name="returnDate" id="leaveTo" /></span><br/><br/>
-					<span><label>Leave Type :&nbsp;&nbsp; </label></span>
- 					<span>
- 						<input type="hidden" name="noOfDays" value="2"/>
- 						<input type="hidden" name="employeeId" id="employeeId" />
-						<input type="hidden" id="leaveKinds" value="" />
-						<input type="hidden" name="userType" value="Employee"/>
-						<select name="leaveTypeId" id="TypeOfLeave" > </select>&nbsp;&nbsp;&nbsp;&nbsp;
-  					</span>
- 					<span><label>Description : &nbsp;&nbsp;</label></span>
-					<span><input type="textarea" style="width:130px !important;" name="description" id="description" /></span><br/><br/>
-					<div>
-						<span>Available : </span>&nbsp;&nbsp;&nbsp;
-						<span id="remaining"></span>
- 					</div>
-  					<div style="float:right;">
-	  					<span><input type="submit" id="addLeave" value="Apply"/></span>&nbsp;&nbsp;
-						<span><input type="button" id="canceLeave" value="Cancel"/></span>
- 					</div>
-  			</div><br/><br/>
-  			<div id="grid"> </div>
- 		</div>
+				<div style="clear: both"></div>
+			</div>
+			<div id="addLeaveDiv" class="displayClass">
+				<span><label>Leave From : &nbsp;&nbsp;</label></span> <span><input
+					type="text" name="leaveDate" id="leaveFrom" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<span><label>Leave To : &nbsp;&nbsp;</label></span> <span><input
+					type="text" name="returnDate" id="leaveTo" /></span><br /> <br /> <span><label>Leave
+						Type :&nbsp;&nbsp; </label></span> <span> <input type="hidden"
+					name="noOfDays" value="2" /> <input type="hidden"
+					name="employeeId" id="employeeId" /> <input type="hidden"
+					id="leaveKinds" value="" /> <input type="hidden" name="userType"
+					value="Employee" /> <select name="leaveTypeId" id="TypeOfLeave">
+				</select>&nbsp;&nbsp;&nbsp;&nbsp;
+				</span> <span><label>Description : &nbsp;&nbsp;</label></span> <span><input
+					type="textarea" style="width: 130px !important;" name="description"
+					id="description" /></span><br /> <br />
+				<div>
+					<span>Available : </span>&nbsp;&nbsp;&nbsp; <span id="remaining"></span>
+				</div>
+				<div style="float: right;">
+					<span><input type="submit" id="addLeave" value="Apply" /></span>&nbsp;&nbsp;
+					<span><input type="button" id="canceLeave" value="Cancel" /></span>
+				</div>
+			</div>
+			<br /> <br />
+			<div id="grid"></div>
+		</div>
 	</div>
 </div>
 
@@ -81,60 +79,13 @@
 	     }	
 	       		
    			
-  		var leaveApprovalModel = kendo.data.Model.define({
-  	        	id: "id",            
-  	            fields: {
-  	            	leaveDate : {
-  	            		type : "date"
-  	            	},
-  	            	returnDate : {
-  	            		type : "date"
-  	            	},
-  	            	noOfDays : {
-  	            		type : "number"
-  	            	},
-  	        		status : {
-  	        			type : "string"
-  	        		},
-  	                employeeId:{
-  	        			defaultValue : {
-  	        				id : 0,
-  	        				employeeId : "",
-  	        				firstname : "",
-  	        				middlename : "",
-  	        				lastname : "",        				
-  	        				sex : "",
-  	        				hiredate : "",
-  	        				birthdate : "",
-  	        				positionId : {
-  	        					defaultValue : {
-  	        						id : 0,
-  	        						name : "",
-  	        						salary : 0,
-  	        						raisePerYear : 0
-  	        					}
-  	        				},
-  	        				photo : "",
-  	        			}
-  	        		},
-  	        		leaveTypeId: {
-  	                	defaultValue : {
-  	                		id:  0,
-  	                		name: "",
-  	                        dayCap: 0 
-  	                	}
-  	                },
-  	                description : {
-  	                	type : "string"
-  	                }
-  	            }
-  	        });		
+  		
   			
   			$("#grid").kendoGrid({
   				dataSource : {
   					transport : {
   						read : {
-  	                        url : "<%=request.getContextPath() + "/do/ReadRequestedLeaveAction"%>",
+  	                        url : "<%=request.getContextPath() + "/do/ReadLeaveInfo"%>",
   	                        dataType : 'json',
   	                        cache : false
   	                    },
@@ -148,9 +99,7 @@
   	                        }
   	                    }
   					},
-  					schema : {
-  						model :leaveApprovalModel
-  					},
+  					
   					batch : true,
   	                pageSize : 10
   				},
@@ -187,14 +136,13 @@
 					}
 				}
 		    });
-      		<% List<LeaveType>	list =  (List<LeaveType>) request.getAttribute("leaveTypes");   
+      		<%List<LeaveType>	list =  (List<LeaveType>) request.getAttribute("leaveTypes");   
     		LeaveType myleave = null;
          	for (Iterator iterator = list.iterator(); iterator.hasNext();) {  
-            	 myleave = (LeaveType)iterator.next();  
-         		%>
+            	 myleave = (LeaveType)iterator.next();%>
 	            leaveTypes = "<%=myleave.getName()%>";
 	            leaveValue = "<%=myleave.getId()%>"; 
-            <% } %>     
+            <%}%>     
       		employeeId = <%=request.getSession().getAttribute("employeeId")%>;
      		$('#employeeId').val(employeeId);
  		});
@@ -240,7 +188,7 @@
 				dataType 	: 'json',
 				contentType : 'application/json; charset=utf-8',
 				data 		: leaveApply,
-				success     : function(){
+				success     : function(data){
 				    $("#leaveFrom").val('');
 					$("#leaveTo").val('');
 	 				$("#description").val('');
@@ -248,6 +196,10 @@
 					$("#addLeaveDiv").addClass("displayClass");
 					$("#grid").empty();
 					getEmployeeLeaves();
+					
+					if(data[0] == 0){
+						alert('Not enough leaves available in this type.');
+					}
 				}
 	        });  
 		});
@@ -288,23 +240,19 @@
 				
  				$.ajax({
 		       		url 		: "<%=request.getContextPath() + "/do/CheckLeaveAvail"%>",
-		       		type 		: 'POST',
-					dataType 	: 'json',
-					contentType : 'application/json; charset=utf-8',
-					data 		: leavetype,
-					success     : function(data){
-						available = data[0]+'/'+data[1]
-						$('#remaining').text(''+available);
-  		 			},
-					error : function(){
-						alert('error');
-					}
-		        });  
- 		});
-
-	
-	
-    
+			type : 'POST',
+			dataType : 'json',
+			contentType : 'application/json; charset=utf-8',
+			data : leavetype,
+			success : function(data) {
+				available = data[0] + '/' + data[1]
+				$('#remaining').text('' + available);
+			},
+			error : function() {
+				alert('error');
+			}
+		});
+	});
 </script>
- 
+
 

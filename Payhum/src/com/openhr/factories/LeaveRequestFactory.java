@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.openhr.data.Department;
 import com.openhr.data.LeaveApproval;
 import com.openhr.data.LeaveRequest;
 import com.openhr.factories.common.OpenHRSessionFactory;
@@ -23,7 +24,7 @@ public class LeaveRequestFactory {
     private static List<LeaveApproval> appLeaves;
 
     public LeaveRequestFactory() {
-    }
+    } 
 
      
     @SuppressWarnings("unchecked")
@@ -36,7 +37,67 @@ public class LeaveRequestFactory {
         
         return leaveRequests;
     }
-
+   
+    
+    		
+    		
+    		
+    		public static   List<Object[]>  findByStatusNodaysJion(Integer c,Department d)
+    	    
+    	    
+    	    {
+    	    	List<Object[]> results=null;
+    	    	 session = OpenHRSessionFactory.getInstance().getCurrentSession();
+    	         session.beginTransaction();
+    	         try
+    	         {
+    	        	 String hql= "select e.employeeId, sum(lr.status)  from  LeaveRequest lr, Employee e  where  e.id=lr.employeeId and  lr.status="+c+" and e.deptId="+d+"group by lr.employeeId" ;	         
+    	        	 
+    	         Query query = session.createQuery(hql);
+    	        // query.setParameter("c", 1);
+    	        
+    	         results=query.list();
+    	         session.getTransaction().commit();
+    	         }
+    	         catch(Exception e)
+    	         {
+    	        	 e.printStackTrace();
+    	         }
+    	         
+    	         return results;
+    	    }
+    	    		
+    		
+    		
+    		
+    		
+    		
+    		
+    		public static   List<Object[]>  findByStatusNodays(Integer c)
+    
+    
+    {
+    	List<Object[]> results=null;
+    	 session = OpenHRSessionFactory.getInstance().getCurrentSession();
+         session.beginTransaction();
+         try
+         {
+         String hql="select lr.employeeId, sum(lr.status) from LeaveRequest lr where  lr.status = "+c+"group by lr.employeeId";
+         Query query = session.createQuery(hql);
+        // query.setParameter("c", 1);
+         query=session.createQuery(hql);
+         results=query.list();
+         session.getTransaction().commit();
+         }
+         catch(Exception e)
+         {
+        	 e.printStackTrace();
+         }
+         
+         return results;
+    }
+    
+    
     @SuppressWarnings("unchecked")
 	public static List<LeaveRequest> findByEmployeeId(Integer employeeId){
      	session = OpenHRSessionFactory.getInstance().getCurrentSession();

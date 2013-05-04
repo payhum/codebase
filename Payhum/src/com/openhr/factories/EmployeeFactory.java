@@ -43,7 +43,18 @@ public class EmployeeFactory implements Serializable {
 
 	public EmployeeFactory() {
 	}
+	public static List<Employee> findAllEmpPerDepart(Department depId)
+	
+	{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Employee.findByDeptID");
+		query.setParameter(0, depId);
+		employees = query.list();
+		session.getTransaction().commit();
 
+		return employees;
+	}
 	public static boolean saveUpdateBankDet(EmpBankAccount ebn) {
 		boolean done = false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
@@ -450,8 +461,15 @@ public class EmployeeFactory implements Serializable {
 			throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("Department.findByBrachId");
-		query.setInteger(0, compID);
+		if(compID!=0)
+		{
+			query = session.getNamedQuery("Department.findByBrachId");
+		 query.setInteger(0, compID);
+		}
+		else
+		{
+			query = session.getNamedQuery("Department.findAll");
+		}
 		List<Department> depList = query.list();
 		session.getTransaction().commit();
 
@@ -517,7 +535,9 @@ public class EmployeeFactory implements Serializable {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findAllActiveByBranch");
-		query.setParameter(0, branchId);
+		Branch branch = new Branch();
+		branch.setId(branchId);
+		query.setParameter(0, branch);
 		List<Employee> activeEmps = query.list();
 		session.getTransaction().commit();
 
@@ -529,9 +549,11 @@ public class EmployeeFactory implements Serializable {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findInActiveByDateAndBranch");
+		Branch branch = new Branch();
+		branch.setId(branchId);
 		query.setParameter(0, time);
 		query.setParameter(1, time);
-		query.setParameter(2, branchId);
+		query.setParameter(2, branch);
 		List<Employee> inactiveEmps = query.list();
 		session.getTransaction().commit();
 

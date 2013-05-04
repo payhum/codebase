@@ -13,6 +13,7 @@ import com.openhr.company.Licenses;
 import com.openhr.data.Benefit;
 import com.openhr.data.BenefitType;
 import com.openhr.data.Branch;
+import com.openhr.data.ConfigData;
 import com.openhr.data.DeductionsType;
 import com.openhr.data.Department;
 import com.openhr.data.Dtest;
@@ -93,6 +94,8 @@ public class OpenHRSessionFactory {
         config.addAnnotatedClass(PayrollDate.class);
         config.addAnnotatedClass(Payroll.class);
         config.addAnnotatedClass(EmpPayrollMap.class);
+        config.addAnnotatedClass(ConfigData.class);
+        
         sessionFactory = config.buildSessionFactory();
     }
 

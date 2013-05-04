@@ -38,12 +38,16 @@ public class EmpBankAccount implements Serializable {
     private String bankName;
     
     @Basic(optional = false)
-    @Column(name = "bankBranch", nullable = false, length = 90)
+    @Column(name = "bankBranch", nullable = false, length = 45)
     private String bankBranch;
 
     @Basic(optional = false)
-    @Column(name = "accountNo", nullable = false, length = 90)
+    @Column(name = "accountNo", nullable = false, length = 45)
     private String accountNo;
+    
+    @Basic(optional = false)
+    @Column(name = "routingNo", nullable = false, length = 45)
+    private String routingNo;
     
 	public EmpBankAccount () {
 	}
@@ -86,5 +90,13 @@ public class EmpBankAccount implements Serializable {
 
 	public void setAccountNo(String accountNo) {
 		this.accountNo = accountNo;
+	}
+
+	public String getRoutingNo() {
+		return routingNo;
+	}
+
+	public void setRoutingNo(String routingNo) {
+		this.routingNo = routingNo;
 	}
 }

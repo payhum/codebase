@@ -1,167 +1,176 @@
-<style>
-
-.k-grouping-header
-
-{display:none;}
+<style type="text/css">
+.k-grouping-header {
+	display: none;
+}
 </style>
-<%@include file="../../common/jspHeader.jsp" %>
-<h2 class="legend">Employee Form</h2> 
+<%@include file="../../common/jspHeader.jsp"%>
+<h2 class="legend">Employee Form</h2>
 
-<div id="depdentsWinId" style=" display: none">
+<div id="depdentsWinId" style="display: none">
 
-<div>
-	<div id="gridDepdent"></div>		
-			
-	<div id="left-col">
+	<div>
+		<div id="gridDepdent"></div>
+
+		<div id="left-col">
 			<div class="label">Name</div>
 			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="depdentName"  value="" />
+				<input type="text" required="required" class="k-input k-textbox"
+					id="depdentName" value="" />
 			</div>
 			<div class="clear"></div>
-				<div class="label">Age</div>
+			<div class="label">Age</div>
 			<div class="field">
-				
-				
-				 <input id="depdentAge" type="number" class="k-input k-textbox"   step="2"  value="" min="1"  max="90" />
+
+
+				<input id="depdentAge" type="number" class="k-input k-textbox"
+					step="2" value="" min="1" max="90" />
 			</div>
 			<div class="clear"></div>
 		</div>
-			</div>
-		<div id="right-col">
+	</div>
+	<div id="right-col">
 		<div class="label">Occupation</div>
-			<div class="field">
-				<input   id="occupationTypeDepdent" class="occupationTypeDepdent"  />
-			</div>
-			<div class="clear"></div>
-				<div class="label">DependentType</div>
-			<div class="field">
-				<input   id="depdentTypeDepdent" class="depdentTypeDepdent"  />
-			</div>
-			<div class="clear"></div>
+		<div class="field">
+			<input id="occupationTypeDepdent" class="occupationTypeDepdent" />
 		</div>
-		
-		<div>
-			<div class="field">
-				<a class="k-button k-icontext"  id="addDepdent"><span class="k-add k-icon"></span>Save</a> <a
-					class="k-button k-icontext"  id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
-			</div>
-			<div class="clear"></div>
-			
+		<div class="clear"></div>
+		<div class="label">DependentType</div>
+		<div class="field">
+			<input id="depdentTypeDepdent" class="depdentTypeDepdent" />
 		</div>
-		
-</div>
-<div id="changeSalryWinId" style=" display: none">
+		<div class="clear"></div>
+	</div>
 
-<div>
-<div class="label">Current Salary</div><div class="field"><input type="text"  class="k-input k-textbox" id="curSalary"  readonly />
-</div>
-	<div class="clear"></div>
-</div>
-<div>
-
-
-			<div class="label">Change Salary</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="chageSal"   value="" />
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div>
-			<div class="label">Change Date</div>
-			<div class="field">
-		<input id="changeSalaryDate"   />
-		</div>
-			<div class="clear"></div>
-		</div>
-				<div>
-			<div class="field">
-				<a class="k-button k-icontext"  id="addchangeSal"><span class="k-add k-icon"></span>Save</a> <a
-					class="k-button k-icontext"  id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
-			</div>
-			<div class="clear"></div>
-			
-		</div>
-
-</div>
-<div id="giveBonusWinId" style=" display: none">
-
-<div>
-			<div class="label">Amount</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="bonusAmont"  value="" />
-			</div>
-			<div class="clear"></div>
-		</div>
 	<div>
-			<div class="label">Given Date</div>
-			<div class="field">
-		<input id="bonusDate"    />
+		<div class="field">
+			<a class="k-button k-icontext" id="addDepdent"><span
+				class="k-add k-icon"></span>Save</a> <a class="k-button k-icontext"
+				id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
 		</div>
-			<div class="clear"></div>
-		</div>
-			<div>
-			<div class="field">
-				<a class="k-button k-icontext"  id="addBonus"><span class="k-add k-icon"></span>Save</a> <a
-					class="k-button k-icontext"  id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
-			</div>
-			<div class="clear"></div>
-			
-		</div>
+		<div class="clear"></div>
+
+	</div>
+
 </div>
-<div id="bankAccountWinId" style=" display: none">
+<div id="changeSalryWinId" style="display: none">
 
-<div>
-			<div class="label">BankName</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="bankName"  value="" />
-			</div>
-			<div class="clear"></div>
+	<div>
+		<div class="label">Current Salary</div>
+		<div class="field">
+			<input type="text" class="k-input k-textbox" id="curSalary" readonly />
 		</div>
+		<div class="clear"></div>
+	</div>
+	<div>
 
-<div>
-			<div class="label">BankBrach</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="bankBranch"  value="" />
-			</div>
-			<div class="clear"></div>
+
+		<div class="label">Effective Salary</div>
+		<div class="field">
+			<input type="text" required="required" class="k-input k-textbox"
+				id="chageSal" value="" />
 		</div>
-		
-		
-		<div>
-			<div class="label">Account No</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="accNo"  value="" />
-			</div>
-			<div class="clear"></div>
+		<div class="clear"></div>
+	</div>
+	<div>
+		<div class="label">Effective Date</div>
+		<div class="field">
+			<input id="changeSalaryDate" />
 		</div>
-		
-			<div>
-			<div class="field">
-				<a class="k-button k-icontext"  id="addBank"><span class="k-add k-icon"></span>Save</a> <a
-					class="k-button k-icontext"  id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
-			</div>
-			<div class="clear"></div>
-			
+		<div class="clear"></div>
+	</div>
+	<div>
+		<div class="field">
+			<a class="k-button k-icontext" id="addchangeSal"><span
+				class="k-add k-icon"></span>Save</a> <a class="k-button k-icontext"
+				id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
 		</div>
+		<div class="clear"></div>
+
+	</div>
+
+</div>
+<div id="giveBonusWinId" style="display: none">
+
+	<div>
+		<div class="label">Amount</div>
+		<div class="field">
+			<input type="text" required="required" class="k-input k-textbox"
+				id="bonusAmont" value="" />
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div>
+		<div class="label">Given Date</div>
+		<div class="field">
+			<input id="bonusDate" />
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div>
+		<div class="field">
+			<a class="k-button k-icontext" id="addBonus"><span
+				class="k-add k-icon"></span>Save</a> <a class="k-button k-icontext"
+				id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
+		</div>
+		<div class="clear"></div>
+
+	</div>
+</div>
+<div id="bankAccountWinId" style="display: none">
+
+	<div>
+		<div class="label">BankName</div>
+		<div class="field">
+			<input type="text" required="required" class="k-input k-textbox"
+				id="bankName" value="" />
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	<div>
+		<div class="label">BankBrach</div>
+		<div class="field">
+			<input type="text" required="required" class="k-input k-textbox"
+				id="bankBranch" value="" />
+		</div>
+		<div class="clear"></div>
+	</div>
+
+
+	<div>
+		<div class="label">Account No</div>
+		<div class="field">
+			<input type="text" required="required" class="k-input k-textbox"
+				id="accNo" value="" />
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	<div>
+		<div class="field">
+			<a class="k-button k-icontext" id="addBank"><span
+				class="k-add k-icon"></span>Save</a> <a class="k-button k-icontext"
+				id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
+		</div>
+		<div class="clear"></div>
+
+	</div>
 </div>
 
 <div id="grid">
 
-<span id="rpsm1">
-<a class="k-button"  id="depdentsId"  href='#'><span class="k-icon "></span>Dependents</a>
-
-<a class="k-button" href='#' id="changeSalryId"><span class="k-icon "></span>ChangeSalary</a>
-
-<a class="k-button" href='#' id="giveBonusId"><span class="k-icon"></span>Give Bonus</a>
-
-<a class="k-button" href='#' id="bankAccountId" ><span class="k-icon "></span>Bank Account</a>
-<a class="k-button" href='#' id="editEmp1" ><span class="k-icon "></span>Edit</a>
-</span>
+	<span id="rpsm1"> <a class="k-button" id="depdentsId" href='#'><span
+			class="k-icon "></span>Dependents</a> <a class="k-button" href='#'
+		id="changeSalryId"><span class="k-icon "></span>ChangeSalary</a> <a
+		class="k-button" href='#' id="giveBonusId"><span class="k-icon"></span>Give
+			Bonus</a> <a class="k-button" href='#' id="bankAccountId"><span
+			class="k-icon "></span>Bank Account</a> <a class="k-button" href='#'
+		id="editEmp1"><span class="k-icon "></span>Edit</a>
+	</span>
 
 </div>
-<div id="empForm">
-</div>
-<script> 
+<div id="empForm"></div>
+<script type="text/javascript"> 
 var createNewEmpForm;
 var dropDownURL = "<%=request.getContextPath()%>" + "/do/ReadPositionAction"; 
 var empDataSource;
@@ -311,7 +320,7 @@ var postDropDownList;
 	                { field : "positionIds", title : "Role",  template: '#=positionIds ? positionIds.name: ""#', width : 40  },
 	                { hidden:true, field : "birthdate", title : "Birth date", template : "#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy') #" },
 	                {hidden:true,  field : "hiredate", title : "Hired date", template : "#= kendo.toString(new Date(hiredate) , 'MMM, dd yyyy') #" },
-	                { field : "companyId", title : "Branch", template: '#=companyId ? companyId.brchId.name: ""#',  width : 40 },
+	                { field : "companyId", title : "Branch", template: '#=companyId ? companyId.branchId.name: ""#',  width : 40 },
 	                
 	                { field : "status", title : "Status", width : 30 },
 	                { field : "residentType", title : "residentType",  template: '#=residentType ? residentType.name: ""#', width : 40 }
@@ -350,7 +359,8 @@ var postDropDownList;
 		         	 transport : {
 		             		read : {
 		             			type: 'POST',
-		             			url : "<%=request.getContextPath() + "/do/EmployeeCommanAction?parameter=getEmpDepdents"%>",
+		             			url : "<%=request.getContextPath()
+					+ "/do/EmployeeCommanAction?parameter=getEmpDepdents"%>",
 		 	        				 dataType : 'json',
 		 	        				 contentType : 'application/json; charset=utf-8',
 		 	        				 cache: false,
@@ -420,7 +430,8 @@ var postDropDownList;
 				  
 	        		read : {
 	      			type: 'POST',
-	      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getOccupationType"%>',
+	      			 url:'<%=request.getContextPath()
+					+ "/do/CommantypesAction?parameter=getOccupationType"%>',
 	  				 dataType : 'json',
 	  				 contentType : 'application/json; charset=utf-8',
 	  				 cache: false
@@ -450,7 +461,8 @@ var postDropDownList;
 					  
 		        		read : {
 		      			type: 'POST',
-		      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getdepdentType"%>',
+		      			 url:'<%=request.getContextPath()
+					+ "/do/CommantypesAction?parameter=getdepdentType"%>',
 		  				 dataType : 'json',
 		  				 contentType : 'application/json; charset=utf-8',
 		  				 cache: false
@@ -503,7 +515,8 @@ depdentAge=$("#depdentAge").val();
 			}]);
 	 	       
 	 		$.ajax({
-	    		url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=saveDepdents"%>',
+	    		url:'<%=request.getContextPath()
+					+ "/do/EmployeeCommanAction?parameter=saveDepdents"%>',
 			type : 'POST',
 			dataType : 'json',
 			contentType : 'application/json; charset=utf-8',
@@ -601,7 +614,8 @@ function getSal()
 	  
 	  $.ajax({
 				 type : "POST",
-					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=getCurrentSalry"%>',
+					url:'<%=request.getContextPath()
+					+ "/do/EmployeeCommanAction?parameter=getCurrentSalry"%>',
 				 dataType : 'json',
 				 contentType : 'application/json; charset=utf-8',
 				 data : editData,
@@ -646,7 +660,8 @@ $("#addchangeSal").bind("click", function () {
 	  
 	  $.ajax({
 				 type : "POST",
-					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=saveCurrentSalry"%>',
+					url:'<%=request.getContextPath()
+					+ "/do/EmployeeCommanAction?parameter=saveCurrentSalry"%>',
 				 dataType : 'json',
 				 contentType : 'application/json; charset=utf-8',
 				 data : editData,
@@ -726,7 +741,8 @@ $("#giveBonusWinId").css("display",
 	    	  
 	    	  $.ajax({
 	    				 type : "POST",
-	    					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=saveBonus"%>',
+	    					url:'<%=request.getContextPath()
+					+ "/do/EmployeeCommanAction?parameter=saveBonus"%>',
 	    				 dataType : 'json',
 	    				 contentType : 'application/json; charset=utf-8',
 	    				 data : editData,
@@ -792,7 +808,8 @@ e.preventDefault();
 	    	
 	    	 $.ajax({
 				 type : "POST",
-					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=getBankDetails"%>',
+					url:'<%=request.getContextPath()
+					+ "/do/EmployeeCommanAction?parameter=getBankDetails"%>',
 				 dataType : 'json',
 				 contentType : 'application/json; charset=utf-8',
 				 data : editData,
@@ -844,7 +861,8 @@ e.preventDefault();
 	    	  
 	    	  $.ajax({
 	    				 type : "POST",
-	    					url:'<%=request.getContextPath()+ "/do/EmployeeCommanAction?parameter=saveBank"%>',
+	    					url:'<%=request.getContextPath()
+					+ "/do/EmployeeCommanAction?parameter=saveBank"%>',
 	    				 dataType : 'json',
 	    				 contentType : 'application/json; charset=utf-8',
 	    				 data : editData,
@@ -867,10 +885,18 @@ e.preventDefault();
 	        	 ///e.stopPropagation();
 	    		tempEmpid  = $(".k-state-selected").find('td').eq(1).text();
 	    		 //alert(ids);
+	    		 
 	    		 $("#rpsm1").show("slow");
 	         });
          
-	        
+	         $(".k-grid-pager").bind("click", function (e) {
+	        	 //alert("ee"+event.button);
+	        	 ///e.stopPropagation();
+	    		//tempEmpid  = $(".k-state-selected").find('td').eq(1).text();
+	    		 //alert(ids);
+	    		 
+	    		 $("#rpsm1").hide("slow");
+	         });
 	         //grid.hideColumn("photo");
 	       // grid.hideColumn(2);
 	        // alert( "heeloo"+grid.hideColumn(2));
@@ -896,7 +922,7 @@ e.preventDefault();
 				 var r=confirm("Are you sure you to delete this record!");
 				 if (r==true)
 				   {
-				  alert("hello true");
+				 // alert("hello true");
 				  
 				  $.ajax({
 	      				 type : "POST",
@@ -1003,7 +1029,8 @@ e.preventDefault();
 	   			  
 	            		read : {
 	          			type: 'POST',
-	          			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getBranch"%>',
+	          			 url:'<%=request.getContextPath()
+					+ "/do/CommantypesAction?parameter=getBranch"%>',
 	      				 dataType : 'json',
 	      				 contentType : 'application/json; charset=utf-8',
 	      				 cache: false
@@ -1023,7 +1050,8 @@ e.preventDefault();
 				  
 	        		read : {
 	      			type: 'POST',
-	      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getResident"%>',
+	      			 url:'<%=request.getContextPath()
+					+ "/do/CommantypesAction?parameter=getResident"%>',
 	  				 dataType : 'json',
 	  				 contentType : 'application/json; charset=utf-8',
 	  				 cache: false
@@ -1042,7 +1070,8 @@ e.preventDefault();
 				  
 	        		read : {
 	      			type: 'POST',
-	      			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getAccommodation"%>',
+	      			 url:'<%=request.getContextPath()
+					+ "/do/CommantypesAction?parameter=getAccommodation"%>',
 	  				 dataType : 'json',
 	  				 contentType : 'application/json; charset=utf-8',
 	  				 cache: false
@@ -1078,7 +1107,7 @@ e.preventDefault();
 						
 				  }).data("kendoDropDownList");
 							  
-				  var selectedBranch = JSON.stringify(dataItem.companyId.brchId.id); 
+				  var selectedBranch = JSON.stringify(dataItem.companyId.branchId.id); 
 				 // alert("residentVal"+selectedResident);
 					 $("#brachDropDownList").data("kendoDropDownList").value(selectedBranch);
 					 
@@ -1109,7 +1138,8 @@ e.preventDefault();
 		                	 transport : {
 		                    		read : {
 		                    			type: 'POST',
-		                    			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getAllBrachDepart"%>',
+		                    			 url:'<%=request.getContextPath()
+					+ "/do/CommantypesAction?parameter=getAllBrachDepart"%>',
 				        				 dataType : 'json',
 				        				 contentType : 'application/json; charset=utf-8',
 				        				 cache: false,
@@ -1134,7 +1164,7 @@ e.preventDefault();
 					 
 					  
 					$(".departDropDownList").kendoDropDownList({
-						dataTextField : "name",
+						dataTextField : "deptname",
 						dataValueField : "id",
 						optionLabel: "Select Depart",
 						dataSource :branchDepartDataSource1
@@ -1143,7 +1173,7 @@ e.preventDefault();
 					
 						 
 					 }
-					var bid=dataItem.companyId.brchId.id;
+					var bid=dataItem.companyId.branchId.id;
 					var BrachData = JSON.stringify({
 						
 						
@@ -1232,7 +1262,13 @@ e.preventDefault();
 	    				
 	    				
 	    				
-	    				var id, employeeId, firstname, middlename, lastname, sex, birthdate, hiredate, positionId, photo;
+	    				var id,status,famly,nationID,contName,contNumber,
+	                	
+	                	sex,accommodationVal,residentVal,employeeId, departId,
+	                	
+	                	firstname, middlename, lastname, 
+	                	
+	                	birthdate, hiredate,  photo, numericSal1;
 	    				
          				
 	                	
@@ -1246,13 +1282,35 @@ e.preventDefault();
 	         			firstname = $("#firstname").val(); 
 	         			middlename = $("#middlename").val(); 
 	         			lastname = $("#lastname").val(); 
-	         			sex = $("#sex").val(); 
+	         			numericSal1=$("#numericSal").val();
 	         			
-	         			positionId = $("#positions").val();
-	         			status = $("#status1").val();
+	       residentVal=$("#residentVal").val();
 	         			
+	         			accommodationVal=$("#accommodationVal").val();
+	         			departId=$("#departVal").val();
+	         			sex=$('input:radio[name=sex]:checked').val();
 	         			
-	         			var bdate = new Date($("#birthdate").val());
+	         			status=$('input:radio[name=status]:checked').val();
+	         			famly=$('input:radio[name=family]:checked').val();
+	         			
+	         			contName=$("#contName").val();
+	         			contNumber=$("#contNumber").val();
+	         		nationID=$("#nationID").val();
+	         		var post=$("#positions").val();
+	         		 var costpart1 = String(post).split("-");
+					 postDropDownList=costpart1[0];
+	         	
+	         		
+	         		alert("employeeId"+employeeId+"-----"+"firstname"+firstname
+	         				
+	         			+"middlename"+middlename+"lastname"	+lastname+"residentVal"+residentVal
+	         			+"accommodationVal"+accommodationVal+"postDropDownList"+postDropDownList
+	         			+"sex"+sex+"status"+status+"famly"+famly+"nationID"+nationID
+	         		 +"contName"+contName+"contNumber"+contNumber
+	         		
+	         		);
+	         			
+	         	        var bdate = new Date($("#birthdate").val());
 	         			var hdate = new Date($("#hiredate").val());
 	         			birthdate = bdate.getTime();
 	         			hiredate = hdate.getTime();
@@ -1311,44 +1369,49 @@ e.preventDefault();
 	                        });
 	         			}else{	         				
 	         				photo = $("#photo").val(); 
-	         			}         			
+	         			}        
 	         			
-	         			var updateData = JSON.stringify([{
-        					"id" : id,
-        					"employeeId" : employeeId,
-        					"firstname" : firstname,
-        					"middlename" : middlename,
-        					"lastname" : lastname,
-        					"sex" : sex,
-        					"birthdate" : birthdate,
-        					"hiredate" : hiredate,
-        					"positionId" : postDropDownList,
-        					"photo" : photo,
-        					"status": status
-        				 }]);
-	         			
+	         			alert("diasud");
+	         			var updateDataEmp1 = JSON.stringify([{
+	    					"id" : id,
+	    					"employeeId" : employeeId,
+	    					"firstname" : firstname,
+	    					"middlename" : middlename,
+	    					"lastname" : lastname,
+	    					"sex" : sex,
+	    					"birthdate" : birthdate,
+	    					"hiredate" : hiredate,
+	    					"positionId" : postDropDownList,
+	    					"photo" : photo,
+	    					"status" : status,
+	    					"famly":famly,
+	    					"accommodationVal":accommodationVal,
+	    					"nationID":nationID,
+	    					"residentVal":residentVal,
+	    					"contNumber":contNumber,
+	    					"contName":contName,
+	    					"departId":departId,
+	    					"baseSalry":numericSal1
+	    					
+	    				 }]);  
+	         	
 	         			$.ajax({
 	         				 type : "POST",
-	        				 url:'<%=request.getContextPath()+ "/do/UpdateEmployeeAction"%>',
-	        				 dataType : 'json',
-	        				 contentType : 'application/json; charset=utf-8',
-	        				 data : updateData,
-	        				 success : function(){ 
-	        					 empDataSource.read();
-	        					 wnd.close();	        					 	        					 
-	        				 }	        				
-	        			});	                	
-	                });
-             });
-	        
-	                
-    });    
-    
-    
-    
+	         				 url:'<%=request.getContextPath() + "/do/UpdateEmployeeAction"%>',
+																			dataType : 'json',
+																			contentType : 'application/json; charset=utf-8',
+																			data :updateDataEmp1, 
+																			success : function() {
 
-     
-</script>  
+																				 empDataSource.read();
+													        					 wnd.close();	
+																			}
+																		});
+															});
+										});
+
+					});
+</script>
 
 <script type="text/x-kendo-template" id="employeeTemplate">
 <div id="employeeForm">
@@ -1485,7 +1548,7 @@ e.preventDefault();
 		</div> 
 		<div> <div class="label">Branch</div>
 			<div class="field">
-							<input id="brachDropDownList" value="#=companyId ? companyId.brchId.name: ''#"/>
+							<input id="brachDropDownList" value="#=companyId ? companyId.branchId.name: ''#"/>
 			</div>
 			<div class="clear"></div></div>
 		
@@ -1573,21 +1636,21 @@ e.preventDefault();
 
 </script>
 
-<script>
-var cropperWindow;
-var jcrop_api, boundx, boundy;
+<script type="text/javascript">
+	var cropperWindow;
+	var jcrop_api, boundx, boundy;
 
-function readURL(input) {
-	if (input.files && input.files[0]) {
-		var reader = new FileReader();
-		
-		reader.onload = function(e) {
-		
-			$("#preview").attr('src', e.target.result);		
-			$("#target").attr('src', e.target.result);				
-		};
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
 
-		reader.readAsDataURL(input.files[0]);
+			reader.onload = function(e) {
+
+				$("#preview").attr('src', e.target.result);
+				$("#target").attr('src', e.target.result);
+			};
+
+			reader.readAsDataURL(input.files[0]);
+		}
 	}
-}
-</script> 
+</script>

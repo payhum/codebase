@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -37,7 +39,12 @@ public class ReadNoticeAction extends Action {
         			list.add(l);
         		}
         	}
-            result = JSONArray.fromObject(list);
+        	
+        	JsonConfig config = new JsonConfig();
+			config.setIgnoreDefaultExcludes(false);
+			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			
+            result = JSONArray.fromObject(list, config);
         } catch (Exception e) {
             e.printStackTrace();
         }

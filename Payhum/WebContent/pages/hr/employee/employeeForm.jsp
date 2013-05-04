@@ -328,9 +328,9 @@
 					 
 					  
 					$(".departDropDownList").kendoDropDownList({
-						dataTextField : "name",
+						dataTextField : "deptname",
 						dataValueField : "id",
-						optionLabel: "Select Depart",
+						optionLabel: "Select Department",
 						dataSource :branchDepartDataSource1
 					
 				       }).data("kendoDropDownList");
@@ -423,7 +423,7 @@
 	  
 	  dataTextField : "name",
 		dataValueField : "id",
-		optionLabel: "Select Brach",
+		optionLabel: "Select Branch",
 		dataSource :branchDataSource1
 		
   }).data("kendoDropDownList");

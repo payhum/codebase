@@ -38,7 +38,7 @@
                 <div id="user-box">
                      <p><a class="k-link" href="<%out.print(request.getContextPath() + "/do/LogoutAction");%>">[ Log out ]</a></p>                            
                 <%
-                     out.println("<p style='font-size:11px;'>Welcome <b>" + request.getSession().getAttribute("loggedUser") + "!</b></p>");
+                     out.println("<p style='font-size:11px;'>Welcome <b>" + request.getSession().getAttribute("loggedUser") + "</b> (" + request.getSession().getAttribute("loggedRole") + ")!</p>");
                 %>
                 </div>               
                 
@@ -60,7 +60,7 @@
            
            <%if (request.getSession().getAttribute("loggedUser") != null) {
                      if(!request.getSession().getAttribute("loggedUser").toString().equalsIgnoreCase("")){%>
-            <div id="footer"><p>&copy;2013 Copyright. Payhum. </p></div>
+            <div id="footer"><p>&copy;2013 Copyright. MPTS. </p></div>
             <%}
            } %>
         </div>

@@ -17,32 +17,32 @@ import org.apache.struts.action.ActionMapping;
 
 import com.openhr.factories.LeaveRequestFactory;
 
-public class ReadRequestedLeaveAction extends Action {
+public class ReadLeaveAction extends Action {
 	@Override
     public ActionForward execute(ActionMapping map,
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse response) throws Exception { 
 		
+		int empId = (Integer) request.getSession().getAttribute("employeeId");
 		JSONArray result = null;
         try {
-        	List applicationList = LeaveRequestFactory.findByStatus(0);
+        	List applicationList = LeaveRequestFactory.findByEmployeeId(empId);
             
             JsonConfig config = new JsonConfig();
             config.setIgnoreDefaultExcludes(false);
             config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
-            
             result = JSONArray.fromObject(applicationList, config);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
-	    if(result != null) {
+        if(result != null) {
 	        response.setContentType("application/json; charset=utf-8");
 	        PrintWriter out = response.getWriter();
 	        out.print(result.toString());
-	        out.flush();	
-	    }
+	        out.flush();
+        }
 		
 		return null;
 	}
