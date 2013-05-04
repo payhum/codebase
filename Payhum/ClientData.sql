@@ -56,7 +56,7 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
 INSERT INTO `company` (`id`,`companyId`,`name`) VALUES 
- (1,'C-0001','Comp1');
+ (2,'C-0002','Comp2');
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 
 --
@@ -65,7 +65,7 @@ INSERT INTO `company` (`id`,`companyId`,`name`) VALUES
 
 /*!40000 ALTER TABLE `branch` DISABLE KEYS */;
 INSERT INTO `branch` (`id`,`name`,`address`,`companyId`) VALUES 
- (1,'Main','Address1', 1);
+ (1,'Main','2nd Address', 2);
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 
 --
@@ -73,7 +73,7 @@ INSERT INTO `branch` (`id`,`name`,`address`,`companyId`) VALUES
 --
 /*!40000 ALTER TABLE `department` DISABLE KEYS */;
 INSERT INTO `department` (`id`,`deptname`,`branchId`) VALUES 
- (1,'Finance',1);
+ (1,'Sales',1);
 /*!40000 ALTER TABLE `department` ENABLE KEYS */;
 
 --
@@ -81,7 +81,7 @@ INSERT INTO `department` (`id`,`deptname`,`branchId`) VALUES
 --
 /*!40000 ALTER TABLE `licenses` DISABLE KEYS */;
 INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`,`licensekey`) VALUES
-(1,'2013-04-01 00:00:00','2014-03-31 00:00:00',1,1,'10-119-87-41109-76');
+(1,'2013-05-01 00:00:00','2013-06-30 00:00:00',2,1,'10-119-87-37-99-76');
 /*!40000 ALTER TABLE `licenses` ENABLE KEYS */;
 
 --
