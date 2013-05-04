@@ -250,7 +250,7 @@ public class TaxEngine {
 		return testMap;
 	}
 	
-	private EmployeeBonus getLatestBonus(EmployeePayroll empPayroll,
+	public static EmployeeBonus getLatestBonus(EmployeePayroll empPayroll,
 			Calendar currDtCal) {
 		List<EmployeeBonus> empBonusList = EmpPayTaxFactroy.findEmpBonus(empPayroll.getEmployeeId());
 		EmployeeBonus latestEmpBonus = null;

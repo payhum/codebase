@@ -569,7 +569,7 @@
     					"residentVal":residentVal,
     					"contNumber":contNumber,
     					"contName":contName,
-    					"departId":departId,
+    					"deptIdVal":departId,
     					"baseSalry":numericSal
     					
     				 }]);       			

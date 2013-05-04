@@ -233,7 +233,7 @@ var departDrp, selectDepar;
                               { field: "employeeId", title: "EmpID",   width: "100px" },
                         
                         { field: "firstname", title: "fullName",   width: "100px" },
-                        { field : "companyId", title : "Department", template: '#=companyId? companyId.deptname: ""#',   width: "100px"},
+                        { field : "deptId", title : "Department", template: '#=deptId? deptId.deptname: ""#',   width: "100px"},
                      
                         {field : "payrol",  title: "Amount Earned", template: '#=payrol? payrol.paidNetPay: ""#',width : 50 },
                        

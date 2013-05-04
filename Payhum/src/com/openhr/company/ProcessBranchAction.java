@@ -2,6 +2,7 @@ package com.openhr.company;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,12 +20,20 @@ import org.apache.struts.action.ActionMapping;
 
 import com.openhr.common.PayhumConstants;
 import com.openhr.data.ConfigData;
+import com.openhr.data.EmpPayrollMap;
+import com.openhr.data.Employee;
+import com.openhr.data.EmployeeBonus;
+import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Payroll;
 import com.openhr.data.PayrollDate;
+import com.openhr.data.Users;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.ConfigDataFactory;
+import com.openhr.factories.EmpPayTaxFactroy;
+import com.openhr.factories.EmployeeFactory;
 import com.openhr.factories.LicenseFactory;
 import com.openhr.factories.PayrollFactory;
+import com.openhr.taxengine.TaxEngine;
 
 public class ProcessBranchAction extends Action{
 
@@ -75,6 +84,7 @@ public class ProcessBranchAction extends Action{
 					// License has expired and throw an error
 					//throw new Exception("License has expired");
 					a[0] = 2;
+					break;
 				} else {
 					// License end date is valid, so lets check the key.
 					String licenseKeyStr = LicenseValidator.formStringToEncrypt(compName, endDate);
@@ -84,6 +94,7 @@ public class ProcessBranchAction extends Action{
 					} else {
 						//throw new Exception("License is tampered. Contact Support.");
 						a[0] = 3;
+						break;
 					}
 				}
 			}
@@ -96,7 +107,9 @@ public class ProcessBranchAction extends Action{
 			int returnRes = getTobeProcessedDate(payrollDates);
 			
 			if(returnRes == 1) {
-				a[0] = 4;
+				// adhoc
+				// Check if there is any record to proceed.
+				a[0] = checkIfAdhocIsPossible(now);
 			} else if (returnRes == 2) {
 				a[0] = 5;
 			}
@@ -115,6 +128,48 @@ public class ProcessBranchAction extends Action{
 		return null;
 	}
 	
+	private int checkIfAdhocIsPossible(Date now) throws Exception {
+		
+		Calendar salaryProcessDate = Calendar.getInstance();
+		salaryProcessDate.setTime(now);
+		List<Employee> activeEmpList = new ArrayList<Employee>();
+		List<Employee> inActiveEmpList = new ArrayList<Employee>();
+		
+		// License validation is done and there is a active license, lets proceed and run the tax engine
+		// to compute the payroll for the current pay period
+		//TODO: Get dept ID
+		Integer deptId = 0; // Means All depts
+		
+		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH); 
+		Integer branchId = Integer.parseInt(config.getConfigValue());
+		
+		if(branchId == 0) {
+			// Employees of all Branches
+			activeEmpList = EmployeeFactory.findAllActive();
+		} else {
+			if(deptId == 0) {
+				// Employees of all depts of a given branch.
+				activeEmpList = EmployeeFactory.findAllActiveByBranch(branchId);
+			} else {
+				// Particular dept of a particular branch
+				activeEmpList = EmployeeFactory.findActiveByDeptID(deptId);
+			}
+		}
+		
+		int count = 0;
+		for(Employee emp: activeEmpList) {
+			EmployeePayroll empPayroll = EmpPayTaxFactroy.findEmpPayrollbyEmpID(emp);
+			
+			EmployeeBonus latestBonus = TaxEngine.getLatestBonus(empPayroll, salaryProcessDate);
+			
+			if(latestBonus != null) {
+				count++;
+			}
+		}
+		
+		return count > 0 ? 4 : 6;
+	}
+
 	private boolean isLicenseActive(Date currentDate, Date endDate) {
 	    if (currentDate.after(endDate)) {
 	    	// License has expired

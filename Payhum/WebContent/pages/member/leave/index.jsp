@@ -16,7 +16,7 @@
 			<div class="legend">
 				<div style="float: right">
 					<input type="submit" id="applyLeave" value="New" /> <input
-						type="submit" value="Delete" id="deleteLeave" /> <input
+						type="submit" value="Delete" id="deleteLeave" class="displayClass" /> <input
 						type="submit" value="Edit" style="display: none !important;" />
 				</div>
 				<div style="float: left">
@@ -77,10 +77,7 @@
 	            }
 	        }); 
 	     }	
-	       		
-   			
-  		
-  			
+	     
   			$("#grid").kendoGrid({
   				dataSource : {
   					transport : {
@@ -145,6 +142,8 @@
             <%}%>     
       		employeeId = <%=request.getSession().getAttribute("employeeId")%>;
      		$('#employeeId').val(employeeId);
+     		 
+     		
  		});
  	
 		$('#applyLeave, #canceLeave').click(function(){
@@ -165,15 +164,53 @@
 	
 		$("#addLeave").click(function(){
 	 		leaveremain = $('#remaining').text().split('/')[0];
-			if(leaveremain < 0){
-				alert("Requested number of days is not available. If you proceed there will be loss of pay.");
-			}
+ 			 
 	 		leaveFrom   = $("#leaveFrom").val();
 			leaveTo     = $("#leaveTo").val();
 			leaveType   = $("#TypeOfLeave").val();
 			description = $("#description").val();
 			employeeId  = $("#employeeId").val();
-	 		 
+			 
+	
+			var date1 = new Date(leaveFrom);
+			var date2 = new Date(leaveTo);
+			var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+			var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+			var resultValue = true;
+			var flag = 0;
+			
+			var current = new Date();
+			var currentDate = (current.getMonth()+1) + '/' + current.getDate() + '/' + current.getFullYear();
+			var fromDate = (date1.getMonth()+1) + '/' + date1.getDate() + '/' + date1.getFullYear();
+ 			
+			if(currentDate == fromDate){
+				flag = 1;
+				alert('Leave From Should not be Todays Date');
+			}
+			
+			if(date1.getDate() < current.getDate()){
+ 				if(date1.getMonth() <= current.getMonth()){
+	 				flag = 1;
+					alert('Leave From Should not be Lessthan CurrentDate');
+				}
+			}
+			
+			if(leaveType == ""){
+				flag = 1;
+				alert('LeaveType Should not be Empty');
+			}
+			
+			
+			if(date2.getTime() < date1.getTime()){
+				flag = 1;
+				alert('LeaveTo Should be Greaterthan LeaveFrom');
+			}
+			
+			
+			if((diffDays > leaveremain) && (flag != 1)){
+				resultValue = confirm("Requested number of days is not available. If you proceed there will be loss of pay.");
+			}
+			
 	   		leaveApply = JSON.stringify({
 	   			"leaveFrom"	  : leaveFrom,
 	   			"leaveTo" 	  : leaveTo, 
@@ -181,28 +218,53 @@
 	   			"description" : description,
 	   			"employeeId"  : employeeId
 	   		}); 
+	   		
+	   		if((resultValue && flag == 0)){
     	
-	   		$.ajax({
-	       		url 		: "<%=request.getContextPath() + "/do/LeaveApplicationAction"%>",
-	       		type 		: 'POST',
-				dataType 	: 'json',
-				contentType : 'application/json; charset=utf-8',
-				data 		: leaveApply,
-				success     : function(data){
-				    $("#leaveFrom").val('');
-					$("#leaveTo").val('');
-	 				$("#description").val('');
-	 			 		 
-					$("#addLeaveDiv").addClass("displayClass");
-					$("#grid").empty();
-					getEmployeeLeaves();
-					
-					if(data[0] == 0){
-						alert('Not enough leaves available in this type.');
-					}
+		   		$.ajax({
+		       		url 		: "<%=request.getContextPath() + "/do/LeaveApplicationAction"%>",
+		       		type 		: 'POST',
+					dataType 	: 'json',
+					contentType : 'application/json; charset=utf-8',
+					data 		: leaveApply,
+					success     : function(data){
+					    $("#leaveFrom").val('');
+						$("#leaveTo").val('');
+		 				$("#description").val('');
+	 					$("#addLeaveDiv").addClass("displayClass");
+						$("#grid").empty();
+						getEmployeeLeaves();
+	 				}
+		        });  
+	   		}
+	   		else if(flag != 1){
+	   			 
+	   			isDisplayed = $("#addLeaveDiv").hasClass("displayClass");
+				if(isDisplayed){
+					 $("#leaveFrom").val('');
+					 $("#leaveTo").val('');
+					 $("#description").val('');
+					 $("#addLeaveDiv").removeClass("displayClass");
 				}
-	        });  
+				else{
+					 $("#leaveFrom").val('');
+					 $("#leaveTo").val('');
+					 $("#description").val('');
+					$("#addLeaveDiv").addClass("displayClass");
+				}
+	   		}
 		});
+		
+		  $("#grid").delegate(".k-grid-content", "click", function(e){
+			var containClass = $("#deleteLeave").hasClass("displayClass");
+			if(containClass){
+				$("#deleteLeave").removeClass("displayClass");
+			}
+			else{
+				$("#deleteLeave").addClass("displayClass");
+			}
+			
+		 });
 	
 		$("#deleteLeave").click(function(){
 			 employeeId = $(".k-state-selected").find('td').eq(0).text();

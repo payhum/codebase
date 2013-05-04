@@ -47,29 +47,18 @@ public class LeaveApplicationAction extends Action {
 		long diffTime = endDate - startDate;
 		int diffDays = (int) diffTime / (1000 * 60 * 60 * 24);
 		
-		int a[] = {0};
-		if(diffDays < 0) {
-			a[0] = 0;
-		} else {
-			Employee emp = EmployeeFactory.findById(employeeId).get(0);
-			LeaveType leaveType = LeaveTypeFactory.findById(typeLeave).get(0);
-			LeaveRequest leaveRequest = new LeaveRequest();
-			leaveRequest.setDescription(description);
-			leaveRequest.setEmployeeId(emp);
-			leaveRequest.setLeaveDate(new Date(leaveFrom));
-			leaveRequest.setReturnDate(new Date(leaveTo));
-			leaveRequest.setLeaveTypeId(leaveType);
-			leaveRequest.setNoOfDays(diffDays);
-			leaveRequest.setStatus(0);
-			LeaveRequestFactory.insert(leaveRequest);
-		}
-		
-		JSONArray result = JSONArray.fromObject(a);
-    	response.setContentType("application/json; charset=utf-8");
-		PrintWriter out = response.getWriter();
-		out.print(result.toString());
-		out.flush();
-		
+		Employee emp = EmployeeFactory.findById(employeeId).get(0);
+		LeaveType leaveType = LeaveTypeFactory.findById(typeLeave).get(0);
+		LeaveRequest leaveRequest = new LeaveRequest();
+		leaveRequest.setDescription(description);
+		leaveRequest.setEmployeeId(emp);
+		leaveRequest.setLeaveDate(new Date(leaveFrom));
+		leaveRequest.setReturnDate(new Date(leaveTo));
+		leaveRequest.setLeaveTypeId(leaveType);
+		leaveRequest.setNoOfDays(diffDays);
+		leaveRequest.setStatus(0);
+		LeaveRequestFactory.insert(leaveRequest);
+			
 		return null;
 	}
 }

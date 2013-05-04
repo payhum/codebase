@@ -81,7 +81,7 @@ var departDrp, selectDepar;
                 { field:"count", title: "LeavesDays",  width: "100px" },
                 {field : "payrol",  title:"tilldate", template: '#=payrol? payrol.paidNetPay: ""#',width : 50 },
                 {field : "payrol",  title:"pending", template: '#=payrol? payrol.netPay-payrol.paidNetPay: ""#',width : 50 },
-                { field : "companyId", title : "Department", template: '#=companyId? companyId.deptname: ""#',   width: "100px"},
+                { field : "deptId", title : "Department", template: '#=deptId? deptId.deptname: ""#',   width: "100px"},
             ], 
           
             toolbar : [{"name" : "create",className : "searchBox", text : "Search"}],
@@ -238,7 +238,7 @@ var departDrp, selectDepar;
                 { field:"count", title: "LeavesDays",  width: "100px" },
                 {field : "payrol",  title:"tilldate", template: '#=payrol? payrol.paidNetPay: ""#',width : 50 },
                 {field : "payrol",  title:"pending", template: '#=payrol? payrol.netPay-payrol.paidNetPay: ""#',width : 50 },
-                { field : "companyId", title : "Department", template: '#=companyId? companyId.deptname: ""#',   width: "100px"},
+                { field : "deptId", title : "Department", template: '#=deptId? deptId.deptname: ""#',   width: "100px"},
             ], 
                   
                     toolbar : [{"name" : "create",className : "searchBox", text : "Search"}],

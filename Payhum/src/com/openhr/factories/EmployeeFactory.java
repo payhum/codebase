@@ -463,7 +463,7 @@ public class EmployeeFactory implements Serializable {
 		session.beginTransaction();
 		if(compID!=0)
 		{
-			query = session.getNamedQuery("Department.findByBrachId");
+			query = session.getNamedQuery("Department.findByBranchId");
 		 query.setInteger(0, compID);
 		}
 		else

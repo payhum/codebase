@@ -320,7 +320,7 @@ var postDropDownList;
 	                { field : "positionIds", title : "Role",  template: '#=positionIds ? positionIds.name: ""#', width : 40  },
 	                { hidden:true, field : "birthdate", title : "Birth date", template : "#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy') #" },
 	                {hidden:true,  field : "hiredate", title : "Hired date", template : "#= kendo.toString(new Date(hiredate) , 'MMM, dd yyyy') #" },
-	                { field : "companyId", title : "Branch", template: '#=companyId ? companyId.branchId.name: ""#',  width : 40 },
+	                { field : "deptId", title : "Branch", template: '#=deptId? deptId.branchId.name: ""#',  width : 40 },
 	                
 	                { field : "status", title : "Status", width : 30 },
 	                { field : "residentType", title : "residentType",  template: '#=residentType ? residentType.name: ""#', width : 40 }
@@ -1107,7 +1107,7 @@ e.preventDefault();
 						
 				  }).data("kendoDropDownList");
 							  
-				  var selectedBranch = JSON.stringify(dataItem.companyId.branchId.id); 
+				  var selectedBranch = JSON.stringify(dataItem.deptId.branchId.id); 
 				 // alert("residentVal"+selectedResident);
 					 $("#brachDropDownList").data("kendoDropDownList").value(selectedBranch);
 					 
@@ -1173,7 +1173,7 @@ e.preventDefault();
 					
 						 
 					 }
-					var bid=dataItem.companyId.branchId.id;
+					var bid=dataItem.deptId.branchId.id;
 					var BrachData = JSON.stringify({
 						
 						
@@ -1181,7 +1181,7 @@ e.preventDefault();
 					 });  
 					 branDep(BrachData);
 					 
-					 var selectedDepart = JSON.stringify(dataItem.companyId.id); 
+					 var selectedDepart = JSON.stringify(dataItem.deptId.id); 
 					 // alert("residentVal"+selectedResident);
 						 $("#departVal").data("kendoDropDownList").value(selectedDepart);
 					 
@@ -1390,7 +1390,7 @@ e.preventDefault();
 	    					"residentVal":residentVal,
 	    					"contNumber":contNumber,
 	    					"contName":contName,
-	    					"departId":departId,
+	    					"deptIdVal":departId,
 	    					"baseSalry":numericSal1
 	    					
 	    				 }]);  
@@ -1548,14 +1548,14 @@ e.preventDefault();
 		</div> 
 		<div> <div class="label">Branch</div>
 			<div class="field">
-							<input id="brachDropDownList" value="#=companyId ? companyId.branchId.name: ''#"/>
+							<input id="brachDropDownList" value="#=deptId ? deptId.branchId.name: ''#"/>
 			</div>
 			<div class="clear"></div></div>
 		
 			<div id="dp1">
 			<div class="label">Department</div>
 			<div class="field">
-	<input class="departDropDownList" id="departVal" value="#=companyId ? companyId.name: ''#"/>
+	<input class="departDropDownList" id="departVal" value="#=deptId ? deptId.name: ''#"/>
 			</div>
 			<div class="clear"></div>
 		</div>

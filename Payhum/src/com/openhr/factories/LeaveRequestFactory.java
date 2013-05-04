@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
 import com.openhr.data.Department;
@@ -39,6 +40,35 @@ public class LeaveRequestFactory {
     }
    
     
+	public static   List<Object[]>  findByStatusNodaysJion1(Integer c,Integer d)
+    
+    
+    {
+    	List<Object[]> results=null;
+    	 session = OpenHRSessionFactory.getInstance().getCurrentSession();
+         session.beginTransaction();
+         try
+         {
+        	 String hql= "select e.employeeId, sum(lr.status)  from  employee e , " +
+        	 		"leaverequest lr  where  e.id=lr.employeeId and  e.deptId = "+d +" and  lr.status="+c +" group by lr.employeeId";
+        	 		
+        	 			         
+        	 
+        	 SQLQuery query = session.createSQLQuery(hql);
+        	 //query.setParameter("id", d);
+        // query.setParameter("c", 1);
+        
+         results=query.list();
+         session.getTransaction().commit();
+         }
+         catch(Exception e)
+         {
+        	 e.printStackTrace();
+         }
+         
+         return results;
+    }
+    	
     		
     		
     		

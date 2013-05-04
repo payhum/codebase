@@ -66,6 +66,7 @@ public class ReadEmployeeAction extends Action {
 				empFrm.setEmerContactNo(emp.getEmerContactNo());
 				empFrm.setContNumber(emp.getEmerContactNo());
 				empFrm.setDeptId(emp.getDeptId());
+				
 				empFrm.setEmployeeId(emp.getEmployeeId());
 				empFrm.setEmpNationalID(emp.getEmpNationalID());
 				empFrm.setFirstname(emp.getFirstname());

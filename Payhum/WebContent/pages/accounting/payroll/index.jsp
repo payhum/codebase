@@ -742,16 +742,24 @@ h3 {
 							alert("License is tampered. Contact Support.");
 						} else if (data == 4) {
 							alert("Adhoc Payroll is processed, click on the Download button to download the file.");
+
+							var ele = document.getElementById("runPayrollDiv");
+							if(ele.style.display == "none") {
+						    	ele.style.display = "block";
+							};
 						} else if (data == 5) {
 							alert("Unexpected Error Occurred. Contact Support.");
+						} else if (data == 6) {
+							alert("Nothing to process in Adhoc Payroll.");
 						} else {
 							alert("Successfully processed the payroll, click on the Download button to download the file.");
+
+							var ele = document.getElementById("runPayrollDiv");
+							if(ele.style.display == "none") {
+						    	ele.style.display = "block";
+							};
 						}
 						
-						var ele = document.getElementById("runPayrollDiv");
-						if(ele.style.display == "none") {
-					    	ele.style.display = "block";
-						};
 					},
 					failure : function(e){
 						alert(e.responseText);

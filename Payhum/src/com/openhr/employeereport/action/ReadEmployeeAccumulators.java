@@ -106,26 +106,29 @@ public class ReadEmployeeAccumulators extends DispatchAction {
 			Department dep=new Department();
 			dep.setId(ids);
 			
-			List <Object[]> ls=LeaveRequestFactory.findByStatusNodaysJion(1,dep);
+			List <Object[]> ls=LeaveRequestFactory.findByStatusNodaysJion1(1,ids);
+			
+			
 			
 			List<EmployeeForm> acl=new ArrayList<EmployeeForm>();
 			EmployeeForm acfm=null;
 	for(Object[] obj:ls)
 	{
 		acfm =new EmployeeForm();
-	Employee e=(Employee)obj[0];
+	Employee e=EmployeeFactory.findByEmployeeId((String)obj[0]).get(0);
 	acfm.setEmployeeId(e.getEmployeeId());
 	acfm.setFirstname(e.getFirstname()+"."+e.getMiddlename());
 		acfm.setBirthdate(e.getBirthdate());
 		acfm.setHiredate(e.getBirthdate());
 		acfm.setPayrol(EmpPayTaxFactroy.findEmpPayrollbyEmpID(e));
 		acfm.setDeptId(e.getDeptId());
-		acfm.setCount((Long)obj[1]);
+		String s=obj[1].toString();
+		acfm.setCount(Long.valueOf(s));
 		acl.add(acfm);
 	}
-			
+		
 			result = JSONArray.fromObject(acl, config);
-			
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		
@@ -136,8 +139,6 @@ public class ReadEmployeeAccumulators extends DispatchAction {
 			
 			
 			
-			
-
 		System.out.print(result.toString());
 
 		response.setContentType("application/json; charset=utf-8");

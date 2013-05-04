@@ -32,7 +32,7 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	private String famly;
 	private Integer positionId;
 	private String status;
-
+	private Integer deptIdVal;
 
 	private String contName;
 
@@ -104,6 +104,14 @@ public void setCount(Long count) {
 		
 	}
 
+	public Integer getDeptIdVal() {
+		return deptIdVal;
+	}
+
+	public void setDeptIdVal(Integer deptIdVal) {
+		this.deptIdVal = deptIdVal;
+	}
+
 	public void setInactiveDate(Date inactiveDate) {
 		this.inactiveDate = inactiveDate;
 	}
@@ -158,8 +166,8 @@ public void setCount(Long count) {
 		return deptId;
 	}
 
-	public void setDeptId(Department companyId) {
-		this.deptId = companyId;
+	public void setDeptId(Department deptId) {
+		this.deptId = deptId;
 	}
 
 	public String getEmpNationalID() {

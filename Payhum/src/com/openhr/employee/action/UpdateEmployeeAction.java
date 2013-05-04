@@ -95,7 +95,7 @@ public class UpdateEmployeeAction extends Action {
 				e.setPhoto(eFromJSON.getPhoto());
 			}
 			e.setStatus(eFromJSON.getStatus());
-			Department  db = EmployeeFactory.findDepartById(eFromJSON.getDeptId().getId());
+			Department  db = EmployeeFactory.findDepartById(eFromJSON.getDeptIdVal());
 			
 			if(db!=null)
 			{
