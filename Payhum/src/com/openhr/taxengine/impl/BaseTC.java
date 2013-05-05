@@ -10,9 +10,10 @@ import com.openhr.taxengine.TaxRates;
 public class BaseTC implements TaxCalculator{
 
 	@Override
-	public void calculate(Employee emp, EmployeePayroll empPayroll) {
+	public Double calculate(Employee emp, EmployeePayroll empPayroll) {
 		TaxRates taxRates = TaxRates.getTaxRatesForCountry();
-	
+		Double lastPercentage = 1D;
+		
 		if(taxRates.shouldTax(empPayroll)) {
 			// Get the taxes and put the math.
 			Double taxAmount = new Double(0);
@@ -31,17 +32,20 @@ public class BaseTC implements TaxCalculator{
 						break;
 					
 					taxAmount += amountYetToBeTaxed * ratePercentage / 100;
+					lastPercentage = ratePercentage;
 					break;
 				}
 				else {
 					if(taxableIncome >= toValue) {
 						amountYetToBeTaxed = amountYetToBeTaxed - (toValue - fromValue);
 						taxAmount += (toValue - fromValue) * ratePercentage / 100;
+						lastPercentage = ratePercentage;
 					} else {
 						if(amountYetToBeTaxed == 0)
 							break;
 						
 						taxAmount += amountYetToBeTaxed * ratePercentage / 100;
+						lastPercentage = ratePercentage;
 						break;
 					}
 				}
@@ -51,6 +55,8 @@ public class BaseTC implements TaxCalculator{
 		} else {
 			// The taxable income is lower than the limit, so no tax.
 		}
+		
+		return lastPercentage;
 	}
 
 }

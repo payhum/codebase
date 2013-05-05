@@ -144,6 +144,10 @@ public class EmployeePayroll implements Serializable {
     @Column(name = "leaveLoss")
     private Double leaveLoss;
     
+    @Basic(optional = false)
+    @Column(name = "taxPaidByEmployer")
+    private Integer taxPaidByEmployer;
+    
 	public EmployeePayroll() {
     	this.taxableIncome = 0D;
         this.taxAmount = 0D;
@@ -168,6 +172,8 @@ public class EmployeePayroll implements Serializable {
         this.paidSS = 0D;
         this.paidTaxAmt = 0D;
         this.otherIncome = 0D;
+        this.leaveLoss = 0D;
+        this.taxPaidByEmployer = 0;
     }
     
     public Double getAccomodationAmount() {
@@ -474,5 +480,12 @@ public class EmployeePayroll implements Serializable {
 	public void setPaidSS(Double paidSS) {
 		this.paidSS = paidSS;
 	}
-	
+
+	public Integer getTaxPaidByEmployer() {
+		return taxPaidByEmployer;
+	}
+
+	public void setTaxPaidByEmployer(Integer taxPaidByEmployer) {
+		this.taxPaidByEmployer = taxPaidByEmployer;
+	}	
 }

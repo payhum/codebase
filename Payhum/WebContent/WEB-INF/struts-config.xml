@@ -202,30 +202,34 @@
 		
 		
 				<!--Start of TaxRatesAction-->
-						<action path="/TaxRatesAction" 
+		<action path="/TaxRatesAction" 
 			type="com.openhr.tax.action.TaxRatesAction" >
 			<forward name="continue" path="position.form" />
 		</action>
 						
-							<action path="/CommanTaxReatesActions" parameter="parameter"
-    type="com.openhr.tax.action.CommanTaxReatesActions">
-    <forward name="success" path="/UserSuccess.jsp" />
-    <forward name="failure" path="/UserSuccess.jsp" />
-    
-</action>
-						<!--end of TaxRatesAction-->
+		<action path="/CommanTaxReatesActions" parameter="parameter"
+    		type="com.openhr.tax.action.CommanTaxReatesActions">
+    		<forward name="success" path="/UserSuccess.jsp" />
+    		<forward name="failure" path="/UserSuccess.jsp" />
+		</action>
+
+		<action path="/ForiegnTaxRatesAction" 
+			type="com.openhr.tax.action.ForiegnTaxRatesAction" >
+			<forward name="continue" path="position.form" />
+		</action>
+				
+		<!--end of TaxRatesAction-->
 		
 		<!--start  Deductions actions -->
 		
 		<action path="/ReadDeductionDeclAction" parameter="parameter"
-    type="com.openhr.deductiondec.action.ReadDeductionDeclAction">
-    <forward name="success" path="/UserSuccess.jsp" />
-    <forward name="failure" path="/UserSuccess.jsp" />
-    
-</action>
+    		type="com.openhr.deductiondec.action.ReadDeductionDeclAction">
+    		<forward name="success" path="/UserSuccess.jsp" />
+    		<forward name="failure" path="/UserSuccess.jsp" />
+		</action>
 		
 		
-	<action path="/ReadDeductionAction" 
+		<action path="/ReadDeductionAction" 
 			type="com.openhr.deduction.action.ReadDeductionAction" >
 			<forward name="continue" path="position.form" />
 		</action>

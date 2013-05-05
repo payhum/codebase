@@ -25,6 +25,9 @@ public class LicenseValidator {
 											String toCompare) {
 		String retval = encrypt(strToBeEncrypted);
 		
+		System.out.println("New String - " + retval);
+		System.out.print("Repo String - " + toCompare);
+		
 		return retval.equalsIgnoreCase(toCompare);
 	}
 	

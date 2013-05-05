@@ -4,5 +4,5 @@ import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 
 public interface TaxCalculator {
-	public void calculate(Employee emp, EmployeePayroll empPayroll);
+	public Double calculate(Employee emp, EmployeePayroll empPayroll);
 }

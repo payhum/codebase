@@ -81,7 +81,10 @@ public class TaxEngine {
 			
 			// Finally calculate the tax to be paid
 			TaxCalculator taxCalc = ResidentTypeFactory.getTaxCalculator(emp);
-			taxCalc.calculate(emp, empPayroll);
+			Double lastPercentage = taxCalc.calculate(emp, empPayroll);
+			
+			// Process if the tax is to be paid by employer.
+			processTaxPaidByEmployer(empPayroll, lastPercentage);
 			
 			empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
 			
@@ -120,8 +123,11 @@ public class TaxEngine {
 			
 			// Finally calculate the tax to be paid
 			TaxCalculator taxCalc = ResidentTypeFactory.getTaxCalculator(emp);
-			taxCalc.calculate(emp, empPayroll);
+			Double lastPercentage = taxCalc.calculate(emp, empPayroll);
 			
+			// Process if the tax is to be paid by employer.
+			processTaxPaidByEmployer(empPayroll, lastPercentage);
+						
 			empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
 			
 			empPayroll.setPaidNetPay(empPayroll.getNetPay());
@@ -145,6 +151,30 @@ public class TaxEngine {
 		return retList;
 	}
 	
+	private void processTaxPaidByEmployer(EmployeePayroll empPayroll, 
+											Double ratePercentage) {
+		Integer taxPaidByEmployer = empPayroll.getTaxPaidByEmployer();
+		
+		if(taxPaidByEmployer != null && taxPaidByEmployer.compareTo(1) == 0) {
+			// Tax is paid by Employer so process it.
+			Double taxRate = ratePercentage / 100;
+			
+			Double taxAmount = empPayroll.getTaxAmount();
+			
+			Double amt1 = taxAmount * taxRate;
+			amt1 += (amt1 * taxRate) / (1 - taxRate);
+			amt1 += taxAmount;
+			
+			empPayroll.setTaxAmount(amt1);
+			
+			Double totalAmt = empPayroll.getTotalIncome();
+			Double taxableAmt = empPayroll.getTaxableIncome();
+			
+			empPayroll.setTotalIncome(totalAmt + amt1);
+			empPayroll.setTaxableIncome(taxableAmt + amt1);
+		}
+	}
+
 	private void computeDetailsPerPayPeriod(EmployeePayroll empPayroll,
 			Calendar toBeProcessedFor, Payroll payroll, boolean adhoc) throws Exception {
 		List<PayPeriodData> payPeriods = PayPeriodFactory.findAll();
@@ -213,7 +243,7 @@ public class TaxEngine {
 				
 				Double pendingTaxAmt = totalTaxAmt - empPayroll.getPaidTaxAmt();
 				Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay();
-				Double pendingEmpSS = totalEmpSS - empPayroll.getEmployerSS();
+				Double pendingEmpSS = totalEmpSS - empPayroll.getPaidSS();
 				
 				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + pendingNeyPay / remainingMonths);
 				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + pendingTaxAmt / remainingMonths);

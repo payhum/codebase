@@ -62,7 +62,7 @@ public class Report extends Action {
 		boolean adhoc = false;
 		PayrollDate payrollDate = null;
 		try {
-			getTobeProcessedDate(now);
+			payrollDate = getTobeProcessedDate(now);
 		}
 		catch(Exception e) {
 			// Its an adhoc one.

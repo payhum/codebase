@@ -379,7 +379,8 @@ span.k-tooltip {
 		<ul class="list">
 			<li class="k-state-active">Overtime Setting</li>
 			<li>Tax Rates for Local</li>
- 			<li>Deduction Type Setting</li>
+			<li>Tax Rates for NRF</li>
+ 			<li>Deduction Setting</li>
 			<li>Payroll period Setting</li>
 		</ul>
 
@@ -415,6 +416,27 @@ span.k-tooltip {
 					</select> <label> %</label><br> <br> <input type="button"
 						class="taxRateSave" value="Save" /> <input type="reset"
 						class="taxClear" value="Clear" />
+				</fieldset>
+			</form>
+		</div>
+		
+		<div id="foriegn">
+			<div id="foriegnDiv" class="k-content">
+				<div id="foriegnTable"></div>
+				<div id="empForm"></div>
+			</div>
+
+			<form>
+				<fieldset>
+					<legend>Tax Rates Settings For Non Resident Foreigner</legend>
+					<label>From (MMK)</label> <input type="text" id="foriegnincomeFrom"
+						disabled /><br> <label>To(MMK)</label> <input type="text"
+						id="foriegnincomeTo" /><br> <input type="hidden" id="foriegnincomeFromId" /><br>
+					<label>Rate </label> <select id="foriegntaxpercent">
+
+					</select> <label> %</label><br> <br> <input type="button"
+						class="foriegntaxRateSave" value="Save" /> <input type="reset"
+						class="foriegntaxClear" value="Clear" />
 				</fieldset>
 			</form>
 		</div>
@@ -872,21 +894,25 @@ h3 {
 			function reuseScript(className) {
 						var blr=false;
 		 				$("#payrollSettingsWindow").html(df);
-				 
-						switch(className) {
+ 						switch(className) {
+						
 				            case 1:
 		 		            break;
 				            case 2:
 				            	$("ul.list li:nth-child(1)").removeClass("k-state-active");
 				            	$("ul.list li:nth-child(2)").addClass("k-state-active");
-				           	 	break;      
+				           	 	break;
 				            case 3:
 				            	$("ul.list li:nth-child(1)").removeClass("k-state-active");
 				            	$("ul.list li:nth-child(3)").addClass("k-state-active");
-				            	break;     
+				           	 	break;
 				            case 4:
 				            	$("ul.list li:nth-child(1)").removeClass("k-state-active");
 				            	$("ul.list li:nth-child(4)").addClass("k-state-active");
+				            	break;     
+				            case 5:
+				            	$("ul.list li:nth-child(1)").removeClass("k-state-active");
+				            	$("ul.list li:nth-child(5)").addClass("k-state-active");
 				            	break;
 		 		        }
 		 	
@@ -960,7 +986,7 @@ h3 {
 								 url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=getTaxRate"%>',
 		 						 success : function(data1){
 		 						 	var d=data1;
-			 						 $("#incomeFrom").val(d[0].incomeFrom);
+			 						 $("#incomeFrom").val(d[0].incomeTo);
 									 $("#incomeFromId").val(d[0].id);
 							 	 }
 								
@@ -974,6 +1000,28 @@ h3 {
 			             
 			      		percentSelect=$("#taxpercent").data("kendoDropDownList");
 					});
+					
+					$("#foriegn").ready(function() {
+		 				$.ajax({
+								 type : "POST",
+								 url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=getTaxRateForForiegn"%>',
+		 						 success : function(data1){
+		 						 	var d=data1;
+			 						 $("#foriegnincomeFrom").val(d[0].incomeTo);
+									 $("#foriegnincomeFromId").val(d[0].id);
+							 	 }
+								
+						});
+						$("#foriegntaxpercent").kendoDropDownList({
+				                 dataTextField: "text",
+				                 dataValueField: "value",
+				                 optionLabel: "Select %",
+				                 dataSource: rateIncome
+				     	});
+			             
+			      		percentSelect=$("#foriegntaxpercent").data("kendoDropDownList");
+					});
+					
 					$("#payPrdDiv").ready(function() {
 		 			 	$("#payperiodval").kendoDropDownList({
 			                 dataTextField: "text",
@@ -1006,6 +1054,19 @@ h3 {
 			           	batch : true 
 			        });
 			       
+					var foriegnempDataSource = new kendo.data.DataSource({
+			        	transport : {
+			           		read : {
+			           			url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=getAllTaxRatesForiegn"%>',
+			           			dataType : "json",
+			           			cache : false
+			           		}
+				         },
+			           	pageSize: 3,
+			           	autoSync : true,
+			           	batch : true 
+			        });
+			       
 			        
 					var grid=$("#grid").kendoGrid({
 			            dataSource : empDataSource,
@@ -1015,7 +1076,21 @@ h3 {
 		                          { field: "incomeFrom", title:"From", width: "30px" },
 		                          { field: "incomeTo", title:"To",  template : "#= incomeTo = incomeFrom ? incomeTo : 'Above' #", width: "30px" },
 		                          { field: "incomePercentage", title:"%",width: "30px" },
-		                          { command: [{"name" : "edit", text:"", className : "editEmp"}, {"name" :"destroy", text:"", className:"delTax"}], title: "", width: "50px" }],
+		                          { command: [{"name" : "edit", text:"", className : "editEmp "}, {"name" :"destroy", text:"", className:"delTax"}], title: "", width: "50px" }],
+			                      
+			  
+			        }).data("kendoGrid");
+					
+					
+					var grid1 = $("#foriegnTable").kendoGrid({
+			            dataSource : foriegnempDataSource,
+			            pageable: true,
+			            columns: [
+		                          { hidden:true,field:"id", title: "id" ,width: "1px"},
+		                          { field: "incomeFrom", title:"From", width: "30px" },
+		                          { field: "incomeTo", title:"To",  template : "#= incomeTo = incomeFrom ? incomeTo : 'Above' #", width: "30px" },
+		                          { field: "incomePercentage", title:"%",width: "30px" },
+		                          { command: [{"name" : "edit", text:"", className : "editForiegnTaxRate"}, {"name" :"destroy", text:"", className:"delForiegnTax"}], title: "", width: "50px" }],
 			                      
 			  
 			        }).data("kendoGrid");
@@ -1049,12 +1124,53 @@ h3 {
 			     				 contentType : 'application/json; charset=utf-8',
 			     				 data : rate,
 			     				 success : function(datas){ 
-			     					 alert(datas);
+			     					 //alert(datas);
 			     				 
 			     					reuseScript(2);
 			     				 }	        				
 			     			});
 					});
+				
+					
+					$("#foriegnTable").delegate(".delForiegnTax", "click", function(e) {
+		 				e.preventDefault();
+ 					 	var dataItem = grid1.dataItem($(this).closest("tr"));
+					  
+					   	percentSelect.value(dataItem.incomePersent);
+						$("#foriegnincomeTo").val(dataItem.incomeTo).attr('disabled', 'disabled');;
+						$("#foriegnincomeFromId").val(dataItem.id).attr('disabled', 'disabled');;
+						
+						$("#foriegnincomeFrom").val(dataItem.incomeFrom);
+						 
+						var taxpercnt=$("#foriegntaxpercent").val();
+						var incomeTo=$("#foriegnincomeTo").val();
+						var idTax= $("#foriegnincomeFromId").val();
+						
+						var incomeFrom=$("#foriegnincomeFrom").val();
+						
+						var rate = JSON.stringify([{
+							"id":idTax,
+							"incomeFrom" :incomeFrom,
+							"incomeTo":incomeTo,
+							"incomePersent":taxpercnt
+							}]);
+						  $.ajax({
+			      				 type : "POST",
+			      				url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=deleteTaxRate"%>',
+			     				 dataType : 'json',
+			     				 contentType : 'application/json; charset=utf-8',
+			     				 data : rate,
+			     				 success : function(datas){ 
+			     					// alert(datas);
+			     				 
+			     					reuseScript(3);
+			     				 }	        				
+			     			});
+					});
+				
+					
+					
+					
 					
 					$("#grid").delegate(".editEmp", "click", function(e) {
 		 				e.preventDefault();
@@ -1087,12 +1203,14 @@ h3 {
 		            	 
 					}); 
 					
+					
+					
 					$(".taxClear").bind("click", function() { 
 		 				 reuseScript(2);
 		 			});
 					
 					$(".taxRateSave").bind("click", function() { 
- 			 			var taxpercnt=$("#taxpercent").val();
+   			 			var taxpercnt=$("#taxpercent").val();
 						var incomeTo=$("#incomeTo").val();
 						var idTax= $("#incomeFromId").val();
 						var taxbutton=$(".taxRateSave").val();
@@ -1148,6 +1266,102 @@ h3 {
 					  }
 							
 				 }); 
+					
+					
+					$("#foriegnTable").delegate(".editForiegnTaxRate", "click", function(e) {
+ 		 				e.preventDefault();
+ 			        	var dataItem = grid1.dataItem($(this).closest("tr"));
+		                percentSelect.value(dataItem.incomePersent);
+		      
+						$("#foriegnincomeTo").val(dataItem.incomeTo).attr('disabled', 'disabled');;
+						$("#foriegnincomeFromId").val(dataItem.id).attr('disabled', 'disabled');
+		 				$("#foriegnincomeFrom").val(dataItem.incomeFrom);
+		 				$(".foriegntaxRateSave").val('Update');
+		                $(".editTaxPercent").bind("click", function() { 
+			             	  var  id = $(".eperid").val(); 
+			            	  var  incEdit = $(".incomePersentEdit").val(); 
+			            	   
+			             	  var editData = JSON.stringify([{
+			  					"id" : id,
+			  					"incomePersent" : incEdit,
+			  				  }]);
+			             	  $.ajax({
+			      				 type : "POST",
+			      				url:'<%=request.getContextPath()
+								+ "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
+			     				 dataType : 'json',
+			     				 contentType : 'application/json; charset=utf-8',
+			     				 data : editData,
+			     				 success : function(datas){ 
+			      					reuseScript(3);
+			     				 }	        				
+			     			});	 
+		                });
+		            	 
+					}); 
+					
+					$(".foriegntaxClear").bind("click", function() { 
+		 				 reuseScript(3);
+		 			});
+					
+					$(".foriegntaxRateSave").bind("click", function() { 
+  			 			var taxpercnt=$("#foriegntaxpercent").val();
+						var incomeTo=$("#foriegnincomeTo").val();
+						var idTax= $("#foriegnincomeFromId").val();
+						var taxbutton=$(".foriegntaxRateSave").val();
+						var incomeFrom=$("#foriegnincomeFrom").val();
+ 						
+		 				if(incomeFrom==''||incomeTo==''||taxpercnt=='-1'|| incomeFrom > incomeTo) {
+			 				if(taxbutton=="Update") {
+			 					perFlag=true;
+							}
+		 					else {		
+			 					alert("fill data correctly");
+								return false;
+							}
+		 				}
+						else {
+		 					if(taxbutton=="Update") {
+		 						perFlag=true;
+							 }
+						}
+						var rate = JSON.stringify([{
+							"id":idTax,
+							"incomeFrom" :incomeFrom,
+							"incomeTo":incomeTo,
+							"incomePersent":taxpercnt
+						}]);
+						
+						if(taxbutton=="Save") {
+				 			$.ajax({
+									 type : "POST",
+									 url:'<%=request.getContextPath() + "/do/ForiegnTaxRatesAction"%>',
+									 dataType : 'json',
+									 contentType : 'application/json; charset=utf-8',
+									 data : rate,
+									 success : function(data1){
+		 							 	reuseScript(3);
+		 							 }
+		 						});
+		 				}
+					
+						if(perFlag) {
+		 					if(taxbutton=="Update") {
+		 				  	  $.ajax({
+				      				 type : "POST",
+				      				url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
+				     				 dataType : 'json',
+				     				 contentType : 'application/json; charset=utf-8',
+				     				 data : rate,
+				     				 success : function(datas){ 
+		 		     					reuseScript(3);
+				     				 }	        				
+				     			});	 
+		 					}
+					  }
+							
+				 }); 
+					
 				 var dnameup;
 				 $(".ratesave").bind("click", function() { 
 						var day=$("#daygroup").val();
@@ -1193,7 +1407,7 @@ h3 {
 		 					 if(data1)
 								 {alert("tue");}
 							 else
-								 {alert("false");}
+								 {}
 							 reuseScript(4);
 						 }
 		 			});

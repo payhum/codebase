@@ -21,12 +21,13 @@ import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.TaxFactory;
 import com.openhr.factories.TypesDataFactory;
 
-public class TaxRatesAction extends Action {
+public class ForiegnTaxRatesAction extends Action {
 	@Override
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse reponse)
 			throws Exception {
 		boolean flag = false;
+		System.out.println("testing......venki........");
 		BufferedReader bf = request.getReader();
 		StringBuffer sb = new StringBuffer();
 		String line = null;
@@ -42,7 +43,7 @@ public class TaxRatesAction extends Action {
  			Double incomeFrom = json1.getDouble("incomeFrom");
 			Double incomeTo = json1.getDouble("incomeTo");
 			Double incomePercnt = json1.getDouble("incomePersent");
-			TypesData residentType = TypesDataFactory.findById(11);
+			TypesData residentType = TypesDataFactory.findById(12);
 			Integer id = json1.getInt("id");
 			System.out.println("venkat....."+incomeFrom+"------"+incomeTo+"----"+incomePercnt+"---"+residentType.getId());
  			txr.setIncomeFrom(incomeFrom);
@@ -64,7 +65,7 @@ public class TaxRatesAction extends Action {
 
 			} else {
 				if (TaxFactory.update(txr)) {
- 					txr.setIncomeFrom(incomeTo + 1);
+					txr.setIncomeFrom(incomeTo + 1);
 					txr.setIncomeTo(incomeTo + 1);
 					txr.setIncomePercentage(incomePercnt);
 					flag = EmpPayTaxFactroy.insertTaxRates(txr);

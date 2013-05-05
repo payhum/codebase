@@ -63,8 +63,8 @@ public class TaxFactory implements Serializable {
 				;
 			}
 			trd.setIncomeTo(trds.getIncomeTo());
-			trd.setIncomePercentage(trds.getIncomePercentage());
-			trd.setIncomeFrom(trds.getIncomeFrom());
+			//trd.setIncomePercentage(trds.getIncomePercentage());
+			//trd.setIncomeFrom(trds.getIncomeFrom());
 			trd.setResidentTypeId(trds.getResidentTypeId());
 
 			session.update(trd);

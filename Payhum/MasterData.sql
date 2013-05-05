@@ -24,8 +24,8 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 (5,'Income Limit for no Tax','Amount upto which there is no Tax','TAXDETAILS'),
 (6,'Children','Amount which is exempted if the child is studying (applicable per child)','TAXDETAILS'),
 (7,'Supporting Spouse','Amount which is exempted if Spouse is dependent','TAXDETAILS'),
-(8,'Fully Furnished Accomodation','Employer sponsored. Percentage of Gross Salary added as additional income','TAXDETAILS'),
-(9,'Not Furnished Accomodation','Employer sponsored. Percentage of Gross Salary added as additional income','TAXDETAILS'),
+(8,'Free Fully Furnished Accomodation','Employer sponsored. Percentage of Gross Salary added as additional income','TAXDETAILS'),
+(9,'Free Not Furnished Accomodation','Employer sponsored. Percentage of Gross Salary added as additional income','TAXDETAILS'),
 (10,'Employer contribution for Social Security','Employer contributions percentage of base salary','TAXDETAILS'),
 (11,'Local','Local employee','RESIDENTTYPE'),
 (12,'Resident Foreigner','Resident foreigner employee','RESIDENTTYPE'),
@@ -70,8 +70,8 @@ INSERT INTO `department` (`id`,`deptname`,`branchId`) VALUES
 -- Dumping data for table `employee`
 --
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`) VALUES 
- (1,'MAS-0001','Max','A','Leo','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',1,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1');
+INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`,`address`,`phoneNo`) VALUES 
+ (1,'MAS-0001','Max','A','Leo','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',1,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1','address1','123456');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 
 --

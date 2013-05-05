@@ -2,6 +2,7 @@ package com.openhr.company;
 
 
 import java.io.BufferedReader;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,10 +33,14 @@ public class DeleteCompanyAction extends Action {
 		JSONObject json = JSONObject.fromObject(sb.toString());
 		String companyId   =  json.getString("compId");
   		Company company = CompanyFactory.findByCompanyId(companyId).get(0);
-  		Branch branch = BranchFactory.findByCompanyId(company.getId()).get(0);
- 		if(branch != null){
- 			BranchFactory.delete(branch);
- 		}
+  		List<Branch> branchList = BranchFactory.findByCompanyId(company.getId());
+  		if(! branchList.isEmpty()) {
+  			Branch branch = branchList.get(0);
+
+  	 		if(branch != null){
+  	 			BranchFactory.delete(branch);
+  	 		}
+  		}
   		Licenses license = LicenseFactory.findByCompanyId(company.getId()).get(0);
    		System.out.println("license size...."+license.getCompanyId());
 		LicenseFactory.delete(license);

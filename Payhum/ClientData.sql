@@ -88,8 +88,8 @@ INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`,`licens
 -- Dumping data for table `employee`
 --
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`) VALUES 
- (1,'CLI-0001','JOHN','B','WIN','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',3,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1');
+INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`,`address`,`phoneNo`) VALUES 
+ (1,'CLI-0001','JOHN','B','WIN','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',3,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1','address1','123456');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 
 --
