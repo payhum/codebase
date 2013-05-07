@@ -421,21 +421,26 @@ span.k-tooltip {
 		</div>
 		
 		<div id="foriegn">
-			<div id="foriegnDiv" class="k-content">
-				<div id="foriegnTable"></div>
+			<div id="foriegnDiv" class="k-content" style="display : none !important;" >
+				<div id="foriegnTable" style="display : none !important;"></div>
 				<div id="empForm"></div>
 			</div>
 
 			<form>
 				<fieldset>
 					<legend>Tax Rates Settings For Non Resident Foreigner</legend>
-					<label>From (MMK)</label> <input type="text" id="foriegnincomeFrom"
-						disabled /><br> <label>To(MMK)</label> <input type="text"
-						id="foriegnincomeTo" /><br> <input type="hidden" id="foriegnincomeFromId" /><br>
+					<label style="display : none !important;">From (MMK)</label> <input type="text" id="foriegnincomeFrom"
+						disabled  style="display : none !important;"/><label style="display :none !important;">To(MMK)</label> <input type="text"
+						id="foriegnincomeTo" value="1"  disabled style="display:none !important;"/><input type="hidden" id="foriegnincomeFromId" />
+					
+					<label>All income is taxed at <span id = "forTax" ></span></label><br/>
+					
+					<label>To change the percentage, select the rate and update</label><br/>
 					<label>Rate </label> <select id="foriegntaxpercent">
 
+					
 					</select> <label> %</label><br> <br> <input type="button"
-						class="foriegntaxRateSave" value="Save" /> <input type="reset"
+						class="foriegntaxRateSave" value="Update" /> <input type="reset"
 						class="foriegntaxClear" value="Clear" />
 				</fieldset>
 			</form>
@@ -724,6 +729,17 @@ h3 {
 
 
 <script>
+	function getForiegnTax(){
+		$.ajax({
+			 type : "POST",
+			 url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=getTaxRateForForiegnTax"%>',
+			 success : function(data1){
+ 			 	 $("#forTax").text(data1[0]+"%");
+		 	 }
+			
+	});
+	}
+
 	var no_Of_steps = 3, first_step = 1;
 	$(document).ready(function() {
 		
@@ -844,7 +860,21 @@ h3 {
 	                   {text: "27", value:"27"},
 	                   {text: "28", value:"28"},
 	                   {text: "29", value:"29"},
-	                   {text: "30", value:"30"}
+	                   {text: "30", value:"30"},
+					   {text: "31", value:"31"},
+	                   
+	                   {text: "32", value:"32"},
+	                   
+	                   {text: "33", value:"33"},
+	                   
+	                   {text: "34", value:"34"},
+	                   
+	                   {text: "35", value:"35"},
+	                   {text: "36", value:"36"},
+	                   {text: "37", value:"37"},
+	                   {text: "38", value:"38"},
+	                   {text: "39", value:"39"},
+	                   {text: "40", value:"40"}
 	         
 	                   
 	                   ];  
@@ -1002,6 +1032,8 @@ h3 {
 					});
 					
 					$("#foriegn").ready(function() {
+						
+						getForiegnTax();
 		 				$.ajax({
 								 type : "POST",
 								 url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=getTaxRateForForiegn"%>',
@@ -1311,29 +1343,15 @@ h3 {
 						var taxbutton=$(".foriegntaxRateSave").val();
 						var incomeFrom=$("#foriegnincomeFrom").val();
  						
-		 				if(incomeFrom==''||incomeTo==''||taxpercnt=='-1'|| incomeFrom > incomeTo) {
-			 				if(taxbutton=="Update") {
-			 					perFlag=true;
-							}
-		 					else {		
-			 					alert("fill data correctly");
-								return false;
-							}
-		 				}
-						else {
-		 					if(taxbutton=="Update") {
-		 						perFlag=true;
-							 }
-						}
+		 				
 						var rate = JSON.stringify([{
 							"id":idTax,
 							"incomeFrom" :incomeFrom,
 							"incomeTo":incomeTo,
 							"incomePersent":taxpercnt
 						}]);
-						
-						if(taxbutton=="Save") {
-				 			$.ajax({
+ 						if(taxbutton=="Update") {
+  				 			$.ajax({
 									 type : "POST",
 									 url:'<%=request.getContextPath() + "/do/ForiegnTaxRatesAction"%>',
 									 dataType : 'json',
@@ -1345,21 +1363,6 @@ h3 {
 		 						});
 		 				}
 					
-						if(perFlag) {
-		 					if(taxbutton=="Update") {
-		 				  	  $.ajax({
-				      				 type : "POST",
-				      				url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=upDateTaxRate"%>',
-				     				 dataType : 'json',
-				     				 contentType : 'application/json; charset=utf-8',
-				     				 data : rate,
-				     				 success : function(datas){ 
-		 		     					reuseScript(3);
-				     				 }	        				
-				     			});	 
-		 					}
-					  }
-							
 				 }); 
 					
 				 var dnameup;
@@ -1484,9 +1487,9 @@ h3 {
 							 data : updateData1,
 							 success : function(data1){
 		 						 if(data1)
-									 {alert("Sucessfuully deleted");}
+									 {alert("Sucessfully deleted");}
 								 else
-									 {alert("alredy in Use");}
+									 {alert("Cannot delete as the deduction is already used.");}
 								 reuseScript(3);
 							 }
 							
@@ -1566,7 +1569,7 @@ h3 {
 				}
 				
 				else if(idf=="Save") {
-					 alert("please chose another one ");
+					 alert("Please choose another one ");
 		 		}
 		 	 });
 			 

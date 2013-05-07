@@ -356,7 +356,18 @@
 			type="com.openhr.employee.action.EmployeeAction" input="employee.form">
 			<forward name="continue" path="employee.form" />
 		</action>
-
+		
+		<action path="/IncomeAction" name="employeeForm"
+			type="com.openhr.employee.action.EmployeeIncomeUpdate" >
+			<forward name="continue" path="employee.form" />
+		</action>
+ 
+ 		<action path="/income" name="employeeForm"
+			type="com.openhr.employee.action.EmployeeIncomeAction" >
+			<forward name="continue" path="employee.form" />
+		</action>
+ 
+ 
 		<action path="/ReadEmployeeAction" name="employeeForm"
 			type="com.openhr.employee.action.ReadEmployeeAction" input="employee.form">
 			<forward name="continue" path="employee.form" />
@@ -740,6 +751,9 @@
 		<action path="/GenerateBankFile" type="com.openhr.payroll.BankFile" scope="request">
 		</action>
 
+		<action path="/GenerateCashFile" type="com.openhr.payroll.CashFile" scope="request">
+		</action>
+		
 		<action path="/GenerateGovtFile" type="com.openhr.payroll.GovtFile" scope="request">
 		</action>
 

@@ -1,8 +1,6 @@
 package com.openhr.payroll;
 
-import java.io.BufferedReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,8 +9,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -60,7 +56,7 @@ public class BankFile extends Action {
 		response.setContentType("application/force-download");
 		
 		// Columns in the file will be:
-		// EmployeeName,BankName,Branch,AccountNumber,NetPay
+		// CompanyName, Company ID, EmployeeName, Emp ID, Emp National ID, Payroll Cycle, NetPay,BankName,Branch,Routing No,AccountNumber,NetPay
 		// Total Tax Amount : XXX
 		// Total Social Security Amount : XXX		
 		Double totalTaxAmt = 0D;
@@ -95,6 +91,13 @@ public class BankFile extends Action {
 		allEmpPayStr.append("\n");
 		
 		for(CompanyPayroll compPay : compPayroll) {
+			if(compPay.getBankName().equals("-")) {
+				// Its Employee who is paid by cash, include it in separate file.
+				totalTaxAmt += compPay.getTaxAmount();
+				totalSSAmt += compPay.getSocialSec();
+				continue;
+			}
+			
 			StringBuilder empPayStr = new StringBuilder();
 			empPayStr.append(compPay.getCompanyId().getName());
 			empPayStr.append(COMMA);

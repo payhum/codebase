@@ -134,11 +134,13 @@ public class Report extends Action {
 			empPayStr.append(empPay.getEmployeeId().getEmpNationalID());
 			empPayStr.append(COMMA);
 			if(empPayrollMap.getMode() == 0) {
-				empPayStr.append("Cash");
+				empPayStr.append("-");
 				empPayStr.append(COMMA);
-				empPayStr.append("Cash");
+				empPayStr.append("-");
 				empPayStr.append(COMMA);
-				empPayStr.append("Cash");
+				empPayStr.append("-");
+				empPayStr.append(COMMA);
+				empPayStr.append("-");
 				empPayStr.append(COMMA);
 			} else {
 				empPayStr.append(empBankAcct.getBankName());

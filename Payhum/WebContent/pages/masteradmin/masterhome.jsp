@@ -38,6 +38,12 @@
 	        </form> <br>
 		</div>
 		
+		<div style="display:none" id="genCashDiv">	
+		    <form method="post" action="<%=request.getContextPath() + "/do/GenerateCashFile"%>" enctype="multipart/form-data">
+		    	<input class="k-button k-icontext" type="submit" value="Download Cash File"/> to be used to pay salary by cash for employees who do not have bank accounts.<br>
+	        </form> <br>
+		</div>
+		
 		<div style="display:none" id="genGovtDiv">
 			<form method="post" action="<%=request.getContextPath() + "/do/GenerateGovtFile"%>" enctype="multipart/form-data">
 		    	<input class="k-button k-icontext" type="submit" value="Download Tax File"/> to be sent to IRD office to inform the Tax being credited on behalf of the Employees of the Company.
@@ -89,6 +95,11 @@
 							alert("Successfully processed the data, click on the Download buttons to download the files.");
 							
 							var ele = document.getElementById("genBankDiv");
+							if(ele.style.display == "none") {
+						    	ele.style.display = "block";
+							};
+							
+							var ele = document.getElementById("genCashDiv");
 							if(ele.style.display == "none") {
 						    	ele.style.display = "block";
 							};

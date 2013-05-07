@@ -27,8 +27,7 @@ public class ForiegnTaxRatesAction extends Action {
 			HttpServletRequest request, HttpServletResponse reponse)
 			throws Exception {
 		boolean flag = false;
-		System.out.println("testing......venki........");
-		BufferedReader bf = request.getReader();
+ 		BufferedReader bf = request.getReader();
 		StringBuffer sb = new StringBuffer();
 		String line = null;
 		while ((line = bf.readLine()) != null) {
@@ -39,42 +38,34 @@ public class ForiegnTaxRatesAction extends Action {
 		JSONObject json1 = (JSONObject) json.get(0);
 		
  
-			TaxRatesData txr = new TaxRatesData();
+			
  			Double incomeFrom = json1.getDouble("incomeFrom");
 			Double incomeTo = json1.getDouble("incomeTo");
 			Double incomePercnt = json1.getDouble("incomePersent");
-			TypesData residentType = TypesDataFactory.findById(12);
+			TypesData residentType = TypesDataFactory.findById(13);
 			Integer id = json1.getInt("id");
 			System.out.println("venkat....."+incomeFrom+"------"+incomeTo+"----"+incomePercnt+"---"+residentType.getId());
- 			txr.setIncomeFrom(incomeFrom);
- 			txr.setId(id);
-			txr.setIncomeTo(incomeTo);
-			txr.setIncomePercentage(incomePercnt);
-			txr.setResidentTypeId(residentType);
-		
-			if (id == 0) {
-				flag = EmpPayTaxFactroy.insertTaxRates(txr);
-				if (flag) {
-
-					txr.setIncomeFrom(incomeTo + 1);
-					txr.setIncomeTo(-1.0);
-					txr.setIncomePercentage(incomePercnt);
-					flag = EmpPayTaxFactroy.insertTaxRates(txr);
-
-				}
-
-			} else {
-				if (TaxFactory.update(txr)) {
-					txr.setIncomeFrom(incomeTo + 1);
-					txr.setIncomeTo(incomeTo + 1);
-					txr.setIncomePercentage(incomePercnt);
-					flag = EmpPayTaxFactroy.insertTaxRates(txr);
-				}
+			TaxRatesData txr;
+			if(TaxFactory.findAllTaxByType(13).size() != 0){
+			    txr = TaxFactory.findAllTaxByType(13).get(0);
+				txr.setIncomeFrom(1.0);
+ 				txr.setIncomeTo(1.0);
+				txr.setIncomePercentage(incomePercnt);
+				TaxFactory.update(txr);
+ 			}
+			else{
+				txr = new TaxRatesData();
+				txr.setIncomeFrom(1.0);
+ 				txr.setIncomeTo(1.0);
+				txr.setIncomePercentage(incomePercnt);
+				txr.setResidentTypeId(residentType);
+				EmpPayTaxFactroy.insertTaxRates(txr);
 			}
-		
-		PrintWriter out = reponse.getWriter();
-		out.print(flag);
-		out.flush();
+			
+			 
+			PrintWriter out = reponse.getWriter();
+			out.print(flag);
+			out.flush();
 		return map.findForward("");
 	}
 }

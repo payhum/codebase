@@ -7,6 +7,7 @@
 		<li>Leave</li>
 		<li>Overtime</li>
 		<li>Deductions Declaration</li>	
+		<li>Income Declaration</li>	
 	    
 	</ul>
 	
@@ -29,6 +30,10 @@
 	<div id="deductions">
 		<tiles:insert page="../../pages/member/deductions/deductionsdecmember.jsp" />
 	</div>	
+	
+	<div id="loan">
+		<tiles:insert page="../../pages/member/incomeDeclaration.jsp" />
+	</div>
 
 		
 </div>

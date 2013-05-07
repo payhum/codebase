@@ -79,6 +79,33 @@ public class CommanTaxReatesActions extends DispatchAction {
  				out.flush();
  		 		return map.findForward("");
  		  	}
+ 	
+ 	public ActionForward getTaxRateForForiegnTax(ActionMapping map, ActionForm form,
+ 		 	HttpServletRequest request, HttpServletResponse response) throws Exception {
+ 		 		JSONArray result = null;
+ 		 		try {
+ 					
+ 					List<TaxRatesData> txdList = TaxFactory.findAllTaxByType(13);
+ 					TaxRatesData txd = null;
+ 					double a[] = {0,1};
+ 					if(txdList.size() != 0){
+ 						txd = txdList.get(txdList.size()-1);
+ 						a[0] = txd.getIncomePercentage();
+ 					}
+  					 
+ 					
+ 					
+ 		 			result = JSONArray.fromObject(a);
+ 		 		}
+ 				catch (Exception e) {
+ 					e.printStackTrace();
+ 				}
+ 		 		response.setContentType("application/json; charset=utf-8");
+ 				PrintWriter out = response.getWriter();
+ 				out.print(result.toString());
+ 				out.flush();
+ 		 		return map.findForward("");
+ 		  	}
 
 	public ActionForward getAllTaxRates(ActionMapping map, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception {
  		JSONArray result = null;
@@ -98,7 +125,7 @@ public class CommanTaxReatesActions extends DispatchAction {
 	public ActionForward getAllTaxRatesForiegn(ActionMapping map, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception {
  		JSONArray result = null;
 		try {
-  			List<TaxRatesData> txl = TaxFactory.findAllTaxByType(12);
+  			List<TaxRatesData> txl = TaxFactory.findAllTaxByType(13);
    			result = JSONArray.fromObject(txl);
  		} catch (Exception e) {
 			e.printStackTrace();

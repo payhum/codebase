@@ -66,6 +66,7 @@ public class TaxFactory implements Serializable {
 			//trd.setIncomePercentage(trds.getIncomePercentage());
 			//trd.setIncomeFrom(trds.getIncomeFrom());
 			trd.setResidentTypeId(trds.getResidentTypeId());
+			trd.setIncomePercentage(trds.getIncomePercentage());
 
 			session.update(trd);
 			session.getTransaction().commit();
@@ -190,12 +191,13 @@ public class TaxFactory implements Serializable {
 	}
 	
 	public static List<TaxRatesData> findAllTaxByType(int typeId) {
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("TaxRatesData.findByResidentType");
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		query = lsession.getNamedQuery("TaxRatesData.findByResidentType");
 		query.setInteger(0, typeId);
 		trd = query.list();
-		session.getTransaction().commit();
+		lsession.getTransaction().commit();
+		lsession.close();
  		return trd;
  	}
 }

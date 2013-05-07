@@ -145,6 +145,10 @@
 	<definition name="leave.form" extends="hrHome">
 		<put name="body" value="/pages/hr/leave/index.jsp" />
 	</definition>
+	
+	<definition name="incomeDeclaration.form" extends="memberHome">
+		<put name="body" value="/pages/member/incomeDeclaration.jsp" />
+	</definition>
 
 	<definition name="leaveapp.form" extends="hrHome">
 		<put name="body" value="/pages/hr/leave/approve.jsp" />
