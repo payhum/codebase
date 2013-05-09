@@ -131,6 +131,11 @@ public class Report extends Action {
 			EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPay.getEmployeeId().getId());
 			EmpPayrollMap empPayrollMap = PayrollFactory.findEmpPayrollMapByEmpPayrollDate(empPay, payroll);
 
+			if(empPayrollMap == null) {
+				// Payroll is not processed for this emp, skip it.
+				continue;
+			}
+			
 			StringBuilder empPayStr = new StringBuilder();
 			empPayStr.append(empPay.getEmployeeId().getDeptId().getBranchId().getCompanyId().getId());
 			empPayStr.append(COMMA);

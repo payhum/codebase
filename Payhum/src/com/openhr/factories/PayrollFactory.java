@@ -76,7 +76,11 @@ public class PayrollFactory implements Serializable {
 		List<EmpPayrollMap> empPayrollMapList = query.list();
 		lsession.close();
 		
-		return empPayrollMapList.get(0);
+		if(empPayrollMapList.size() > 0) {
+			return empPayrollMapList.get(0);
+		}
+		
+		return null;
 	}
 
 	public static List<Payroll> findAllPayrollRuns() throws Exception {
