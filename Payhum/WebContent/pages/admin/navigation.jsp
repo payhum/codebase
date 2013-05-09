@@ -67,9 +67,9 @@
 					
 					<ul class="gradient_menu gradient95">
 						<li class="gradient_menuitem gradient31 last_item"><a href="<%=request.getContextPath() + "/do/Role"%>">
-					Manage Departments</a></li>
+					Roles</a></li>
 						<li class="gradient_menuitem gradient31 last_item"><a href="<%=request.getContextPath() + "/do/User"%>">
-					Manage Users</a></li>
+					Users</a></li>
 					</ul>
 				</li>
 			

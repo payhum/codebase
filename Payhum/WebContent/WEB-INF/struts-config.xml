@@ -112,6 +112,7 @@
 			<forward name="admin" path="/do/AdminHome" />
 			</action>
 			
+			 
 		<action path="/ReadPayrollSummary" name="PayrollForm" 
 			type="com.openhr.payroll.action.ReadPayrollSummary"  input="/pages/hr/report/summary.jsp">
 			<forward name="admin" path="/do/AdminHome" />
@@ -726,6 +727,11 @@
 		
 		<action path="/validateUser"
 			type="com.openhr.user.action.ValidateUser">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
+		<action path="/forgotPassword"
+			type="com.openhr.user.action.ForgotPasswordAction">
 			<forward name="continue" path="mbenefit.form" />
 		</action>
 		 

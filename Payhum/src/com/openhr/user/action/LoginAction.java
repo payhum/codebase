@@ -69,10 +69,10 @@ public class LoginAction extends OpenHRAction {
 				request.getSession().setAttribute("empPay",
 						epay.getId());
 				}
-				if (loginForm.getRole().equalsIgnoreCase("Administrator")) {
+				if (loginForm.getRole().equalsIgnoreCase("PageAdmin")) {
 					return map.findForward("admin");
 				}
-				else if (loginForm.getRole().equalsIgnoreCase("HR")) {
+				else if (loginForm.getRole().equalsIgnoreCase("HumanResource")) {
 					return map.findForward("hr");
 				}
 				else if (loginForm.getRole().equalsIgnoreCase("Employee")) {

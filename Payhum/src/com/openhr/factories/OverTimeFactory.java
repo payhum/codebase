@@ -64,12 +64,12 @@ public class OverTimeFactory {
     
     @SuppressWarnings("unchecked")
    	public static List<OverTime> findByEmployeeId(Integer employeeId){
-        	session = OpenHRSessionFactory.getInstance().getCurrentSession();
-           session.beginTransaction();
-           query = session.getNamedQuery("OverTime.findByEmployeeId");
+           Session lsession = OpenHRSessionFactory.getInstance().openSession();
+           lsession.beginTransaction();
+           query = lsession.getNamedQuery("OverTime.findByEmployeeId");
            query.setInteger(0, employeeId);
            overTimes = query.list();
-           session.getTransaction().commit();
+           lsession.getTransaction().commit();
            return overTimes;
        	
        }

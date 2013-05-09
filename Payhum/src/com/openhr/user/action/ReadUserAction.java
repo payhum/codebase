@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -23,14 +25,17 @@ public class ReadUserAction extends Action {
             ActionForm form,
             HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-//        UserForm userForm = (UserForm) form;
-
 
         JSONArray result = null;
         try {
             List<Users> users = UsersFactory.findAll();
             System.out.println("Size of the list that contains employees " + users.size());
-            result = JSONArray.fromObject(users);            
+            
+            JsonConfig config = new JsonConfig();
+            config.setIgnoreDefaultExcludes(false);
+            config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+            
+            result = JSONArray.fromObject(users, config);            
         } catch (Exception e) {
             e.printStackTrace();
         }     

@@ -139,6 +139,23 @@ public class Employee implements Serializable {
 	@Column(name = "phoneNo", nullable = false, length = 15)
 	private String phoneNo;
 
+	@Basic(optional = false)
+	@Column(name = "nationality", length = 55)
+	private String nationality;
+	
+	@Basic(optional = false)
+	@Column(name = "ppNumber", length = 15)
+	private String ppNumber;
+	
+	@Basic(optional = false)
+	@Column(name = "ppExpDate", nullable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date ppExpDate;
+	
+	@Basic(optional = false)
+	@Column(name = "ppIssuePlace", length = 45)
+	private String ppIssuePlace;
+	
 	public String getEmpNationalID() {
 		return empNationalID;
 	}
@@ -353,4 +370,37 @@ public class Employee implements Serializable {
 	public void setPhoneNo(String phoneNo) {
 		this.phoneNo = phoneNo;
 	}
+
+	public String getNationality() {
+		return nationality;
+	}
+
+	public void setNationality(String nationality) {
+		this.nationality = nationality;
+	}
+
+	public String getPpNumber() {
+		return ppNumber;
+	}
+
+	public void setPpNumber(String ppNumber) {
+		this.ppNumber = ppNumber;
+	}
+
+	public Date getPpExpDate() {
+		return ppExpDate;
+	}
+
+	public void setPpExpDate(Date ppExpDate) {
+		this.ppExpDate = ppExpDate;
+	}
+
+	public String getPpIssuePlace() {
+		return ppIssuePlace;
+	}
+
+	public void setPpIssuePlace(String ppIssuePlace) {
+		this.ppIssuePlace = ppIssuePlace;
+	}
+	
 }

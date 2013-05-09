@@ -29,10 +29,13 @@ public class ReadHolidaysAction extends Action {
             e.printStackTrace();
         }
         
-        response.setContentType("application/json; charset=utf-8");
-        PrintWriter out = response.getWriter();
-        out.print(result.toString());
-        out.flush();
+        if(result != null) {
+	        response.setContentType("application/json; charset=utf-8");
+	        PrintWriter out = response.getWriter();
+	        out.print(result.toString());
+	        out.flush();
+        }
+        
  		return null;
 	}
 }

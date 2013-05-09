@@ -90,11 +90,11 @@
         $("#grid").kendoGrid({
             dataSource : usrDataSource, 
             columns : [
-                { field : "roleId", title : "Department",  editor : roleDropDownEditor, template: '#=roleId ? roleId.name: ""#', width : 120 },
+                { field : "roleId", title : "Role",  editor : roleDropDownEditor, template: '#=roleId ? roleId.name: ""#', width : 120 },
 				{ field : "employeeId", title : "Employee",  editor : employeeDropDownEditor, template: '#=employeeId ? employeeId.employeeId: ""#', width : 120 },
 				{ field : "username", title : "Username", width : 120 },
                 { field : "password", title : "Password",
-					template: "<input type='password' value='#= password #'/>",
+					template: "<input type='password' value='#= password #' disabled/>",
 					width : 0 },
                 { command : ["edit", "destroy"], width : "210px" ,filterable :false}
             ], 

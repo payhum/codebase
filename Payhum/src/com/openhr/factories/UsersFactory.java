@@ -61,13 +61,13 @@ public class UsersFactory {
         return users;
     }
     public static List<Users> findByUserName(String usersName) {
-        session = OpenHRSessionFactory.getInstance().getCurrentSession();
-        session.beginTransaction();
-        query = session.getNamedQuery("Users.findByUsername");
+        Session lsession = OpenHRSessionFactory.getInstance().openSession();
+        lsession.beginTransaction();
+        query = lsession.getNamedQuery("Users.findByUsername");
         query.setString(0, usersName);
         users = query.list();
-        session.getTransaction().commit();
-        
+        lsession.getTransaction().commit();
+        lsession.close();
         return users;
     }
 

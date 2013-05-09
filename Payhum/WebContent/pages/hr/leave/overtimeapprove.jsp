@@ -1,5 +1,5 @@
 <%@include file="../../common/jspHeader.jsp"%>
-<h2 class="legend">Approve Leave form</h2>
+<h2 class="legend">Approve Overtime</h2>
 
 <div id="grid"></div>
 

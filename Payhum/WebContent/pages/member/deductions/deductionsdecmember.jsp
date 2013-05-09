@@ -218,22 +218,25 @@ $("form")[0].reset();
    			"ids"	  : ids,
    			
     	}); 
-    	$.ajax({
-       		url 		: "<%=request.getContextPath() + "/do/ReadDeductionDeclAction?parameter=deleteDeduction"%>",
-       		type 		: 'POST',
-    		dataType 	: 'json',
-    		contentType : 'application/json; charset=utf-8',
-    		data 		: dedDelete,
-    		success     : function(data){
-    			//$("#addOverTimeDiv").addClass("displayClass");
-    		    
-    			alert(data);
-    			
-    		  	//alert(wholeDedu);
-    			
-    			start();
-    		}
-        });
+    	var deleteStatus = confirm('Are you sure you want to Delete ?');
+    	if(deleteStatus){
+	    	$.ajax({
+	       		url 		: "<%=request.getContextPath() + "/do/ReadDeductionDeclAction?parameter=deleteDeduction"%>",
+	       		type 		: 'POST',
+	    		dataType 	: 'json',
+	    		contentType : 'application/json; charset=utf-8',
+	    		data 		: dedDelete,
+	    		success     : function(data){
+	    			//$("#addOverTimeDiv").addClass("displayClass");
+	    		    
+	    			alert(data);
+	    			
+	    		  	//alert(wholeDedu);
+	    			
+	    			start();
+	    		}
+	        });
+    	}
     	
     });
     

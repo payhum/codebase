@@ -9,8 +9,8 @@
 		<div class="k-content">
 			<div class="legend">
 				<div style="float: right">
-					<input type="submit" value="New" id="addOverTime" /> <input
-						type="submit" id="deleteOverTime" value="Delete" /> <input
+					<input type="submit" value="Apply Overtime" id="addOverTime" /> <input
+						type="submit" id="deleteOverTime" value="Delete" class="displayClass"/> <input
 						type="submit" value="Edit" style="display: none !important;" />
 				</div>
 
@@ -103,8 +103,8 @@ function getEmployeeOverTimes(){
 	$(document).ready(function() {
  		getEmployeeOverTimes();
  		$("#requestOnDate").kendoDatePicker();
-		 
-	});
+ 		$("#noOfHours").kendoNumericTextBox();
+ 	});
  	
 	$("#addOverTime, #canceOverTime").click(function(){
 		isDisplayed = $("#addOverTimeDiv").hasClass("displayClass");
@@ -120,30 +120,59 @@ function getEmployeeOverTimes(){
 		}
 	});
 	
+	 $("#grid1").delegate(".k-grid-content", "click", function(e){
+			var containClass = $("#deleteOverTime").hasClass("displayClass");
+			if(containClass){
+				$("#deleteOverTime").removeClass("displayClass");
+			}
+			else{
+				$("#deleteOverTime").addClass("displayClass");
+			}
+			
+	 });
 	
 	$("#overTimeReq").click(function(){
  		requestOnDate   = $("#requestOnDate").val();
 		noOfHours     	= $("#noOfHours").val();
 		employeeId 		= <%=request.getSession().getAttribute("employeeId")%>;
-		 
+		var flag = 0;
+		if(noOfHours > 12){
+			flag = 1;
+			alert('Number of hours should not be greater than 12Hrs');
+		}
+		var date1 = new Date(requestOnDate);
+		var current = new Date();
+		var currentDate = (current.getMonth()+1) + '/' + current.getDate() + '/' + current.getFullYear();
+		var fromDate = (date1.getMonth()+1) + '/' + date1.getDate() + '/' + date1.getFullYear();
+		
+		if(date1.getDate() < current.getDate()){
+				if(date1.getMonth() <= current.getMonth()){
+ 				flag = 1;
+				alert('Requested date cannot be in the past');
+			}
+		}
    		applyOverTime = JSON.stringify({
    			"requestOnDate"	  : requestOnDate,
    			"noOfHours" 	  : noOfHours,
    			"employeeId"	  : employeeId
     	}); 
     	
-   		$.ajax({
-       		url 		: "<%=request.getContextPath() + "/do/ApplyOverTime"%>",
-       		type 		: 'POST',
-			dataType 	: 'json',
-			contentType : 'application/json; charset=utf-8',
-			data 		: applyOverTime,
-			success     : function(){
-				$("#addOverTimeDiv").addClass("displayClass");
-			    $("#grid1").empty();
-				getEmployeeOverTimes();  
-			}
-        });  
+   		if(flag == 0){
+   		 
+	   		$.ajax({
+	       		url 		: "<%=request.getContextPath() + "/do/ApplyOverTime"%>",
+	       		type 		: 'POST',
+				dataType 	: 'json',
+				contentType : 'application/json; charset=utf-8',
+				data 		: applyOverTime,
+				success     : function(){
+					$("#addOverTimeDiv").addClass("displayClass");
+				    $("#grid1").empty();
+					getEmployeeOverTimes();  
+				}
+	        }); 
+   		}
+   		
 	});
 	
 	$("#deleteOverTime").click(function(){
@@ -154,22 +183,25 @@ function getEmployeeOverTimes(){
 	   		"employeeId"	  : employeeId,
 	   		"requestOnDate"   : requestOnDate 
  	 	 }); 
-	    
-  	  	if(status1 == "New"){
-		  	 $.ajax({
-		   		url 		: "<%=request.getContextPath() + "/do/DeleteOverTime"%>",
-				type : 'POST',
-				dataType : 'json',
-				contentType : 'application/json; charset=utf-8',
-				data : deleteOverTime,
-				success : function() {
-					$("#grid1").empty();
-					getEmployeeOverTimes();
-				}
-			});
-		} else {
-			alert("Approved/Rejected Overtime records cannot be deleted.");
-		}
+		 
+		deleteStatus = confirm('Are you sure you want delete ?');
+	    if(deleteStatus){
+	  	  	if(status1 == "New"){
+			  	 $.ajax({
+			   		url 		: "<%=request.getContextPath() + "/do/DeleteOverTime"%>",
+					type : 'POST',
+					dataType : 'json',
+					contentType : 'application/json; charset=utf-8',
+					data : deleteOverTime,
+					success : function() {
+						$("#grid1").empty();
+						getEmployeeOverTimes();
+					}
+				});
+			} else {
+				alert("Approved/Rejected Overtime records cannot be deleted.");
+			}
+	    }
 	});
 </script>
 

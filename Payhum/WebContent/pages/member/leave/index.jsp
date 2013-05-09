@@ -15,7 +15,7 @@
 		<div class="k-content">
 			<div class="legend">
 				<div style="float: right">
-					<input type="submit" id="applyLeave" value="New" /> <input
+					<input type="submit" id="applyLeave" value="Apply Leave" /> <input
 						type="submit" value="Delete" id="deleteLeave" class="displayClass" /> <input
 						type="submit" value="Edit" style="display: none !important;" />
 				</div>
@@ -275,22 +275,25 @@
 		   		"leaveDate" 	  : leaveDate 
 	 	 	 }); 
  	 	  	 
-		     if(status1 == "New"){	
-			  	 $.ajax({
-			   		url 		: "<%=request.getContextPath() + "/do/DeleteLeaveApplication"%>",
-			    	type 		: 'POST',
-					dataType 	: 'json',
-					contentType : 'application/json; charset=utf-8',
-					data 		: deleteLeaveAction,
-					success     : function(){
-		 				$("#grid").empty();
-						getEmployeeLeaves();
-					}
-			 	 }); 
-		     }
-		     else{
-		    	alert("Approved/Rejected Leaves cannot be deleted.");
-	 	     }
+ 	 	  	 var deleteStatus = confirm('Are you sure you want to Delete ?');
+ 	 	  	 if(deleteStatus){
+ 			     if(status1 == "New"){	
+				  	 $.ajax({
+				   		url 		: "<%=request.getContextPath() + "/do/DeleteLeaveApplication"%>",
+				    	type 		: 'POST',
+						dataType 	: 'json',
+						contentType : 'application/json; charset=utf-8',
+						data 		: deleteLeaveAction,
+						success     : function(){
+			 				$("#grid").empty();
+							getEmployeeLeaves();
+						}
+				 	 }); 
+			     }
+			     else{
+			    	alert("Approved/Rejected Leaves cannot be deleted.");
+		 	     }
+ 	 	  	 }
  	  	});
 	
 		$("#TypeOfLeave").change(function(){

@@ -128,24 +128,27 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
                 
                 $("#grid").delegate(".deleteCmp", "click", function(e) {
                     companyId = $(".currentCompany").find('td').eq(2).text();
-                    alert(companyId);
-                      var cmpl = JSON.stringify({
+                       var cmpl = JSON.stringify({
         	   			"compId"	  : companyId
           			 });   
+                      
+                     deleteStatus = confirm('Are you sure you want to Delete ? ');
+                     if(deleteStatus){
                   
-        			$.ajax({
-        				url 		: "<%=request.getContextPath() + "/do/DeleteCompany"%>",
-        				type 		: 'POST',
-        				dataType 	: 'json',
-        				contentType : 'application/json; charset=utf-8',
-        				data 		:  cmpl,
-        				success 	:  function(){
-        					empDataSource.read();
-        				},
-        				failure : function(e){
-        					alert(e.responseText);
-        				}
-                	});  
+	        			$.ajax({
+	        				url 		: "<%=request.getContextPath() + "/do/DeleteCompany"%>",
+	        				type 		: 'POST',
+	        				dataType 	: 'json',
+	        				contentType : 'application/json; charset=utf-8',
+	        				data 		:  cmpl,
+	        				success 	:  function(){
+	        					empDataSource.read();
+	        				},
+	        				failure : function(e){
+	        					alert(e.responseText);
+	        				}
+	                	});  
+                     }
         	});
                 
                 $("#grid").delegate(".addBranch", "click", function(e) {
@@ -444,21 +447,25 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
  
                 var cmpl = JSON.stringify({
  	   			"compId"	  : deptId
-   			 });   
+   			 }); 
+             
+                var deleteStatus = confirm('Are you sure you want to Delete ?');
            
- 			$.ajax({
- 				url 		: "<%=request.getContextPath() + "/do/DeleteDept"%>",
- 				type 		: 'POST',
- 				dataType 	: 'json',
- 				contentType : 'application/json; charset=utf-8',
- 				data 		:  cmpl,
- 				success 	:  function(){
- 					empDataSource.read();
- 				},
- 				failure : function(e){
- 					alert(e.responseText);
- 				}
-         	});  
+            if(deleteStatus){
+	 			$.ajax({
+	 				url 		: "<%=request.getContextPath() + "/do/DeleteDept"%>",
+	 				type 		: 'POST',
+	 				dataType 	: 'json',
+	 				contentType : 'application/json; charset=utf-8',
+	 				data 		:  cmpl,
+	 				success 	:  function(){
+	 					empDataSource.read();
+	 				},
+	 				failure : function(e){
+	 					alert(e.responseText);
+	 				}
+	         	});  
+            }
  	});
 
             
@@ -468,8 +475,10 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
                    var branchId   = $(v).find('td').eq(0).text();
                     var cmpl = JSON.stringify({
     	   			"compId"	  : branchId
-      			 });   
-              
+      		});   
+            
+            deleteStatus = confirm('Are you sure you want to Delete ?');
+            if(deleteStatus){
     			$.ajax({
     				url 		: "<%=request.getContextPath() + "/do/DeleteBranch"%>",
     				type 		: 'POST',
@@ -483,7 +492,8 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
     					alert(e.responseText);
     				}
             	});  
-    	});
+            }
+            });
             
    	         
    	         createNewCmpForm = function (){        	         	 

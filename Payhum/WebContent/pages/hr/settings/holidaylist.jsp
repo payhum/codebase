@@ -12,7 +12,7 @@
 			<div class="legend">
 				<div style="float: right">
 					<input type="submit" value="New" id="addHolidayDiv" /> <input
-						type="submit" id="deleteHoliday" value="Delete" /> <input
+						type="submit" id="deleteHoliday" value="Delete" class="displayClass"/> <input
 						type="submit" value="Edit" style="display: none !important;" />
 				</div>
 
@@ -46,6 +46,17 @@
 	$(document).ready(function() {
  		$("#holidayDate").kendoDatePicker();
  		getHolidays();
+ 		
+ 		$("#holidayListGrid").delegate(".k-grid-content", "click", function(e){
+			var containClass = $("#deleteHoliday").hasClass("displayClass");
+			if(containClass){
+				$("#deleteHoliday").removeClass("displayClass");
+			}
+			else{
+				$("#deleteHoliday").addClass("displayClass");
+			}
+			
+	 	});
  	}); 
 		
 	$("#addHolidayDiv, #cancelHoliday").click(function(){
@@ -91,19 +102,22 @@
   	  	 deleteHoliday = JSON.stringify({
  	   		"date"   : date 
 	 	 }); 
+  	  	 
+  	  	 var deleteStatus = confirm('Are you sure want to Delete ?');
 	    	
-	  	 $.ajax({
-	   		url 		: "<%=request.getContextPath() + "/do/DeleteHoliday"%>",
-	    	type 		: 'POST',
-			dataType 	: 'json',
-			contentType : 'application/json; charset=utf-8',
-			data 		: deleteHoliday,
-			success     : function(){
-				$("#holidayListGrid").empty();
-				getHolidays();
-			}
-	 	 });  
-		 
+  	  	 if(deleteStatus){
+		  	 $.ajax({
+		   		url 		: "<%=request.getContextPath() + "/do/DeleteHoliday"%>",
+		    	type 		: 'POST',
+				dataType 	: 'json',
+				contentType : 'application/json; charset=utf-8',
+				data 		: deleteHoliday,
+				success     : function(){
+					$("#holidayListGrid").empty();
+					getHolidays();
+				}
+		 	 });  
+  	  	 }
  	}); 
 
 	

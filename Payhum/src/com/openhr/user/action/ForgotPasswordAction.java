@@ -7,6 +7,7 @@ package com.openhr.user.action;
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -38,7 +39,7 @@ import org.apache.struts.action.ActionMapping;
  * 
  * @author Mekbib
  */
-public class ValidateUser extends OpenHRAction {
+public class ForgotPasswordAction extends OpenHRAction {
 
 	@Override
 	public ActionForward execute(ActionMapping map, ActionForm form,
@@ -54,41 +55,32 @@ public class ValidateUser extends OpenHRAction {
         }
         JSONObject json = JSONObject.fromObject(sb.toString());
         
-        String userName = json.getString("userName");
-        String passWord = json.getString("passWord");
-        String loginAs = json.getString("loginAs");
+        String userName = json.getString("changeUserName");
+        String passWord = json.getString("changeNewPassword");
+        String   dob     = json.getString("dob");
+        Date dateOf      = new Date(dob);
         int a[] = {10,20};
-        System.out.println("helooooooooooo"+userName+"---"+passWord+"-----"+loginAs);
         List<Users> user = UsersFactory.findByUserName(userName);
-        if(user.size() == 0){
-        	a[0] = 0;
+        if(user.size() != 0){
+        	if(user.get(0).getEmployeeId() != null){
+	        	if(dateOf.equals(user.get(0).getEmployeeId().getBirthdate())){
+	        		user.get(0).setPassword(passWord);
+	            	UsersFactory.update(user.get(0));
+	        	}
+	        	else{
+	        		a[1] = 1;
+	        	}
+        	}
         }
         else{
-        	String uPasswd = user.get(0).getPassword();
-        	
-        	if(!uPasswd.equals(passWord)) {
-        		a[0] = 1;
-        	} else {
-        		// Passwords are same. check role, skip it for Guest as he has all roles.
-        		if(! user.get(0).getUsername().equalsIgnoreCase("guest")) {
-	        		if(user.get(0).getRoleId().getName().equalsIgnoreCase(loginAs)){
-	        			// all are ok.
-	        			a[0] = 10;
-	        		} else {
-	        			a[0] = 2;
-	        		}
-        		}
-        	}
-         }
-        
+        	a[0] = 0;
+        }
  		result = JSONArray.fromObject(a);
      	response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		if (result == null) {
-			System.out.println("Validate results is null");
 			out.print("");
 		} else {
-			System.out.println("Validate results - " + result.toString());
 			out.print(result.toString());
 		}
 		out.flush();

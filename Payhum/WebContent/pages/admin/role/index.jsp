@@ -1,5 +1,5 @@
 <%@include file="../../common/jspHeader.jsp" %>
-<h2 class="legend">Department Form</h2> 
+<h2 class="legend">Role Form</h2> 
 
 
 <script type="text/x-kendo-template" id="toolbarTemplate">
@@ -67,11 +67,11 @@
         $("#grid").kendoGrid({
             dataSource : roleDataSource, 
             columns : [
-				{ field : "name", title : "Department Name", width : 500 },
+				{ field : "name", title : "Role Name", width : 500 },
                 { command : ["edit", "destroy"], width : 210,
 					filterable: false}
             ], 
-            toolbar : [{"name" : "create",text : "Add New Department"}],  
+            toolbar : [{"name" : "create",text : "Add New Role"}],  
             sortable: true,
             scrollable: true,
             filterable : true, 

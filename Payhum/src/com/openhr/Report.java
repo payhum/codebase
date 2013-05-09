@@ -40,7 +40,7 @@ public class Report extends Action {
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		//TODO get logged in user, company, branch and dept details
+		//TODO get logged in user
 		Users runBy = new Users();
 		runBy.setId(1);
 		
@@ -55,7 +55,14 @@ public class Report extends Action {
 	    Date now = currDtCal.getTime();
 
 		List<Company> comps = CompanyFactory.findAll();
-		Company comp = comps.get(0);
+		Company comp = null;
+		for(Company cp: comps) {
+			if (PayhumConstants.MASTER_COMP.equalsIgnoreCase(cp.getName())){
+				comp = cp;
+				break;
+			}
+		}
+		
 		String compName = comp.getName();
 		compName = compName.replace(" ", "_");
 		
