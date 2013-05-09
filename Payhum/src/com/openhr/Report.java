@@ -57,7 +57,7 @@ public class Report extends Action {
 		List<Company> comps = CompanyFactory.findAll();
 		Company comp = null;
 		for(Company cp: comps) {
-			if (PayhumConstants.MASTER_COMP.equalsIgnoreCase(cp.getName())){
+			if (!PayhumConstants.MASTER_COMP.equalsIgnoreCase(cp.getName())){
 				comp = cp;
 				break;
 			}

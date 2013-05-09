@@ -66,13 +66,20 @@ public class ProcessBranchAction extends Action{
 
 	    Date now = currDtCal.getTime();
 	    
- 		List<Company> comps = CompanyFactory.findAll();
-		Company comp = comps.get(0);
+		List<Company> comps = CompanyFactory.findAll();
+		Company comp = null;
+		for(Company cp: comps) {
+			if (!PayhumConstants.MASTER_COMP.equalsIgnoreCase(cp.getName())){
+				comp = cp;
+				break;
+			}
+		}
+		
 		String compName = comp.getName();
 		compName = compName.replace(" ", "_");
 		
 		// Check for licenses
-		List<Licenses> compLicenses = LicenseFactory.findByCompanyId(comps.get(0).getId());
+		List<Licenses> compLicenses = LicenseFactory.findByCompanyId(comp.getId());
 		if(compLicenses.isEmpty()) {
 			//throw new Exception("No License available.");
 			a[0] = 1;
