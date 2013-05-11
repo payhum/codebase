@@ -63,7 +63,7 @@ public class UpdateEmployeeAction extends Action {
 			acomId=eFromJSON.getAccommodationVal();
 			lastName=eFromJSON.getLastname();
 			hireDate=new Date(eFromJSON.getHiredate());
-			
+			e.setMarried(eFromJSON.getFamly());
 			e.setEmployeeId(empID);
 			e.setFirstname(eFromJSON.getFirstname());
 			e.setMiddlename(eFromJSON.getMiddlename());
@@ -81,7 +81,17 @@ public class UpdateEmployeeAction extends Action {
 			e.setEmerContactName(eFromJSON.getContName());
 			
 			e.setEmerContactNo(eFromJSON.getContNumber());
+	e.setPpIssuePlace(eFromJSON.getPassPlace());
 			
+			e.setAddress(eFromJSON.getEmpAddrss());
+			
+			e.setPpNumber(eFromJSON.getPassNo());
+			
+			e.setPpExpDate(new Date(eFromJSON.getPassExpDate()));
+			
+			e.setPhoneNo(eFromJSON.getPhNo());
+			
+			e.setNationality(eFromJSON.getEmpNation());
 			TypesData tyd=EmployeeFactory.findTypesById(eFromJSON.getResidentVal());
 			e.setResidentType(tyd);
 			
@@ -112,6 +122,7 @@ public class UpdateEmployeeAction extends Action {
 				epl.setAccomodationType(acomTyds);
 				epl.setFullName(lastName);
 				epl.setEmployeeId(e);
+				epl.setTaxPaidByEmployer(eFromJSON.getPaidTax());
 				//flag=EmpPayTaxFactroy.save(epl);
 				
 				EmployeeSalary empsal=EmployeeFactory.getEmpsalry(e);

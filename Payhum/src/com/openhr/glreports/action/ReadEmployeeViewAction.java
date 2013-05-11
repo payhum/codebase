@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -33,7 +35,9 @@ public class ReadEmployeeViewAction extends Action{
 		JSONArray result = null;
 		long start=0,end=0,diff=0;
 		try {
-			
+			JsonConfig config = new JsonConfig();
+			config.setIgnoreDefaultExcludes(false);
+			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 			List<GLEmployee> glemployees = GLEmployeeFactory.findAll();
 			start=System.currentTimeMillis();
 		
@@ -44,7 +48,7 @@ public class ReadEmployeeViewAction extends Action{
 			}
 			
 			
-			result = JSONArray.fromObject(glemployees);
+			result = JSONArray.fromObject(glemployees, config);
 			end=System.currentTimeMillis();
 			diff = end - start;
 		} catch (Exception e) {

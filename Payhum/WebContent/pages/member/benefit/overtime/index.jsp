@@ -23,7 +23,7 @@
 				<span><label>Request Date : &nbsp;&nbsp;</label></span> <span><input
 					type="text" name="leaveDate" id="requestOnDate" /></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				<span><label>Hours : &nbsp;&nbsp;</label></span> <span><input
-					type="text" name="noofhours" id="noOfHours" /></span><br /> <br />
+					type="text" name="noofhours" id="noOfHours" value="0"/></span><br /> <br />
 				<div style="float: right;">
 					<span><input type="submit" id="overTimeReq" value="Apply" /></span>&nbsp;&nbsp;
 					<span><input type="button" id="canceOverTime" value="Cancel" /></span>
@@ -96,14 +96,30 @@ function getEmployeeOverTimes(){
           selectable : "row",
            pageable : true
 		});	
+		
+		if ($("#grid1 .k-grid-content").hasClass('.k-state-selected')){
+			$("#deleteOverTime").removeClass("displayClass");
+		}
+		else{
+ 			$("#deleteOverTime").addClass("displayClass");
+		}
 	}
 
 
 
 	$(document).ready(function() {
  		getEmployeeOverTimes();
- 		$("#requestOnDate").kendoDatePicker();
+ 		dateToday = new Date();
+ 		$("#requestOnDate").kendoDatePicker({
+ 			 value: new Date(),
+    	     min: new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate()),
+    	     max: new Date((dateToday.getFullYear()+1), 1, 28)
+  		});
  		$("#noOfHours").kendoNumericTextBox();
+ 		
+ 		
+ 		
+ 		
  	});
  	
 	$("#addOverTime, #canceOverTime").click(function(){
@@ -121,15 +137,27 @@ function getEmployeeOverTimes(){
 	});
 	
 	 $("#grid1").delegate(".k-grid-content", "click", function(e){
-			var containClass = $("#deleteOverTime").hasClass("displayClass");
-			if(containClass){
-				$("#deleteOverTime").removeClass("displayClass");
-			}
-			else{
-				$("#deleteOverTime").addClass("displayClass");
-			}
-			
-	 });
+ 		$("#deleteOverTime").removeClass("displayClass");
+ 	 });
+	 
+	 function addOverTimes(applyOverTimes){
+		 
+	   		$.ajax({
+	       		url 		: "<%=request.getContextPath() + "/do/ApplyOverTime"%>",
+	       		type 		: 'POST',
+				dataType 	: 'json',
+				contentType : 'application/json; charset=utf-8',
+				data 		: applyOverTimes,
+				success     : function(){
+					$("#addOverTimeDiv").addClass("displayClass");
+				    $("#grid1").empty();
+					 $("#requestOnDate").val('');
+					 $("#noOfHours").text(' ');
+ 					 getEmployeeOverTimes();  
+				}
+	        }); 
+ 		
+	 };
 	
 	$("#overTimeReq").click(function(){
  		requestOnDate   = $("#requestOnDate").val();
@@ -158,22 +186,23 @@ function getEmployeeOverTimes(){
     	}); 
     	
    		if(flag == 0){
-   		 
-	   		$.ajax({
-	       		url 		: "<%=request.getContextPath() + "/do/ApplyOverTime"%>",
-	       		type 		: 'POST',
-				dataType 	: 'json',
-				contentType : 'application/json; charset=utf-8',
-				data 		: applyOverTime,
-				success     : function(){
-					$("#addOverTimeDiv").addClass("displayClass");
-				    $("#grid1").empty();
-					getEmployeeOverTimes();  
-				}
-	        }); 
-   		}
-   		
-	});
+   			$.ajax({
+   		   		url 		: "<%=request.getContextPath() + "/do/checkForHoliday"%>",
+   		   		type 		: 'POST',
+   				dataType 	: 'json',
+   				contentType : 'application/json; charset=utf-8',
+   				data 		: applyOverTime,
+   				success     : function(data){
+   					if(data[0] == 0){
+   						alert('Cannot apply overtime on holidays');
+   					}
+   					else{
+   	 					addOverTimes(applyOverTime);
+   					}
+    			} 
+   		    }); 
+    	}
+ 	});
 	
 	$("#deleteOverTime").click(function(){
 		 employeeId 	= <%=request.getSession().getAttribute("employeeId")%>;

@@ -79,7 +79,12 @@ public class ReadEmployeeAction extends Action {
 				empFrm.setMarried(emp.isMarried());
 				empFrm.setId(emp.getId());
 				empFrm.setHiredate(emp.getHiredate());
+				empFrm.setPassExpDate(emp.getPpExpDate());
+				empFrm.setPassPlace(emp.getPpIssuePlace());
+				empFrm.setPassNo(emp.getPpNumber());
+				empFrm.setPhNo(emp.getPhoto());
 				
+				empFrm.setEmpAddrss(emp.getAddress());
 				
 				
 				File photo = new File(getServlet().getServletContext()

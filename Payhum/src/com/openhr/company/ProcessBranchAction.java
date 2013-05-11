@@ -235,7 +235,7 @@ public class ProcessBranchAction extends Action{
 					payrollDates.add(payDate);
 				}
 				
-				// Populate from current month to december
+				// Populate from current month to march
 				for(int i = 0; i < 3; i++) {
 					Date rDate = getLastFriday(i, currYear+1);
 					PayrollDate payDate = new PayrollDate();

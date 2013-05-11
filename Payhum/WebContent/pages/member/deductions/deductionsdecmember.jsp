@@ -30,7 +30,8 @@
 	
 	
 	 	<div id="wholeDeduc">
- 	
+ 	<div>
+		<div class="k-content">
  			<div class="legend">
  				<div style="float:right" >
 					<input type="submit" class="applyDeduc" value="New"/>
@@ -71,7 +72,8 @@
  		</div>
 
 				
-	
+	</div>
+	</div>
 	  		
 
 
@@ -125,11 +127,10 @@ var wholeDeduc;
 	        
 	            
 	                sortable: true,
-
-	               
-	                selectable : "row",
-	                 pageable : true,
-	                 height:200,
+	  	            scrollable: true,
+	  	            filterable : true,
+	  	            selectable : "row",
+	   	            pageable : true
 	        }).data('kendoGrid');
 	         
 
@@ -218,25 +219,22 @@ $("form")[0].reset();
    			"ids"	  : ids,
    			
     	}); 
-    	var deleteStatus = confirm('Are you sure you want to Delete ?');
-    	if(deleteStatus){
-	    	$.ajax({
-	       		url 		: "<%=request.getContextPath() + "/do/ReadDeductionDeclAction?parameter=deleteDeduction"%>",
-	       		type 		: 'POST',
-	    		dataType 	: 'json',
-	    		contentType : 'application/json; charset=utf-8',
-	    		data 		: dedDelete,
-	    		success     : function(data){
-	    			//$("#addOverTimeDiv").addClass("displayClass");
-	    		    
-	    			alert(data);
-	    			
-	    		  	//alert(wholeDedu);
-	    			
-	    			start();
-	    		}
-	        });
-    	}
+    	$.ajax({
+       		url 		: "<%=request.getContextPath() + "/do/ReadDeductionDeclAction?parameter=deleteDeduction"%>",
+       		type 		: 'POST',
+    		dataType 	: 'json',
+    		contentType : 'application/json; charset=utf-8',
+    		data 		: dedDelete,
+    		success     : function(data){
+    			//$("#addOverTimeDiv").addClass("displayClass");
+    		    
+    			alert(data);
+    			
+    		  	//alert(wholeDedu);
+    			
+    			start();
+    		}
+        });
     	
     });
     

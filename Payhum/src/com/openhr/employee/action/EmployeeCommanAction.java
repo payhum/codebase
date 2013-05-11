@@ -131,6 +131,60 @@ public class EmployeeCommanAction extends DispatchAction
 	 
 	 
 	 
+	 
+	 public ActionForward getEmpPayMentDetails(ActionMapping mapping, ActionForm form,
+	            HttpServletRequest request, HttpServletResponse response)
+	            throws Exception {
+	     
+			
+			JSONObject result = null;
+			
+		
+			try
+			
+			{
+				Integer id=(Integer) request.getSession().getAttribute("employeeId");
+				
+				Integer empID=(Integer) request.getSession().getAttribute("empPay");
+				
+				JsonConfig config = new JsonConfig();
+				config.setIgnoreDefaultExcludes(false);
+				config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			
+				//JSONObject json = JSONObject.fromObject(sb.toString());
+				
+				//Integer id=json.getInt("id");
+			//Collection<EmployeeDepartFrom> aCollection = JSONArray.toCollection(json, EmployeeDepartFrom.class);
+				
+				
+				
+				Employee  emp=EmployeeFactory.findById(id).get(0);
+				
+				EmployeePayroll empPay=EmpPayTaxFactroy.findEmpPayrollbyEmpID(emp);
+				
+				result=JSONObject.fromObject(empPay,config);
+			
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			 response.setContentType("application/json; charset=utf-8");
+		        PrintWriter out = response.getWriter();
+		        out.print(result.toString());
+		        out.flush();
+	        return mapping.findForward("success");
+	    }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 	 public ActionForward getCurrentSalry(ActionMapping mapping, ActionForm form,
 	            HttpServletRequest request, HttpServletResponse response)
 	            throws Exception {

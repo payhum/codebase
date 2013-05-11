@@ -477,13 +477,26 @@ public class EmployeeFactory implements Serializable {
 	}
 
 	public static List<TypesData> findTypes(String resd) {
+	Session session=null;
+		boolean flagSession=false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		if (session == null || session.isOpen() == false) 
+		{
+			flagSession=true;
+			 session=OpenHRSessionFactory.getInstance().openSession();
+		}
 		session.beginTransaction();
 		query = session.getNamedQuery("TypesData.findByType");
 		query.setString(0, resd);
 		List<TypesData> tyd = query.list();
 		session.getTransaction().commit();
-
+if(flagSession)
+	
+{
+	
+	System.out.println("flagSession --"+flagSession);
+	session.close();	
+}
 		return tyd;
 	}
 

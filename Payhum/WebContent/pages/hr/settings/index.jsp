@@ -16,7 +16,7 @@
 	<label>Employee Id Prefix</label><br /> <input
 		class="k-input k-textbox" type="text" id="idPattern"
 		disabled="disabled" value="<%=Config.employeeIdPattern + "-0000"%>" /><br />
-	<br /> <label>Employee Promotion Strategy</label><br /> <input
+	<br /> <%-- <label>Employee Promotion Strategy</label><br /> <input
 		type="text" id="promotionStrategy" disabled="disabled"
 		value="<%=Config.employeePromotionStrategy%>" /><br /> <br /> <select
 		id="promotionStrategyDrl" style="display: none;">
@@ -30,7 +30,7 @@
 		<option value="0">Select</option>
 		<option value="Automatic">Automatic</option>
 		<option value="User defined">User defined</option>
-	</select> <a id="saveChanges" class="k-button" href="#">Save</a>
+	</select> <a id="saveChanges" class="k-button" href="#">Save</a> --%>
 </div>
 <div style="clear: both"></div>
 <script>

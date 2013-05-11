@@ -1,12 +1,12 @@
 <%@include file="../../common/jspHeader.jsp" %>
 <h2 class="legend">GLReports Employee View </h2> 
-<div id="grid"><a href="#">
-<span id="rpsm"></span>
-<span id="rpsm1">Export To PDF </span></a>
-<a href="#">
-<span id="rpex"></span>
-<span id="rpex1">Export To Excel</span>
-</a>
+
+<style type="text/css">
+.k-grouping-header {
+	display: none;
+}
+</style>
+<div id="grid">
 	</div>
 <div id="empForm">
 </div>

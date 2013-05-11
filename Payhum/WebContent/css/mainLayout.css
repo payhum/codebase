@@ -203,6 +203,11 @@ div.label {
 	width: 90px;
 	float: left;
 }
+#right-col div {
+	line-height: 30px;
+	display: block;
+}
+
 
 #left-col div {
 	line-height: 30px;
@@ -215,13 +220,13 @@ div.field input,div.field select,div.field textarea {
 }
 
 #employeeForm #right-col {
-	float: right;
-	width: 230px;
+float: right;
+	width: 300px;
 	display: block;
 }
 
 #employeeForm #left-col {
-	width: 350px;
+	width: 300px;
 	display: block;
 	float: left;
 }

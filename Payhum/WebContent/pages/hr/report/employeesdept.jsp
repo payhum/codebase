@@ -1,5 +1,11 @@
 <%@include file="../../common/jspHeader.jsp" %>
 <h2 class="legend">Employees By Dept</h2> 
+<style type="text/css">
+.k-grouping-header {
+	display: none;
+}
+</style>
+
 <style scoped="scoped" type="text/css">
 .k-detail-cell .k-tabstrip .k-content {
 	padding: 0.2em;

@@ -526,7 +526,7 @@ span.k-tooltip {
 					
        
        
-<h3 style="float: right">#=employeeId.companyId.name#</h3>
+<h3 style="float: right">#=employeeId.deptId.branchId.companyId.name#</h3>
 <hr style="clear: both">
 		<h3 style="float: right">#=employeeId.firstname#</h3>
 		<hr style="clear: both">

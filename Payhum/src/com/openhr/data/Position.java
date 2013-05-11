@@ -27,8 +27,8 @@ import javax.persistence.Table;
     @NamedQuery(name = "Position.findAll", query = "FROM Position p"),
     @NamedQuery(name = "Position.findById", query = "FROM Position p WHERE id = ?"),
     @NamedQuery(name = "Position.findByName", query = "SELECT p FROM Position p WHERE p.name = ?"),
-    @NamedQuery(name = "Position.findByLowSal", query = "SELECT p FROM Position p WHERE p.lowsal= ?"),
-    @NamedQuery(name = "Position.findByHighSal", query = "SELECT p FROM Position p WHERE p.highsal = ?")})
+    @NamedQuery(name = "Position.findByLowSal", query = "SELECT p FROM Position p WHERE p.lowSal= ?"),
+    @NamedQuery(name = "Position.findByHighSal", query = "SELECT p FROM Position p WHERE p.highSal = ?")})
 public class Position implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,10 +41,10 @@ public class Position implements Serializable {
     private String name;
     @Basic(optional = false)
     @Column(name = "lowsal", nullable = false)
-    private Double lowsal;
+    private Double lowSal;
     @Basic(optional = false)
     @Column(name = "highsal", nullable = false)
-    private Double highsal;
+    private Double highSal;
 
     public Position() {
     }
@@ -56,8 +56,8 @@ public class Position implements Serializable {
     public Position(Integer id, String name, Double ls, Double hs) {
         this.id = id;
         this.name = name;
-        this.lowsal = ls;
-        this.highsal = hs;
+        this.lowSal = ls;
+        this.highSal = hs;
     }
 
     public Integer getId() {
@@ -77,19 +77,19 @@ public class Position implements Serializable {
     }
 
     public Double getLowSal() {
-        return lowsal;
+        return lowSal;
     }
 
     public void setLowSal(Double salary) {
-        this.lowsal = salary;
+        this.lowSal = salary;
     }
 
     public Double getHighSal() {
-        return highsal;
+        return highSal;
     }
 
     public void setHighSal(Double sal) {
-        this.highsal = sal;
+        this.highSal = sal;
     }
 
     @Override

@@ -47,7 +47,7 @@ $("#grid").kendoGrid({
 	                { field : "firstname", title : "First Name", width : 100 },
 	                
 	                { field : "positionId", title : "Desgniation",  groupable : false, template: '#=positionId ? positionId.name: ""#', width : 100  },
-	                { field : "salary", title : "Salary",   groupable : false, template: '#=positionId ? positionId.salary: ""#', width : 100  },
+	                { field : "salary", title : "Salary",   groupable : false, template: '#=positionId ? positionId.highsal: ""#', width : 100  },
 	                 {field : "taxdec", title : " Income Tax deducted", width : 100 },
 	                {field : "remarks", title : " Remarks", width : 100 }
 	                ],             

@@ -3,6 +3,9 @@
 <%Config.readConfig();%>
 <div id="employeeForm">
 	<div class="clear"></div>
+	<div style="border:1px solid #666;float:left;height: 380px;">
+	
+	<div id="sec1"  style="float:left;margin-top: -20px">Personal Details</div>
 	<div id="left-col">
 		<div>
 			<div class="label">EMP-ID</div>
@@ -50,6 +53,42 @@
 		</div>
 
 
+
+	<div>
+	<div class="label">Photo</div>
+		<div class="field">
+		<div >
+			<img id="preview" style="border:2px solid #999;" class="k-image j-cropview"
+				height=100 width=150 src="http://localhost:8080/OpenHR/data/photo/placeholder-pic.png"/>
+	
+		</div>
+		
+</div>
+
+	<input type="file" required=required id="profilePicUploader"
+					onchange="readURL(this)" />
+		</div>
+		
+	<div>
+			<div class="label">Birth date</div>
+			<div class="field">
+				<input type="text" class="k-input k-textbox" 
+					id="birthdate" value="" />
+			</div>
+			<div class="clear"></div>
+		</div>	
+				<div>
+			<div class="label">Address</div>
+			<div class="field">
+<textarea class="k-textbox" id="empAddrss">
+
+
+</textarea>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div id="right-col">
 		<div>
 			<div class="label">Sex</div>
 			<div class="field" >
@@ -80,32 +119,87 @@
 			</label>
 		<div class="clear"></div>	
 	</div>	
-	<div>
-			<div class="label">Status</div>
-			
-			<label for="statusactive">
-				<input  type="radio" id="active" value="ACTIVE" name="status" />
-			ACTIVE
-			</label>
-				<label for="statusInactive">
-				<input  type="radio" id="inactive" value="IN ACTIVE" name="status"  />
-				IN ACTIVE
-			</label>
-			<div class="clear"></div>
-		</div>
+
+	
 	
 			
-		<div>
-			<div class="label">Birth date</div>
+		
+		
+
+	
+<div>
+			<div class="label">Emergency Contact Name</div>
 			<div class="field">
-				<input type="text" class="k-input k-textbox" 
-					id="birthdate" value="" />
+				<input type="text" required=required class="k-input k-textbox" id="contName"  value="" />
 			</div>
 			<div class="clear"></div>
 		</div>
+		<div>
+<div class="label">Emergency Contact Num</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		
+		
+		
+		
+		<div>
+<div class="label">Passport No</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="passNo"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		<div>
+			<div class="label">Passport Exp Date</div>
+			<div class="field">
+				<input type="text" class="k-input k-textbox" 
+					id="passExpDate" value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		<div>
+			<div class="label">Passport Issue place</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="passPlace"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div>
+<div class="label">Nationality</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="empNation"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		
+		
+		
+
+		
+	</div>
+</div>
+
+	<div style="border:1px solid #666;float:left;margin-top: 30px;height: 150px">
+	
+	<div id="sec1"  style="float:left;margin-top: -20px">Hiring Details</div>
 
 
-<div>
+	<div id="right-col">
+		
+	
+
+		
+		
+		
+		
+		<div>
 			<div class="label">Hire date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
@@ -153,54 +247,19 @@
 		
 		
 		
-
+		
+		
+		
+		
+		
+		
+		</div>
 	
-
-		<div>
-			<div class="field">
-				<a class="k-button k-icontext" id="saveEmp"><span class="k-add k-icon"></span>Save</a> <a
-					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel k-icon"></span>Cancel</a>
-			</div>
-			<div class="clear"></div>
-		</div>
-	</div>
-
-
-	<div id="right-col">
-		<div style="width:200px; height:150px; overflow:hidden">
-			<img id="preview" style="border:2px solid #999;" class="k-image j-cropview"
-				height=150 width=200 src="http://localhost:8080/OpenHR/data/photo/placeholder-pic.png"/>
-			<div class="clear"></div>
-		</div>
-
-		<div>
-			<div class="field">
-				<input type="file" required=required id="profilePicUploader"
-					onchange="readURL(this)" />
-			</div>
-			<div class="clear"></div>
-		</div>
-
-		<div>
-			<div class="label">Emergency Contact Name</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="contName"  value="" />
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div>
-<div class="label">Emergency Contact Number</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="" />
-			</div>
-			<div class="clear"></div>
-		</div>
-		
-		
-	<div >
+	<div id="left-col">
+	<div>
 			<div class="label">AccommodationType </div>
 			<div class="field">
-				<input class="accommodationDropDownList" id="accommodationVal"/>
+				<input class="accommodationDropDownList" required=required class="k-input k-textbox"  id="accommodationVal"/>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -211,13 +270,38 @@
 			</div>
 			<div class="clear"></div>
 		</div>
+	
+		
+			<div>
+	
+			<div class="label">Tax Paid By</div>
+			
+			<label for="statusactive">
+				<input  type="radio" id="active" value="1" name="status" />
+			Employee
+			</label>
+				<label for="statusInactive">
+				<input  type="radio" id="inactive" value="-1" name="status"  />
+				Employer
+			</label>
+			<div class="clear"></div>
+		</div>
+		
 		
 	</div>
-	<div class="clear"></div>
+
 
 </div>
-<div></div> 
-
+<div id="left-col">
+<div>
+			<div class="field">
+				<a class="k-button k-icontext" id="saveEmp"><span class="k-add k-icon"></span>Save</a> <a
+					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel k-icon"></span>Cancel</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+</div>
+</div>
 
 <script> 
 
@@ -232,11 +316,15 @@
 			var numericSal;
 			  $("#numericSal").kendoNumericTextBox();
 			//$('input:radio[name=family]').val('false');
+			
+			 $("#passNo").kendoNumericTextBox();
+			
 			$("#dp1").hide();
 			var today = new Date();
 		
 			//$("#employeeId").mask("aaaaaa-9999" , {placeholder:"-"});
-			
+			$("#passExpDate").kendoDatePicker({value : today
+			});
 			
 			$("#hiredate").kendoDatePicker({
 				value : today
@@ -261,7 +349,7 @@
 			 
 			 lowsal=parseFloat(costpart[1]);
 			 highsal=parseFloat(costpart[2]);
-			 alert(costpart[0]+"-"+highsal+"-"+lowsal);
+			 //alert(costpart[0]+"-"+highsal+"-"+lowsal);
 			 }); 
 			 
 			 $("#numericSal").blur(function(){
@@ -439,12 +527,17 @@
                 	
                 	sex,accommodationVal,residentVal,employeeId, departId,
                 	
-                	firstname, middlename, lastname, 
+                	firstname, middlename, lastname, passNo, passExpDate,passPlace,
                 	
-                	birthdate, hiredate,  photo;
+                	birthdate, hiredate, empNation, empAddrss, photo,paidTax, phNo;
          			//crop variables
          			var x, y, width, height;
                 	//id = $("#id").val(); 
+                	
+                	
+                	
+                	
+                	
          			employeeId = $("#employeeId").val(); 
          			firstname = $("#firstname").val(); 
          			middlename = $("#middlename").val(); 
@@ -455,13 +548,26 @@
          			accommodationVal=$("#accommodationVal").val();
          			departId=$("#departVal").val();
          			sex=$('input:radio[name=sex]:checked').val();
-         			
-         			status=$('input:radio[name=status]:checked').val();
+         			paidTax=$('input:radio[name=status]:checked').val();
+         			status="Active";
          			famly=$('input:radio[name=family]:checked').val();
          			
          			contName=$("#contName").val();
          			contNumber=$("#contNumber").val();
          		nationID=$("#nationID").val();
+         		
+         		phNo="534534534";
+         		
+         		passNo=$("#passNo").val();
+         		
+         		empNation=$("#empNation").val();
+         		
+         		passPlace=$("#passPlace").val();
+         		
+         		passExpDate=$("#passExpDate").val();
+         		
+         		empAddrss=$("#empAddrss").val();
+         		
          		postDropDownList=postDropDownList;
          		
          		alert("employeeId"+employeeId+"-----"+"firstname"+firstname
@@ -469,7 +575,8 @@
          			+"middlename"+middlename+"lastname"	+lastname+"residentVal"+residentVal
          			+"accommodationVal"+accommodationVal+"postDropDownList"+postDropDownList
          			+"sex"+sex+"status"+status+"famly"+famly+"nationID"+nationID
-         		 +"contName"+contName+"contNumber"+contNumber
+         		 +"contName"+contName+"contNumber"+contNumber+"empAddrss"+empAddrss
+         		 +"passExpDate"+passExpDate+"empNation"+empNation+"passNo"+passNo+"passPlace"+passPlace
          		
          		);
          			var bdate = new Date($("#birthdate").val());
@@ -550,8 +657,7 @@
          				photo = "/data/photo/placeholder-pic.png";        				
          			}      			
          			
-         			
-         			var updateData = JSON.stringify([{
+           	var updateData = JSON.stringify([{
     					"id" : id,
     					"employeeId" : employeeId,
     					"firstname" : firstname,
@@ -570,7 +676,14 @@
     					"contNumber":contNumber,
     					"contName":contName,
     					"deptIdVal":departId,
-    					"baseSalry":numericSal
+    					"baseSalry":numericSal,
+    					"empAddrss":empAddrss,
+    					"passExpDate":passExpDate,
+    					"passPlace":passPlace,
+    					"empNation":empNation,
+    					"passNo":passNo,
+    					"paidTax":paidTax,
+    					"phNo":phNo
     					
     				 }]);       			
          			

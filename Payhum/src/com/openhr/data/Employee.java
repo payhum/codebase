@@ -139,21 +139,21 @@ public class Employee implements Serializable {
 	@Column(name = "phoneNo", nullable = false, length = 15)
 	private String phoneNo;
 
-	@Basic(optional = false)
-	@Column(name = "nationality", length = 55)
+	@Basic(optional = true)
+	@Column(name = "nationality", nullable = true, length = 55)
 	private String nationality;
 	
-	@Basic(optional = false)
-	@Column(name = "ppNumber", length = 15)
+	@Basic(optional = true)
+	@Column(name = "ppNumber", nullable = true, length = 15)
 	private String ppNumber;
 	
-	@Basic(optional = false)
-	@Column(name = "ppExpDate", nullable = false)
+	@Basic(optional = true)
+	@Column(name = "ppExpDate", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date ppExpDate;
 	
-	@Basic(optional = false)
-	@Column(name = "ppIssuePlace", length = 45)
+	@Basic(optional = true)
+	@Column(name = "ppIssuePlace", nullable = true, length = 45)
 	private String ppIssuePlace;
 	
 	public String getEmpNationalID() {

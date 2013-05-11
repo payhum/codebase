@@ -56,8 +56,12 @@ BufferedReader bf = request.getReader();
         for (Position pFromJSON : aCollection) {
             p.setId(pFromJSON.getId());
             try{
+            	
             PositionFactory.delete(p);
+            
+            
             }catch(Exception e){
+            	e.printStackTrace();
             	response.setStatus(500);
             	System.out.println("CAUGHT AN EXCEPTION...");
             	PrintWriter out = response.getWriter();
@@ -66,7 +70,12 @@ BufferedReader bf = request.getReader();
             	out.flush();            	
             }
         }
-
+        response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		
+			out.print("Sravabnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn");
+		
+		out.flush();
         return map.findForward(null);
     }
 }

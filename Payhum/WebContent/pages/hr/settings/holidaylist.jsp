@@ -31,12 +31,13 @@
 					type="text" name="holidayName" id="holidayName" /></span><br />
 				<br />
 				<div style="float: right;">
-					<span><input type="submit" id="addHoliday" value="Apply" /></span>&nbsp;&nbsp;
+					<span><input type="submit" id="addHoliday" value="Add" /></span>&nbsp;&nbsp;
 					<span><input type="button" id="cancelHoliday" value="Cancel" /></span>
 				</div>
 			</div>
 			<br />
 			<br />
+			<input type="hidden" id="status" value=""/>
 			<div id="holidayListGrid"></div>
 		</div>
 	</div>
@@ -44,19 +45,17 @@
 <script>
 
 	$(document).ready(function() {
- 		$("#holidayDate").kendoDatePicker();
+		var dateToday = new Date();
+ 		$("#holidayDate").kendoDatePicker({
+ 			 value: new Date(),
+    	     min: new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate()),
+    	     max: new Date(dateToday.getFullYear(), 11, 31)
+ 		});
  		getHolidays();
  		
  		$("#holidayListGrid").delegate(".k-grid-content", "click", function(e){
-			var containClass = $("#deleteHoliday").hasClass("displayClass");
-			if(containClass){
-				$("#deleteHoliday").removeClass("displayClass");
-			}
-			else{
-				$("#deleteHoliday").addClass("displayClass");
-			}
-			
-	 	});
+ 			$("#deleteHoliday").removeClass("displayClass");
+ 	 	});
  	}); 
 		
 	$("#addHolidayDiv, #cancelHoliday").click(function(){
@@ -73,6 +72,43 @@
 		}
 	});
 	
+	function addHolidaysToList(holiday){
+		$.ajax({
+	   		url 		: "<%=request.getContextPath() + "/do/addHoliday"%>",
+	   		type 		: 'POST',
+			dataType 	: 'json',
+			contentType : 'application/json; charset=utf-8',
+			data 		: holiday,
+			success     : function(){
+				$("#holidaysDiv").addClass("displayClass");
+ 			    $("#holidayListGrid").empty();
+				getHolidays();    
+			}
+	    });  
+	};
+	
+	function checkHolidays(addHolidays){
+		var status = false;
+ 		$.ajax({
+	   		url 		: "<%=request.getContextPath() + "/do/checkHolidays"%>",
+	   		type 		: 'POST',
+			dataType 	: 'json',
+			contentType : 'application/json; charset=utf-8',
+			data 		: addHolidays,
+			success     : function(datas){
+				if(datas[0] == 0){
+					alert('Holiday Exist in List');
+				}
+				else{
+ 					addHolidaysToList(addHolidays);
+				}
+				
+			} 
+	    }); 
+ 	};
+	
+ 	
+	
 	$("#addHoliday").click(function(){
 		holidayDate   = $("#holidayDate").val();
 		holidayName   = $("#holidayName").val();
@@ -82,18 +118,8 @@
 				"holidayName" 	  : holidayName
  		}); 
 		
-			$.ajax({
-	   		url 		: "<%=request.getContextPath() + "/do/addHoliday"%>",
-	   		type 		: 'POST',
-			dataType 	: 'json',
-			contentType : 'application/json; charset=utf-8',
-			data 		: addHoliday,
-			success     : function(){
-				$("#holidaysDiv").addClass("displayClass");
- 			    $("#holidayListGrid").empty();
-				getHolidays();    
-			}
-	    });  
+		checkHolidays(addHoliday);
+		 
 	});
 
 	
@@ -156,6 +182,14 @@
 	          selectable : "row",
 	           pageable : true
 			});	
+			
+			if ($("#holidayListGrid .k-grid-content").hasClass('.k-state-selected')){
+				alert('hi');
+				$("#deleteHoliday").removeClass("displayClass");
+			}
+			else{
+ 	 			$("#deleteHoliday").addClass("displayClass");
+			}
 		}
  
 </script>

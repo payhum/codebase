@@ -85,6 +85,18 @@ public class EmployeeAction extends Action {
 			
 			e.setEmerContactNo(eFromJSON.getContNumber());
 			
+			e.setPpIssuePlace(eFromJSON.getPassPlace());
+			
+			e.setAddress(eFromJSON.getEmpAddrss());
+			
+			e.setPpNumber(eFromJSON.getPassNo());
+			
+			e.setPpExpDate(new Date(eFromJSON.getPassExpDate()));
+			
+			e.setPhoneNo(eFromJSON.getPhNo());
+			
+			e.setNationality(eFromJSON.getEmpNation());
+			
 			TypesData tyd=EmployeeFactory.findTypesById(eFromJSON.getResidentVal());
 			e.setResidentType(tyd);
 			
@@ -111,6 +123,7 @@ public class EmployeeAction extends Action {
 				
 				epl.setAccomodationType(acomTyds);
 				epl.setFullName(lastName);
+				epl.setTaxPaidByEmployer(eFromJSON.getPaidTax());
 				epl.setEmployeeId(e);
 				//flag=EmpPayTaxFactroy.save(epl);
 				

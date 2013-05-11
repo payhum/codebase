@@ -1,8 +1,11 @@
 <%@include file="../../common/jspHeader.jsp"%>
 <h2 class="legend"> Active vs Terminated</h2>
-<div id="grid"><a href="#">
-<span id="rpsm"></span>
-<span id="rpsm1">Export PDF Report</span></a></div>
+<style type="text/css">
+.k-grouping-header {
+	display: none;
+}
+</style>
+<div id="grid"></div>
 <div id="empForm"></div>
 
 

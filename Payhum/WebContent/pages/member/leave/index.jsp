@@ -116,12 +116,32 @@
   	            selectable : "row",
    	            pageable : true
   			});	
+  			
+  			if ($("#grid1 .k-grid-content").hasClass('.k-state-selected')){
+  				$("#deleteLeave").removeClass("displayClass");
+  			}
+  			else{
+  	 			$("#deleteLeave").addClass("displayClass");
+  			}
   		}
   			
   		$(document).ready(function() {	
     		getEmployeeLeaves();
-      		$("#leaveFrom").kendoDatePicker();
-    		$("#leaveTo").kendoDatePicker();
+       		
+      		var dateToday = new Date();
+      		$("#leaveFrom").kendoDatePicker({
+      		   value: new Date(),
+      	       min: new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate()),
+      	       max: new Date((dateToday.getFullYear()+1), 1, 28)
+      		});
+      		
+      		
+    		$("#leaveTo").kendoDatePicker({
+    			value: new Date(),
+       	       min: new Date(dateToday.getFullYear(), dateToday.getMonth(), dateToday.getDate()),
+       	       max: new Date((dateToday.getFullYear()+1), 1, 28)
+    		});
+    		
   			$("#TypeOfLeave").kendoDropDownList({
 				dataTextField : "name",
 				dataValueField : "id",
@@ -256,15 +276,8 @@
 		});
 		
 		  $("#grid").delegate(".k-grid-content", "click", function(e){
-			var containClass = $("#deleteLeave").hasClass("displayClass");
-			if(containClass){
-				$("#deleteLeave").removeClass("displayClass");
-			}
-			else{
-				$("#deleteLeave").addClass("displayClass");
-			}
-			
-		 });
+ 			$("#deleteLeave").removeClass("displayClass");
+ 		 });
 	
 		$("#deleteLeave").click(function(){
 			 employeeId = $(".k-state-selected").find('td').eq(0).text();

@@ -112,7 +112,6 @@
 			<forward name="admin" path="/do/AdminHome" />
 			</action>
 			
-			 
 		<action path="/ReadPayrollSummary" name="PayrollForm" 
 			type="com.openhr.payroll.action.ReadPayrollSummary"  input="/pages/hr/report/summary.jsp">
 			<forward name="admin" path="/do/AdminHome" />
@@ -183,7 +182,10 @@
 			type="com.openhr.position.action.PositionAction" input="position.form">
 			<forward name="continue" path="position.form" />
 		</action>
-
+	<action path="/ReadJobTitleAction" name="positionForm"
+			type="com.openhr.position.action.ReadJobTitleAction" input="position.form">
+			<forward name="continue" path="position.form" />
+		</action>
 		<action path="/ReadPositionAction" name="positionForm"
 			type="com.openhr.position.action.ReadPositionAction" input="position.form">
 			<forward name="continue" path="position.form" />
@@ -612,6 +614,16 @@
 			<forward name="continue" path="holiday.form" />
 		</action>
 		
+		<action path="/checkHolidays" 
+			type="com.openhr.CheckHolidayAction">
+			<forward name="continue" path="holiday.form" />
+		</action>
+		
+		
+		<action path="/checkForHoliday" 
+			type="com.openhr.CheckHoliday">
+			<forward name="continue" path="employee.form" />
+		</action>
 		
 		
 		<action path="/DeleteLeaveApplication" name="applyLeave"
@@ -724,6 +736,7 @@
 			type="com.openhr.leave.action.CheckLeavesAction">
 			<forward name="continue" path="mbenefit.form" />
 		</action>
+		
 		
 		<action path="/validateUser"
 			type="com.openhr.user.action.ValidateUser">

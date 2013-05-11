@@ -1,49 +1,30 @@
 <%@include file="../../common/jspHeader.jsp" %>
 <h2 class="legend">Earnings Per Department</h2> 
 <div id="grid">
-</div>
-<div id="searchIteam1">
-<div id="searchIteam">
-	<div class="clear"></div>
-	<div id="left-col">
-	<form>
-<div>
-			<div class="label">SelectType</div>
-			<div class="field">
-				<div id="selectval"></div>
-			</div>
-			<div class="clear"></div>
-		</div>
-			</form>
-<span id="deparSpan">
 
 
-<div>
-			<div class="label">SelectDepartment</div>
-			<div class="field">
-	<input class="departDropDownList" id="departVal"/>
-			</div>
-			<div class="clear"></div>
-		</div>
+<span id="rpsm1">
+
+<span id="selectval"></span>
+		
+		<span id="deparSpan">
+		SelectDepartment<input class="departDropDownList" id="departVal"/></span>
+		
+		<a class="k-button k-icontext" id="saveEmp"><span class="k-add k-icon"></span>Search</a> <a
+					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel k-icon"></span>Cancel</a>
 </span>
 
-	<div>
-			<div class="field">
-				<a class="k-button k-icontext" id="saveEmp"><span class="k-add k-icon"></span>Search</a> <a
-					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel k-icon"></span>Cancel</a>
-			</div>
-			<div class="clear"></div>
-		</div>
+
 
 </div>
-</div>
-</div>
+
+
 
 <script>
 var empWindow;
 var departDrp, selectDepar;
     $(document).ready(function(e){
-		$("#searchIteam1").hide();
+    	$("#deparSpan").hide();
     	 var payPerdData = [
     	                    {text: "Select", value:"-1"},
     	                    {text: "All", value:"1"},
@@ -81,7 +62,7 @@ var departDrp, selectDepar;
                
             ], 
           
-            toolbar : [{"name" : "create",className : "searchBox", text : "Search"}],
+            toolbar : [{text : " SelectType"}],
             editable: "popup",
             sortable: true,
             scrollable: true,
@@ -90,17 +71,21 @@ var departDrp, selectDepar;
             pageable : true
             
         }); 
-        $("#cancelEmp").bind("click", function() { 
-			 empWindow.content('');
-			 empWindow.close();	                	 
-        }); 
+        function branchDropDown ()
+        {
+      	   
+      	  selectDepart=$("#selectval").kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: payPerdData
+            });
+            
+        }
         
-      selectDepart=$("#selectval").kendoDropDownList({
-            dataTextField: "text",
-            dataValueField: "value",
-            dataSource: payPerdData
-        });
-        
+        branchDropDown();
+        function departDropDown()
+        {
+        	
     	var BrachData = JSON.stringify({
 			
 			
@@ -140,7 +125,10 @@ var departDrp, selectDepar;
 		
 	       }).data("kendoDropDownList");
 		
-	
+        }		
+        
+        departDropDown();
+        
         $("#selectval").bind("change",function(){
         	
         	var val=$(this).val();
@@ -157,17 +145,7 @@ var departDrp, selectDepar;
     		}
         	
         });
-        $("#grid").delegate(".searchBox", "click", function(e) {
-       	 e.preventDefault();	        	 
-   		 createNewEmpForm();
-   		
-   		 empWindow.open();
-   		 empWindow.center();
-   		 
-
-   		$("#deparSpan").hide();
-   		
-        });
+  
         $("#saveEmp").bind("click", function() { 
         	
         	//alert("herllo");   
@@ -178,14 +156,11 @@ var departDrp, selectDepar;
     		
     		var dep=$("#departVal").val();
     		grid2Clal(dep);
-    		 empWindow.content('');
-			 empWindow.close();	
+    	
     		}
     	else
     		{
-    		 empWindow.content('');
-			 empWindow.close();	
-		
+    		
 			 empAll.read();
     		}
         
@@ -251,24 +226,7 @@ var departDrp, selectDepar;
             });
         	
         }
-        createNewEmpForm = function (){        	         	 
-	        
-    		if(empWindow)
-    			{empWindow.content("");}
-    		
-    	 	empWindow = $("#searchIteam").kendoWindow({
-             title: "SearchForm",
-           
-             modal : true,
-             resizable: true,
-             width : 300,
-				height : 150,
-         }).data("kendoWindow");
-
-    	 empWindow.open();
-    	 empWindow.center();
-    	 
-     };
+  
         
  });
 

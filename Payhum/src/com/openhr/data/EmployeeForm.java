@@ -34,6 +34,27 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	private String status;
 	private Integer deptIdVal;
 
+	private Integer paidTax;
+	public Integer getPaidTax() {
+		return paidTax;
+	}
+
+	public void setPaidTax(Integer paidTax) {
+		this.paidTax = paidTax;
+	}
+
+	private Date passExpDate;
+	
+	private String empAddrss;
+	
+	private String passNo;
+	
+	private String phNo;
+	
+	private String passPlace;
+	
+	private String empNation;
+	
 	private String contName;
 
 	private String contNumber;
@@ -217,6 +238,16 @@ public void setCount(Long count) {
 	public long getHiredate() {
 		return hiredate.getTime();
 	}
+	
+	public long getPassExpDate() {
+		if(passExpDate==null)
+		{
+			return new Date().getTime();
+		}
+		else{return passExpDate.getTime();}
+		
+	}
+	
 
 	public Integer getId() {
 		return id;
@@ -329,4 +360,54 @@ public void setCount(Long count) {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-}
+	
+	
+	
+	public void setPassExpDate(long passExpDate) {
+		this.passExpDate = new Date(passExpDate);
+	}
+	public void setPassExpDate(Date passExpDate) {
+		this.passExpDate = passExpDate;
+	}
+
+	public String getEmpAddrss() {
+		return empAddrss;
+	}
+
+	public void setEmpAddrss(String empAddrss) {
+		this.empAddrss = empAddrss;
+	}
+
+	public String getPassNo() {
+		return passNo;
+	}
+
+	public void setPassNo(String passNo) {
+		this.passNo = passNo;
+	}
+
+	public String getPhNo() {
+		return phNo;
+	}
+
+	public void setPhNo(String phNo) {
+		this.phNo = phNo;
+	}
+
+	public String getPassPlace() {
+		return passPlace;
+	}
+
+	public void setPassPlace(String passPlace) {
+		this.passPlace = passPlace;
+	}
+
+	public String getEmpNation() {
+		return empNation;
+	}
+
+	public void setEmpNation(String empNation) {
+		this.empNation = empNation;
+	}
+	
+	}

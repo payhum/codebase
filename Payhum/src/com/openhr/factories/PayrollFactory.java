@@ -12,6 +12,7 @@ import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Payroll;
 import com.openhr.data.PayrollDate;
+import com.openhr.data.Position;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 public class PayrollFactory implements Serializable {
@@ -119,6 +120,22 @@ public class PayrollFactory implements Serializable {
 		lsession.beginTransaction();
 		try {
 			lsession.save(rDate);
+			lsession.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			lsession.close();
+		}
+	}
+	
+	public static void deletePayrollDate(PayrollDate rDate) {
+
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		try {
+			PayrollDate pos = (PayrollDate) lsession.get(PayrollDate.class, rDate.getId());
+			lsession.delete(pos);
+			lsession.flush();
 			lsession.getTransaction().commit();
 		} catch (Exception ex) {
 			ex.printStackTrace();
