@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import com.openhr.data.LeaveRequest;
 import com.openhr.data.OverTime;
 import com.openhr.factories.OverTimeFactory;
 
@@ -34,17 +35,48 @@ public class ReadNoticeAction extends Action {
         try {
         	List<OverTime> applicationList =  OverTimeFactory.findByEmployeeId(empId);
         	
-        	for(OverTime l : applicationList){
+        	/*for(OverTime l : applicationList){
         		if(l.getStatus() == 1){
         			list.add(l);
         		}
+        	}*/
+        	
+        	System.out.println("size......."+applicationList.size());
+        	
+        	if(applicationList.size() > 10){
+        		for(int i=10; i<applicationList.size(); i++){
+        			applicationList.remove(i);
+        		}
         	}
         	
-        	JsonConfig config = new JsonConfig();
-			config.setIgnoreDefaultExcludes(false);
-			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
-			
-            result = JSONArray.fromObject(list, config);
+        	
+         	    List<OverTime> invertedList = new ArrayList<OverTime>();
+          	    for (int i = applicationList.size() - 1; i >= 0; i--) {
+             	    invertedList.add(applicationList.get(i));
+             	}
+         	   
+         	   List<OverTime> topTen = new ArrayList<OverTime>();
+
+         	   JsonConfig config = new JsonConfig();
+	   			config.setIgnoreDefaultExcludes(false);
+	   			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+   			
+         	    if(invertedList.size() >= 10){
+         	    	for(int i=0; i<10; i++){
+         	    		topTen.add(invertedList.get(i));
+         	    	}
+                    result = JSONArray.fromObject(topTen, config);
+          	    }
+         	    else{
+                    result = JSONArray.fromObject(invertedList, config);
+         	    }
+        	   
+         	
+        	
+        	
+        	System.out.println("size......."+applicationList.size());
+        	
+        	
         } catch (Exception e) {
             e.printStackTrace();
         }

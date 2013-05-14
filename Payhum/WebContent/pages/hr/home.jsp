@@ -163,15 +163,11 @@
 		  width:900px;
 		  padding:10px; ">
 		  <h2 style="font-size:16px;">Summary Note:</h2>
-		  Something about the data visualization is to go here
-		  Any one who wants to can do what he wants too if it is
-		  true. Something about the data visualization is to go here
-		  Any one who wants to can do what he wants too if it is
-		  true.Something about the data visualization is to go here
-		  Any one who wants to can do what he wants too if it is
-		  true.Something about the data visualization is to go here
-		  Any one who wants to can do what he wants too if it is
-		  true.
+		  Welcome to the Human Resource Home page. Here as an HR you can do various operations.
+		  Above is the summary view of the employees per department and the departments per branch.
+		  
+		  Here you can add/update Employees, define new positions, benefits, approve leaves/overtime,
+		  view various reports, etc... 
 </div>
 
 

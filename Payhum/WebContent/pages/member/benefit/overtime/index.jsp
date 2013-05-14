@@ -194,9 +194,12 @@ function getEmployeeOverTimes(){
    				data 		: applyOverTime,
    				success     : function(data){
    					if(data[0] == 0){
-   						alert('Cannot apply overtime on holidays');
+   						alert('Cannot apply for overtime on holidays');
    					}
-   					else{
+   					if(data[1] == 1){
+   						alert("Cannot apply for overtime on leave days");
+   					}
+   					if( (data[0] != 0) && (data[1] != 1)){
    	 					addOverTimes(applyOverTime);
    					}
     			} 

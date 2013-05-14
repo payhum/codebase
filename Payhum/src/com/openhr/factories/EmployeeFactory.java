@@ -21,6 +21,7 @@ import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeeSalary;
 import com.openhr.data.TypesData;
+import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
 import com.openhr.data.Users;
 
@@ -237,7 +238,7 @@ public class EmployeeFactory implements Serializable {
 	public static List<Object[]> findAllDepartEmpChart() {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		String hql = " select   count(d.id) as num, d.deptname from Employee e , Department d where e.deptId=d.id group by e.deptId";
+		String hql = " select   count(d.id) as num, d.deptname from Employee e , Department d where e.deptId=d.id AND e.firstname != 'Guest' group by e.deptId";
 
 		query = session.createQuery(hql);
 		List<Object[]> lob = query.list();
@@ -287,9 +288,16 @@ public class EmployeeFactory implements Serializable {
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findAll");
 		employees = query.list();
-
 		session.getTransaction().commit();
 
+		/*Iterator iter = employees.iterator();
+		while(iter.hasNext()) {
+			Employee emp = (Employee) iter.next();
+			if(PayhumConstants.GUEST_USER.equalsIgnoreCase(emp.getFirstname())) {
+				iter.remove();
+			}
+		}*/
+		
 		return employees;
 	}
 
@@ -334,18 +342,6 @@ public class EmployeeFactory implements Serializable {
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findByName");
 		query.setString(0, EmployeeName);
-		employees = query.list();
-		session.getTransaction().commit();
-
-		return employees;
-	}
-
-	public static List<Employee> findAllByCompanyID(Integer compID)
-			throws Exception {
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("Employee.findByCompanyID");
-		query.setInteger(0, compID);
 		employees = query.list();
 		session.getTransaction().commit();
 

@@ -55,4 +55,5 @@ public class PayhumConstants {
 	public static final String PROCESS_COMPANY = "PCOMP";
 	public static final String PROCESS_BRANCH = "PBRANCH";
 	public static final String MASTER_COMP = "MasterComp";
+	public static final String GUEST_USER = "Guest";
 }

@@ -46,6 +46,9 @@
 			<div id="form">
 				<div>
 					<input type="button" id="makeEditable" value="Edit"/>
+					<span style="display : none;"><a class="k-button k-icontext" id="cancelCmp" style="display:none !important;"><span class="k-cancel k-icon"></span>Cancel</a></span>
+					
+ 					
 					
 					<div>
 						<div class="form-label">
@@ -104,6 +107,7 @@
 <!-- end of Account setting -->
 <script>
 	var messagesWindow = "";	
+	var empWindow;
 	$(document).ready(function() {
 		$("#tabs").kendoTabStrip({
 			animation : {
@@ -112,6 +116,12 @@
 				}
 			}
 		});
+		
+		$("#cancelCmp").bind("click", function() { 
+ 			empWindow.content('');
+			empWindow.close();	                	 
+   		}); 
+			 
 		
 		$("#hideNotificaiton").bind("click", function(e) {
 			$("#notificaitonBar").hide(function() {
@@ -160,12 +170,16 @@
 					success : function(data){
  						if(data[0] == 0){
 							alert('Passwords do not match.');
+							$("#cancelCmp").click();
 						}
 					    if(data[1] == 1){
-							alert('Old Password is incorrect.');
+  							alert('Old Password is incorrect.');
+ 							$("#cancelCmp").click();
+							
 						}
 					    if(data[0] != 0 && data[1] != 1){
 					    	alert('Account settings saved successfully');
+					    	$("#cancelCmp").click();
 					    }
 						
 					} 

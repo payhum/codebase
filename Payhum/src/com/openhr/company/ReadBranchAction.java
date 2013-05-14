@@ -42,11 +42,13 @@ public class ReadBranchAction extends Action {
 				}
 			}
 			
-			List<Branch> companies = BranchFactory.findByCompanyId(comp.getId());
-			start = System.currentTimeMillis();
-			result = JSONArray.fromObject(companies);
-			end = System.currentTimeMillis();
-			diff = end - start;
+			if(comp!=null) {
+				List<Branch> companies = BranchFactory.findByCompanyId(comp.getId());
+				start = System.currentTimeMillis();
+				result = JSONArray.fromObject(companies);
+				end = System.currentTimeMillis();
+				diff = end - start;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

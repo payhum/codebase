@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "company", catalog = "payhumrepo", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Company.findAll", query = "SELECT e FROM Company e"),
+    @NamedQuery(name = "Company.findAll", query = "SELECT e FROM Company e where e.name != 'MasterComp'"),
     @NamedQuery(name = "Company.findById", query = "SELECT e FROM Company e WHERE e.id = ?"),
     @NamedQuery(name = "Company.findByCompanyId", query = "SELECT e FROM Company e WHERE e.companyId = ?"),
     @NamedQuery(name = "Company.findByName", query = "SELECT e FROM Company e WHERE e.name = ?")})

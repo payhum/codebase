@@ -18,6 +18,7 @@ import org.apache.struts.action.ActionMapping;
 
 import com.openhr.data.LeaveApproval;
 import com.openhr.data.LeaveRequest;
+import com.openhr.data.OverTime;
 import com.openhr.factories.LeaveRequestFactory;
 
 public class ReadApprovedLeaveAction extends Action {
@@ -34,23 +35,52 @@ public class ReadApprovedLeaveAction extends Action {
         try {
         	 List<LeaveRequest> applicationList = LeaveRequestFactory.findByEmployeeId(empId);
         	 List<LeaveApproval> list = new ArrayList<LeaveApproval>();
-        	 System.out.println("Size is - " + applicationList.size());	 
-        	 for(int i=0;i<applicationList.size();i++){
-        		 List<LeaveApproval> appLeaveList = LeaveRequestFactory.findByLeaveId(applicationList.get(i).getId());
-        		 if(appLeaveList != null && !appLeaveList.isEmpty()) {
-	        		 LeaveApproval l = appLeaveList.get(0);
-	        		 if(l != null){
-	        			 l.getRequestId().setReturnDate(l.getApprovedbydate());
-	        			 list.add(l);
-	        		 }
-        		 }
-        	 }
+        	 System.out.println("Size is - " + applicationList.size());	
         	 
-        	 JsonConfig config = new JsonConfig();
-			 config.setIgnoreDefaultExcludes(false);
-			 config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
-			 
-        	 result = JSONArray.fromObject(list, config);
+        	 if(applicationList.size() > 10){
+         		for(int i=10; i<applicationList.size(); i++){
+         			applicationList.remove(i);
+         		}
+         	}
+        	 
+        	   List<LeaveRequest> invertedList = new ArrayList<LeaveRequest>();
+         	    for (int i = applicationList.size() - 1; i >= 0; i--) {
+            	    invertedList.add(applicationList.get(i));
+            	}
+        	   
+        	   List<LeaveRequest> topTen = new ArrayList<LeaveRequest>();
+
+        	   JsonConfig config = new JsonConfig();
+	   			config.setIgnoreDefaultExcludes(false);
+	   			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+  			
+        	    if(invertedList.size() >= 10){
+        	    	for(int i=0; i<10; i++){
+        	    		topTen.add(invertedList.get(i));
+        	    	}
+                   result = JSONArray.fromObject(topTen, config);
+         	    }
+        	    else{
+                   result = JSONArray.fromObject(invertedList, config);
+        	    }
+       	   
+        	
+         	
+        	 
+        	 
+//        	 for(int i=0;i<applicationList.size();i++){
+//        		 List<LeaveApproval> appLeaveList = LeaveRequestFactory.findByLeaveId(applicationList.get(i).getId());
+//        		 if(appLeaveList != null && !appLeaveList.isEmpty()) {
+//	        		 LeaveApproval l = appLeaveList.get(0);
+//	        		 applicationList.get(i).setReturnDate(l.getApprovedbydate());
+// 	        		 if(l != null){
+//	        			 l.getRequestId().setReturnDate(l.getApprovedbydate());
+//	        			 list.add(l);
+//	        		 }
+//        		 }
+//         	 }
+        	 
+        	 
         } catch (Exception e) {
             e.printStackTrace();
         }

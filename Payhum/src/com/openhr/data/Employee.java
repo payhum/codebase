@@ -33,18 +33,18 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "employee", catalog = "payhumrepo", schema = "")
 @NamedQueries({
-		@NamedQuery(name = "Employee.findAll", query = "SELECT e FROM Employee e"),
+		@NamedQuery(name = "Employee.findAll", query = "SELECT e FROM Employee e where e.firstname != 'Guest'"),
 		@NamedQuery(name = "Employee.findById", query = "SELECT e FROM Employee e WHERE e.id = ?"),
 		@NamedQuery(name = "Employee.findByEmployeeId", query = "SELECT e FROM Employee e WHERE e.employeeId = ?"),
 		@NamedQuery(name = "Employee.findByFirstname", query = "SELECT e FROM Employee e WHERE e.firstname = ?"),
 		@NamedQuery(name = "Employee.findByMiddlename", query = "SELECT e FROM Employee e WHERE e.middlename = ?"),
 		@NamedQuery(name = "Employee.findByLastname", query = "SELECT e FROM Employee e WHERE e.lastname = ?"),
-		@NamedQuery(name = "Employee.findBySex", query = "SELECT e FROM Employee e WHERE e.sex = ?"),
+		@NamedQuery(name = "Employee.findBySex", query = "SELECT e FROM Employee e WHERE e.sex = ? AND e.firstname != 'Guest'"),
 		@NamedQuery(name = "Employee.findByBirthdate", query = "SELECT e FROM Employee e WHERE e.birthdate = ?"),
-		@NamedQuery(name = "Employee.findByDeptID", query = "SELECT e FROM Employee e WHERE e.deptId = ?"),
+		@NamedQuery(name = "Employee.findByDeptID", query = "SELECT e FROM Employee e WHERE e.deptId = ? AND e.firstname != 'Guest'"),
 		@NamedQuery(name = "Employee.findByHiredate", query = "SELECT e FROM Employee e WHERE e.hiredate = ?"),
-		@NamedQuery(name = "Employee.findActiveByDeptID", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE' AND e.deptId = ?"),
-		@NamedQuery(name = "Employee.findAllActive", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE'"),
+		@NamedQuery(name = "Employee.findActiveByDeptID", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE' AND e.deptId = ? AND e.firstname != 'Guest'"),
+		@NamedQuery(name = "Employee.findAllActive", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE' AND e.firstname != 'Guest'"),
 		@NamedQuery(name = "Employee.findAllActiveByBranch", query = "SELECT e FROM Employee e, Department d WHERE e.status = 'ACTIVE' AND d.branchId = ? "
 				+ " AND e.deptId = d.id"),
 		@NamedQuery(name = "Employee.findInActiveByDeptIDAndDate", query = "SELECT e FROM Employee e WHERE e.status = 'IN ACTIVE' AND e.deptId = ? AND"

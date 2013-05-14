@@ -66,9 +66,10 @@ public class LoginAction extends OpenHRAction {
 				EmployeePayroll epay=	EmpPayTaxFactroy.findEmpPayrollbyEmpID(u.getEmployeeId()); 
 				if(epay!=null)
 				{
-				request.getSession().setAttribute("empPay",
-						epay.getId());
+					request.getSession().setAttribute("empPay",
+							epay.getId());
 				}
+				
 				if (loginForm.getRole().equalsIgnoreCase("PageAdmin")) {
 					return map.findForward("admin");
 				}
@@ -79,7 +80,6 @@ public class LoginAction extends OpenHRAction {
  					 List<LeaveType> leaveTypes = LeaveTypeFactory.findAll();
 					 request.setAttribute("leaveTypes", leaveTypes);
 					 Employee nn = user.getEmployeeId();
-					 String str = nn.getEmployeeId();
 					 String n = nn.getFirstname();
 					 request.setAttribute("employeeId", n);
 					return map.findForward("member");

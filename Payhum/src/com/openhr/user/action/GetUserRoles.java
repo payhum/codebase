@@ -17,13 +17,17 @@ import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.LeaveRequest;
 import com.openhr.data.LeaveType;
+import com.openhr.data.Roles;
 import com.openhr.data.Users;
 import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.EmployeeFactory;
 import com.openhr.factories.LeaveRequestFactory;
 import com.openhr.factories.LeaveTypeFactory;
+import com.openhr.factories.RolesFactory;
 import com.openhr.factories.UsersFactory;
 import com.openhr.user.form.LoginForm;
+
+import javax.management.relation.Role;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,7 +42,7 @@ import org.apache.struts.action.ActionMapping;
  * 
  * @author Mekbib
  */
-public class ValidateUser extends OpenHRAction {
+public class GetUserRoles extends OpenHRAction {
 
 	@Override
 	public ActionForward execute(ActionMapping map, ActionForm form,
@@ -55,31 +59,19 @@ public class ValidateUser extends OpenHRAction {
         JSONObject json = JSONObject.fromObject(sb.toString());
         
         String userName = json.getString("userName");
-        String passWord = json.getString("passWord");
-        String loginAs = json.getString("loginAs");
+        List<Roles> allRoles = RolesFactory.findAll();
         int a[] = {10,20};
         
-        List<Users> user = UsersFactory.findByUserName(userName);
-        if(user.size() == 0){
-        	a[0] = 0;
+        List<Users> userList = UsersFactory.findByUserName(userName);
+        Roles roles;
+        int roleId = 0;
+        if(userList.size() != 0){
+        	roles = userList.get(0).getRoleId();
+        	roleId = roles.getId();
         }
-        else{
-        	String uPasswd = user.get(0).getPassword();
-        	
-        	if(!uPasswd.equals(passWord)) {
-        		a[0] = 1;
-        	} else {
-        		// Passwords are same. check role, skip it for Guest as he has all roles.
-        		if(! user.get(0).getUsername().equalsIgnoreCase("guest")) {
-	        		if(user.get(0).getRoleId().getName().equalsIgnoreCase(loginAs)){
-	        			// all are ok.
-	        			a[0] = 10;
-	        		} else {
-	        			a[0] = 2;
-	        		}
-        		}
-        	}
-         }
+        
+        a[0] = roleId;
+        
         
  		result = JSONArray.fromObject(a);
      	response.setContentType("application/json; charset=utf-8");

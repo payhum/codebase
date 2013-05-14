@@ -340,13 +340,37 @@ $(function(){
 
 
 <script>
+    var empWindow;
 	$("#accountSettings").click(function(e){
-		$("#accountSettingsWnd").css("display","block");
+		e.preventDefault();	        
+      	 createNewCmpForm();
+  		 empWindow.open();
+  		 empWindow.center();
+	});
+  		 
+  		 createNewCmpForm = function (){        	         	 
+	        	if(empWindow)
+	        		empWindow.content("");
+	        	 	empWindow = $("#accountSettingsWnd").kendoWindow({
+	                 title: "",
+ 	                 modal : true,
+	                 resizable: false,
+	                 width : 650
+	             }).data("kendoWindow");
+	        	 
+	        	 empWindow.open();
+	        	 empWindow.center();
+	        	 
+	         };
+	         
+  		 
+  		 
+  		 
+		/* $("#accountSettingsWnd").css("display","block");
 		var accountSettingWnd = $("#accountSettingsWnd").kendoWindow({
 			modal : true,
 			title : "Account Settings" 
 		}).data("kendoWindow");
 		accountSettingWnd.center();
-		accountSettingWnd.open();
-	});	
-</script>
+		accountSettingWnd.open(); */
+ </script>

@@ -70,7 +70,7 @@ public class SSGovtFile extends Action {
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Employee ID");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee National ID");
+		allEmpPayStr.append("Employee National ID / Passport No");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Payroll Cycle");
 		allEmpPayStr.append(COMMA);

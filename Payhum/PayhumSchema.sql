@@ -621,3 +621,184 @@ CREATE TABLE `payhum_config` (
   `configValue` varchar(45) NOT NULL,
   PRIMARY KEY  (`configName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+-- 
+-- Creating Triggers and tables for Audit Trail
+--
+
+--
+-- Table to capture the audit trail for emp_payroll
+--
+DROP TABLE IF EXISTS `audit_emp_payroll`;
+CREATE TABLE `audit_emp_payroll` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ref_ep_id` int(10) unsigned NOT NULL ,
+  `employeeId` int(10) unsigned NOT NULL,
+  `FULL_NAME` varchar(137) NOT NULL,
+  `GROSS_SALARY` double default 0,
+  `taxableIncome` double default 0,
+  `taxAmount` double default 0,
+  `totalIncome` double default 0,
+  `taxableOverseasIncome` double default 0,
+  `allowances` double default 0,
+  `baseSalary` double default 0,
+  `bonus` double default 0,
+  `accomodationAmount` double default 0,
+  `employerSS` double default 0,
+  `accomodationType` int(10) unsigned NOT NULL,
+  `netPay` double default 0,
+  `totalDeductions` double default 0,
+  `overtimeamt` double default 0,
+  `paidTaxAmt` double default 0,
+  `paidNetPay` double default 0,
+  `paidSS` double default 0,
+  `otherIncome` double default 0,
+  `leaveLoss` double default 0,
+  `taxPaidByEmployer` int(2) unsigned NOT NULL default 0,
+  `updatedDate` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table to capture the audit trail for employee
+--
+DROP TABLE IF EXISTS `audit_employee`;
+CREATE TABLE `audit_employee` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ref_emp_id` int(10) unsigned NOT NULL ,
+  `employeeId` varchar(45) NOT NULL,
+  `firstname` varchar(45) NOT NULL,
+  `middlename` varchar(45) NOT NULL,
+  `lastname` varchar(45) NOT NULL,
+  `sex` varchar(6) NOT NULL,
+  `birthdate` datetime NOT NULL,
+  `hiredate` datetime NOT NULL,
+  `inactiveDate` datetime,
+  `positionId` int(10) unsigned NOT NULL,
+  `photo_path` varchar(255) NOT NULL,
+  `status` varchar(20) NOT NULL,
+  `version` int(11) NOT NULL default '1',
+  `married` varchar(6) NOT NULL,
+  `residentType` int(10) unsigned NOT NULL,
+  `deptId` int(10) unsigned NOT NULL,
+  `empNationalID` varchar(45) NOT NULL,
+  `emerContactName` varchar(45) NOT NULL,
+  `emerContactNo` varchar(45) NOT NULL,
+  `address` varchar(90) NOT NULL,
+  `phoneNo` varchar(15) NOT NULL,
+  `nationality` varchar(45),
+  `ppNumber` varchar(15),
+  `ppExpDate` datetime,
+  `ppIssuePlace` varchar(45),
+  `updatedDate` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table to capture the audit trail for types
+-- 
+DROP TABLE IF EXISTS `audit_types`;
+create table `audit_types`
+(
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ref_types_id` int(10) unsigned NOT NULL ,
+  `name` varchar(45) NOT NULL,
+  `desc` varchar(256) NOT NULL,
+  `type` varchar(45) NOT NULL,
+  `updatedDate` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table to capture the audit trail for taxrates
+-- 
+DROP TABLE IF EXISTS `audit_taxrates`;
+create table `audit_taxrates`
+(
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ref_tr_id` int(10) unsigned NOT NULL ,
+  `income_from` double NOT NULL,
+  `income_to` double NOT NULL,
+  `income_percent` double NOT NULL,
+  `residentTypeId` int(10) unsigned NOT NULL,
+  `updatedDate` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table to capture the audit trail for taxdetails
+-- 
+DROP TABLE IF EXISTS `audit_taxdetails`;
+create table `audit_taxdetails`
+(
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `ref_td_id` int(10) unsigned NOT NULL,
+  `typeId` int(10) unsigned NOT NULL,
+  `amount` double NOT NULL,
+  `updatedDate` datetime NOT NULL,
+  PRIMARY KEY  (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+delimiter $$
+CREATE TRIGGER audit_emp_payroll_entry BEFORE UPDATE ON emp_payroll
+  FOR EACH ROW BEGIN
+	INSERT INTO audit_emp_payroll 
+	( `ref_ep_id`, `employeeId`, `FULL_NAME`, `GROSS_SALARY`, `taxableIncome`,
+	  `taxAmount`, `totalIncome`, `taxableOverseasIncome`, `allowances`, `baseSalary`,
+	  `bonus`, `accomodationAmount`, `employerSS`, `accomodationType`, `netPay`,
+	  `totalDeductions`, `overtimeamt`, `paidTaxAmt`, `paidNetPay`, `paidSS`,
+	  `otherIncome`, `leaveLoss`, `taxPaidByEmployer`, `updatedDate`)
+	VALUES(OLD.id, OLD.employeeId, OLD.FULL_NAME, OLD.GROSS_SALARY, OLD.taxableIncome,
+	  OLD.taxAmount, OLD.totalIncome, OLD.taxableOverseasIncome, OLD.allowances, OLD.baseSalary,
+	  OLD.bonus, OLD.accomodationAmount, OLD.employerSS, OLD.accomodationType, OLD.netPay,
+	  OLD.totalDeductions, OLD.overtimeamt, OLD.paidTaxAmt, OLD.paidNetPay, OLD.paidSS,
+	  OLD.otherIncome, OLD.leaveLoss, OLD.taxPaidByEmployer, NOW());
+  END;
+$$
+
+delimiter $$
+CREATE TRIGGER audit_employee_entry BEFORE UPDATE ON employee
+  FOR EACH ROW BEGIN
+	INSERT INTO audit_employee
+	( `ref_emp_id`, `employeeId`, `firstname`, `middlename`, `lastname`, `sex`, `birthdate`,
+	  `hiredate`, `inactiveDate`, `positionId`, `photo_path`, `status`, `version`, `married`,
+      `residentType`, `deptId`, `empNationalID`, `emerContactName`, `emerContactNo`, `address`,
+	  `phoneNo`, `nationality`, `ppNumber`, `ppExpDate`, `ppIssuePlace`, `updatedDate`)
+	VALUES(OLD.id, OLD.employeeId, OLD.firstname, OLD.middlename, OLD.lastname, OLD.sex, OLD.birthdate,
+	  OLD.hiredate, OLD.inactiveDate, OLD.positionId, OLD.photo_path, OLD.status, OLD.version, OLD.married,
+      OLD.residentType, OLD.deptId, OLD.empNationalID, OLD.emerContactName, OLD.emerContactNo, OLD.address,
+	  OLD.phoneNo, OLD.nationality, OLD.ppNumber, OLD.ppExpDate, OLD.ppIssuePlace, NOW());
+  END;
+$$
+
+delimiter $$
+CREATE TRIGGER audit_types_empty  BEFORE UPDATE ON types
+  FOR EACH ROW BEGIN
+	INSERT INTO audit_types
+	( `ref_types_id`, `name`, `desc`, `type`, `updatedDate`)
+	VALUES(OLD.id, OLD.name, OLD.desc, OLD.type, NOW());
+  END;
+$$
+
+
+delimiter $$
+CREATE TRIGGER audit_taxrates_empty  BEFORE UPDATE ON taxrates
+  FOR EACH ROW BEGIN
+	INSERT INTO audit_taxrates
+	( `ref_tr_id`, `income_from`, `income_to`, `income_percent`, `residentTypeId`, `updatedDate`)
+	VALUES(OLD.id, OLD.income_from, OLD.income_to, OLD.income_percent, OLD.residentTypeId, NOW());
+  END;
+$$
+
+
+delimiter $$
+CREATE TRIGGER audit_taxdetails_empty  BEFORE UPDATE ON taxdetails
+  FOR EACH ROW BEGIN
+	INSERT INTO audit_taxdetails
+	( `ref_td_id`, `typeId`, `amount`, `updatedDate`)
+	VALUES(OLD.id, OLD.typeId, OLD.amount, NOW());
+  END;
+$$

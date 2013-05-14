@@ -202,7 +202,9 @@ public class EmpPayTaxFactroy implements Serializable {
 			query = session.getNamedQuery("EmployeePayroll.findByEmployeeId");
 			query.setParameter(0, empID);
 			empsum = query.list();
-			ePayroll = empsum.get(0);
+			if(empsum != null && ! empsum.isEmpty()) {
+				ePayroll = empsum.get(0);
+			}
 			session.getTransaction().commit();
 		}
 

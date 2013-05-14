@@ -49,39 +49,36 @@ public class EmployeeIncomeAction extends Action {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		JSONArray result = null;
-		    BufferedReader bf = request.getReader();
-        StringBuffer sb = new StringBuffer();
-        String line = null;
-        while ((line = bf.readLine()) != null) {
-            sb.append(line);
-        }
-         
-       int empId = Integer.parseInt(""+request.getSession().getAttribute("employeeId"));
-       Employee emp = EmployeeFactory.findById(empId).get(0);
-       System.out.println("........"+empId);
-       EmployeePayroll empPayRoll = EmpPayTaxFactroy.findEmpPayrollbyEmpID(emp);
-    		   
-    	System.out.println(empPayRoll.getTaxableOverseasIncome()+"----------"+empPayRoll.getOtherIncome());	   
-    		   
-    	double a[] = {10,20};
-     	a[0] = empPayRoll.getTaxableOverseasIncome();
-    	a[1] = empPayRoll.getOtherIncome();
-		result = JSONArray.fromObject(a);
-
-    	response.setContentType("application/json; charset=utf-8");
-		PrintWriter out = response.getWriter();
-		if (result == null) {
-			out.print("");
-		} else {
-			out.print(result.toString());
+		BufferedReader bf = request.getReader();
+		StringBuffer sb = new StringBuffer();
+		String line = null;
+		while ((line = bf.readLine()) != null) {
+			sb.append(line);
 		}
-		out.flush();
-    	
-    	
-    	
-	return null;
-}
 
- 
+		int empId = Integer.parseInt(""
+				+ request.getSession().getAttribute("employeeId"));
+		Employee emp = EmployeeFactory.findById(empId).get(0);
+		EmployeePayroll empPayRoll = EmpPayTaxFactroy
+				.findEmpPayrollbyEmpID(emp);
+
+		if (empPayRoll != null) {
+			double a[] = { 10, 20 };
+			a[0] = empPayRoll.getTaxableOverseasIncome();
+			a[1] = empPayRoll.getOtherIncome();
+			result = JSONArray.fromObject(a);
+
+			response.setContentType("application/json; charset=utf-8");
+			PrintWriter out = response.getWriter();
+			if (result == null) {
+				out.print("");
+			} else {
+				out.print(result.toString());
+			}
+			out.flush();
+		}
+
+		return null;
+	}
 
 }

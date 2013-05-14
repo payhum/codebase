@@ -23,9 +23,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import com.ibm.icu.util.Holiday;
+import com.openhr.data.Employee;
 import com.openhr.data.Holidays;
+import com.openhr.data.LeaveApproval;
 import com.openhr.data.LeaveRequest;
 import com.openhr.data.LeaveType;
+import com.openhr.factories.EmployeeFactory;
 import com.openhr.factories.HolidaysFactory;
 import com.openhr.factories.LeaveRequestFactory;
 import com.openhr.factories.LeaveTypeFactory;
@@ -50,7 +53,29 @@ public class CheckHoliday extends Action {
 	        String holidayDate = json.getString("requestOnDate");
 	        int a[] = {10,20};
 	        List<Holidays> holidays = HolidaysFactory.findByDate(new Date(holidayDate));
-	        if(holidays.size() != 0){
+ 	        int employeeId     = json.getInt("employeeId");
+ 	        List<LeaveRequest> leaves = LeaveRequestFactory.findByEmployeeId(employeeId);
+ 	        List<LeaveRequest> approvedLeaves = new ArrayList<LeaveRequest>();
+ 	        
+ 	        
+ 	        for(LeaveRequest appleave : leaves){
+ 	        	if(appleave.getStatus() == 1){
+ 	        		approvedLeaves.add(appleave);
+ 	        	}
+  	        }
+ 	        Date overTimeDate = new Date(holidayDate);
+ 	        
+ 	        for(LeaveRequest byDate : approvedLeaves){
+ 	        	if((overTimeDate.before(new Date(byDate.getReturnDate()))) && (overTimeDate.after(new Date(byDate.getLeaveDate())))){
+ 	        		a[1] = 1;
+ 	        	}
+ 	        	if((overTimeDate.equals(new Date(byDate.getLeaveDate()))) || (overTimeDate.equals(new Date(byDate.getReturnDate()))) ){
+ 	        		a[1] = 1;
+ 	        	}
+ 	        }
+			 
+			Employee emp = EmployeeFactory.findById(employeeId).get(0);	        
+			if(holidays.size() != 0){
 	        	a[0] = 0;
 	        }
 	        

@@ -34,7 +34,7 @@
 			<input id="occupationTypeDepdent" class="occupationTypeDepdent" />
 		</div>
 		<div class="clear"></div>
-		<div class="label">DependentType</div>
+		<div class="label">Relationship</div>
 		<div class="field">
 			<input id="depdentTypeDepdent" class="depdentTypeDepdent" />
 		</div>
@@ -119,7 +119,7 @@
 <div id="bankAccountWinId" style="display: none">
 
 	<div>
-		<div class="label">BankName</div>
+		<div class="label">Bank Name</div>
 		<div class="field">
 			<input type="text" required="required" class="k-input k-textbox"
 				id="bankName" value="" />
@@ -128,7 +128,7 @@
 	</div>
 
 	<div>
-		<div class="label">BankBrach</div>
+		<div class="label">Bank Branch</div>
 		<div class="field">
 			<input type="text" required="required" class="k-input k-textbox"
 				id="bankBranch" value="" />
@@ -161,7 +161,7 @@
 
 	<span id="rpsm1"> <a class="k-button" id="depdentsId" href='#'><span
 			class="k-icon "></span>Dependents</a> <a class="k-button" href='#'
-		id="changeSalryId"><span class="k-icon "></span>ChangeSalary</a> <a
+		id="changeSalryId"><span class="k-icon "></span>Change Salary</a> <a
 		class="k-button" href='#' id="giveBonusId"><span class="k-icon"></span>Give
 			Bonus</a> <a class="k-button" href='#' id="bankAccountId"><span
 			class="k-icon "></span>Bank Account</a> <a class="k-button" href='#'
@@ -311,22 +311,22 @@ var postDropDownList;
 					 { hidden:true,field : "id", title : "id"},
 					
 					{ field : "photo", title : "Photo" ,template : "<img width=67 height=50 src='#='/OpenHR'+photo#'/>", width : 40},
-					{field : "employeeId",  title:"Id",width : 50 },
+					{field : "employeeId",  title:"Employee ID",width : 50 },
 	                { field : "firstname", title : "First Name", width : 50 },
 	                { hidden :true,field : "middlename", title : "Middle Name", width : 50 },
-	                {field : "payrol",  title:"Accom", template: '#=payrol? payrol.accomodationType.name: ""#',width : 50 },
+	                {field : "payrol",  title:"Accomodation Type", template: '#=payrol? payrol.accomodationType.name: ""#',width : 50 },
+	                { field : "residentType", title : "Resident Type",  template: '#=residentType ? residentType.name: ""#', width : 40 },
 	                { hidden :true,field :"empNationalID", title : "empNationalID",  width : 20 },
 	                { hidden :true,field : "married", title : "married",  width : 20 },
 	               
-	                { field : "empsal", title : "Salry", template: '#=empsal?empsal.basesalary: ""#', width : 30 },
+	                { field : "empsal", title : "Salary", template: '#=empsal?empsal.basesalary: ""#', width : 30 },
 	                { field : "sex", title : "Sex",  width : 30 },
-	                { field : "positionIds", title : "Role",  template: '#=positionIds ? positionIds.name: ""#', width : 40  },
+	                { field : "positionIds", title : "Position",  template: '#=positionIds ? positionIds.name: ""#', width : 40  },
 	                { hidden:true, field : "birthdate", title : "Birth date", template : "#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy') #" },
 	                {hidden:true,  field : "hiredate", title : "Hired date", template : "#= kendo.toString(new Date(hiredate) , 'MMM, dd yyyy') #" },
 	                { field : "deptId", title : "Branch", template: '#=deptId? deptId.branchId.name: ""#',  width : 40 },
 	                
-	                { field : "status", title : "Status", width : 30 },
-	                { field : "residentType", title : "residentType",  template: '#=residentType ? residentType.name: ""#', width : 40 }
+	                { field : "status", title : "Status", width : 30 }
 	            ],             
 	            dataBound : function(){
 	            	$.each(empDataSource.data(), function(){  
@@ -391,9 +391,10 @@ var postDropDownList;
 		 	        	 dataSource : depdentDataSource, 
 		 		            columns : [
 		 						
-		 		               { field : "name", title :"name" ,width : 50},
-		 						{field : "age",  title:"age",width : 50 },
+		 		               { field : "name", title :"Name" ,width : 50},
+		 						{field : "age",  title:"Age",width : 50 },
 		 		              {field : "occupationType",  template: '#=occupationType ? occupationType.name: ""#', title:"Occupation", width : 50 },
+		 		             {field : "depType",  template: '#=depType ? depType.name: ""#', title:"Relationship", width : 50 },
 		 		              
 		 						{ command: [ {"name" :"destroy", text:"", className:"delTax"}], title: "", width: "50px" }],
 		 	        	 
@@ -484,7 +485,7 @@ var postDropDownList;
 							  
 							  dataTextField : "name",
 								dataValueField : "id",
-								optionLabel: "Select Depdent",
+								optionLabel: "Select Relationship",
 								dataSource :depdentTypeDepdentSource
 								
 					       }).data("kendoDropDownList");
@@ -547,7 +548,7 @@ depdentAge=$("#depdentAge").val();
 						resizable : false,
 						width : 500,
 						height : 400,
-						title : "Depedents"
+						title : "Dependents"
 					}).data("kendoWindow");
 		         
 		         wndDepdent.open();
@@ -594,7 +595,7 @@ depdentAge=$("#depdentAge").val();
 					resizable : false,
 					width : 400,
 					height : 250,
-					title : "Chage Salary"
+					title : "Change Salary"
 				}).data("kendoWindow");
 	        		wndChangeSalary.open();
 		        	 wndChangeSalary.center();
@@ -1452,13 +1453,13 @@ e.preventDefault();
 <div id="employeeForm">
 	<div class="clear"></div>
  <fieldset>
-  <legend>PersonalDetials:</legend>
+  <legend>Personal Details</legend>
 	<div style="float:left;height: 380px;">
 	
 
 	<div id="left-col">
 		<div>
-			<div class="label">EMP-ID</div>
+			<div class="label">Employee ID</div>
 			<div class="field">
 				<input type="hidden" id="id" value="#=id#"/>
                 <input type="hidden" id="photo" value="#=photo#"/>
@@ -1467,7 +1468,7 @@ e.preventDefault();
 			<div class="clear"></div>
 		</div>
 <div>
-			<div class="label">EMP-NationalID</div>
+			<div class="label">National ID</div>
 			<div class="field">
 						<input type="text"  class="k-input k-textbox" id="nationID"  value="#=empNationalID#" />
 			</div>
@@ -1475,7 +1476,7 @@ e.preventDefault();
 		</div>
 
 		<div>
-			<div class="label">First name</div>
+			<div class="label">First Name</div>
 			<div class="field">
 								<input type="text" required=required class="k-input k-textbox" id="firstname"  value="#=firstname#"/>
 			</div>
@@ -1485,7 +1486,7 @@ e.preventDefault();
 
 
 		<div>
-			<div class="label">Middle name</div>
+			<div class="label">Middle Name</div>
 			<div class="field">
 						<input type="text" required=required class="k-input k-textbox" id="middlename"  value="#=middlename#"/>
 			</div>
@@ -1495,7 +1496,7 @@ e.preventDefault();
 
 
 		<div>
-			<div class="label">Last name</div>
+			<div class="label">Last Name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="lastname" value="#=lastname#" />
 			</div>
@@ -1524,7 +1525,7 @@ e.preventDefault();
 		</div>
 		
 	<div>
-			<div class="label">Birth date</div>
+			<div class="label">Birth Date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="birthdate" value="#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy')#" />
@@ -1562,7 +1563,7 @@ e.preventDefault();
 
 			
 <div>
-<div class="label">Family</div>
+<div class="label">Marital Status</div>
 			<label for="family_single">
 				<input  type="radio" id="family_single" value="false" name="family" data-bind="checked: selectedFamily" />
 				Single
@@ -1589,7 +1590,7 @@ e.preventDefault();
 			<div class="clear"></div>
 		</div>
 		<div>
-<div class="label">Emergency Contact Num</div>
+<div class="label">Emergency Contact No</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="#=emerContactNo#" />
 			</div>
@@ -1609,7 +1610,7 @@ e.preventDefault();
 		</div>
 		
 		<div>
-			<div class="label">Passport Exp Date</div>
+			<div class="label">Passport Expiry Date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="passExpDate"   value="#= kendo.toString(new Date(passExpDate), 'MMM, dd yyyy')#"  />
@@ -1618,7 +1619,7 @@ e.preventDefault();
 		</div>
 		
 		<div>
-			<div class="label">Passport Issue place</div>
+			<div class="label">Passport Place of Issue</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="passPlace"  value="#=passPlace#" />
 			</div>
@@ -1641,8 +1642,8 @@ e.preventDefault();
 </div>
  </fieldset>
 <fieldset>
-  <legend>PersonalDetials:</legend>
-	<div style="float:left;height: 150px">
+  <legend>Hiring Details</legend>
+	<div style="float:left;height: 180px">
 	
 
 
@@ -1656,7 +1657,7 @@ e.preventDefault();
 		
 		
 		<div>
-			<div class="label">Hire date</div>
+			<div class="label">Hired Date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="hiredate" value="#= kendo.toString(new Date(hiredate), 'MMM, dd yyyy')#" />
@@ -1713,14 +1714,14 @@ e.preventDefault();
 	
 	<div id="left-col">
 	<div>
-			<div class="label">AccommodationType </div>
+			<div class="label">Accommodation Type</div>
 			<div class="field">
 			<input class="accommodationDropDownList" id="accommodationVal"/>
 			</div>
 			<div class="clear"></div>
 		</div>
 <div >
-			<div class="label">Resident Type </div>
+			<div class="label">Resident Type</div>
 			<div class="field">
 <input class="residentDropDownList" id="residentVal" value="#=residentType ? residentType.name: ''#"/>
 			</div>

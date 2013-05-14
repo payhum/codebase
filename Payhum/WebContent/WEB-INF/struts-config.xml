@@ -743,6 +743,11 @@
 			<forward name="continue" path="mbenefit.form" />
 		</action>
 		
+		<action path="/getUserRoles"
+			type="com.openhr.user.action.GetUserRoles">
+			<forward name="continue" path="mbenefit.form" />
+		</action>
+		
 		<action path="/forgotPassword"
 			type="com.openhr.user.action.ForgotPasswordAction">
 			<forward name="continue" path="mbenefit.form" />

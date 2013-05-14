@@ -128,15 +128,8 @@
 		  width:900px;
 		  padding:10px; ">
 		  <h2 style="font-size:16px;">Summary Note:</h2>
-		  Something about the data visualization is to go here
-		  Any one who wants to can do what he wants too if it is
-		  true. Something about the data visualization is to go here
-		  Any one who wants to can do what he wants too if it is
-		  true.Something about the data visualization is to go here
-		  Any one who wants to can do what he wants too if it is
-		  true.Something about the data visualization is to go here
-		  Any one who wants to can do what he wants too if it is
-		  true.
+		  Welcome to MPTS Page Administrator page. Here as an administartor you can View the available roles in the application.
+		  Also, create new users to with specific roles, edit and delete the existing users.
 </div>
 
 

@@ -143,7 +143,11 @@ public class Report extends Action {
 			empPayStr.append(COMMA);
 			empPayStr.append(empPay.getFullName());
 			empPayStr.append(COMMA);
-			empPayStr.append(empPay.getEmployeeId().getEmpNationalID());
+			if(empPay.getEmployeeId().getResidentType().getName().equalsIgnoreCase(PayhumConstants.LOCAL)) {
+				empPayStr.append(empPay.getEmployeeId().getEmpNationalID());
+			} else {
+				empPayStr.append(empPay.getEmployeeId().getPpNumber());
+			}
 			empPayStr.append(COMMA);
 			if(empPayrollMap.getMode() == 0) {
 				empPayStr.append("-");

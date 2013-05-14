@@ -1,7 +1,7 @@
 <div>
 	<div id="side_bar" style="float: right; padding: 20px; width: 300px;">
-		<h2 style="font-size: 16px;">Message Notice Board General Summary</h2>
-		<p style="height: 300px; overflow: auto;">Welcome to the Employee
+		<h2 style="font-size: 16px;">Message Notice Board General Summary</h2><br/><br/>
+		<p style="height: 300px; width:286px; overflow: auto;">Welcome to the Employee
 			review page. User can do actions related like View Notices, Holidays,
 			Apply for Leaves, Register the Overtime details, Income and Deduction
 			declarations and also change the user settings like password.</p>
@@ -93,9 +93,9 @@
 	                pageSize : 10
 				},
 				columns: [
-						{ field : "status", title : "Status", template : "Overtime", width : 100 },
+						{ field : "status", title : "Status", template : "#= status != 2 ? (status == 0 ? 'Pending' : 'Approved')  : 'Rejected' #", width : 100 },
 				 		{ field : "overTimeDate", title : "Overtime Date", template : "#= kendo.toString(new Date(overTimeDate), 'MMM, dd yyyy') #", width : 100  },
-					  	{ field : "ApprovedDate", title : "Approved Date", template : "#=  kendo.toString(new Date(approvedDate), 'MMM, dd yyyy')  #", width : 100 },
+					  	{ field : "ApprovedDate", title : "Approved Date", template : "#= status != 2 ? (status == 0 ? '-' :  kendo.toString(new Date(approvedDate), 'MMM, dd yyyy') )  :  kendo.toString(new Date(approvedDate), 'MMM, dd yyyy')  #", width : 100 },
   	            ], 
 	            sortable: true,
 	            scrollable: true,
@@ -154,11 +154,11 @@
 	                pageSize : 10
 				},
 				columns: [
-				          
-					{ field : "status", title : "Status", template : "Leave", width : 100 },
-					{ field : "requestId", title : "Approved Date",   template: '#=id ?  kendo.toString(new Date(requestId.returnDate), "MMM, dd yyyy"): ""#', width : 100 },	  
-					{ field : "requestId", title : "Leave Date",   template: '#=id ?  kendo.toString(new Date(requestId.leaveDate), "MMM, dd yyyy"): ""#', width : 100 },	           
-				], 
+					{ field : "status", title : "Status", template : "#= status != 2 ? (status == 0 ? 'Pending' : 'Approved')  : 'Rejected' #", width : 100 },
+					{ field : "leaveDate", title : "Leave Date", template : "#= kendo.toString(new Date(leaveDate), 'MMM, dd yyyy') #", width : 100  },
+  		            { field : "returnDate", title : "Return Date", template : "#= kendo.toString(new Date(returnDate) , 'MMM, dd yyyy') #", width : 100 },
+  		           
+					], 
 	            sortable: true,
 	            scrollable: true,
 	            filterable : true,

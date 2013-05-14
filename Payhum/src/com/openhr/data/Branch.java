@@ -19,7 +19,7 @@ import com.openhr.company.Company;
 @Entity
 @Table(name = "branch", catalog = "payhumrepo", schema = "")
 @NamedQueries({
-    @NamedQuery(name = "Branch.findAll", query = "FROM Branch br"),
+    @NamedQuery(name = "Branch.findAll", query = "FROM Branch br where name != 'MMain'"),
     @NamedQuery(name = "Branch.findById", query = "FROM Branch br WHERE id = ?"),
     @NamedQuery(name = "Branch.findByName", query = "SELECT br FROM Branch br WHERE br.name = ?"),
     @NamedQuery(name = "Branch.findByCompanyId", query = "SELECT br FROM Branch br WHERE br.companyId = ?"),})

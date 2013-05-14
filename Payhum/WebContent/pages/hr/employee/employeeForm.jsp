@@ -8,7 +8,7 @@
 	<div id="sec1"  style="float:left;margin-top: -20px">Personal Details</div>
 	<div id="left-col">
 		<div>
-			<div class="label">EMP-ID</div>
+			<div class="label">Employee ID</div>
 			<div class="field">
 				<input type="text" readonly="readonly" class="k-input k-textbox" id="employeeId"  
 				value="<%=Config.employeeIdPattern + "-" + EmployeeIdUtility.nextId()%>" />
@@ -17,7 +17,7 @@
 		</div>
 
 <div>
-			<div class="label">EMP-NationalID</div>
+			<div class="label">National ID</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
 			</div>
@@ -25,7 +25,7 @@
 		</div>
 
 		<div>
-			<div class="label">First name</div>
+			<div class="label">First Name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="firstname"  value="" />
 			</div>
@@ -35,7 +35,7 @@
 
 
 		<div>
-			<div class="label">Middle name</div>
+			<div class="label">Middle Name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="middlename"  value="" />
 			</div>
@@ -45,7 +45,7 @@
 
 
 		<div>
-			<div class="label">Last name</div>
+			<div class="label">Last Name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="lastname"  value="" />
 			</div>
@@ -70,7 +70,7 @@
 		</div>
 		
 	<div>
-			<div class="label">Birth date</div>
+			<div class="label">Birth Date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="birthdate" value="" />
@@ -108,7 +108,7 @@
 
 			
 <div>
-<div class="label">Family</div>
+<div class="label">Marital Status</div>
 			<label for="family_single">
 				<input  type="radio" id="family_single" value="false" name="family"  />
 				Single
@@ -135,7 +135,7 @@
 			<div class="clear"></div>
 		</div>
 		<div>
-<div class="label">Emergency Contact Num</div>
+<div class="label">Emergency Contact No</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="" />
 			</div>
@@ -155,7 +155,7 @@
 		</div>
 		
 		<div>
-			<div class="label">Passport Exp Date</div>
+			<div class="label">Passport Expiry Date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="passExpDate" value="" />
@@ -164,7 +164,7 @@
 		</div>
 		
 		<div>
-			<div class="label">Passport Issue place</div>
+			<div class="label">Passport Place of Issue</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="passPlace"  value="" />
 			</div>
@@ -200,7 +200,7 @@
 		
 		
 		<div>
-			<div class="label">Hire date</div>
+			<div class="label">Hire Date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="hiredate" value="" />
@@ -257,7 +257,7 @@
 	
 	<div id="left-col">
 	<div>
-			<div class="label">AccommodationType </div>
+			<div class="label">Accommodation Type </div>
 			<div class="field">
 				<input class="accommodationDropDownList" required=required class="k-input k-textbox"  id="accommodationVal"/>
 			</div>
