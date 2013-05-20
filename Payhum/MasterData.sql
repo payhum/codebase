@@ -37,7 +37,9 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 (18,'Working','Working','OCCUPATIONTYPE'),
 (19,'None','No occupation','OCCUPATIONTYPE'),
 (20,'Spouse','Spouse','DEPENDENTTYPE'),
-(21,'Child','Child','DEPENDENTTYPE');
+(21,'Child','Child','DEPENDENTTYPE'),
+(22,'Limit for the Employer contribution for Social Security','Maximum amount limit for the Employer contribution for Social Security','TAXDETAILS'),
+(23,'Limit for the Employee contribution for Social Security','Maximum amount limit for the Employee contribution for Social Security','TAXDETAILS');
 /*!40000 ALTER TABLE `types` ENABLE KEYS */;
 
 --
@@ -181,7 +183,9 @@ INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 (7,7,300000),
 (8,8,12.5),
 (9,9,10),
-(10,10,2.5);
+(10,10,2.5),
+(11,22,9300),
+(12,23,5580);
 /*!40000 ALTER TABLE `taxdetails` ENABLE KEYS */;
 
 --

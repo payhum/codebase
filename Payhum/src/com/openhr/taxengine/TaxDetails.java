@@ -16,6 +16,8 @@ public class TaxDetails {
 	private Map<String, Double> accomationPercentage;
 	private Double employerSSPercentage;
 	private Boolean employerSSDone;
+	private Double limitForEmployerSS;
+	private Double limitForEmployeeSS;
 	
 	private static TaxDetails taxDetailsObj;
 	
@@ -70,11 +72,23 @@ public class TaxDetails {
 				td.addAccomodationPercentage(PayhumConstants.ACCOM_NOT_FURNISHED, tdd.getAmount());
 			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.EMPLOYER_SOCIAL_SECURITY)) {
 				td.setEmployerSocialSecurityPercentage(tdd.getAmount());
+			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.LIMIT_FOR_EMPLOYER_SS)) {
+				td.setLimitForEmployerSS(tdd.getAmount());
+			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.LIMIT_FOR_EMPLOYEE_SS)) {
+				td.setLimitForEmployeeSS(tdd.getAmount());
 			}
 		}
 		
 		taxDetailsObj = td;
 		return taxDetailsObj;
+	}
+
+	private void setLimitForEmployeeSS(Double amount) {
+		this.limitForEmployeeSS = amount;
+	}
+
+	private void setLimitForEmployerSS(Double amount) {
+		this.limitForEmployerSS = amount;
 	}
 
 	public Double getExemption(String typeStr) {
@@ -148,7 +162,17 @@ public class TaxDetails {
 		td.addAccomodationPercentage(PayhumConstants.ACCOM_NOT_FURNISHED, 10D);
 		
 		td.setEmployerSocialSecurityPercentage(2.5D);
+		td.setLimitForEmployeeSS(465D);
+		td.setLimitForEmployerSS(775D);
 		
 		return td;
+	}
+
+	public Double getLimitForEmployeeSS() {
+		return limitForEmployeeSS;
+	}
+	
+	public Double getLimitForEmployerSS() {
+		return limitForEmployerSS;
 	}
 }

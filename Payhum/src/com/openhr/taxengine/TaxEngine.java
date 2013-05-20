@@ -14,11 +14,10 @@ import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
-import com.openhr.data.PayPeriodData;
 import com.openhr.data.Payroll;
+import com.openhr.data.PayrollDate;
 import com.openhr.factories.EmpBankAccountFactory;
 import com.openhr.factories.EmpPayTaxFactroy;
-import com.openhr.factories.PayPeriodFactory;
 import com.openhr.factories.PayrollFactory;
 
 public class TaxEngine {
@@ -58,6 +57,8 @@ public class TaxEngine {
 		toBeProcessedFor.setTime(payroll.getPayDateId().getRunDate());
 		
 		List<EmployeePayroll> retList = new ArrayList<EmployeePayroll>();
+		List<PayrollDate> payrollDates = PayrollFactory.findAllPayrollDate();
+		List<Payroll> payRuns = PayrollFactory.findAllPayrollRuns();
 		
 		for (Employee emp : activeEmpList) {
 			System.out.println("Processing for employee - " + emp.getId());
@@ -89,7 +90,8 @@ public class TaxEngine {
 			empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
 			
 			// Update on the split per month/week/biweekly
-			computeDetailsPerPayPeriod(empPayroll, toBeProcessedFor, payroll, adhoc);
+			computeDetailsPerPayPeriod(empPayroll, toBeProcessedFor, payroll, adhoc,
+					payrollDates, payRuns);
 			
 			if(System.getProperty("DRYRUN") != null 
 			&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
@@ -176,9 +178,8 @@ public class TaxEngine {
 	}
 
 	private void computeDetailsPerPayPeriod(EmployeePayroll empPayroll,
-			Calendar toBeProcessedFor, Payroll payroll, boolean adhoc) throws Exception {
-		List<PayPeriodData> payPeriods = PayPeriodFactory.findAll();
-		
+			Calendar toBeProcessedFor, Payroll payroll, boolean adhoc,
+			List<PayrollDate> payrollDates, List<Payroll> payRuns) throws Exception {		
 		if(adhoc) {
 			EmployeeBonus latestBonus = getLatestBonus(empPayroll, toBeProcessedFor);
 			if(latestBonus != null && prevNetPay != 0D) {
@@ -211,66 +212,45 @@ public class TaxEngine {
 				// this emp has no bonus, so no changes.
 			}
 		} else {
-			// default is monthly
-			// 0 = monthly, 1 = biweekly, 2 = weekly
-			int mode = 0; 
+			Double totalTaxAmt = empPayroll.getTaxAmount();
+			Double totalNeyPay = empPayroll.getNetPay();
+			Double totalEmpSS = empPayroll.getEmployerSS();
 			
-			for(PayPeriodData pp : payPeriods) {
-				if (pp.getPeriodValue().compareTo(new Integer(3)) == 0) {
-					mode = 0;
-				} else if(pp.getPeriodValue().compareTo(new Integer(2)) == 0) {
-					mode = 1;
-				} else if(pp.getPeriodValue().compareTo(new Integer(1)) == 0) {
-					mode = 2;
+			// get employee contribution of SS
+			List<DeductionsDone> deductionsList = empPayroll.getDeductionsDone();
+			
+			for(DeductionsDone dd: deductionsList) {
+				if(dd.getType().getName().equalsIgnoreCase(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY)) {
+					totalEmpSS += dd.getAmount();
 				}
 			}
 			
-			if(mode == 0) {
-				Double totalTaxAmt = empPayroll.getTaxAmount();
-				Double totalNeyPay = empPayroll.getNetPay();
-				Double totalEmpSS = empPayroll.getEmployerSS();
-				
-				// get employee contribution of SS
-				List<DeductionsDone> deductionsList = empPayroll.getDeductionsDone();
-				
-				for(DeductionsDone dd: deductionsList) {
-					if(dd.getType().getName().equalsIgnoreCase(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY)) {
-						totalEmpSS += dd.getAmount();
-					}
-				}
-				
-				int remainingMonths = remainingMonths(toBeProcessedFor);
-				
-				Double pendingTaxAmt = totalTaxAmt - empPayroll.getPaidTaxAmt();
-				Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay();
-				Double pendingEmpSS = totalEmpSS - empPayroll.getPaidSS();
-				
-				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + pendingNeyPay / remainingMonths);
-				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + pendingTaxAmt / remainingMonths);
-				empPayroll.setPaidSS(empPayroll.getPaidSS() + pendingEmpSS / remainingMonths);
-				
-				// Save to emp_payroll_map table.
-				EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPayroll.getEmployeeId().getId());
-				EmpPayrollMap empPayMap = new EmpPayrollMap();
-				empPayMap.setEmppayId(empPayroll);
-				empPayMap.setNetPay(pendingNeyPay / remainingMonths);
-				empPayMap.setTaxAmount(pendingTaxAmt / remainingMonths);
-				empPayMap.setSocialSec(pendingEmpSS / remainingMonths);
-				empPayMap.setPayrollId(payroll);
-				
-				if(empBankAcct != null) {
-					empPayMap.setMode(1);
-				}
-				
-				if(System.getProperty("DRYRUN") == null 
-				|| ! System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
-					PayrollFactory.insertEmpPayrollMap(empPayMap);
-				}
-				
-			} else if (mode == 1) {
-				//TODO
-			} else if (mode == 2) {
-				//TODO
+			int remainingPaycycles = remainingPaycycles(payrollDates, payRuns);
+			
+			Double pendingTaxAmt = totalTaxAmt - empPayroll.getPaidTaxAmt();
+			Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay();
+			Double pendingEmpSS = totalEmpSS - empPayroll.getPaidSS();
+			
+			empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + pendingNeyPay / remainingPaycycles);
+			empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + pendingTaxAmt / remainingPaycycles);
+			empPayroll.setPaidSS(empPayroll.getPaidSS() + pendingEmpSS / remainingPaycycles);
+			
+			// Save to emp_payroll_map table.
+			EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPayroll.getEmployeeId().getId());
+			EmpPayrollMap empPayMap = new EmpPayrollMap();
+			empPayMap.setEmppayId(empPayroll);
+			empPayMap.setNetPay(pendingNeyPay / remainingPaycycles);
+			empPayMap.setTaxAmount(pendingTaxAmt / remainingPaycycles);
+			empPayMap.setSocialSec(pendingEmpSS / remainingPaycycles);
+			empPayMap.setPayrollId(payroll);
+			
+			if(empBankAcct != null) {
+				empPayMap.setMode(1);
+			}
+			
+			if(System.getProperty("DRYRUN") == null 
+			|| ! System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
+				PayrollFactory.insertEmpPayrollMap(empPayMap);
 			}
 		}
 	}
@@ -313,19 +293,25 @@ public class TaxEngine {
 	    return latestEmpBonus;
 	}
 	
-	private int remainingMonths(Calendar currDate) {
-		int retVal = 0;
-		
-		// Get the remaining months in the year.
-		int currentMonth = currDate.get(Calendar.MONTH) + 1;
-		
-		if(currentMonth >= 4) {
-			retVal = 12 - currentMonth + 1;
-			retVal += 3;
-		} else {
-			retVal = 3 - currentMonth + 1;	
+	private int remainingPaycycles(List<PayrollDate> payDates, List<Payroll> payRuns) {
+		// default starts with 1 as the current date is being processed, but its already recorded as processed
+		int unprocessedDates = 1;
+
+		for(PayrollDate payDate: payDates) {
+			boolean processed = false;
+			for(Payroll run: payRuns) {
+				if(run.getPayDateId() == payDate) {
+					processed = true;
+					break;
+				}
+			}
+			
+			if(!processed) {
+				unprocessedDates++;
+			}
+			
 		}
 		
-		return retVal;
+		return unprocessedDates;
 	}
 }

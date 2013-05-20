@@ -19,6 +19,12 @@ public class LocalIC extends BaseIC {
 		
 		// Employer Social Security
 		Double employerSS = taxDetails.getEmployerSocialSecurityPercentage() * annualGrossPay / 100;
+		Double maxLimit = taxDetails.getLimitForEmployerSS();
+		
+		if(employerSS > maxLimit) {
+			employerSS = maxLimit;
+		}
+		
 		totalIncome += employerSS;
 		
 		ePayroll.setEmployerSS(employerSS);

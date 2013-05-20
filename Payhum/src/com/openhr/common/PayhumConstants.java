@@ -13,7 +13,9 @@ public class PayhumConstants {
 	public static final String EMPLOYEE_SOCIAL_SECURITY = "Employee Social Security";
 	public static final String INCOME_LIMIT_FOR_NO_TAX = "Income Limit for no Tax";
 	public static final String EMPLOYER_SOCIAL_SECURITY = "Employer contribution for Social Security";
-
+	public static final String LIMIT_FOR_EMPLOYER_SS = "Limit for the Employer contribution for Social Security";
+	public static final String LIMIT_FOR_EMPLOYEE_SS = "Limit for the Employee contribution for Social Security";
+	
 	public static final String LIFE_INSURANCE = "Life Insurance";
 	public static final String SELF_LIFE_INSURANCE = "Self Life Insurance";
 	public static final String SPOUSE_LIFE_INSURANCE = "Spouse Insurance";
