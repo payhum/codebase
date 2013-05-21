@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS `types`;
 create table `types`
 (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(45) NOT NULL,
+  `name` varchar(90) NOT NULL,
   `desc` varchar(256) NOT NULL,
   `type` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`)

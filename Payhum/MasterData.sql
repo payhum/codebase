@@ -1,7 +1,7 @@
 -- This file inserts pre-populated data into the repos
 -- for Master Module
 
-USE payhumrepo;
+USE payhummaster;
 
 --
 -- Dumping data for table `position`
@@ -99,9 +99,7 @@ INSERT INTO `licenses` (`id`, `fromdate`, `todate`, `companyId`,`active`,`licens
 INSERT INTO `roles` (`id`,`name`,`version`) VALUES 
  (1,'MasterAdmin',1),
  (2,'HumanResource',1),
- (3,'PageAdmin',1),
- (4,'Accountant',1),
- (5,'Employee',1);
+ (3,'PageAdmin',1);
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
 --
@@ -110,7 +108,7 @@ INSERT INTO `roles` (`id`,`name`,`version`) VALUES
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`,`username`,`password`,`employeeId`,`roleId`,`version`) VALUES 
- (1,'John','welcome',1,1,1);
+ (1,'madmin','welcome',1,1,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 --
@@ -183,9 +181,7 @@ INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 (7,7,300000),
 (8,8,12.5),
 (9,9,10),
-(10,10,2.5),
-(11,22,9300),
-(12,23,5580);
+(10,10,2.5);
 /*!40000 ALTER TABLE `taxdetails` ENABLE KEYS */;
 
 --
@@ -204,3 +200,10 @@ INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
 ('EMODE','MMODE'),
 ('PCOMP','0');
 /*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;
+
+
+--
+-- Create payhum user and give all privs to that user.
+--
+GRANT ALL ON payhummaster.* TO 'paymaster'@localhost IDENTIFIED BY 'paymaster';
+

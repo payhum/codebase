@@ -71,7 +71,8 @@ public class ValidateUser extends OpenHRAction {
         	} else {
         		// Passwords are same. check role, skip it for Guest as he has all roles.
         		if(! (user.get(0).getUsername().equalsIgnoreCase("guest")
-        				|| user.get(0).getUsername().equalsIgnoreCase("clientadmin"))) {
+        				|| user.get(0).getUsername().equalsIgnoreCase("cadmin")
+        				|| user.get(0).getUsername().equalsIgnoreCase("madmin"))) {
 	        		if(user.get(0).getRoleId().getName().equalsIgnoreCase(loginAs)){
 	        			// all are ok.
 	        			a[0] = 10;

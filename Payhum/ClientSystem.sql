@@ -105,7 +105,7 @@ INSERT INTO `roles` (`id`,`name`,`version`) VALUES
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`,`username`,`password`,`employeeId`,`roleId`,`version`) VALUES 
  (1,'guest','welcome',1,1,1),
- (2,'clientadmin','allowme',1,1,1);
+ (2,'cadmin','allowme',1,1,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 --

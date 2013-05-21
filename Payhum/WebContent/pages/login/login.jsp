@@ -39,10 +39,10 @@
 						<option value="HumanResource">Human Resource</option>
 						<option value="Accountant">Accountant</option>
 						<option value="PageAdmin"><bean:message key="pageAdmin"/></option>
-						<option value="MasterAdmin">Master Admin</option>
+						<!-- <option value="MasterAdmin">Master Admin</option> -->
 					</select>
 				</span>
-				<span id="client">
+				<span id="client" >
 					<select id="loginAs1">
 						<option value="Employee"><bean:message key="employee"/></option>
 						<option value="HumanResource">Human Resource</option>
@@ -139,8 +139,8 @@
 			success     : function(data2){
 				$("#roleId").val(data2[0]);
 			   if(data2[0] == 1){
- 				   $("#master").removeClass("displayClass");
- 				  $("#client").addClass("displayClass");
+ 				    $("#master").removeClass("displayClass");
+ 				   $("#client").addClass("displayClass");
  				   
 			   }
 			    
