@@ -45,11 +45,25 @@ span.k-tooltip {
 					Generate the payroll for the current pay period.<br> <br>
 					<b><i>NOTE: Ensure the employee status is updated before
 							generating the payroll for the current pay period.</i></b> <br> <br>
-					<div class="label" style="width : 75px !important;">Branch</div>
+					<div class="label" style="width : 95px !important;">Branch</div>
 					<div class="field">
 						<select id="branchName"></select>
-						<a class="k-button k-icontext" id="processBranch">Process</a> <br> <br>
+					</div><br>
+					<div>
+					<div class="label" style="width : 95px !important;"><b>Currency Rates</b></div><br><br>
+					<div class="label">1 USD </div>
+					<div class="field">
+						<input type="text" required=required class="k-input k-textbox" id="usdVal" value="" /> MMK
 					</div>
+					<div class="label">1 EURO</div>
+					<div class="field">
+						<input type="text" required=required class="k-input k-textbox" id="euroVal" value="" /> MMK
+					</div>
+					<div class="label">1 POUND</div>
+					<div class="field">
+						<input type="text" required=required class="k-input k-textbox" id="poundVal" value="" /> MMK
+					</div>
+					<a class="k-button k-icontext" id="processBranch">Process</a> <br> <br>
 					<div class="clear"></div>
 				</div>
 				
@@ -757,13 +771,21 @@ h3 {
 		
 		$("#processBranch").bind("click", function() {    				
 			branchId = $("#branchName").val();
+			usd = $("#usdVal").val();
+			euro = $("#euroVal").val();
+			pound = $("#poundVal").val();
     		
 			var branch = JSON.stringify({
- 	   			"branchId"	  : branchId
+ 	   			"branchId"	  : branchId,
+ 	   			"usd"		  : usd,
+ 	   			"euro"		  : euro,
+ 	   			"pound"		  : pound
   			});   
  			
 			if(branchId == "") {
   				alert("Select a Branch to process.");
+  			} else if (usd == "" || euro == "" || pound == "") {
+  				alert("Enter values for the currency conversion. It has to be set to 1 to proceed further.");
   			} else {
 	 			$.ajax({
 					url 		: "<%=request.getContextPath() + "/do/SaveBranchToProcess"%>",

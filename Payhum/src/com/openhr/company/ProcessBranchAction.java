@@ -50,10 +50,25 @@ public class ProcessBranchAction extends Action{
 		}
 		JSONObject json = JSONObject.fromObject(sb.toString());
 		int branchId   		= json.getInt("branchId");
+		String usd   		= json.getString("usd");
+		String euro   		= json.getString("euro");
+		String pound 		= json.getString("pound");
 		
-		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH);
-		config.setConfigValue(Integer.toString(branchId));
- 		ConfigDataFactory.update(config);
+		ConfigData config1 = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH);
+		config1.setConfigValue(Integer.toString(branchId));
+ 		ConfigDataFactory.update(config1);
+ 		
+ 		ConfigData config2 = ConfigDataFactory.findByName(PayhumConstants.USD_MMK_CONVER);
+		config2.setConfigValue(usd);
+ 		ConfigDataFactory.update(config2);
+ 		
+ 		ConfigData config3 = ConfigDataFactory.findByName(PayhumConstants.EURO_MMK_CONVER);
+		config3.setConfigValue(euro);
+ 		ConfigDataFactory.update(config3);
+ 		
+ 		ConfigData config4 = ConfigDataFactory.findByName(PayhumConstants.POUND_MMK_CONVER);
+		config4.setConfigValue(pound);
+ 		ConfigDataFactory.update(config4);
  		
  		int a[] = {0};
  		Calendar currDtCal = Calendar.getInstance();

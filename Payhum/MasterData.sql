@@ -202,6 +202,7 @@ INSERT INTO `paycycle` (`id`, `name`, `selected`) VALUES
 /*!40000 ALTER TABLE `payhum_config` DISABLE KEYS */;
 INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
 ('EMODE','MMODE'),
+('LUSERCOMP','1'),
 ('PCOMP','0'),
 ('USD_MMK','1'),
 ('EURO_MMK','1'),
