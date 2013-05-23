@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.openhr.common.PayhumConstants;
 import com.openhr.data.Benefit;
+import com.openhr.data.ConfigData;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
@@ -17,7 +18,9 @@ import com.openhr.data.LeaveRequest;
 import com.openhr.data.LeaveType;
 import com.openhr.data.OverTime;
 import com.openhr.data.OverTimePayRateData;
+import com.openhr.data.TypesData;
 import com.openhr.factories.BenefitFactory;
+import com.openhr.factories.ConfigDataFactory;
 import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.HolidaysFactory;
 import com.openhr.factories.LeaveRequestFactory;
@@ -402,14 +405,18 @@ public class BaseIC implements IncomeCalculator {
 		}
 		
 		if(latestEmpSal != null && prevEmpSal != null) {
-			Double diff = latestEmpSal.getBasesalary()/12 - prevEmpSal.getBasesalary()/12;
+			Double latestSal = getAmountInMMK(latestEmpSal);
+			Double prevSal = getAmountInMMK(prevEmpSal);
+			
+			Double diff = latestSal/12 - prevSal/12;
 			Double existingSal = empPayroll.getBaseSalary();
 			
 			Double newSal = existingSal + diff * remainingMonths(currDtCal);
 			
 			empPayroll.setBaseSalary(newSal);
 		} else if(latestEmpSal != null) {
-			Double monthlyBase = latestEmpSal.getBasesalary()/12;
+			Double latestSal = getAmountInMMK(latestEmpSal);
+			Double monthlyBase = latestSal/12;
 			Double existingSal = empPayroll.getBaseSalary();
 			
 			if(existingSal == 0D) {
@@ -420,6 +427,24 @@ public class BaseIC implements IncomeCalculator {
 		} else {
 			// There is no change in salary.
 		}
+	}
+
+	private Double getAmountInMMK(EmployeeSalary latestEmpSal) {
+		Double salAmt = latestEmpSal.getBasesalary();
+		Double conversionRate = 1D;
+		
+		if(latestEmpSal.getEmployeeId().getCurrency().getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.USD_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} else if(latestEmpSal.getEmployeeId().getCurrency().getName().equalsIgnoreCase(PayhumConstants.CURRENCY_EURO)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.EURO_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} else if(latestEmpSal.getEmployeeId().getCurrency().getName().equalsIgnoreCase(PayhumConstants.CURRENCY_POUND)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.POUND_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} 
+		
+		return salAmt * conversionRate;
 	}
 
 	private int remainingMonths(Calendar currDate) {

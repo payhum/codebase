@@ -25,4 +25,17 @@ public class TypesDataFactory implements Serializable {
 		session2.close();
 		return td;
 	}
+	
+	public static TypesData findByName(String name) {
+		Session session2 = OpenHRSessionFactory.getInstance().openSession();
+		session2.beginTransaction();
+		Query query = session2.getNamedQuery("TypesData.findByName");
+		query.setString(0, name);
+		if(query.list().size() != 0){
+			td = (TypesData) query.list().get(0);
+		}
+ 		session2.getTransaction().commit();
+		session2.close();
+		return td;
+	}
 }

@@ -58,4 +58,16 @@ public class PayhumConstants {
 	public static final String PROCESS_BRANCH = "PBRANCH";
 	public static final String MASTER_COMP = "MasterComp";
 	public static final String GUEST_USER = "Guest";
+	
+	public static final String CURRENCY_MMK = "MMK";
+	public static final String CURRENCY_USD = "USD";
+	public static final String CURRENCY_EURO = "EURO";
+	public static final String CURRENCY_POUND = "POUND";
+	
+	public static final String USD_MMK_CONVER = "USD_MMK";
+	public static final String EURO_MMK_CONVER = "EURO_MMK";
+	public static final String POUND_MMK_CONVER = "POUND_MMK";
+	
+	public static final String LOGGED_USER_COMP = "LUSERCOMP";
+	
 }

@@ -156,6 +156,10 @@ public class Employee implements Serializable {
 	@Column(name = "ppIssuePlace", nullable = true, length = 45)
 	private String ppIssuePlace;
 	
+	@JoinColumn(name = "currency", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false)
+	private TypesData currency;
+	
 	public String getEmpNationalID() {
 		return empNationalID;
 	}
@@ -401,6 +405,14 @@ public class Employee implements Serializable {
 
 	public void setPpIssuePlace(String ppIssuePlace) {
 		this.ppIssuePlace = ppIssuePlace;
+	}
+
+	public TypesData getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(TypesData currency) {
+		this.currency = currency;
 	}
 	
 }

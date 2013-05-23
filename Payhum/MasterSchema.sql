@@ -101,14 +101,17 @@ CREATE TABLE `employee` (
   `ppNumber` varchar(15),
   `ppExpDate` datetime,
   `ppIssuePlace` varchar(45),
+  `currency` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_employee_position` (`positionId`),
   KEY `FK_employee_id` (`employeeId`),
   KEY `FK_employee_dept` (`deptId`),
   KEY `FK_employee_res` (`residentType`),
+  KEY `FK_employee_curr` (`currency`),
   CONSTRAINT `FK_employee_position` FOREIGN KEY (`positionId`) REFERENCES `position` (`id`),
   CONSTRAINT `FK_employee_dept` FOREIGN KEY (`deptId`) REFERENCES `department` (`id`),
-  CONSTRAINT `FK_employee_res` FOREIGN KEY (`residentType`) REFERENCES `types` (`id`)
+  CONSTRAINT `FK_employee_res` FOREIGN KEY (`residentType`) REFERENCES `types` (`id`),
+  CONSTRAINT `FK_employee_curr` FOREIGN KEY (`currency`) REFERENCES `types` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -766,11 +769,11 @@ CREATE TRIGGER audit_employee_entry BEFORE UPDATE ON employee
 	( `ref_emp_id`, `employeeId`, `firstname`, `middlename`, `lastname`, `sex`, `birthdate`,
 	  `hiredate`, `inactiveDate`, `positionId`, `photo_path`, `status`, `version`, `married`,
       `residentType`, `deptId`, `empNationalID`, `emerContactName`, `emerContactNo`, `address`,
-	  `phoneNo`, `nationality`, `ppNumber`, `ppExpDate`, `ppIssuePlace`, `updatedDate`)
+	  `phoneNo`, `nationality`, `ppNumber`, `ppExpDate`, `ppIssuePlace`, `currency`, `updatedDate`)
 	VALUES(OLD.id, OLD.employeeId, OLD.firstname, OLD.middlename, OLD.lastname, OLD.sex, OLD.birthdate,
 	  OLD.hiredate, OLD.inactiveDate, OLD.positionId, OLD.photo_path, OLD.status, OLD.version, OLD.married,
       OLD.residentType, OLD.deptId, OLD.empNationalID, OLD.emerContactName, OLD.emerContactNo, OLD.address,
-	  OLD.phoneNo, OLD.nationality, OLD.ppNumber, OLD.ppExpDate, OLD.ppIssuePlace, NOW());
+	  OLD.phoneNo, OLD.nationality, OLD.ppNumber, OLD.ppExpDate, OLD.currency, OLD.ppIssuePlace, NOW());
   END;
 $$
 

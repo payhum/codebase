@@ -18,6 +18,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.common.PayhumConstants;
+import com.openhr.factories.TypesDataFactory;
+
 @Entity
 @Table(name = "emp_salary", catalog = "payhumrepo", schema = "")
 @XmlRootElement
@@ -52,7 +55,7 @@ public class EmployeeSalary implements Serializable{
 	@Basic(optional = false)
     @Column(name = "basesalary", nullable = false)
     private Double basesalary;
-
+	
 	public Integer getId() {
 		return id;
 	}

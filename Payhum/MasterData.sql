@@ -39,7 +39,11 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 (20,'Spouse','Spouse','DEPENDENTTYPE'),
 (21,'Child','Child','DEPENDENTTYPE'),
 (22,'Limit for the Employer contribution for Social Security','Maximum amount limit for the Employer contribution for Social Security','TAXDETAILS'),
-(23,'Limit for the Employee contribution for Social Security','Maximum amount limit for the Employee contribution for Social Security','TAXDETAILS');
+(23,'Limit for the Employee contribution for Social Security','Maximum amount limit for the Employee contribution for Social Security','TAXDETAILS'),
+(24,'MMK','Myanmar Currency - Kyats','CURRENCY'),
+(25,'USD','United States of America Currency - Dollars($)','CURRENCY'),
+(26,'EURO','European Union Currency - EURO','CURRENCY'),
+(27,'POUND','United Kingdom Currency - Pounds','CURRENCY');
 /*!40000 ALTER TABLE `types` ENABLE KEYS */;
 
 --
@@ -72,8 +76,8 @@ INSERT INTO `department` (`id`,`deptname`,`branchId`) VALUES
 -- Dumping data for table `employee`
 --
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`,`address`,`phoneNo`) VALUES 
- (1,'MAS-0001','Max','A','Leo','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',1,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1','address1','123456');
+INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`sex`,`birthdate`,`hiredate`,`positionId`,`photo_path`,`status`,`version`,`married`,`residentType`,`deptId`,`empNationalID`,`emerContactName`,`emerContactNo`,`address`,`phoneNo`,`currency`) VALUES 
+ (1,'MAS-0001','Max','A','Leo','Male','1980-06-19 00:00:00','2011-06-14 00:00:00',1,'/data/photo/185145_481927465161666_2082997324_n.jpg','ACTIVE',1,'true',11,1,'N1','A','1','address1','123456',24);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 
 --
@@ -198,7 +202,10 @@ INSERT INTO `paycycle` (`id`, `name`, `selected`) VALUES
 /*!40000 ALTER TABLE `payhum_config` DISABLE KEYS */;
 INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
 ('EMODE','MMODE'),
-('PCOMP','0');
+('PCOMP','0'),
+('USD_MMK','1'),
+('EURO_MMK','1'),
+('POUND_MMK','1');
 /*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;
 
 
