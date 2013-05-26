@@ -87,7 +87,14 @@ public class TaxEngine {
 			// Process if the tax is to be paid by employer.
 			processTaxPaidByEmployer(empPayroll, lastPercentage);
 			
-			empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
+			// Here if the employees (resident and non-res foreigner) are not subject to withhold tax then
+			// consider it.
+			if(empPayroll.getWithholdTax().compareTo(1) == 0) {
+				empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
+			} else {
+				// Else keep the Net pay as taxable Income and let Employee pay the tax and we just tell the amount.
+				empPayroll.setNetPay(empPayroll.getTaxableIncome());
+			}
 			
 			// Update on the split per month/week/biweekly
 			computeDetailsPerPayPeriod(empPayroll, toBeProcessedFor, payroll, adhoc,
@@ -129,8 +136,15 @@ public class TaxEngine {
 			
 			// Process if the tax is to be paid by employer.
 			processTaxPaidByEmployer(empPayroll, lastPercentage);
-						
-			empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
+			
+			// Here if the employees (resident and non-res foreigner) are not subject to withhold tax then
+			// consider it.
+			if(empPayroll.getWithholdTax().compareTo(1) == 0) {
+				empPayroll.setNetPay(empPayroll.getTaxableIncome() - empPayroll.getTaxAmount());
+			} else {
+				// Else keep the Net pay as taxable Income and let Employee pay the tax and we just tell the amount.
+				empPayroll.setNetPay(empPayroll.getTaxableIncome());
+			}
 			
 			empPayroll.setPaidNetPay(empPayroll.getNetPay());
 			empPayroll.setPaidSS(empPayroll.getEmployerSS());

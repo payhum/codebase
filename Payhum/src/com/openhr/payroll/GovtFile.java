@@ -77,6 +77,10 @@ public class GovtFile extends Action {
 		allEmpPayStr.append("\n");
 		
 		for(CompanyPayroll compPay : compPayroll) {
+			if(compPay.getTaxAmount() == 0D) {
+				continue;
+			}
+			
 			StringBuilder empPayStr = new StringBuilder();
 			empPayStr.append(compPay.getCompanyId().getName());
 			empPayStr.append(COMMA);

@@ -28,7 +28,7 @@ public class ReadDeductionAction extends Action {
 		
 		 JSONArray result = null;
 	        try {
-	        	List<DeductionsType> dedc = DeductionFactory.findAll();
+	        	List<DeductionsType> dedc = DeductionFactory.findAllToDisplay();
 	            result = JSONArray.fromObject(dedc);
 	        } catch (Exception e) {
 	            e.printStackTrace();

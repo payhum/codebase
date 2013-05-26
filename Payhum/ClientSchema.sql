@@ -143,6 +143,8 @@ CREATE TABLE `emp_payroll` (
   `otherIncome` double default 0,
   `leaveLoss` double default 0,
   `taxPaidByEmployer` int(2) unsigned NOT NULL default 0,
+  `withholdTax` int(2) unsigned NOT NULL default 1,
+  `withholdSS` int(2) unsigned NOT NULL default 1,
   PRIMARY KEY  (`id`),
   KEY `FK_emp_payroll_emp` (`employeeId`),
   KEY `FK_emp_payroll_acc` (`accomodationType`),

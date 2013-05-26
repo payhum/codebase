@@ -49,15 +49,17 @@ public class BaseDC implements DeductionCalculator{
 					(eligibleAmt > actualAmt ? actualAmt : eligibleAmt));
 		}
 		
-		Double employeeSS = taxDetails.getDeduction(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY) * empPayroll.getBaseSalary() / 100;
-		Double maxLimit = taxDetails.getLimitForEmployeeSS();
-		
-		if(employeeSS > maxLimit) {
-			employeeSS = maxLimit;
+		// Check if the employee contributes to SS or not
+		if(empPayroll.getWithholdSS().compareTo(1) == 0) {
+			Double employeeSS = taxDetails.getDeduction(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY) * empPayroll.getBaseSalary() / 100;
+			Double maxLimit = taxDetails.getLimitForEmployeeSS();
+			
+			if(employeeSS > maxLimit) {
+				employeeSS = maxLimit;
+			}
+			
+			empPayroll.addDeduction(getDeductionsType(deductionsTypes, PayhumConstants.EMPLOYEE_SOCIAL_SECURITY), employeeSS);
 		}
-		
-		empPayroll.addDeduction(getDeductionsType(deductionsTypes, PayhumConstants.EMPLOYEE_SOCIAL_SECURITY), employeeSS);
-		
 	}
 
 	protected DeductionsType getDeductionsType(

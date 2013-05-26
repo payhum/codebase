@@ -1,10 +1,12 @@
 package com.openhr.factories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.data.DeductionsType;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
@@ -33,9 +35,30 @@ public class DeductionFactory {
 		session.beginTransaction();
 		query = session.getNamedQuery("DeductionsType.findAll");
 		decType = query.list();
+		
 		session.getTransaction().commit();
 
 		return decType;
+	}
+	
+	public static List<DeductionsType> findAllToDisplay() {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("DeductionsType.findAll");
+		decType = query.list();
+		
+		List<DeductionsType> retList = new ArrayList<DeductionsType>();
+		for(DeductionsType dt : decType) {
+			if(dt.getName().equalsIgnoreCase(PayhumConstants.SELF_LIFE_INSURANCE)
+			|| dt.getName().equalsIgnoreCase(PayhumConstants.SPOUSE_LIFE_INSURANCE)
+			|| dt.getName().equalsIgnoreCase(PayhumConstants.DONATION)) {
+				retList.add(dt);
+			}  
+		}
+		
+		session.getTransaction().commit();
+
+		return retList;
 	}
 	
 	public static List<Exemptionstype> findAllExemptionTypes() {

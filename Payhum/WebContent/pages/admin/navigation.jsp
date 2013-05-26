@@ -8,7 +8,12 @@
 		   <span>	<a href="<%=request.getContextPath() + "/do/AdminHome"%>"> Home</a></span>
  		</div>
  	</li>	
-	<li class="topitem spaced_li"><div
+ 	<li class="topitem"><div
+			class="buttonbg gradient_button gradient27" style="width: 73px;">
+			<a href="<%=request.getContextPath() + "/do/User"%>">
+					Users</a>
+		</div></li>
+	<!-- li class="topitem spaced_li"><div
 			class="buttonbg gradient_button gradient27" style="width: auto;">
 			<div class="arrow">
 				<a class="button_2">Modules</a>
@@ -60,10 +65,10 @@
 			 -->
 			
 			
+			 
 			
 			
-			
-			<li class="topitem spaced_li">
+			<!-- li class="topitem spaced_li">
 					<div class="buttonbg gradient_button gradient27" style="width: auto;">
 						<div class="arrow">
 							<a class="button_2" style="color:#000">Security</a>
@@ -81,7 +86,7 @@
 			
 			
 			 
-		</ul></li>
+		</ul></li-->
 	
 	<!-- <li class="topitem"><div
 			class="buttonbg gradient_button gradient27" style="width: 73px;">

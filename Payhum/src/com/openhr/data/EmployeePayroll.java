@@ -148,6 +148,14 @@ public class EmployeePayroll implements Serializable {
     @Column(name = "taxPaidByEmployer")
     private Integer taxPaidByEmployer;
     
+    @Basic(optional = false)
+    @Column(name = "withholdTax")
+    private Integer withholdTax;
+    
+    @Basic(optional = false)
+    @Column(name = "withholdSS")
+    private Integer withholdSS;
+    
 	public EmployeePayroll() {
     	this.taxableIncome = 0D;
         this.taxAmount = 0D;
@@ -487,5 +495,21 @@ public class EmployeePayroll implements Serializable {
 
 	public void setTaxPaidByEmployer(Integer taxPaidByEmployer) {
 		this.taxPaidByEmployer = taxPaidByEmployer;
+	}
+
+	public Integer getWithholdTax() {
+		return withholdTax;
+	}
+
+	public void setWithholdTax(Integer withholdTax) {
+		this.withholdTax = withholdTax;
+	}
+
+	public Integer getWithholdSS() {
+		return withholdSS;
+	}
+
+	public void setWithholdSS(Integer withholdSS) {
+		this.withholdSS = withholdSS;
 	}	
 }

@@ -207,8 +207,47 @@ INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
 ('USD_MMK','1'),
 ('EURO_MMK','1'),
 ('POUND_MMK','1');
-/*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;
+/*!40000 ALTER TABLE `payhum_config` ENABLE KEYS */;
 
+
+--
+-- Dumping data for Holidays
+--
+/*!40000 ALTER TABLE `holidays` DISABLE KEYS */;
+INSERT INTO `holidays` (`id`, `date`, `name`) VALUES
+(1, '2013-01-01 00:00:00','Kayin New Year Day'),
+(2, '2013-01-04 00:00:00','Independence Day'),
+(3, '2013-02-12 00:00:00','Union Day'),
+(4, '2013-03-02 00:00:00','Peasant’s Day'),
+(5, '2013-03-01 00:00:00','Full Moon Day of Tabaung'),
+(6, '2013-03-27 00:00:00','Tatmadaw Day (Armed Forces Day)'),
+(7, '2013-04-12 00:00:00','Myanmar New Year'),
+(8, '2013-04-13 00:00:00','Myanmar New Year'),
+(9, '2013-04-14 00:00:00','Myanmar New Year'),
+(10, '2013-04-15 00:00:00','Myanmar New Year'),
+(11, '2013-04-16 00:00:00','Myanmar New Year'),
+(12, '2013-04-17 00:00:00','Myanmar New Year'),
+(13, '2013-04-18 00:00:00','Myanmar New Year'),
+(14, '2013-04-19 00:00:00','Myanmar New Year'),
+(15, '2013-04-20 00:00:00','Myanmar New Year'),
+(16, '2013-04-21 00:00:00','Myanmar New Year'),
+(17, '2013-05-01 00:00:00','May Day (World Workers Day)'),
+(18, '2013-06-01 00:00:00','Full Moon Day of Kasone'),
+(19, '2013-07-01 00:00:00','Full Moon Day of Waso'),
+(20, '2013-07-19 00:00:00','Martyr’s Day'),
+(21, '2013-10-01 00:00:00','Full Moon Day of Thadingyut'),
+(22, '2013-11-01 00:00:00','Full Moon Day of Tazangmone'),
+(23, '2013-11-01 00:00:00','National Day'),
+(24, '2013-12-25 00:00:00','Christmas Day');
+/*!40000 ALTER TABLE `holidays` ENABLE KEYS */;
+
+--
+-- Dumping data for table `benefitype`
+--
+/*!40000 ALTER TABLE `benefitype` DISABLE KEYS */;
+INSERT INTO `benefitype` (`id`,`name`,`cap`) VALUES 
+ (1,'Transport Allowance',50000);
+/*!40000 ALTER TABLE `benefitype` ENABLE KEYS */;
 
 --
 -- Create payhum user and give all privs to that user.

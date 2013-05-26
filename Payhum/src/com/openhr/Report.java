@@ -149,7 +149,7 @@ public class Report extends Action {
 				empPayStr.append(empPay.getEmployeeId().getPpNumber());
 			}
 			empPayStr.append(COMMA);
-			if(empPayrollMap.getMode() == 0) {
+			if(empPayrollMap.getMode().compareTo(0) == 0) {
 				empPayStr.append("-");
 				empPayStr.append(COMMA);
 				empPayStr.append("-");
@@ -170,7 +170,11 @@ public class Report extends Action {
 			}
 			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getNetPay()));
 			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getTaxAmount()));
+			if(empPay.getWithholdTax().compareTo(1) == 0) {
+				empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getTaxAmount()));
+			} else {
+				empPayStr.append("0.00");
+			}
 			empPayStr.append(COMMA);
 			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getSocialSec()));
 			empPayStr.append("\n");

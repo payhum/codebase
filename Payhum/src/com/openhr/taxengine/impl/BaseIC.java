@@ -263,7 +263,7 @@ public class BaseIC implements IncomeCalculator {
 		    toDtCal.set(Calendar.MILLISECOND, 0);
 		    toDtCal.set(Calendar.DAY_OF_MONTH, 1);
 		    
-		    
+		    Double salAmount = getAmountInMMK(empSal.getEmployeeId().getCurrency(), empSal.getBasesalary());
 			if(toDate.compareTo(effectiveDate) != 0) {
 				// Not a last record
 				int toDtMonth = toDtCal.get(Calendar.MONTH) + 1; 
@@ -271,18 +271,18 @@ public class BaseIC implements IncomeCalculator {
 				
 				if( toDtMonth >= 4) {
 					int count = toDtMonth - effDtMonth;
-					Double sal = empSal.getBasesalary()/12 * count;
+					Double sal = salAmount/12 * count;
 					totalSal += sal;
 				} else {
 					if(effDtMonth >= 4){
 						int count = 12 - effDtMonth;
 						count += toDtMonth;
 						
-						Double sal = empSal.getBasesalary()/12 * count;
+						Double sal = salAmount/12 * count;
 						totalSal += sal;
 					} else {
 						int count = toDtMonth - effDtMonth;
-						Double sal = empSal.getBasesalary()/12 * count;
+						Double sal = salAmount/12 * count;
 						totalSal += sal;
 					}
 				}
@@ -294,7 +294,7 @@ public class BaseIC implements IncomeCalculator {
 				
 				int noOfDays = exitDtCal.get(Calendar.DAY_OF_MONTH);
 				
-				Double monthSal = empSal.getBasesalary()/12;
+				Double monthSal = salAmount/12;
 				Double daySal = monthSal / exitDtCal.getActualMaximum(Calendar.DAY_OF_MONTH);
 				
 				Double amount = daySal * noOfDays;
@@ -340,8 +340,9 @@ public class BaseIC implements IncomeCalculator {
 	    if(latestEmpBonus != null) {
 	    	// There is a bonus, so lets update the emp payroll with it.
 	    	Double existingBonusAmt = empPayroll.getBonus();
+	    	Double newBouns = getAmountInMMK(latestEmpBonus.getEmployeeId().getCurrency(), latestEmpBonus.getAmount());
 	    	
-	    	empPayroll.setBonus(existingBonusAmt + latestEmpBonus.getAmount());
+	    	empPayroll.setBonus(existingBonusAmt + newBouns);
 	    }
 	}
 
@@ -405,8 +406,8 @@ public class BaseIC implements IncomeCalculator {
 		}
 		
 		if(latestEmpSal != null && prevEmpSal != null) {
-			Double latestSal = getAmountInMMK(latestEmpSal);
-			Double prevSal = getAmountInMMK(prevEmpSal);
+			Double latestSal = getAmountInMMK(latestEmpSal.getEmployeeId().getCurrency(), latestEmpSal.getBasesalary());
+			Double prevSal = getAmountInMMK(prevEmpSal.getEmployeeId().getCurrency(), prevEmpSal.getBasesalary());
 			
 			Double diff = latestSal/12 - prevSal/12;
 			Double existingSal = empPayroll.getBaseSalary();
@@ -415,7 +416,7 @@ public class BaseIC implements IncomeCalculator {
 			
 			empPayroll.setBaseSalary(newSal);
 		} else if(latestEmpSal != null) {
-			Double latestSal = getAmountInMMK(latestEmpSal);
+			Double latestSal = getAmountInMMK(latestEmpSal.getEmployeeId().getCurrency(), latestEmpSal.getBasesalary());
 			Double monthlyBase = latestSal/12;
 			Double existingSal = empPayroll.getBaseSalary();
 			
@@ -429,22 +430,21 @@ public class BaseIC implements IncomeCalculator {
 		}
 	}
 
-	private Double getAmountInMMK(EmployeeSalary latestEmpSal) {
-		Double salAmt = latestEmpSal.getBasesalary();
+	private Double getAmountInMMK(TypesData currency, Double amount) {
 		Double conversionRate = 1D;
 		
-		if(latestEmpSal.getEmployeeId().getCurrency().getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+		if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
 			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.USD_MMK_CONVER);
 			conversionRate = Double.valueOf(currencyConver.getConfigValue());
-		} else if(latestEmpSal.getEmployeeId().getCurrency().getName().equalsIgnoreCase(PayhumConstants.CURRENCY_EURO)) {
+		} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_EURO)) {
 			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.EURO_MMK_CONVER);
 			conversionRate = Double.valueOf(currencyConver.getConfigValue());
-		} else if(latestEmpSal.getEmployeeId().getCurrency().getName().equalsIgnoreCase(PayhumConstants.CURRENCY_POUND)) {
+		} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_POUND)) {
 			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.POUND_MMK_CONVER);
 			conversionRate = Double.valueOf(currencyConver.getConfigValue());
 		} 
 		
-		return salAmt * conversionRate;
+		return amount * conversionRate;
 	}
 
 	private int remainingMonths(Calendar currDate) {

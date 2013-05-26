@@ -78,6 +78,10 @@ public class SSGovtFile extends Action {
 		allEmpPayStr.append("\n");
 		
 		for(CompanyPayroll compPay : compPayroll) {
+			if(compPay.getSocialSec() == 0D) {
+				continue;
+			}
+			
 			StringBuilder empPayStr = new StringBuilder();
 			empPayStr.append(compPay.getCompanyId().getName());
 			empPayStr.append(COMMA);
