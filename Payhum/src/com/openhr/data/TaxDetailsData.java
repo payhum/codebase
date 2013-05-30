@@ -15,8 +15,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.common.PayhumConstants;
+
 @Entity
-@Table(name = "taxdetails", catalog = "payhumrepo", schema = "")
+@Table(name = "taxdetails", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TaxDetailsData.findAll", query = "SELECT tr FROM TaxDetailsData tr"),

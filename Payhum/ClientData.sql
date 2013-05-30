@@ -95,3 +95,12 @@ INSERT INTO `emp_salary` (`id`, `employeeId`, `fromdate`,`todate`,`basesalary`) 
 INSERT INTO `emp_bonus` (`id`, `employeeId`, `givendate`,`amount`) VALUES
 (1,2,'2013-05-01 00:00:00',4000000);
 /*!40000 ALTER TABLE `emp_bonus` ENABLE KEYS */;
+
+--
+-- Dumping data for table `users`
+--
+
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` (`id`,`username`,`password`,`employeeId`,`roleId`,`version`) VALUES 
+ (3,'john','welcome',2,1,1);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;

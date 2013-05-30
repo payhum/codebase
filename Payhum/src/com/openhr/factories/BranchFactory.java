@@ -31,16 +31,6 @@ public class BranchFactory implements Serializable {
 	public BranchFactory() {
 	}
 
-	@SuppressWarnings("unchecked")
-	public static List<Branch> findAll() throws Exception{
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("Branch.findAll");
-		comps = query.list();
-		session.getTransaction().commit();
- 		return comps;
-	}
-
 	public static List<Branch> findById(Integer branchId) throws Exception{
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();

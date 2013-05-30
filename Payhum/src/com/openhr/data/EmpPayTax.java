@@ -17,10 +17,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
+import com.openhr.common.PayhumConstants;
+
 
 
 @Entity
-@Table(name = "emppaytax", catalog = "payhumrepo", schema = "")
+@Table(name = "emppaytax", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "EmpPayTax.findAll", query = "SELECT e FROM EmpPayTax e")
 

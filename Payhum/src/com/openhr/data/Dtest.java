@@ -9,9 +9,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.openhr.common.PayhumConstants;
  
 @Entity
-@Table(name="dtest",catalog = "payhumrepo", schema = "")
+@Table(name="dtest",catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "Dtest.findAll", query = "SELECT e FROM Dtest e")})
 public class Dtest {

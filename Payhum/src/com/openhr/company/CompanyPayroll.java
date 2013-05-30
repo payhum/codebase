@@ -17,8 +17,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.openhr.common.PayhumConstants;
+
 @Entity
-@Table(name = "company_payroll", catalog = "payhumrepo", schema = "")
+@Table(name = "company_payroll", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "CompanyPayroll.findAll", query = "SELECT e FROM CompanyPayroll e"),
     @NamedQuery(name = "CompanyPayroll.findById", query = "SELECT e FROM CompanyPayroll e WHERE e.id = ?"),
@@ -82,6 +84,11 @@ public class CompanyPayroll implements Serializable {
     @Basic(optional = false)
     @Column(name = "routingNo", nullable = false, length=45)
     private String routingNo;
+    
+    @Basic(optional = false)
+    @Column(name = "currencySym", nullable = false, length=10)
+    private String currencySym;
+    
     
     public String getRoutingNo() {
 		return routingNo;
@@ -188,5 +195,13 @@ public class CompanyPayroll implements Serializable {
 
 	public void setEmpNationalID(String empNationalID) {
 		this.empNationalID = empNationalID;
+	}
+
+	public String getCurrencySym() {
+		return currencySym;
+	}
+
+	public void setCurrencySym(String currencySym) {
+		this.currencySym = currencySym;
 	}
 }

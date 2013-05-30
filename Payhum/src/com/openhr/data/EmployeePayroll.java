@@ -35,7 +35,7 @@ import com.openhr.taxengine.ExemptionsDone;
  * @author xmen
  */
 @Entity
-@Table(name = "emp_payroll", catalog = "payhumrepo", schema = "")
+@Table(name = "emp_payroll", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
 	@NamedQuery(name = "EmployeePayroll.findByEmployeeId", query = "SELECT e FROM EmployeePayroll e WHERE e.employeeId = ?"),

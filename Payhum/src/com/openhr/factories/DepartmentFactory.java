@@ -33,16 +33,6 @@ public class DepartmentFactory implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Department> findAll() throws Exception{
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("Department.findAll");
-		comps = query.list();
-		session.getTransaction().commit();
- 		return comps;
-	}
-
-	@SuppressWarnings("unchecked")
 	public static List<Department> findById(Integer branchId) throws Exception{
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();

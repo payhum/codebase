@@ -17,12 +17,14 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.common.PayhumConstants;
+
 /**
  *
  * @author xmen
  */
 @Entity
-@Table(name = "leavetype", catalog = "payhumrepo", schema = "")
+@Table(name = "leavetype", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "LeaveType.findAll", query = "SELECT l FROM LeaveType l"),

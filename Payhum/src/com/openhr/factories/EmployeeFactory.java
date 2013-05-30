@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.openhr.data.Branch;
+import com.openhr.data.ConfigData;
 import com.openhr.data.Department;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpDependents;
@@ -284,19 +285,21 @@ public class EmployeeFactory implements Serializable {
 	}
 
 	public static List<Employee> findAll() throws Exception {
+		
+		ConfigData userComp = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP); 
+		Integer compId = Integer.parseInt(userComp.getConfigValue());
+		
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		query = session.getNamedQuery("Employee.findAll");
+		if(compId.compareTo(1) == 0) {
+			query = session.getNamedQuery("Employee.findAll");
+		} else {
+			query = session.getNamedQuery("Employee.findAllByComp");
+			query.setInteger(0, compId);
+		}
+		
 		employees = query.list();
 		session.getTransaction().commit();
-
-		/*Iterator iter = employees.iterator();
-		while(iter.hasNext()) {
-			Employee emp = (Employee) iter.next();
-			if(PayhumConstants.GUEST_USER.equalsIgnoreCase(emp.getFirstname())) {
-				iter.remove();
-			}
-		}*/
 		
 		return employees;
 	}
@@ -518,22 +521,25 @@ if(flagSession)
 		return tyd;
 	}
 
-	public static List<Employee> findAllActive() {
+	public static List<Employee> findAllActive(Integer compId) {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findAllActive");
+		query.setInteger(0, compId);
+		
 		List<Employee> activeEmps = query.list();
 		session.getTransaction().commit();
 
 		return activeEmps;
 	}
 
-	public static List<Employee> findInActiveByDate(Date time) {
+	public static List<Employee> findInActiveByDate(Date time, Integer compId) {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("Employee.findInActiveByDate");
 		query.setParameter(0, time);
 		query.setParameter(1, time);
+		query.setInteger(2, compId);
 		List<Employee> inactiveEmps = query.list();
 		session.getTransaction().commit();
 

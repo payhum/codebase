@@ -75,7 +75,7 @@ public class CashFile extends Action {
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Payroll Cycle");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Amount(MMK)");
+		allEmpPayStr.append("Amount");
 		allEmpPayStr.append("\n");
 		
 		for(CompanyPayroll compPay : compPayroll) {
@@ -95,6 +95,7 @@ public class CashFile extends Action {
 				empPayStr.append(sdf.format(compPay.getProcessedDate()));
 				empPayStr.append(COMMA);
 				empPayStr.append(new DecimalFormat("###.##").format(compPay.getNetPay()));
+				empPayStr.append(compPay.getCurrencySym());
 				empPayStr.append("\n");
 	
 				allEmpPayStr.append(empPayStr);

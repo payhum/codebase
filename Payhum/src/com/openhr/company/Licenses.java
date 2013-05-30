@@ -17,8 +17,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.openhr.common.PayhumConstants;
+
 @Entity
-@Table(name = "licenses", catalog = "payhumrepo", schema = "")
+@Table(name = "licenses", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "Licenses.findAll", query = "SELECT e FROM Licenses e"),
     @NamedQuery(name = "Licenses.findById", query = "SELECT e FROM Licenses e WHERE e.id = ?"),

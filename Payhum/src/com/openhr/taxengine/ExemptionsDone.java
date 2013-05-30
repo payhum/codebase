@@ -15,11 +15,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Exemptionstype;
 
 @Entity
-@Table(name = "exemptions_done", catalog = "payhumrepo", schema = "")
+@Table(name = "exemptions_done", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "ExemptionsDone.findAll", query = "SELECT e FROM  ExemptionsDone e"),
     @NamedQuery(name = "ExemptionsDone.findByEmpPayrollId", query = "SELECT e FROM  ExemptionsDone e where e.payrollId = ?")})

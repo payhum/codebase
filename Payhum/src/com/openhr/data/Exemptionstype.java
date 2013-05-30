@@ -8,12 +8,14 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.openhr.common.PayhumConstants;
+
 /**
 *
 * @author xmen
 */
 @Entity
-@Table(name = "exemptionstype", catalog = "payhumrepo", schema = "")
+@Table(name = "exemptionstype", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
    @NamedQuery(name = "Exemptionstype.findAll", query = "SELECT d FROM Exemptionstype d"),

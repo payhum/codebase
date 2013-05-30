@@ -110,7 +110,7 @@ public class UploadFile extends Action {
                     		throw new Exception("The required columns are missing in the line - " + strLine);
                     	}
                     	
-                    	// Format is - CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,RoutingNo,AccountNo,TaxAmount,SS,NetPay
+                    	// Format is - CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,RoutingNo,AccountNo,NetPay,Currency,TaxAmount,SS,
                     	if(comp == null || comp.getId() != Integer.parseInt(lineColumns[0])) {
                     		List<Company> comps = CompanyFactory.findById(Integer.parseInt(lineColumns[0]));
                     		
@@ -166,8 +166,9 @@ public class UploadFile extends Action {
                     	compPayroll.setRoutingNo(lineColumns[6]);
                     	compPayroll.setAccountNo(lineColumns[7]);
                     	compPayroll.setNetPay(Double.parseDouble(lineColumns[8]));
-                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[9]));
-                    	compPayroll.setSocialSec(Double.parseDouble(lineColumns[10]));
+                    	compPayroll.setCurrencySym(lineColumns[9]);
+                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[10]));
+                    	compPayroll.setSocialSec(Double.parseDouble(lineColumns[11]));
                     	compPayroll.setProcessedDate(now);
                     	CompanyPayrollFactory.insert(compPayroll);
                     }

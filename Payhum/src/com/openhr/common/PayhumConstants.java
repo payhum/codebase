@@ -70,4 +70,5 @@ public class PayhumConstants {
 	
 	public static final String LOGGED_USER_COMP = "LUSERCOMP";
 	
+	public static final String DATABASE_NAME = "payhumrepo";
 }

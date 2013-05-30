@@ -16,8 +16,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.openhr.common.PayhumConstants;
 @Entity
-@Table(name = "glemployee", catalog = "payhumrepo", schema = "")
+@Table(name = "glemployee", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({ @NamedQuery(name = "GLEmployee.findAll", query = "SELECT e FROM GLEmployee  e")})
 public class GLEmployee {
 	 @Id

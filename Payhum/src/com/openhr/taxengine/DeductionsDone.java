@@ -17,11 +17,12 @@ import javax.persistence.Table;
 
 import org.hibernate.engine.Cascade;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.data.DeductionsType;
 import com.openhr.data.EmployeePayroll;
 
 @Entity
-@Table(name = "deduction_done", catalog = "payhumrepo", schema = "")
+@Table(name = "deduction_done", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "DeductionsDone.findAll", query = "SELECT e FROM  DeductionsDone e"),
     @NamedQuery(name = "DeductionsDone.findByEmpPayrollId", query = "SELECT e FROM  DeductionsDone e where e.payrollId = ?")})

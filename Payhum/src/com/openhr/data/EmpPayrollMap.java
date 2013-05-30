@@ -15,12 +15,14 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.common.PayhumConstants;
+
 /**
 *
 * @author Vijay
 */
 @Entity
-@Table(name = "emp_payroll_map", catalog = "payhumrepo", schema = "")
+@Table(name = "emp_payroll_map", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
    @NamedQuery(name = "EmpPayrollMap.findAll", query = "SELECT p FROM EmpPayrollMap p"),

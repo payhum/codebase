@@ -71,9 +71,11 @@ public class LoginAction extends OpenHRAction {
 				}
 				
 				if (loginForm.getRole().equalsIgnoreCase("PageAdmin")) {
+					recordLoggedUserComp(user);
 					return map.findForward("admin");
 				}
 				else if (loginForm.getRole().equalsIgnoreCase("HumanResource")) {
+					recordLoggedUserComp(user);
 					return map.findForward("hr");
 				}
 				else if (loginForm.getRole().equalsIgnoreCase("Employee")) {
@@ -82,16 +84,20 @@ public class LoginAction extends OpenHRAction {
 					 Employee nn = user.getEmployeeId();
 					 String n = nn.getFirstname();
 					 request.setAttribute("employeeId", n);
+					 recordLoggedUserComp(user);
 					return map.findForward("member");
 				}
 				else if (loginForm.getRole().equalsIgnoreCase("Accountant")) {
+					recordLoggedUserComp(user);
 					return map.findForward("finance");
 				}
 				else if (loginForm.getRole().equalsIgnoreCase("MasterAdmin")) {
 					if(payhumConfig.getConfigValue().equalsIgnoreCase(PayhumConstants.MMODE)) {
+						recordLoggedUserComp(user);
 						return map.findForward("masteradmin");
 					} else {
 						request.getSession().setAttribute("loggedUser", null);
+						recordLoggedUserComp(user);
 						return map.findForward("login");
 					}
 				}
@@ -101,5 +107,18 @@ public class LoginAction extends OpenHRAction {
 			return map.findForward("login");
 		}
 		return map.findForward("login");
+	}
+	
+	private void recordLoggedUserComp(Users user) {
+		// Once the user logs in record his company ID in the database for usage.
+		Integer compId = user.getEmployeeId().getDeptId().getBranchId().getCompanyId().getId();
+		if(compId == null) {
+			throw new RuntimeException("Unable to get the user's company details");
+		} else {
+			ConfigData config = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP);
+			config.setConfigValue(compId.toString());
+			
+			ConfigDataFactory.update(config);
+		}
 	}
 }

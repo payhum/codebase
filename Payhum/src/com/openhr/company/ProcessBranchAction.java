@@ -165,9 +165,12 @@ public class ProcessBranchAction extends Action{
 		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH); 
 		Integer branchId = Integer.parseInt(config.getConfigValue());
 		
+		ConfigData userComp = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP); 
+		Integer compId = Integer.parseInt(userComp.getConfigValue());
+		
 		if(branchId == 0) {
 			// Employees of all Branches
-			activeEmpList = EmployeeFactory.findAllActive();
+			activeEmpList = EmployeeFactory.findAllActive(compId);
 		} else {
 			if(deptId == 0) {
 				// Employees of all depts of a given branch.

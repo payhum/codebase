@@ -13,8 +13,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.openhr.common.PayhumConstants;
 @Entity
-@Table(name = "overtime_payrate", catalog = "payhumrepo", schema = "")
+@Table(name = "overtime_payrate", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "OverTimePayRateData.findAll", query = "SELECT ov FROM OverTimePayRateData ov"),

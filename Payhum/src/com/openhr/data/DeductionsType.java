@@ -10,12 +10,14 @@ import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.openhr.common.PayhumConstants;
+
 /**
  *
  * @author xmen
  */
 @Entity
-@Table(name = "deductiontype", catalog = "payhumrepo", schema = "")
+@Table(name = "deductiontype", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "DeductionsType.findAll", query = "SELECT d FROM DeductionsType d"),

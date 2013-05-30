@@ -9,12 +9,14 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.common.PayhumConstants;
+
 /**
  * 
  * @author xmen
  */
 @Entity
-@Table(name = "holidays", catalog = "payhumrepo", schema = "")
+@Table(name = "holidays", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement     
 @NamedQueries({
 		@NamedQuery(name = "Holidays.findAll", query = "SELECT l FROM Holidays l"),

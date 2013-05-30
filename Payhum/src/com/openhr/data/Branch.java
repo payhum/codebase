@@ -15,9 +15,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
 @Entity
-@Table(name = "branch", catalog = "payhumrepo", schema = "")
+@Table(name = "branch", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "Branch.findAll", query = "FROM Branch br where name != 'MMain'"),
     @NamedQuery(name = "Branch.findById", query = "FROM Branch br WHERE id = ?"),

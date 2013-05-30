@@ -66,7 +66,7 @@ public class BankFile extends Action {
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(comp, cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
 		// Populate the header.
-		allEmpPayStr.append("Section 1: Deposit request record for each employee.\n");
+		allEmpPayStr.append("Section 1: Deposit request record for employees.\n");
 		allEmpPayStr.append("Company Name");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Company ID");
@@ -87,7 +87,7 @@ public class BankFile extends Action {
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Payroll Cycle");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Amount(MMK)");
+		allEmpPayStr.append("Amount");
 		allEmpPayStr.append("\n");
 		
 		for(CompanyPayroll compPay : compPayroll) {
@@ -120,6 +120,7 @@ public class BankFile extends Action {
 			empPayStr.append(sdf.format(compPay.getProcessedDate()));
 			empPayStr.append(COMMA);
 			empPayStr.append(new DecimalFormat("###.##").format(compPay.getNetPay()));
+			empPayStr.append(compPay.getCurrencySym());
 			empPayStr.append("\n");
 			
 			totalTaxAmt += compPay.getTaxAmount();

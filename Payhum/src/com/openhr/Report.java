@@ -25,6 +25,7 @@ import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Payroll;
 import com.openhr.data.PayrollDate;
+import com.openhr.data.TypesData;
 import com.openhr.data.Users;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.ConfigDataFactory;
@@ -93,10 +94,13 @@ public class Report extends Action {
 		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH); 
 		Integer branchId = Integer.parseInt(config.getConfigValue());
 		
+		ConfigData userComp = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP); 
+		Integer compId = Integer.parseInt(userComp.getConfigValue());
+		
 		if(branchId == 0) {
 			// Employees of all Branches
-			activeEmpList = EmployeeFactory.findAllActive();
-			inActiveEmpList = EmployeeFactory.findInActiveByDate(salaryProcessDate.getTime());
+			activeEmpList = EmployeeFactory.findAllActive(compId);
+			inActiveEmpList = EmployeeFactory.findInActiveByDate(salaryProcessDate.getTime(), compId);
 		} else {
 			if(deptId == 0) {
 				// Employees of all depts of a given branch.
@@ -168,8 +172,13 @@ public class Report extends Action {
 				empPayStr.append(empBankAcct.getAccountNo());
 				empPayStr.append(COMMA);
 			}
-			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getNetPay()));
+			
+			empPayStr.append(new DecimalFormat("###.##").format(getAmountInRespectiveCurrency(empPay.getEmployeeId().getCurrency(), 
+																			   empPayrollMap.getNetPay())));
 			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getEmployeeId().getCurrency().getName());
+			empPayStr.append(COMMA);
+			
 			if(empPay.getWithholdTax().compareTo(1) == 0) {
 				empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getTaxAmount()));
 			} else {
@@ -217,6 +226,23 @@ public class Report extends Action {
 		return null;
 	}
 
+	private Double getAmountInRespectiveCurrency(TypesData currency, Double amount) {
+		Double conversionRate = 1D;
+		
+		if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.USD_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_EURO)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.EURO_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_POUND)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.POUND_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} 
+		
+		return amount / conversionRate;
+	}
+	
 	public Report() {
 
 	}

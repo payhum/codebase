@@ -16,12 +16,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.common.PayhumConstants;
+
 /**
 *
 * @author Vijay
 */
 @Entity
-@Table(name = "payroll_date", catalog = "payhumrepo", schema = "")
+@Table(name = "payroll_date", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
    @NamedQuery(name = "PayrollDate.findAll", query = "SELECT p FROM PayrollDate p")})

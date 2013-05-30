@@ -21,13 +21,15 @@ import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 
+import com.openhr.common.PayhumConstants;
+
 /**
  *
  * @author Mekbib
  */
 @Audited
 @Entity
-@Table(name = "roles", catalog = "payhumrepo", schema = "")
+@Table(name = "roles", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({@NamedQuery(name = "Roles.findAll", query = "SELECT r FROM Roles r"),
 @NamedQuery(name = "Roles.findById", query = "SELECT r FROM Roles r WHERE r.id = ?"),
 @NamedQuery(name = "Roles.findByName", query = "SELECT r FROM Roles r WHERE r.name = ?")})

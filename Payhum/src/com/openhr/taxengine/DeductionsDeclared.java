@@ -14,11 +14,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import com.openhr.common.PayhumConstants;
 import com.openhr.data.DeductionsType;
 import com.openhr.data.EmployeePayroll;
 
 @Entity
-@Table(name = "deduction_decl", catalog = "payhumrepo", schema = "")
+@Table(name = "deduction_decl", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "DeductionsDeclared.findAll", query = "SELECT e FROM  DeductionsDeclared e"),
     @NamedQuery(name = "DeductionsDeclared.findType", query = "SELECT e FROM  DeductionsDeclared e where e.type=?"),

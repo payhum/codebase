@@ -415,6 +415,7 @@ CREATE TABLE `company_payroll` (
   `bankBranch` varchar(45) NOT NULL,
   `routingNo` varchar(45) NOT NULL,
   `accountNo` varchar(45) NOT NULL,
+  `currencySym` varchar(10) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_comppay_comp` (`companyId`),
   CONSTRAINT `FK_comppay_comp` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`) 
@@ -662,6 +663,8 @@ CREATE TABLE `audit_emp_payroll` (
   `otherIncome` double default 0,
   `leaveLoss` double default 0,
   `taxPaidByEmployer` int(2) unsigned NOT NULL default 0,
+  `withholdTax` int(2) unsigned NOT NULL default 1,
+  `withholdSS` int(2) unsigned NOT NULL default 1,
   `updatedDate` datetime NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -756,12 +759,12 @@ CREATE TRIGGER audit_emp_payroll_entry BEFORE UPDATE ON emp_payroll
 	  `taxAmount`, `totalIncome`, `taxableOverseasIncome`, `allowances`, `baseSalary`,
 	  `bonus`, `accomodationAmount`, `employerSS`, `accomodationType`, `netPay`,
 	  `totalDeductions`, `overtimeamt`, `paidTaxAmt`, `paidNetPay`, `paidSS`,
-	  `otherIncome`, `leaveLoss`, `taxPaidByEmployer`, `updatedDate`)
+	  `otherIncome`, `leaveLoss`, `taxPaidByEmployer`, `withholdTax`, `withholdSS`, `updatedDate`)
 	VALUES(OLD.id, OLD.employeeId, OLD.FULL_NAME, OLD.GROSS_SALARY, OLD.taxableIncome,
 	  OLD.taxAmount, OLD.totalIncome, OLD.taxableOverseasIncome, OLD.allowances, OLD.baseSalary,
 	  OLD.bonus, OLD.accomodationAmount, OLD.employerSS, OLD.accomodationType, OLD.netPay,
 	  OLD.totalDeductions, OLD.overtimeamt, OLD.paidTaxAmt, OLD.paidNetPay, OLD.paidSS,
-	  OLD.otherIncome, OLD.leaveLoss, OLD.taxPaidByEmployer, NOW());
+	  OLD.otherIncome, OLD.leaveLoss, OLD.taxPaidByEmployer, OLD.withholdTax, OLD.withholdSS, NOW());
   END;
 $$
 

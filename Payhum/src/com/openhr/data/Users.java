@@ -20,14 +20,17 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import com.openhr.common.PayhumConstants;
+
 /**
  *
  * @author Mekbib
  */
 @Entity
-@Table(name = "users", catalog = "payhumrepo", schema = "")
+@Table(name = "users", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
 	@NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
+	@NamedQuery(name = "Users.findAllByComp", query = "SELECT u FROM Users u, Employee e, Department d, Branch b, Company c where u.employeeId=e.id AND e.deptId = d.id AND d.branchId = b.id AND b.companyId = c.id AND c.id = ?"),
 	@NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = ?"), 
 	@NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = ?"), 
 	@NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = ?"),

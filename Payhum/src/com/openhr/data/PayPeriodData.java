@@ -13,8 +13,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.common.PayhumConstants;
+
 @Entity
-@Table(name = "paycycle", catalog = "payhumrepo", schema = "")
+@Table(name = "paycycle", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({ @NamedQuery(name = "PayPeriodData.findAll", query = "SELECT prd FROM PayPeriodData prd") })
 public class PayPeriodData implements Serializable {

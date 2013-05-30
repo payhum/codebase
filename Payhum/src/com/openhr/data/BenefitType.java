@@ -8,12 +8,14 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.openhr.common.PayhumConstants;
+
 /**
  *
  * @author xmen
  */
 @Entity
-@Table(name = "benefitype", catalog = "payhumrepo", schema = "")
+@Table(name = "benefitype", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "BenefitType.findAll", query = "SELECT b FROM BenefitType b"),

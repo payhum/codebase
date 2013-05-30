@@ -22,7 +22,7 @@ import com.openhr.common.PayhumConstants;
 import com.openhr.factories.TypesDataFactory;
 
 @Entity
-@Table(name = "emp_salary", catalog = "payhumrepo", schema = "")
+@Table(name = "emp_salary", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "EmployeeSalary.findAll", query = "SELECT tr FROM EmployeeSalary tr"),

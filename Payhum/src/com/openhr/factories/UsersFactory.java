@@ -10,6 +10,8 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
+import com.openhr.common.PayhumConstants;
+import com.openhr.data.ConfigData;
 import com.openhr.data.Dtest;
 import com.openhr.data.Roles;
 import com.openhr.data.Users;
@@ -30,9 +32,18 @@ public class UsersFactory {
     }
 
     public static List<Users> findAll() {
+    	ConfigData userComp = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP); 
+		Integer compId = Integer.parseInt(userComp.getConfigValue());
+		
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
-        query = session.getNamedQuery("Users.findAll");
+        if(compId.compareTo(1) == 0) {
+        	query = session.getNamedQuery("Users.findAll");
+		} else {
+			query = session.getNamedQuery("Users.findAllByComp");
+			query.setInteger(0, compId);
+		}
+        
         users = query.list();
         session.getTransaction().commit();
         

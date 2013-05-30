@@ -13,6 +13,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import com.openhr.common.PayhumConstants;
+import com.openhr.data.ConfigData;
+import com.openhr.factories.ConfigDataFactory;
+
 /**
  *
  * @author Mekbib
@@ -26,6 +30,7 @@ public class LogoutAction extends Action {
             HttpServletResponse reponse) throws Exception {
         //LogoutForm logoutForm = (LogoutForm) form;
         request.getSession().invalidate();
+        
         return map.findForward("continue");
     }
 }
