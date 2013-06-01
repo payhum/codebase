@@ -108,7 +108,7 @@ public class LicenseFactory implements Serializable {
 		session.beginTransaction();
  
 		Licenses comp = (Licenses) session.get(Licenses.class, e.getId());
-		comp.setActive(0);
+		comp.setActive(e.getActive());
 		 
 		
 		session.update(comp);

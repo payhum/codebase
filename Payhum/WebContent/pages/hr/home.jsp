@@ -170,5 +170,33 @@
 		  view various reports, etc... 
 </div>
 
+<div class="k-content" id="compLicensesWnd" style="display:none">
+	<div>
+		<div >
+			<div id="form">
+				<div>
+					<span style="display : none;"><a class="k-button k-icontext" id="cancelCmp" style="display:none !important;"><span class="k-cancel k-icon"></span>Cancel</a></span>
+					<div  style="width: 630px;">
+			<fieldset>
+				<legend>Upload Company License File</legend>
+		
+		<div>
+			<form method="post" action="<%=request.getContextPath() + "/do/UploadCompLicenseFile"%>" enctype="multipart/form-data">
+			Upload the License file given by the Master to add/activate the Company and the License information for using this payroll application.
+			<br><br>Select the file to be uploaded and click on <b>Upload</b> button.<br><br>
+			    Company License file to upload: <input type="file" name="uploadFile" />
+	            <br/><br/> 
+	            <input class="k-button k-icontext" type="submit" value="Upload" />
+	        </form>
+		</div>
+		</fieldset>
+	</div>
+				</div>
+
+			</div>
+		</div>
+		
+	</div>
+</div>
 
 

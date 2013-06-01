@@ -97,13 +97,13 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
                         pageable		: true,
                         detailTemplate	: kendo.template($("#template").html()),
                         detailInit		: detailInit,       
-        	            toolbar : [{"name" : "create", className : "newCmp", text : "Add New Company" }, {"name" : "delete", className : "deleteCmp displayClass", text : "Delete Company" }, {"name" : "edit", className : "editCmp displayClass", text : "Edit Company" }, {"name" : "addBranch", className : "addBranch displayClass", text : "Add Branch" }, {"name" : "addDept", className : "addDept displayClass", text : "Add Department" }, {"name" : "license", className : "editLicense displayClass", text : "License Renewal" }],
+        	            toolbar : [{"name" : "create", className : "newCmp", text : "Add New Company" }, {"name" : "delete", className : "deleteCmp displayClass", text : "Delete Company" }, {"name" : "edit", className : "editCmp displayClass", text : "Edit Company" }, {"name" : "addBranch", className : "addBranch displayClass", text : "Add Branch" }, {"name" : "addDept", className : "addDept displayClass", text : "Add Department" }, {"name" : "license", className : "editLicense displayClass", text : "Renew License" }, {"name" : "dwndLicense", className : "dwndLicense displayClass", text : "Download License File" }],
 
                          columns : [
  									{ template:'#=companyId.companyId ? companyId.id: ""#', width : 1},  								
 									{ field : "companyId.companyId", title : " Company Id",    width : 100  },
 									{ field : "companyId.name", title : "company Name",    width : 100  },
-				  		            { field : "active", title : "Status", template : "#= active != 0 ? 'Active.' : 'Inavctive' #", width : 100 },
+				  		            { field : "active", title : "Status", template : "#= active != 0 ? 'Active' : 'Inavctive' #", width : 100 },
 
  								  ]     
                 	
@@ -132,7 +132,7 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
         	   			"compId"	  : companyId
           			 });   
                       
-                     deleteStatus = confirm('Are you sure you want to Delete ? ');
+                     deleteStatus = confirm('Are you sure you want to delete ? ');
                      if(deleteStatus){
                   
 	        			$.ajax({
@@ -333,7 +333,19 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
                });
        });
 
-            
+
+            $("#grid").delegate(".dwndLicense", "click", function(e) {
+            	var cId = $("#grid").find(".currentCompany").find('td').eq(2).text();
+            	
+            	$.ajax({
+                    type: "POST",
+                    url: "<%=request.getContextPath() + "/do/GenLicenseFile"%>",
+                    data: {cId : cId},
+                    success: function(data) {                
+                        alert(data);
+                    }
+                });
+            });
             
             $("#grid").delegate(".editBranch", "click", function(e) {
        	 		 var v= $(this).closest("tr");

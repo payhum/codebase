@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
  * 
  */
 @Entity
-@Table(name = "employee", catalog = "payhumrepo", schema = "")
+@Table(name = "employee", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
 		@NamedQuery(name = "Employee.findAllByComp", query = "SELECT e from Employee e, Department d, Branch b, Company c where e.deptId=d.id and d.branchId=b.id and b.companyId=c.id and c.id= ?"),
 		@NamedQuery(name = "Employee.findAll", query = "SELECT e from Employee e"),

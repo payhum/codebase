@@ -32,7 +32,7 @@ public class ReadCompanyAction extends Action {
 		long start = 0, end = 0, diff = 0;
 		try {
 
-			List<Licenses> companies = LicenseFactory.findAll();
+			List<Licenses> companies = LicenseFactory.findByActive(1);
 			start = System.currentTimeMillis();
 			result = JSONArray.fromObject(companies);
 			end = System.currentTimeMillis();

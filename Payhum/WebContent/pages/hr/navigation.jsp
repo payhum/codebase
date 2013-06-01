@@ -3,6 +3,7 @@
 
 <ul id="mbmcpebul_table" class="mbmcpebul_menulist css_menu"
 	style="width: 100%; height: 27px;">
+	
 		<li class="topitem">
 		<div class="buttonbg gradient_button gradient27" style="width: 73px;">
 		   <span>	<a href="<%=request.getContextPath() + "/do/HRHome"%>"> Home</a></span>
@@ -223,4 +224,36 @@
 			<a href="<%=request.getContextPath() + "/do/SettingsHR"%>">
 				Settings</a>
 		</div></li>
+		
+					
+    <!-- li class="topitem" -->
+		<div style="float:right;padding-right: 15px;">
+		   <input id="compLicenses" type="button" value="Company License" class="k-button k-icontext"/>
+ 		</div>
+ 	</li-->
 </ul>
+
+<script>
+    var empWindow;
+	$("#compLicenses").click(function(e){
+		e.preventDefault();	        
+      	 createNewCmpForm();
+  		 empWindow.open();
+  		 empWindow.center();
+	});
+  		 
+  		 createNewCmpForm = function (){        	         	 
+	        	if(empWindow)
+	        		empWindow.content("");
+	        	 	empWindow = $("#compLicensesWnd").kendoWindow({
+	                 title: "",
+ 	                 modal : true,
+	                 resizable: false,
+	                 width : 650
+	             }).data("kendoWindow");
+	        	 
+	        	 empWindow.open();
+	        	 empWindow.center();
+	        	 
+	         }
+</script>

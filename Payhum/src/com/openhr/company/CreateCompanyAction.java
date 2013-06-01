@@ -57,9 +57,7 @@ public class CreateCompanyAction extends Action {
 		license.setTodate(new Date(toDate));
  		license.formLicenseKey();
  		LicenseFactory.insert(license);
-		
-		
-   
+		   
 		return null;
 	}
 }

@@ -3,6 +3,7 @@ package com.openhr.company;
 
 import java.io.BufferedReader;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +38,15 @@ public class LicenseAction extends Action {
 		
 		Company company = CompanyFactory.findByCompanyId(companyId).get(0);
 		
-		Licenses license = LicenseFactory.findByCompanyId(company.getId()).get(0);
-		license.setActive(2);
-		LicenseFactory.update(license);
+		List<Licenses> licenses = LicenseFactory.findByCompanyId(company.getId());
+		
+		for(Licenses lic: licenses) {
+			if(lic.getActive().compareTo(1) == 0) {
+				lic.setActive(0);
+				LicenseFactory.update(lic);
+			}
+		}
+		
 		Licenses newLicense = new Licenses();
 		newLicense.setActive(1);
 		newLicense.setCompanyId(company);

@@ -795,11 +795,10 @@
 			<forward name="continue" path="index" />
 		</action>
 
-		
-
-
-
-
+		<action path="/UploadCompLicenseFile" type="com.openhr.company.UploadCompLicenseFile" scope="request">
+		</action>
+		<action path="/GenLicenseFile" type="com.openhr.company.GenerateCompLicenseFile" scope="request">
+		</action>
 
 	</action-mappings>
 

@@ -103,7 +103,7 @@ public class UploadFile extends Action {
                     	
                     	String[] lineColumns = strLine.split(COMMA);
                     	
-                    	if(lineColumns.length < 4) {
+                    	if(lineColumns.length < 12) {
                     		br.close();
                     		in.close();
                     		fstream.close();
