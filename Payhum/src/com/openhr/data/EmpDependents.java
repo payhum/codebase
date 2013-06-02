@@ -103,14 +103,6 @@ public class EmpDependents  implements Serializable {
 		this.age = age;
 	}
 
-	public void setType(TypesData depType) {
-		this.depType = depType;
-	}
-
-	public TypesData getType() {
-		return this.depType;
-	}
-
 	public int getAge() {
 		return age;
 	}

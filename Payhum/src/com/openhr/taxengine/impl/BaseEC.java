@@ -23,7 +23,7 @@ public class BaseEC implements ExemptionCalculator {
 		// Handle Married person supporting spouse
 		if(emp.isMarried()) {
 			for(EmpDependents dependent : dependents) {
-				if(dependent.getType().getName().equalsIgnoreCase(PayhumConstants.DEP_SPOUSE)
+				if(dependent.getDepType().getName().equalsIgnoreCase(PayhumConstants.DEP_SPOUSE)
 				  && dependent.getOccupationType().getName().equalsIgnoreCase(PayhumConstants.OCCUP_NONE)) {
 					empPayroll.addExemption(getExemptionType(exemptionsTypes, PayhumConstants.SUPPORTING_SPOUSE),
 							taxDetails.getExemption(PayhumConstants.SUPPORTING_SPOUSE));
@@ -34,7 +34,7 @@ public class BaseEC implements ExemptionCalculator {
 		// Handle Children exemptions
 		int noOfChildern = 0;
 		for(EmpDependents dependent : dependents) {
-			if((dependent.getType().getName().equalsIgnoreCase(PayhumConstants.DEP_CHILD))
+			if((dependent.getDepType().getName().equalsIgnoreCase(PayhumConstants.DEP_CHILD))
 			&& ( dependent.getAge() < 18 || (dependent.getOccupationType().getName().equalsIgnoreCase(PayhumConstants.OCCUP_STUDENT)))) {
 				noOfChildern++;
 			}

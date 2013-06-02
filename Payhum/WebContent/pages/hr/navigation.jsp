@@ -220,40 +220,71 @@
 
 		</ul></li>
 	<li class="topitem"><div
-			class="buttonbg gradient_button gradient27" style="width: 73px;">
+			class="buttonbg gradient_button gradient27" style="width:auto;">
 			<a href="<%=request.getContextPath() + "/do/SettingsHR"%>">
 				Settings</a>
 		</div></li>
 		
-					
-    <!-- li class="topitem" -->
-		<div style="float:right;padding-right: 15px;">
-		   <input id="compLicenses" type="button" value="Company License" class="k-button k-icontext"/>
- 		</div>
- 	</li-->
+		
+		<li class="topitem"><div
+			class="buttonbg gradient_button gradient27" style="width: auto;">
+			<div>
+				<a class="compLicenses" style="color: #000">Company License</a>
+			</div>
+		</div></li>
 </ul>
 
 <script>
-    var empWindow;
-	$("#compLicenses").click(function(e){
+    var compLicWindow;
+	//$("#compLicenses").click(function(e){
+	$("#mbmcpebul_table").delegate(".compLicenses", "click", function(e) {
 		e.preventDefault();	        
-      	 createNewCmpForm();
-  		 empWindow.open();
-  		 empWindow.center();
+      	 createNewCmpLicForm();
+      	compLicWindow.open();
+      	compLicWindow.center();
 	});
   		 
-  		 createNewCmpForm = function (){        	         	 
-	        	if(empWindow)
-	        		empWindow.content("");
-	        	 	empWindow = $("#compLicensesWnd").kendoWindow({
+  		 createNewCmpLicForm = function (){        	         	 
+	        	if(compLicWindow)
+	        		compLicWindow.content("");
+	        		compLicWindow = $("#compLicensesWnd").kendoWindow({
 	                 title: "",
  	                 modal : true,
 	                 resizable: false,
 	                 width : 650
 	             }).data("kendoWindow");
 	        	 
-	        	 empWindow.open();
-	        	 empWindow.center();
+	        	 compLicWindow.open();
+	        	 compLicWindow.center();
 	        	 
 	         }
 </script>
+
+<div class="k-content" id="compLicensesWnd" style="display:none">
+	<div>
+		<div >
+			<div id="form">
+				<div>
+					<span style="display : none;"><a class="k-button k-icontext" id="cancelCmp" style="display:none !important;"><span class="k-cancel k-icon"></span>Cancel</a></span>
+					<div  style="width: 630px;">
+			<fieldset>
+				<legend>Upload Company License File</legend>
+		
+		<div>
+			<form method="post" action="<%=request.getContextPath() + "/do/UploadCompLicenseFile"%>" enctype="multipart/form-data">
+			Upload the License file given by the Master to add/activate the Company and the License information for using this payroll application.
+			<br><br>Select the file to be uploaded and click on <b>Upload</b> button.<br><br>
+			    Company License file to upload: <input type="file" name="uploadFile" />
+	            <br/><br/> 
+	            <input class="k-button k-icontext" type="submit" value="Upload" />
+	        </form>
+		</div>
+		</fieldset>
+	</div>
+				</div>
+
+			</div>
+		</div>
+		
+	</div>
+</div>

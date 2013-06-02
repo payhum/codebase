@@ -6,13 +6,15 @@ package com.openhr.factories;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.openhr.common.PayhumConstants;
+import com.openhr.company.Company;
+import com.openhr.data.Benefit;
 import com.openhr.data.Branch;
 import com.openhr.data.ConfigData;
 import com.openhr.data.Department;
@@ -20,12 +22,9 @@ import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
+import com.openhr.data.EmployeePayroll;
 import com.openhr.data.EmployeeSalary;
 import com.openhr.data.TypesData;
-import com.openhr.common.PayhumConstants;
-import com.openhr.company.Company;
-import com.openhr.data.Users;
-
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
@@ -573,5 +572,37 @@ if(flagSession)
 		session.getTransaction().commit();
 
 		return inactiveEmps;
+	}
+	
+	
+	public static boolean insertAll(Employee e, EmployeePayroll ep, EmployeeSalary empsal,
+			Benefit ben, EmpBankAccount empBank, List<EmpDependents> dependents) {
+		
+		boolean done = false;
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+	    Transaction   tx = session.beginTransaction();
+	    
+	    try {
+	    	session.save(e);
+	        session.save(ep);
+	        session.save(empsal);
+	        session.save(ben);
+	        
+	        if(empBank != null) {
+	        	session.save(empBank);
+	        }
+	        
+	        for(EmpDependents dep : dependents) {
+	        	session.save(dep);
+	        }
+	        
+	        tx.commit();
+	        done = true;
+	    } catch (Exception ex) {
+	    	tx.rollback();
+	        ex.printStackTrace();
+	    }finally{
+	    }
+	    return done;
 	}
 }

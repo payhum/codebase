@@ -166,6 +166,7 @@
 			Bonus</a> <a class="k-button" href='#' id="bankAccountId"><span
 			class="k-icon "></span>Bank Account</a> <a class="k-button" href='#'
 		id="editEmp1"><span class="k-icon "></span>Edit</a>
+		
 	</span>
 
 </div>
@@ -335,7 +336,7 @@ var postDropDownList;
 	            	});
 	            },
 	            
-	            toolbar : [{"name" : "create", className : "newEmp", text : "Add New Employee" }],
+	            toolbar : [{"name" : "create", className : "newEmp", text : "Add New Employee" }, {"name" : "upload", className : "upldEmpFile", text : "Upload Employee Data File" }],
 	            sortable: true,  
 	            scrollable : true,
 	            height : 400,
@@ -1447,6 +1448,7 @@ e.preventDefault();
 										});
 
 					});
+
 </script>
 
 <script type="text/x-kendo-template" id="employeeTemplate">
@@ -1791,3 +1793,57 @@ e.preventDefault();
 		}
 	}
 </script>
+
+<script>
+    var empWindow;
+    $("#grid").delegate(".upldEmpFile", "click", function(e) {
+		e.preventDefault();	        
+		createNewUpdEmpForm();
+  		 empWindow.open();
+  		 empWindow.center();
+	});
+  		 
+  		 createNewUpdEmpForm = function (){        	         	 
+	        	if(empWindow)
+	        		empWindow.content("");
+	        	 	empWindow = $("#upldEmpFileWnd").kendoWindow({
+	                 title: "",
+ 	                 modal : true,
+	                 resizable: false,
+	                 width : 650
+	             }).data("kendoWindow");
+	        	 
+	        	 empWindow.open();
+	        	 empWindow.center();
+	        	 
+	         }
+</script>
+
+<div class="k-content" id="upldEmpFileWnd" style="display:none">
+	<div>
+		<div >
+			<div id="form">
+				<div>
+					<span style="display : none;"><a class="k-button k-icontext" id="cancelCmp" style="display:none !important;"><span class="k-cancel k-icon"></span>Cancel</a></span>
+					<div  style="width: 630px;">
+			<fieldset>
+				<legend>Upload New Employee Details File</legend>
+		
+		<div>
+			<form method="post" action="<%=request.getContextPath() + "/do/UploadEmployeeDataFile"%>" enctype="multipart/form-data">
+			Upload the file containing the list of employees and their details to be added into this application.
+			<br><br>Select the file to be uploaded and click on <b>Upload</b> button.<br><br>
+			    New Employee Details file to upload: <input type="file" name="uploadFile" />
+	            <br/><br/> 
+	            <input class="k-button k-icontext" type="submit" value="Upload" />
+	        </form>
+		</div>
+		</fieldset>
+	</div>
+				</div>
+
+			</div>
+		</div>
+		
+	</div>
+</div>

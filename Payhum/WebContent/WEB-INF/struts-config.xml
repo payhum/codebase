@@ -799,7 +799,9 @@
 		</action>
 		<action path="/GenLicenseFile" type="com.openhr.company.GenerateCompLicenseFile" scope="request">
 		</action>
-
+		<action path="/UploadEmployeeDataFile" type="com.openhr.employee.UploadEmployeeDataFile" scope="request">
+		</action>
+		
 	</action-mappings>
 
 	<controller processorClass="org.apache.struts.tiles.TilesRequestProcessor" />

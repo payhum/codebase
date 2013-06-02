@@ -113,7 +113,7 @@ public class TestTaxEngine {
 			List<EmpDependents> dependents = emp.getDependents();
 			int noOfChildren = 0;
 			for(EmpDependents dep : dependents ) {
-				if(dep.getType().getName().equalsIgnoreCase(PayhumConstants.DEP_CHILD)) {
+				if(dep.getDepType().getName().equalsIgnoreCase(PayhumConstants.DEP_CHILD)) {
 					noOfChildren++;
 				}
 			}

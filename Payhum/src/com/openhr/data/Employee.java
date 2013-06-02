@@ -106,7 +106,7 @@ public class Employee implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date hiredate;
 
-	@Basic(optional = false)
+	@Basic(optional = true)
 	@Column(name = "inactiveDate")
 	private Date inactiveDate;
 

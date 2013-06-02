@@ -59,7 +59,6 @@ public class EmpPayTaxFactroy implements Serializable {
 	}
 	
 	
-	
 	public static boolean updateEmpPaytax(Employee e,EmployeePayroll ep,EmployeeSalary empsal) {
 		boolean done = false;
 
@@ -86,27 +85,27 @@ public class EmpPayTaxFactroy implements Serializable {
 	
 	
 	public static boolean insertEmpPaytax(Employee e,EmployeePayroll ep,EmployeeSalary empsal) {
-	boolean done = false;
+		boolean done = false;
 
-        session = OpenHRSessionFactory.getInstance().getCurrentSession();
-        Transaction   tx = session.beginTransaction();
-        try {
-        	session.save(e);
-        	
-        	session.save(ep);
-        	session.save(empsal);
-        	tx.commit();
-            done = true;
-        } catch (Exception ex) {
-        	
-        	tx.rollback();
-            ex.printStackTrace();
-        }finally{
-        	
-        }
-        return done;
-		
-	}
+	        session = OpenHRSessionFactory.getInstance().getCurrentSession();
+	        Transaction   tx = session.beginTransaction();
+	        try {
+	        	session.save(e);
+	        	
+	        	session.save(ep);
+	        	session.save(empsal);
+	        	tx.commit();
+	            done = true;
+	        } catch (Exception ex) {
+	        	
+	        	tx.rollback();
+	            ex.printStackTrace();
+	        }finally{
+	        	
+	        }
+	        return done;
+			
+		}
 	
 	
 	
