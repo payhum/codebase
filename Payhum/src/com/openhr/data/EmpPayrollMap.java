@@ -26,6 +26,7 @@ import com.openhr.common.PayhumConstants;
 @XmlRootElement
 @NamedQueries({
    @NamedQuery(name = "EmpPayrollMap.findAll", query = "SELECT p FROM EmpPayrollMap p"),
+   @NamedQuery(name = "EmpPayrollMap.findByPayDateId",query ="select emap from  EmpPayrollMap emap, Payroll pr where pr.id=emap.payrollId and pr.payDateId= ?"),
    @NamedQuery(name = "EmpPayrollMap.findByEmpPayrollId", query = "SELECT p FROM EmpPayrollMap p WHERE p.emppayId = ?"),
    @NamedQuery(name = "EmpPayrollMap.findByEmpPayrollIdAndPayrollId", query = "SELECT p FROM EmpPayrollMap p WHERE p.emppayId = ? AND p.payrollId = ?")})
 public class EmpPayrollMap implements Serializable {

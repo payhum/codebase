@@ -4,68 +4,47 @@ import org.apache.struts.action.ActionForm;
 
 public class GlReportForm extends ActionForm{
 	
-	private Integer id;
-	 private String accno;
-	 
-	 private String accname;
-	 
-	 private Double debit;
-	 
-	 private Double credit;
-	 
-	 private Double sumcredit;
-	 private Double sumdebit;
-	 
-	 private long date;
-	 
-	 
-	public long getDate() {
-		return date;
+	private Double credt;
+	
+    private String empName; 
+    
+    private  String ename;
+    
+    private Double debit;
+
+	public Double getCredt() {
+		return credt;
 	}
-	public void setDate(long date) {
-		this.date = date;
+
+	public void setCredt(Double credt) {
+		this.credt = credt;
 	}
-	public Integer getId() {
-		return id;
+
+	public String getEmpName() {
+		return empName;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+
+	public void setEmpName(String empName) {
+		this.empName = empName;
 	}
-	public String getAccno() {
-		return accno;
+
+	public String getEname() {
+		return ename;
 	}
-	public void setAccno(String accno) {
-		this.accno = accno;
+
+	public void setEname(String ename) {
+		this.ename = ename;
 	}
-	public String getAccname() {
-		return accname;
-	}
-	public void setAccname(String accname) {
-		this.accname = accname;
-	}
+
 	public Double getDebit() {
 		return debit;
 	}
+
 	public void setDebit(Double debit) {
 		this.debit = debit;
 	}
-	public Double getCredit() {
-		return credit;
-	}
-	public void setCredit(Double credit) {
-		this.credit = credit;
-	}
-	public Double getSumcredit() {
-		return sumcredit;
-	}
-	public void setSumcredit(Double sumcredit) {
-		this.sumcredit = sumcredit;
-	}
-	public Double getSumdebit() {
-		return sumdebit;
-	}
-	public void setSumdebit(Double sumdebit) {
-		this.sumdebit = sumdebit;
-	}
-
+    
+    
+    
+    
 }

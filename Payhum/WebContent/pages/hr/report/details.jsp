@@ -89,7 +89,7 @@
 
 
 
-{ field : "baseSalary", title : " Hours",    width : 100  },
+
 { field : "grossSalary", title : "Gross Pay",    width : 100  },
 
 { field : "baseSalary", title : "Tax Withheld",    width : 100  },

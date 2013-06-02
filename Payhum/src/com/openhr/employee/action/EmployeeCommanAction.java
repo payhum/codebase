@@ -22,6 +22,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
 import com.openhr.data.DeductionsType;
+import com.openhr.data.Department;
 import com.openhr.data.Dtest;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpDependents;
@@ -60,17 +61,26 @@ public class EmployeeCommanAction extends DispatchAction
 			try
 			
 			{
+				
 			JSONArray json = JSONArray.fromObject(sb.toString());
 			Collection<EmployeeDepartFrom> aCollection = JSONArray.toCollection(json, EmployeeDepartFrom.class);
+			JsonConfig config = new JsonConfig();
+			config.setIgnoreDefaultExcludes(false);
+			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			
 			for (EmployeeDepartFrom eFromJSON : aCollection) {
 				System.out.println(eFromJSON.getId());
 				
-				Roles r=new Roles();
-				r.setId(Integer.valueOf(eFromJSON.getId()));
-				Users u=new Users();
-				u.setRoleId(r);
-				List<Users> eptx=UsersFactory.findByRoleId(u);
-				result = JSONArray.fromObject(eptx);
+				Department d=new Department();
+				d.setId(Integer.valueOf(eFromJSON.getId()));
+				Employee e=new Employee();
+				
+				e.setDeptId(d);
+				//List<Users> eptx=UsersFactory.findByRoleId(e);
+				 
+				List<Employee> lis=EmployeeFactory.findAllEmpPerDepart(d);
+				
+				result = JSONArray.fromObject(lis,config);
 				
 				
 			}

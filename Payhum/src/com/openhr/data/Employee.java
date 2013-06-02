@@ -42,11 +42,13 @@ import com.openhr.common.PayhumConstants;
 		@NamedQuery(name = "Employee.findByFirstname", query = "SELECT e FROM Employee e WHERE e.firstname = ?"),
 		@NamedQuery(name = "Employee.findByMiddlename", query = "SELECT e FROM Employee e WHERE e.middlename = ?"),
 		@NamedQuery(name = "Employee.findByLastname", query = "SELECT e FROM Employee e WHERE e.lastname = ?"),
+		@NamedQuery(name = "Employee.findBySex", query = "SELECT e FROM Employee e WHERE e.sex = ?"),
 		@NamedQuery(name = "Employee.findByBirthdate", query = "SELECT e FROM Employee e WHERE e.birthdate = ?"),
 		@NamedQuery(name = "Employee.findByDeptID", query = "SELECT e FROM Employee e WHERE e.deptId = ?"),
 		@NamedQuery(name = "Employee.findByHiredate", query = "SELECT e FROM Employee e WHERE e.hiredate = ?"),
 		@NamedQuery(name = "Employee.findActiveByDeptID", query = "SELECT e FROM Employee e WHERE e.status = 'ACTIVE' AND e.deptId = ?"),
 		@NamedQuery(name = "Employee.findAllActive", query = "SELECT e FROM Employee e, Department d, Branch b, Company c WHERE e.status = 'ACTIVE' AND e.deptId=d.id and d.branchId=b.id and b.companyId=c.id and c.id= ?"),
+        @NamedQuery(name = "Employee.findAllPostionID", query = "SELECT e FROM Employee e WHERE e.positionId = ?"),
 		@NamedQuery(name = "Employee.findAllActiveByBranch", query = "SELECT e FROM Employee e, Department d WHERE e.status = 'ACTIVE' AND d.branchId = ? "
 				+ " AND e.deptId = d.id"),
 		@NamedQuery(name = "Employee.findInActiveByDeptIDAndDate", query = "SELECT e FROM Employee e WHERE e.status = 'IN ACTIVE' AND e.deptId = ? AND"

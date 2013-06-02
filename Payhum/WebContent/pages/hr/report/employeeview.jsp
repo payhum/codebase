@@ -7,13 +7,18 @@
 }
 </style>
 <div id="grid">
+
+	
+	<a href='<%=request.getContextPath() + "/do/PDFActions?parameter=employeeViewPDF"%>'> <span id="rpsm"></span> <span id="rpsm1">Export
+				PDF Report</span></a>
+	
 	</div>
 <div id="empForm">
 </div>
 <script> 
 
 var createNewEmpForm;
-
+var pdfOBjt;
 
 var empWindow;
 
@@ -31,7 +36,8 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/report/employeevie
 	           		read : {
 	           			url : "<%=request.getContextPath() + "/do/ReadEmployeeViewAction"%>",
 	           			dataType : "json",
-	           			cache : false
+	           			cache : false,
+	           			complete: function (jqXHR, responseText) {pdfOBjt=jqXHR.responseText;}
 	           		},
 	            
 	                parameterMap : function(options, operation){
@@ -73,20 +79,18 @@ $("#grid").kendoGrid({
 	            columns : [
 					
 	                
-					{ field : "accno", title : "Account Number", width : 120 },
-	                { field : "accname", title : "Account Name", width : 150 },
-	                
-	                { field : "employeeId", title : "Employee",   groupable : false, template: '#=employeeId ? employeeId.firstname+"."+employeeId.middlename: ""#', width : 100  },
-
-	                
-	                { field : "debit", title : "Debit", width : 50 },
-	                { field : "credit", title : "Credit", width : 50 },
-	                { field : "date", title : "Date", template : "#= kendo.toString(new Date(date) , 'dd/MM/yyyy') #", width : 100 }
+					{ field : "ename", title : "Name", width : 120 },
+	                { field : "empName", title : "EmpName", width : 150 },
 	                
 	               
+	                
+	                { field : "debit", title : "Debit", width : 50 },
+	                { field : "credt", title : "Credit", width : 50 }
+	              
+	                	               
 	                ],             
 	        
-	                toolbar : [{"name" : "create", className : "newEmp", text : "Search General Ledger Employee View" }],
+	                
 	            sortable: true,  
 	            scrollable : true,
 	            height : 500,
@@ -99,7 +103,21 @@ $("#grid").kendoGrid({
 	        });
 	         
 	  });    
+    $("#pdfEmp1").bind("click", function(){
+    	
+    	
+    	
+    	
+    	
+    	
     
+    	
+    	
+    	
+    	
+    	
+    	
+    }); 
     </script>  
 
 

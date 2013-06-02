@@ -1,6 +1,7 @@
 package com.openhr.data;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -53,7 +54,13 @@ public class PayrollDate implements Serializable {
 		this.id = id;
 	}
 	
-	public Date getRunDate() {
+	public String getRunDate() {
+		 SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
+		 String d=sdf.format(runDate);
+		return d;
+	}
+	
+	public Date getRunDateofDateObject() {
 		return runDate;
 	}
 	

@@ -91,6 +91,18 @@
 			
 		</action>
 
+
+<!--   PDF Start-->
+
+
+		
+		<action path="/PDFActions" name="employeeForm" parameter="parameter"
+			type="com.openhr.pdfreports.PDFActions" >
+			<forward name="admin" path="/do/AdminHome" />
+			
+		</action>
+<!---PDF End-->
+
 <!-- Start Read Payroll actions  -->
 <action path="/ReadPayDetailsAction" name="employeeForm" 
 			type="com.openhr.payroll.action.ReadPayDetailsAction"  input="/pages/hr/report/employeeviewform.jsp">

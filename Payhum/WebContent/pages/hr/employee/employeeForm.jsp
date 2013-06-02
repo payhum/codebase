@@ -3,12 +3,12 @@
 <%Config.readConfig();%>
 <div id="employeeForm">
 	<div class="clear"></div>
-	<div style="border:1px solid #666;float:left;height: 380px;">
-	
-	<div id="sec1"  style="float:left;margin-top: -20px">Personal Details</div>
+	<fieldset style="margin-top: -22px;">
+  <legend>PersonalDetials:</legend>
+	<div style="float:left;height: 380px;">
 	<div id="left-col">
 		<div>
-			<div class="label">Employee ID</div>
+			<div class="label">EMP-ID</div>
 			<div class="field">
 				<input type="text" readonly="readonly" class="k-input k-textbox" id="employeeId"  
 				value="<%=Config.employeeIdPattern + "-" + EmployeeIdUtility.nextId()%>" />
@@ -17,7 +17,7 @@
 		</div>
 
 <div>
-			<div class="label">National ID</div>
+			<div class="label">EMP-NationalID</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
 			</div>
@@ -25,7 +25,7 @@
 		</div>
 
 		<div>
-			<div class="label">First Name</div>
+			<div class="label">First name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="firstname"  value="" />
 			</div>
@@ -35,7 +35,7 @@
 
 
 		<div>
-			<div class="label">Middle Name</div>
+			<div class="label">Middle name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="middlename"  value="" />
 			</div>
@@ -45,7 +45,7 @@
 
 
 		<div>
-			<div class="label">Last Name</div>
+			<div class="label">Last name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="lastname"  value="" />
 			</div>
@@ -70,7 +70,7 @@
 		</div>
 		
 	<div>
-			<div class="label">Birth Date</div>
+			<div class="label">Birth date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="birthdate" value="" />
@@ -90,7 +90,7 @@
 	</div>
 	<div id="right-col">
 		<div>
-			<div class="label">Sex</div>
+			<div class="label" style="width: 160px;">Sex</div>
 			<div class="field" >
 					<label for="sexmale">
 				<input  type="radio" id="sexm" value="Male" name="sex" />
@@ -108,7 +108,7 @@
 
 			
 <div>
-<div class="label">Marital Status</div>
+<div class="label">Family</div>
 			<label for="family_single">
 				<input  type="radio" id="family_single" value="false" name="family"  />
 				Single
@@ -128,16 +128,16 @@
 
 	
 <div>
-			<div class="label">Emergency Contact Name</div>
+			<div class="label" >Emergency Contact Name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="contName"  value="" />
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div>
-<div class="label">Emergency Contact No</div>
+<div class="label" style="width: 160px;">Emergency Contact Num</div>
 			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="contNumber"  value="" />
+				<input type="text" style="margin-top: -2px; margin-right: -60px;" required=required class="k-input k-textbox" id="contNumber"  value="" />
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -147,7 +147,7 @@
 		
 		
 		<div>
-<div class="label">Passport No</div>
+<div class="label" >Passport No</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="passNo"  value="" />
 			</div>
@@ -155,7 +155,7 @@
 		</div>
 		
 		<div>
-			<div class="label">Passport Expiry Date</div>
+			<div class="label" style="width: 160px;">Passport Exp Date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="passExpDate" value="" />
@@ -164,7 +164,7 @@
 		</div>
 		
 		<div>
-			<div class="label">Passport Place of Issue</div>
+			<div class="label" style="width: 160px;">Passport Issue place</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="passPlace"  value="" />
 			</div>
@@ -185,10 +185,10 @@
 		
 	</div>
 </div>
-
-	<div style="border:1px solid #666;float:left;margin-top: 30px;height: 150px">
-	
-	<div id="sec1"  style="float:left;margin-top: -20px">Hiring Details</div>
+</fieldset>
+ <fieldset>
+  <legend>HireDetials:</legend>
+	<div style="float:left;height: 150px">
 
 
 	<div id="right-col">
@@ -200,7 +200,7 @@
 		
 		
 		<div>
-			<div class="label">Hire Date</div>
+			<div class="label">Hire date</div>
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="hiredate" value="" />
@@ -257,7 +257,7 @@
 	
 	<div id="left-col">
 	<div>
-			<div class="label">Accommodation Type </div>
+			<div class="label">AccommodationType </div>
 			<div class="field">
 				<input class="accommodationDropDownList" required=required class="k-input k-textbox"  id="accommodationVal"/>
 			</div>
@@ -292,6 +292,7 @@
 
 
 </div>
+</fieldset>
 <div id="left-col">
 <div>
 			<div class="field">
@@ -549,7 +550,7 @@
          			departId=$("#departVal").val();
          			sex=$('input:radio[name=sex]:checked').val();
          			paidTax=$('input:radio[name=status]:checked').val();
-         			status="Active";
+         			status="ACTIVE";
          			famly=$('input:radio[name=family]:checked').val();
          			
          			contName=$("#contName").val();

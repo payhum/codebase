@@ -7,13 +7,18 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.openhr.data.DeductionsType;
+import com.openhr.data.EmpDependents;
 import com.openhr.data.EmpPayTax;
+import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.EmployeeSalary;
 import com.openhr.data.OverTimePayRateData;
+import com.openhr.data.PayrollDate;
 import com.openhr.data.TaxRatesData;
+import com.openhr.data.TypesData;
 import com.openhr.factories.common.OpenHRSessionFactory;
 import com.openhr.taxengine.DeductionsDone;
 import com.openhr.taxengine.ExemptionsDone;
@@ -58,6 +63,29 @@ public class EmpPayTaxFactroy implements Serializable {
 		
 	}
 	
+	public static List<PayrollDate> findPayrollDates() {
+		Session session=null;
+			boolean flagSession=false;
+			session = OpenHRSessionFactory.getInstance().getCurrentSession();
+			if (session == null || session.isOpen() == false) 
+			{
+				flagSession=true;
+				 session=OpenHRSessionFactory.getInstance().openSession();
+			}
+			session.beginTransaction();
+			query = session.getNamedQuery("PayrollDate.findAll");
+			
+			List<PayrollDate> tyd = query.list();
+			session.getTransaction().commit();
+	if(flagSession)
+		
+	{
+		
+		System.out.println("flagSession --"+flagSession);
+		session.close();	
+	}
+			return tyd;
+		}
 	
 	public static boolean updateEmpPaytax(Employee e,EmployeePayroll ep,EmployeeSalary empsal) {
 		boolean done = false;
@@ -358,5 +386,71 @@ public class EmpPayTaxFactroy implements Serializable {
 		
 	}
 
+	public static List<EmpPayrollMap> findTaxMonthly(Integer a)
+	
+	{
+		
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		if(a==null||a==0)
+		{
+			
+			query = session.getNamedQuery("EmpPayrollMap.findAll");
+		}
+		else
+			{
+			query = session.getNamedQuery("EmpPayrollMap.findByPayDateId");
+			query.setInteger(0, a);
+			}
+	
+		List<EmpPayrollMap> empSalList = query.list();
+		session.getTransaction().commit();
+		return empSalList;
+	}
+	
+	
+	
+	public static  DeductionsDone  findDeductionDone(DeductionsType a, EmployeePayroll emp)
+	{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("DeductionsDone.findByEmpPayrollIdWithType");
+		query.setParameter(0, emp);
+		query.setParameter(1, a);
+		DeductionsDone decDone = (DeductionsDone) query.uniqueResult();
+		session.getTransaction().commit();
+		return decDone;
+	}
+	
+	public static  Long   findEmpDepdentsWithType(TypesData a, Employee emp){
+		
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+	    String hql = "select count(e.depType) from EmpDependents e where e.depType=? and e.employeeId=?";
+        Query query = session.createQuery(hql);
+        
+		query.setParameter(0, a);
+		query.setParameter(1, emp);
+       
+		
+        Long empDep = (Long)query.uniqueResult();
+		session.getTransaction().commit();
+		return empDep;
+	}
+	
+	public static EmpDependents  findEmpDepdentsWithType2(TypesData a, Employee emp){
+		
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmpDependents.findEmpWithDepType");
+		query.setParameter(0, emp);
+		query.setParameter(1, a);
+		EmpDependents decDone = (EmpDependents) query.uniqueResult();
+		session.getTransaction().commit();
+		return decDone;
+
+	}
+	
 	
 }
+

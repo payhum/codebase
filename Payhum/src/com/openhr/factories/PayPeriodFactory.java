@@ -71,7 +71,7 @@ public class PayPeriodFactory {
 		
 		// First remove all the payroll dates of next month and add new ones. 
 		for(PayrollDate pd : payrollDates) {
-			Date runDate = pd.getRunDate();
+			Date runDate = pd.getRunDateofDateObject();
 			Calendar runCal = Calendar.getInstance();
 			runCal.setTime(runDate);
 			

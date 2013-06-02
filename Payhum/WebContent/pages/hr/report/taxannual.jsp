@@ -5,7 +5,13 @@
 	display: none;
 }
 </style>
+
 <div id="grid">
+
+
+<a href='<%=request.getContextPath() + "/do/PDFActions?parameter=taxAnnualPdf"%>'> <span id="rpsm"></span> <span id="rpsm1">Export
+				PDF Report</span></a>
+
 	</div>
 <div id="empForm">
 
@@ -30,14 +36,7 @@ var taxDataSource;
 	           			dataType : "json",
 	           			cache : false
 	           		},
-	           		group: {
-                        field: "list", aggregates: [
-                           { field: "ProductName", aggregate: "count" },
-                           { field: "UnitPrice", aggregate: "sum"},
-                           { field: "UnitsOnOrder", aggregate: "average" },
-                           { field: "UnitsInStock", aggregate: "count" }
-                        ]
-                      },
+	           	
 
 	                parameterMap : function(options, operation){
 	           			if(operation !== "read" && options.models){	           				           				
@@ -56,25 +55,26 @@ $("#grid").kendoGrid({
 	            columns : [
 					
 	                
-					{ field : "employeeId", title : "Id", width : 120 },
-	                { field : "firstname", title : "Name", width : 150 },
+					
 	                
-	                { field : "positionId", title : "Desgniation",   groupable : false, template: '#=positionId ? positionId.name: ""#', width : 100  },
-	                { field : "positionId", title : "AnnualSalary",   groupable : false, template: '#=positionId ? positionId.salary: ""#', width : 100  },
+	                { field : "epay", title : "Id",   groupable : false, template: '#=epay? epay.employeeId.employeeId: ""#', width : 100  },
+	                { field : "epay", title : "Name",   groupable : false, template: '#=epay? epay.employeeId.firstname: ""#', width : 100  },
+	                { field : "epay", title : "Designation",   groupable : false, template: '#=epay? epay.employeeId.positionId.name: ""#', width : 100  },
+	              
+	                { field : "epay", title : "Salary",   groupable : false, template: '#=epay? epay.baseSalary: ""#', width : 50  },
 	                
-	                { field : "freeacom", title : "Value of free accomdation", width : 50 },
-	                { field : "disburse", title : "Other disbursements", width : 50 },
-	                { field : "sumsalary", title : "Total", width : 100 },
+	                { field : "epay", title : "Accomodation Amount",   groupable : false, template: '#=epay? epay.accomodationAmount: ""#', width : 100  },
+	               
+	                { field : "epay", title : " Others",   groupable : false, template: '#=epay? epay.bonus: ""#', width : 50  },
 	                
-	                { field : "sumGPF", title : "Sums  contributed to G.P.F", width : 50},
-	                { field : "lifeinsurance", title : "Life Insuranse premium Paid", width : 50 },
+	                { field : "epay", title : "Total",   groupable : false, template: '#=epay? epay.totalIncome: ""#', width : 50  },
+	                { field : "lifeinsurance", title : "Life Insuranse premium Paid", width : 100 },
 	                
-	                { field : "svaingsGovt", title : "Other savings recognized by Govt", width : 50 },
 	                
-	                { field : "sumGovt", title : "Total", width : 50 },
-	                { field : "wifetax", title : "Wife earned Taxable income with in that Year", width : 50 },
+	                {field : "spouse", title : "Spouse", width : 50 },
 	                {field : "childeren", title : "Children", width : 50 },
-	                {field : "incometaxdec", title : "Amount Income Tax deducted", width : 50 }
+	                { field : "epay", title : "Income Tax",   groupable : false, template: '#=epay? epay.taxAmount: ""#', width : 50  },
+
 	                ],             
 	        
 	                pageable: true,

@@ -10,6 +10,10 @@
 		
 		<a class="k-button k-icontext" id="saveEmp"><span class="k-add k-icon"></span>Search</a> <a
 					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel k-icon"></span>Cancel</a>
+
+<a class="k-button" href='#'
+		id="pdfEmp1"><span class="k-icon "></span>PDF</a>
+
 </span>
 
 				
@@ -237,7 +241,14 @@ var depClass;
             });
         	
         }
-        
+     $("#pdfEmp1").bind("click", function(){
+    	 
+         
+    	 window.location.href='<%=request.getContextPath() + "/do/PDFActions?parameter=empAcumPDF"%>';
+    		
+
+     
+     });
  });
 
 </script>

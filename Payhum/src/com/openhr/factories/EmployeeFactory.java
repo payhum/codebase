@@ -6,14 +6,13 @@ package com.openhr.factories;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.openhr.common.PayhumConstants;
-import com.openhr.company.Company;
 import com.openhr.data.Benefit;
 import com.openhr.data.Branch;
 import com.openhr.data.ConfigData;
@@ -24,7 +23,12 @@ import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.EmployeeSalary;
+import com.openhr.data.Position;
 import com.openhr.data.TypesData;
+import com.openhr.common.PayhumConstants;
+import com.openhr.company.Company;
+import com.openhr.data.Users;
+
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
@@ -497,7 +501,22 @@ if(flagSession)
 }
 		return tyd;
 	}
+	public static boolean findPostById(Position compID) throws Exception {
+		boolean flag=false;
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Employee.findAllPostionID");
+		query.setParameter(0, compID);
+		List<Position> plist= query.list();
+		
+		if(plist.size()>0)
+		{
+			flag=true;
+		}
+		session.getTransaction().commit();
 
+		return flag;
+	}	
 	public static Department findDepartById(Integer compID) throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();

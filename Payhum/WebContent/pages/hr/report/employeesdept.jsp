@@ -1,5 +1,5 @@
-<%@include file="../../common/jspHeader.jsp" %>
-<h2 class="legend">Employees By Dept</h2> 
+<%@include file="../../common/jspHeader.jsp"%>
+<h2 class="legend">Employees By Dept</h2>
 <style type="text/css">
 .k-grouping-header {
 	display: none;
@@ -33,14 +33,13 @@
 }
 </style>
 <div id="example" class="k-content">
-<div id="grid"><a href="#">
-<span id="rpsm"></span>
-<span id="rpsm1">Export PDF Report</span></a>
+	<div id="grid">
+		<a href='<%=request.getContextPath() + "/do/PDFActions?parameter=empDepartmentPdf"%>'> <span id="rpsm"></span> <span id="rpsm1">Export
+				PDF Report</span></a>
 	</div>
-<div id="empForm">
-</div>
+	<div id="empForm"></div>
 
-<script type="text/x-kendo-template" id="template">
+	<script type="text/x-kendo-template" id="template">
                 <div class="tabstrip">
                     <ul>
                         <li class="k-state-active">
@@ -57,7 +56,7 @@
                 </div>
 
             </script>
-<script> 
+	<script type="text/javascript"> 
 
 
 var empDataSource11;
@@ -143,56 +142,52 @@ $("#grid").kendoGrid({
     	 transport : {
         		read : {
         			type: 'POST',
-     				url : "<%=request.getContextPath() + "/do/EmployeeCommanAction?parameter=create"%>",
-					dataType : 'json',
-					contentType : 'application/json; charset=utf-8',
-					cache : false
+     				url : "<%=request.getContextPath()
+					+ "/do/EmployeeCommanAction?parameter=create"%>",
+								dataType : 'json',
+								contentType : 'application/json; charset=utf-8',
+								cache : false
 
-				},
+							},
 
-				parameterMap : function(data, type) {
-					if (type = "read") {
+							parameterMap : function(data, type) {
+								if (type = "read") {
 
-						return updateData;
-					}
+									return updateData;
+								}
 
-				}
-			},
+							}
+						},
 
-			autoSync : true,
-			batch : true
-		});
+						autoSync : true,
+						batch : true
+					});
 
-detailRow.find(".orders").kendoGrid(
+			detailRow.find(".orders").kendoGrid({
+
+				dataSource : empDataSource1,
+
+				scrollable : false,
+				sortable : true,
+				pageable : true,
+				columns : [
+
 				{
 
-					dataSource : empDataSource1,
+					field : "employeeId",
+					title : "Id",
 
-					scrollable : false,
-					sortable : true,
-					pageable : true,
-					columns : [
+					width : 120
+				}, {
 
-							{
-								
-								field : "employeeId",
-								title : "Id",
-								template : '#=employeeId ? employeeId.employeeId: ""#',
-								width : 120
-							},
-							{
-								
-								field : "employeeId",
-								title : "Name",
-								template : '#=employeeId ? employeeId.firstname+" "+employeeId.middlename: ""#',
-								width : 100
-							}
+					field : "employeeId",
+					title : "Name",
+					template : '#=employeeId ?firstname+" "+middlename: ""#',
+					width : 100
+				}
 
-					]
-				});
-}
-
-    
-   
-</script>
+				]
+			});
+		}
+	</script>
 </div>

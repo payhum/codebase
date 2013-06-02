@@ -167,6 +167,9 @@
 			class="k-icon "></span>Bank Account</a> <a class="k-button" href='#'
 		id="editEmp1"><span class="k-icon "></span>Edit</a>
 		
+		<a class="k-button" href='#'
+		id="pdfEmp1"><span class="k-icon "></span></a>
+	
 	</span>
 
 </div>
@@ -190,7 +193,7 @@ var depdentAge;
  var prvsId;
  var prvsSal;
  var bankId;
- 
+ var pdfOBjt;
 var postDropDownList;
  var occupationTypeDepdent=  $("#occupationTypeDepdent").val();
     $(document).ready(function(e){	
@@ -279,7 +282,8 @@ var postDropDownList;
 	           		read : {
 	           			url : "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>",
 	           			dataType : "json",
-	           			cache : false
+	           			cache : false,
+	           	    	complete: function (jqXHR, responseText) {pdfOBjt=jqXHR.responseText;}
 	           		},
 	                destroy : {
 	                    url : "<%=request.getContextPath() + "/do/DeleteEmployeeAction"%>",
@@ -974,6 +978,19 @@ e.preventDefault();
 	        	 empWindow.center();
 	        	 
 	         };
+	         
+	         
+	         $("#pdfEmp1").bind("click", function(){
+	        	 
+	         
+	        	 window.location.href='<%=request.getContextPath() + "/do/PDFActions?parameter=employeePDF"%>';
+	        		
+
+	         
+	         });
+	         
+	         
+	         
 	         $("#editEmp1").bind("click", function () {    
 				// alert("hello");
 	        // $("#grid").delegate(".editEmp", "click", function(e) {
@@ -1454,8 +1471,8 @@ e.preventDefault();
 <script type="text/x-kendo-template" id="employeeTemplate">
 <div id="employeeForm">
 	<div class="clear"></div>
- <fieldset>
-  <legend>Personal Details</legend>
+ <fieldset style="margin-top: -22px;">
+  <legend>PersonalDetials:</legend>
 	<div style="float:left;height: 380px;">
 	
 
@@ -1643,9 +1660,10 @@ e.preventDefault();
 	</div>
 </div>
  </fieldset>
-<fieldset>
-  <legend>Hiring Details</legend>
-	<div style="float:left;height: 180px">
+
+  <fieldset>
+  <legend>HireDetials:</legend>
+	<div style="float:left;height: 150px">
 	
 
 

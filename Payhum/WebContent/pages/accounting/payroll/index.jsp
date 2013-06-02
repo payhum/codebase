@@ -527,8 +527,8 @@ span.k-tooltip {
 
 	<div style="clear: both">
 		<input type="button" class="print" value="Print" />
-	
-		<img  height="42" width="80"  src="<%=request.getContextPath() + "/css/images/companyLogo/logo.jpg"%>" /> 
+
+		<img  height="42" width="80"  src="<%=request.getContextPath() + "/css/images/logo.jpg"%>" /> 
 	</div>
 					<div id="exampleSalryListWin" class="k-content">
 

@@ -6,6 +6,8 @@
 }
 </style>
 <div id="grid">
+		<a href='<%=request.getContextPath() + "/do/PDFActions?parameter=empAdressPdf"%>'> <span id="rpsm"></span> <span id="rpsm1">Export
+				PDF Report</span></a>
 	</div>
 <div id="empForm">
 </div>
@@ -50,9 +52,9 @@ $("#grid").kendoGrid({
 					
 	                
 					{ field : "employeeId", title : "Id", width : 120 },
-	                { field : "firstname", title : "Name", width : 100 },
+	                { field : "firstname", title : "Name", template: '#=firstname+"."+middlename#', width : 100 },
 	                
-	             {field : "adress", title : "Address", width : 100 }
+	             {field : "address", title : "Address", width : 100 }
 	                ],             
 	        
 	            

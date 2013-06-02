@@ -6,6 +6,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 
+import com.openhr.data.EmployeePayroll;
 import com.openhr.data.GLEmployee;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
@@ -35,13 +36,13 @@ public class GLEmployeeFactory {
 	}
 	
 	
-	public static List<GLEmployee> findCompanyView() throws Exception{
+	public static List<Object[]> findCompanyView() throws Exception{
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		String sql="";
-		String hql = "SELECT id,accno,accname, date,SUM(gl.debit), SUM(gl.credit)FROM GLEmployee gl GROUP BY gl.accname";
+		String hql = "SELECT SUM(e.netPay) as net, SUM(e.taxAmount) as tax ,SUM(e.totalDeductions) as dedc, sum(e.baseSalary), sum(e.allowances) from EmployeePayroll e" ;
 				Query query = session.createQuery(hql);
-				glemployees = query.list();
+				List<Object[]>	glemployees = query.list();
 				
 				session.getTransaction().commit();
 				

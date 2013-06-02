@@ -95,7 +95,7 @@ public class UsersFactory {
     public static List findEmpDepart() {
         session = OpenHRSessionFactory.getInstance().getCurrentSession();
         session.beginTransaction();
-        SQLQuery qry= session.createSQLQuery("select r.name, count(u.roleId) as total, u.roleId from roles r,users u where u.roleId=r.id group by  roleId");
+        SQLQuery qry= session.createSQLQuery("select d.deptname, count(e.deptId) as total, d.id from employee e,department d where d.id=e.deptId group by  e.deptId");
         
      lib = qry.list();
         session.getTransaction().commit();

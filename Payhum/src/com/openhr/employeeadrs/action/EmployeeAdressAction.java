@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -21,7 +23,7 @@ import com.openhr.factories.EmployeeFactory;
 
 
 public class EmployeeAdressAction extends Action{
-	private static List<EmployeeAdressForm> employees1 = new ArrayList<EmployeeAdressForm>();
+	
 	@Override
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -31,33 +33,21 @@ public class EmployeeAdressAction extends Action{
 		JSONArray result = null;
 		long start=0,end=0,diff=0;
 		try {
-			
+			JsonConfig config = new JsonConfig();
+			config.setIgnoreDefaultExcludes(false);
+			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 			List<Employee> employees = EmployeeFactory.findAll();
 			start=System.currentTimeMillis();
-			Iterator<Employee> it = employees.iterator();
-			while (it.hasNext()) {
-				
-				EmployeeAdressForm tm=new EmployeeAdressForm();
-				Employee e = it.next();
-				
-				tm.setEmployeeId(e.getEmployeeId());
-				tm.setFirstname(e.getFirstname()+"   "+e.getMiddlename());
-				tm.setId(e.getId());
-				
-				tm.setAdress("NONE");
-				employees1.add(tm);
-				
-			}
-			
-			
-			result = JSONArray.fromObject(employees1);
+	
+			result = JSONArray.fromObject(employees, config);
+
 			end=System.currentTimeMillis();
 			diff = end - start;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		System.out.println("It took " + diff +" milli seconds to read the results");
+		
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.print(result.toString());

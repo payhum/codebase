@@ -82,7 +82,7 @@ public class Report extends Action {
 		}
 
 		Calendar salaryProcessDate = Calendar.getInstance();
-		salaryProcessDate.setTime(payrollDate.getRunDate());
+		salaryProcessDate.setTime(payrollDate.getRunDateofDateObject());
 		List<Employee> activeEmpList = new ArrayList<Employee>();
 		List<Employee> inActiveEmpList = new ArrayList<Employee>();
 		
@@ -213,8 +213,8 @@ public class Report extends Action {
 			
 			if(!processed) {
 				// If this date is post the current date, but its not processed, lets process it.
-				if(currDate.after(payDate.getRunDate())
-				|| currDate.equals(payDate.getRunDate())) {
+				if(currDate.after(payDate.getRunDateofDateObject())
+				|| currDate.equals(payDate.getRunDateofDateObject())) {
 					return payDate;
 				} else {
 					// Current date is before the next processing date, so its an adhoc

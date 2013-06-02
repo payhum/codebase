@@ -16,18 +16,28 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import com.openhr.data.DeductionsType;
+import com.openhr.data.EmpDependents;
+import com.openhr.data.EmpPayTax;
 import com.openhr.data.Employee;
+import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Position;
+import com.openhr.data.TypesData;
+import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.EmployeeFactory;
 import com.openhr.tax.form.TaxAnnualForm;
+import com.openhr.taxengine.DeductionsDone;
 
 public class ReadTaxAnnualAction extends Action {
-	private static List<TaxAnnualForm> employees1 = new ArrayList<TaxAnnualForm>();
+
 
 	// private static Position p=null;
 	@Override
@@ -38,60 +48,70 @@ public class ReadTaxAnnualAction extends Action {
 		JSONArray result = null;
 		long start = 0, end = 0, diff = 0;
 		try {
-
-			List<Employee> employees = EmployeeFactory.findAll();
 			
-			//Employee e = null;
-			Iterator<Employee> it = employees.iterator();
-			StringBuilder sb = new StringBuilder();
-			while (it.hasNext()) {
-				//Object o1 = it.next();
-				TaxAnnualForm ta=new TaxAnnualForm();
-				Employee e = it.next();
-
-				Position p = e.getPositionId();
-
-				String s = p.getId().toString();
-
-				sb.append(s + "  ");
-
-				String s2[] = sb.toString().split(s);
-
-				if (!(s2.length > 2)) {
-					System.out.println(p.getId() + "---p.hashCode()---"
-							+ p.hashCode());
-					Double d = p.getLowSal();
-					p.setLowSal(((d) * 12));
-
-				}
-				
-				ta.setEmployeeId(e.getEmployeeId());
-				ta.setChilderen(0);
-				
-				ta.setFirstname(e.getFirstname()+"."+e.getMiddlename());
-				
-				ta.setId(e.getId());
-				ta.setIncometaxdec(0);
-				
-				ta.setLastname(e.getLastname());
-				
-				ta.setPositionId(p);
-				
-				ta.setFreeacom(0);
-				ta.setDisburse(0);
-				ta.setSumsalary(e.getPositionId().getLowSal()+0+0);
-				ta.setLifeinsurance(0);
-				ta.setSumGPF(0);
-				ta.setSvaingsGovt(0);
-				ta.setWifetax(0);
-				employees1.add(ta);
-				
-
-			}
-
+			JsonConfig config = new JsonConfig();
+			config.setIgnoreDefaultExcludes(false);
+			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			 List<TaxAnnualForm> employees1 = new ArrayList<TaxAnnualForm>();
+			List<EmployeePayroll> employees =EmpPayTaxFactroy.findAllEmpPayroll();
+			TaxAnnualForm ta=null;
+		
+for(EmployeePayroll emp:employees)
+{
+	 ta=new TaxAnnualForm();
+	 ta.setEpay(emp);
+	// int type=3;
+	 DeductionsType type=new DeductionsType();
+	 
+	 type.setId(3);
+	 DeductionsDone decDone=EmpPayTaxFactroy.findDeductionDone(type,emp);
+	 if(decDone==null)
+	 { ta.setLifeinsurance("0");
+		 
+	 }
+	
+	 else
+	 {
+		 ta.setLifeinsurance(decDone.getAmount().toString());
+	 }
+	 int typeDepdent=21;
+	 
+	 
+	 
+	 TypesData  typeData=new TypesData();
+	 typeData.setId(21);
+	 Long empDep= EmpPayTaxFactroy.findEmpDepdentsWithType(typeData,emp.getEmployeeId());
+	 Long ob=0l;
+	 if(empDep==ob)
+	 { ta.setChilderen("NA");
+		 
+	 }
+	
+	 else
+	 {
+		 ta.setChilderen(empDep.toString());
+	 }
+	 
+	 
+	 TypesData  typeData1=new TypesData();
+	 typeData1.setId(20);
+	 EmpDependents  empDep1= EmpPayTaxFactroy.findEmpDepdentsWithType2(typeData1,emp.getEmployeeId());
+	 
+	 if(empDep1==null)
+	 { ta.setSpouse("NA");
+		 
+	 }
+	
+	 else
+	 {
+		 ta.setSpouse(empDep1.getOccupationType().getName());
+	 }
+	 
+	 employees1.add(ta);
+}
 			start = System.currentTimeMillis();
 
-			result = JSONArray.fromObject(employees1);
+			result = JSONArray.fromObject(employees1,config);
 			end = System.currentTimeMillis();
 			diff = end - start;
 		} catch (Exception e) {

@@ -1,9 +1,7 @@
 package com.openhr.glreports.action;
 
-import java.io.File;
 import java.io.PrintWriter;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,14 +16,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import com.openhr.data.EmployeePayroll;
+import com.openhr.factories.EmpPayTaxFactroy;
+import com.openhr.glreports.form.GlReportForm;
 
-import com.openhr.data.Employee;
-import com.openhr.data.GLEmployee;
-import com.openhr.employeeadrs.action.EmployeeAdressForm;
-import com.openhr.factories.EmployeeFactory;
-import com.openhr.factories.GLEmployeeFactory;
-
-public class ReadEmployeeViewAction extends Action{
+public class ReadEmployeeViewAction extends Action {
 	@Override
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
@@ -33,29 +28,73 @@ public class ReadEmployeeViewAction extends Action{
 		// EmployeeForm EmployeeForm = (EmployeeForm) form;
 
 		JSONArray result = null;
-		long start=0,end=0,diff=0;
+		long start = 0, end = 0, diff = 0;
 		try {
 			JsonConfig config = new JsonConfig();
 			config.setIgnoreDefaultExcludes(false);
 			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
-			List<GLEmployee> glemployees = GLEmployeeFactory.findAll();
-			start=System.currentTimeMillis();
-		
-			for (GLEmployee emp : glemployees) {
-				
-				
-				//System.out.println("Birthdate " + new Date(emp.getDate()));
+			// List<GlReportForm> glemployees = new ArrayList<GlReportForm>();
+			List<EmployeePayroll> empPay = EmpPayTaxFactroy.findAllEmpPayroll();
+			start = System.currentTimeMillis();
+			List<GlReportForm> empFrm = new ArrayList<GlReportForm>();
+
+			GlReportForm glf = null;
+
+			for (EmployeePayroll emp : empPay) {
+
+				for (int i = 1; i < 6; i++)
+
+				{
+
+					glf = new GlReportForm();
+
+					switch (i) {
+					case 1:
+						glf.setEmpName(emp.getFullName());
+						glf.setEname("NetPay");
+						glf.setCredt(emp.getNetPay());
+						break;
+					case 2:
+						glf.setEname("TaxAmount");
+						glf.setEmpName(emp.getFullName());
+
+						glf.setCredt(emp.getTaxableIncome());
+						break;
+					case 3:
+						glf.setEname("Deductions");
+
+						glf.setEmpName(emp.getFullName());
+						glf.setCredt(emp.getTotalDeductions());
+						break;
+					case 4:
+						glf.setEname("Earnings");
+
+						glf.setEmpName(emp.getFullName());
+						glf.setDebit(emp.getBaseSalary());
+						break;
+					case 5:
+						glf.setEname("Allowanse");
+
+						glf.setEmpName(emp.getFullName());
+						glf.setDebit(emp.getAllowancesAmount());
+					}
+
+					empFrm.add(glf);
+				}
+
+				// System.out.println("Birthdate " + new Date(emp.getDate()));
+
 			}
-			
-			
-			result = JSONArray.fromObject(glemployees, config);
-			end=System.currentTimeMillis();
+
+			result = JSONArray.fromObject(empFrm, config);
+			end = System.currentTimeMillis();
 			diff = end - start;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		System.out.println("It took " + diff +" milli seconds to read the results");
+		System.out.println("It took " + diff
+				+ " milli seconds to read the results");
 		response.setContentType("application/json; charset=utf-8");
 		PrintWriter out = response.getWriter();
 		out.print(result.toString());
@@ -63,6 +102,5 @@ public class ReadEmployeeViewAction extends Action{
 
 		return map.findForward("");
 	}
-
 
 }

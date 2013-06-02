@@ -53,8 +53,7 @@ public class ReadActiveAction  extends Action{
 					String s2[] = sb.toString().split(s);
 
 					if (!(s2.length > 2)) {
-						System.out.println(p.getId() + "---p.hashCode()---"
-								+ p.hashCode());
+					
 						Double d = p.getLowSal();
 						p.setLowSal(((d) * 12));
 

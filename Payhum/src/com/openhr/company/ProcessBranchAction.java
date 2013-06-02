@@ -219,8 +219,8 @@ public class ProcessBranchAction extends Action{
 			if(!processed) {
 				// If this date is post the current date, but its not processed, lets process it.
 				Date currDate = new Date();
-				if(currDate.after(payDate.getRunDate())
-				|| currDate.equals(payDate.getRunDate())) {
+				if(currDate.after(payDate.getRunDateofDateObject())
+				|| currDate.equals(payDate.getRunDateofDateObject())) {
 					return 0;
 				} else {
 					// Current date is before the next processing date, so its an adhoc

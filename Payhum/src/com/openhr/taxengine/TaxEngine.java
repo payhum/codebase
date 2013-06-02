@@ -54,7 +54,7 @@ public class TaxEngine {
 			> Calculator.execute(emp);
 		 */
 		Calendar toBeProcessedFor = Calendar.getInstance();
-		toBeProcessedFor.setTime(payroll.getPayDateId().getRunDate());
+		toBeProcessedFor.setTime(payroll.getPayDateId().getRunDateofDateObject());
 		
 		List<EmployeePayroll> retList = new ArrayList<EmployeePayroll>();
 		List<PayrollDate> payrollDates = PayrollFactory.findAllPayrollDate();

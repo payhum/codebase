@@ -7,9 +7,14 @@
 </style>
 
 <div id="grid">
+
+
+
+
+<a href='<%=request.getContextPath() + "/do/PDFActions?parameter=companyViewPDF"%>'> <span id="rpsm"></span> <span id="rpsm1">Export
+				PDF Report</span></a>
 </div>
 <div id="empForm"></div>
-
 
 
 
@@ -75,22 +80,18 @@ var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/report/employeevie
 $("#grid").kendoGrid({
 	            dataSource : taxDataSource, 
 	            columns : [
-					
-	                
-					{ field : "accno", title : "Account Number", width : 120 },
-	                { field : "accname", title : "Account Name", width : 150 },
-	                
-	               
-
-	                
-	                { field : "sumcredit", title : "Debit", width : 50 },
-	                { field : "sumdebit", title : "Credit", width : 50 },
-	                { field : "date", title : "Date", template : "#= kendo.toString(new Date(date) , 'dd/MM/yyyy') #", width : 100 }
-	                
-	               
-	                ],             
-	        
-	                toolbar : [{"name" : "create", className : "newEmp", text : "Search General Ledger Company View" }],
+	   					
+	   	                
+	   					{ field : "ename", title : "Name", width : 120 },
+	   	               
+	   	               
+	   	                
+	   	                { field : "debit", title : "Debit", width : 50 },
+	   	                { field : "credt", title : "Credit", width : 50 }
+	   	              
+	   	                	               
+	   	                ],             
+	              
 	            sortable: true,  
 	            scrollable : true,
 	            height : 500,

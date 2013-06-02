@@ -5,7 +5,10 @@
 	display: none;
 }
 </style>
+
 <div id="grid">
+	<a  href='<%=request.getContextPath() + "/do/PDFActions?parameter=payRollSummaryPDF"%>'> <span id="rpsm"></span> <span id="rpsm1">Export
+				PDF Report</span></a>
 	</div>
 <div id="empForm">
 </div>
@@ -50,7 +53,7 @@ $("#grid").kendoGrid({
                 
                 
                 
-                { field : "baseSalary", title : " Hours",    width : 100  },
+             
                 { field : "grossSalary", title : " Gross Pay",    width : 100  },
                 
                 { field : "baseSalary", title : "Tax Withheld",    width : 100  },

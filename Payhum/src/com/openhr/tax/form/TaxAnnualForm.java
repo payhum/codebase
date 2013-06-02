@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.struts.action.ActionForm;
 
+import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Position;
 
 public class TaxAnnualForm  extends ActionForm {
@@ -30,15 +31,18 @@ public class TaxAnnualForm  extends ActionForm {
     
     private Integer sumGPF;
     
-    private double lifeinsurance;
+    private String lifeinsurance;
     private double svaingsGovt;
     private double sumGovt;
     
     private double wifetax;
-    private Integer childeren;
+    private String childeren;
     private double incometaxdec;
     private boolean logic;
     
+    private EmployeePayroll epay;
+    
+    private String spouse;
     
     
  private List lit;
@@ -49,6 +53,24 @@ public class TaxAnnualForm  extends ActionForm {
     public List getLit() {
 	return lit;
 }
+    
+    
+    
+    
+public String getSpouse() {
+		return spouse;
+	}
+
+
+
+
+	public void setSpouse(String spouse) {
+		this.spouse = spouse;
+	}
+
+
+
+
 public void setLit(List lit) {
 	this.lit = lit;
 }
@@ -112,10 +134,10 @@ public void setLit(List lit) {
 	public void setSumGPF(Integer sumGPF) {
 		this.sumGPF = sumGPF;
 	}
-	public double getLifeinsurance() {
+	public String getLifeinsurance() {
 		return lifeinsurance;
 	}
-	public void setLifeinsurance(double lifeinsurance) {
+	public void setLifeinsurance(String lifeinsurance) {
 		this.lifeinsurance = lifeinsurance;
 	}
 	public double getSvaingsGovt() {
@@ -136,10 +158,10 @@ public void setLit(List lit) {
 	public void setWifetax(double wifetax) {
 		this.wifetax = wifetax;
 	}
-	public Integer getChilderen() {
+	public String getChilderen() {
 		return childeren;
 	}
-	public void setChilderen(Integer childeren) {
+	public void setChilderen(String childeren) {
 		this.childeren = childeren;
 	}
 	public double getIncometaxdec() {
@@ -159,6 +181,12 @@ public void setLit(List lit) {
 	}
 	public void setDisburse(double disburse) {
 		this.disburse = disburse;
+	}
+	public EmployeePayroll getEpay() {
+		return epay;
+	}
+	public void setEpay(EmployeePayroll epay) {
+		this.epay = epay;
 	}
 
 	

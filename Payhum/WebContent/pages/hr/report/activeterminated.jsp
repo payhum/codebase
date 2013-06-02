@@ -5,7 +5,10 @@
 	display: none;
 }
 </style>
-<div id="grid"></div>
+<div id="grid">
+		<a href='<%=request.getContextPath() + "/do/PDFActions?parameter=empActivePdf"%>'> <span id="rpsm"></span> <span id="rpsm1">Export
+				PDF Report</span></a>
+	</div>
 <div id="empForm"></div>
 
 
