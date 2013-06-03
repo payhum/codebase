@@ -49,15 +49,10 @@
 											complete : function(data,
 													responseText) {
 
-												alert(JSON.stringify(data));
-
-												alert(responseText);
 												if (responseText == "success") {
-
-													alert("alredy in Use");
+													alert("Cannot be deleted as there are employee records referring this title.")
 												} else if (responseText == "parsererror") {
 
-													//alert("delete sucess");
 												}
 
 												usrDataSource.read();

@@ -35,7 +35,20 @@
                         url : "<%=request.getContextPath() + "/do/DeleteBenefitTypeAction"%>",
                         dataType : 'json',
                         contentType : 'application/json; charset=utf-8',
-                        type : 'POST'
+                        type : 'POST',
+                        cache : false,
+						complete : function(data,
+								responseText) {
+
+							if (responseText == "success") {
+								alert("Cannot be deleted as there are employee benefit records referring this type.")
+							} else if (responseText == "parsererror") {
+
+							}
+
+							usrDataSource.read();
+
+						}
                     },
                     parameterMap: function(options, operation) {
                         if (operation !== "read" && options.models) {
