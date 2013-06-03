@@ -64,72 +64,86 @@ public class BankFile extends Action {
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMyyyy");
 		
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(comp, cal.getTime());
-		StringBuilder allEmpPayStr = new StringBuilder();
-		// Populate the header.
-		allEmpPayStr.append("Section 1: Deposit request record for employees.\n");
-		allEmpPayStr.append("Company Name");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Company ID");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee Name");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee ID");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee National ID / Passport No");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Bank Name");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Bank Branch");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Routing Number");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Account Number");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Payroll Cycle");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Amount");
-		allEmpPayStr.append("\n");
+		String[] supportedCurrencies = new String [4];
+		supportedCurrencies[0] = PayhumConstants.CURRENCY_MMK;
+		supportedCurrencies[1] = PayhumConstants.CURRENCY_USD;
+		supportedCurrencies[2] = PayhumConstants.CURRENCY_EURO;
+		supportedCurrencies[3] = PayhumConstants.CURRENCY_POUND;
 		
-		for(CompanyPayroll compPay : compPayroll) {
-			if(compPay.getBankName().equals("-")) {
-				// Its Employee who is paid by cash, include it in separate file.
-				totalTaxAmt += compPay.getTaxAmount();
-				totalSSAmt += compPay.getSocialSec();
-				continue;
+		StringBuilder allEmpPayStr = new StringBuilder();
+		int sectionCounter = 1;
+		
+		for(int i = 0; i < supportedCurrencies.length; i++) {
+			if(hasEmpWithThisCurrency(supportedCurrencies[i], compPayroll)) {
+				// Populate the header.
+				allEmpPayStr.append("Section " + sectionCounter++ + ": Deposit request for employees in " + supportedCurrencies[i] + " .\n");
+				allEmpPayStr.append("Company Name");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Company ID");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee Name");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee ID");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee National ID / Passport No");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Bank Name");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Bank Branch");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Routing Number");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Account Number");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Payroll Cycle");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Amount(" + supportedCurrencies[i] + ")");
+				allEmpPayStr.append("\n");
+				
+				for(CompanyPayroll compPay : compPayroll) {
+					if(compPay.getBankName().equals("-")) {
+						// Its Employee who is paid by cash, include it in separate file.
+						totalTaxAmt += compPay.getTaxAmount();
+						totalSSAmt += compPay.getSocialSec();
+						continue;
+					}
+					
+					if(compPay.getCurrencySym().equalsIgnoreCase(supportedCurrencies[i])) {
+						StringBuilder empPayStr = new StringBuilder();
+						empPayStr.append(compPay.getCompanyId().getName());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getCompanyId().getId());
+						empPayStr.append(COMMA);			
+						empPayStr.append(compPay.getEmpFullName());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getEmployeeId());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getEmpNationalID());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getBankName());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getBankBranch());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getRoutingNo());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getAccountNo());
+						empPayStr.append(COMMA);
+						empPayStr.append(sdf.format(compPay.getProcessedDate()));
+						empPayStr.append(COMMA);
+						empPayStr.append(new DecimalFormat("###.##").format(compPay.getNetPay()));
+						empPayStr.append("\n");
+						
+						totalTaxAmt += compPay.getTaxAmount();
+						totalSSAmt += compPay.getSocialSec();
+						
+						allEmpPayStr.append(empPayStr);
+					}
+				}
 			}
-			
-			StringBuilder empPayStr = new StringBuilder();
-			empPayStr.append(compPay.getCompanyId().getName());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getCompanyId().getId());
-			empPayStr.append(COMMA);			
-			empPayStr.append(compPay.getEmpFullName());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getEmployeeId());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getEmpNationalID());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getBankName());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getBankBranch());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getRoutingNo());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getAccountNo());
-			empPayStr.append(COMMA);
-			empPayStr.append(sdf.format(compPay.getProcessedDate()));
-			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(compPay.getNetPay()));
-			empPayStr.append(compPay.getCurrencySym());
-			empPayStr.append("\n");
-			
-			totalTaxAmt += compPay.getTaxAmount();
-			totalSSAmt += compPay.getSocialSec();
-			
-			allEmpPayStr.append(empPayStr);
 		}
 		
-		allEmpPayStr.append("\nSection 2: Deposit request for total tax amount for specific pay cycle.\n");
+		
+		allEmpPayStr.append("\nSection " + sectionCounter++ + ": Deposit request for total tax amount for specific pay cycle.\n");
 		allEmpPayStr.append("Company Name");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Company ID");
@@ -151,7 +165,7 @@ public class BankFile extends Action {
 		allEmpPayStr.append(new DecimalFormat("###.##").format(totalTaxAmt));
 		allEmpPayStr.append("\n");
 		
-		allEmpPayStr.append("\nSection 3: Deposit request for total SS amount for specific pay cycle.\n");
+		allEmpPayStr.append("\nSection " + sectionCounter++ + ": Deposit request for total SS amount for specific pay cycle.\n");
 		allEmpPayStr.append("Company Name");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Company ID");
@@ -178,5 +192,16 @@ public class BankFile extends Action {
 		os.close();
 		
 		return map.findForward("masteradmin");
+	}
+
+	private boolean hasEmpWithThisCurrency(String currency,
+			List<CompanyPayroll> compPayroll) {
+		for(CompanyPayroll compPay : compPayroll) {
+			if(compPay.getCurrencySym().equalsIgnoreCase(currency)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
