@@ -25,6 +25,8 @@ import com.openhr.data.EmployeePayroll;
 @Table(name = "deduction_done", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "DeductionsDone.findAll", query = "SELECT e FROM  DeductionsDone e"),
+    @NamedQuery(name = "DeductionsDone.findByEmpPayrollIdWithType", query = "select dd from  DeductionsDone  dd where dd.payrollId=? and dd.type=?"),
+
     @NamedQuery(name = "DeductionsDone.findByEmpPayrollId", query = "SELECT e FROM  DeductionsDone e where e.payrollId = ?")})
 public class DeductionsDone implements Serializable {
 	private static final long serialVersionUID = 1L;

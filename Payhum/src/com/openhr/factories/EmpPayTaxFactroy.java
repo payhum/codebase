@@ -408,7 +408,27 @@ public class EmpPayTaxFactroy implements Serializable {
 		return empSalList;
 	}
 	
+	public static EmpPayrollMap findTaxMonthlyForEmployee(Integer a, EmployeePayroll emp)
 	
+{
+		
+
+
+
+
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+
+			query = session.getNamedQuery("EmpPayrollMap.findByEmpPayrollIdAndPayrollId");
+			query.setParameter(0, emp);
+			
+			query.setInteger(1, a);
+		EmpPayrollMap empSalList =(EmpPayrollMap) query.uniqueResult();
+		session.getTransaction().commit();
+		return empSalList;
+
+
+}
 	
 	public static  DeductionsDone  findDeductionDone(DeductionsType a, EmployeePayroll emp)
 	{

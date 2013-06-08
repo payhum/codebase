@@ -97,7 +97,7 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
                         pageable		: true,
                         detailTemplate	: kendo.template($("#template").html()),
                         detailInit		: detailInit,       
-        	            toolbar : [{"name" : "create", className : "newCmp", text : "Add New Company" }, {"name" : "delete", className : "deleteCmp displayClass", text : "Delete Company" }, {"name" : "edit", className : "editCmp displayClass", text : "Edit Company" }, {"name" : "license", className : "editLicense displayClass", text : "Renew License" }, {"name" : "dwndLicense", className : "dwndLicense displayClass", text : "Download License File" }],
+        	            toolbar : [{"name" : "addBranch", className : "addBranch displayClass", text : "Add Branch" }, {"name" : "addDept", className : "addDept displayClass", text : "Add Department" }],
 
                          columns : [
  									{ template:'#=companyId.companyId ? companyId.id: ""#', width : 1},  								
@@ -158,11 +158,9 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
    	        	  vk = cId;
 	        	 
    	        	 createBranch();
-   	        	  
-	        	 
-	        	 
-           		 empWindow.open();
+   	        	 empWindow.open();
            		 empWindow.center();       
+           		 empDataSource.read();
    	         });
    	         
    	         
@@ -188,6 +186,7 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
     	        	 createDepartment();
             		 empWindow.open();
             		 empWindow.center();       
+            		 empDataSource.read();
     	         });
     	         
     	         
@@ -341,13 +340,10 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
                     type: "POST",
                     url: "<%=request.getContextPath() + "/do/GenLicenseFile"%>",
                     data: {cId : cId},
-                    success: function(data) {
-                    	alert(data);
+                    success: function(data) {                
+                        alert(data);
                     }
                 });
-            	
-            	$.download('/do/GenLicenseFile','cId=' + cId,'post');
-            	
             });
             
             $("#grid").delegate(".editBranch", "click", function(e) {
@@ -595,7 +591,11 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
 								columns : [
 										{ field : "id", title : "Branch	Id",template: '#=id ? "B-"+id : "" #', width : 120}, 
 										{ field : "name", title : "Branch Name", width : 120},
-										{ field : "address", title : "Branch Address", width : 120 }
+										{ field : "address", title : "Branch Address", width : 120 },
+										{
+						                    command: [{name : "edit", text: "Edit", className: "editBranch"}, {name : "delete", text : "Delete", className: "deleteBranch" }], width:200, filterable:false
+						                }
+
 								]
 							});
 			
@@ -607,7 +607,10 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
 						columns : [ 
 							{ field : "id", title : "Department	Id",template: '#=id ? "D-"+id : "" #', width : 120}, 
 							{ field : "deptname", title : "Department Name", width : 120 },
-							{ field : "branchId.name", title : "Branch Name", width : 120 }
+							{ field : "branchId.name", title : "Branch Name", width : 120 },
+							{
+			                    command: [{name : "edit", text: "Edit", className: "editDept"}, {name : "delete", text : "Delete", className: "deleteDept" }], width:200, filterable:false
+			                }
 						 ]
 					}); 
 			

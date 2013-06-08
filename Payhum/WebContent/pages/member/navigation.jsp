@@ -8,14 +8,19 @@
 
 <div id="pay_summary_cont" style="width: 650px; display: none">
 	
+	<div id="payDateDiv">
 	
-	
-	
-
+	SelectDates<input class="payRollDatesDropDownList" id="payRollDates"/>
+	<a class="k-button k-icontext" id="saveEmp"><span class="k-add k-icon"></span>Search</a> <a
+					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel k-icon"></span>Cancel</a>
+					
+					
+		</div>			
+<div id="paySlipDiv">
 	<div style="clear: both">
 		<input type="button" class="print" value="Print" />
 	
-		<img  height="42" width="80"  src="<%=request.getContextPath() + "/css/images/companyLogo/logo.jpg"%>" /> 
+<img  height="42" width="80"  src="<%=request.getContextPath() + "/css/images/logo.jpg"%>" /> 
 	</div>
 					<div id="exampleSalryListWin" class="k-content">
 
@@ -26,27 +31,17 @@
 						<script id="row-SalryListWin" type="text/x-kendo-template">
 					
        
-       
-<h3 style="float: right">#=employeeId.deptId.branchId.companyId.name#</h3>
+       <h3 style="float: left">Company </h3>
+<h3 style="float: right">#=emppayId.employeeId.deptId.branchId.companyId.name#</h3>
 <hr style="clear: both">
-		<h3 style="float: right">#=employeeId.firstname#</h3>
-		<hr style="clear: both">
+		
 	</div>
 	<div>
-		<h3 style="float: left">Basic</h3>
+		<h3 style="float: left">Name </h3>
+<h3 style="float: right">#=emppayId.employeeId.firstname+"."+emppayId.employeeId.firstname#</h3>
 		<hr style="clear: both" />
 	</div>
-	<div>
-		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Salary</p>
-		</div>
-		<div style="float: right">
-<h3 style="float: right">#=kendo.toString(employeeId.positionId.salary, "n2")#</h3>
-
-
-		</div>
-		<div style="clear: both"></div>
-	</div>
+	
     </script>
 		</div>		
 	
@@ -71,40 +66,35 @@
 	
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Allowances</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">NetPay</p>
 		</div>
 		<div style="float: right">
-			MMK #=kendo.toString(allowances, "n2")#
+			MMK #=kendo.toString(netPay, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
 
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Accomodationtion</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">TaxAmont</p>
 		</div>
 		<div style="float: right">
-	MMK #=kendo.toString(accomodationAmount, "n2")#
+	MMK #=kendo.toString(taxAmount, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">taxableOverseasIncome</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">Social Security</p>
 		</div>
 		<div style="float: right">
-	  	MMK #=kendo.toString(taxableOverseasIncome, "n2")#
+	  	MMK #=kendo.toString(socialSec, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
 
 	<div>
-		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">employerSS</p>
-		</div>
-		<div style="float: right">
-			 	MMK #=kendo.toString(employerSS, "n2")#
-		</div>
+		
 		<div style="clear: both"></div>
 	</div>
 				
@@ -123,108 +113,18 @@
 
 
 
-	<div>
-		<h3 style="float: left">Deductions</h3>
-		<hr style="clear: both" />
-	</div>
 	
-		<div id="exampleDeducWin" class="k-content">
 
-						<div data-template="row-DeducWin"
-							data-bind="source: DeducWins"></div>
-
-
-						<script id="row-DeducWin" type="text/x-kendo-template"> 
-<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">#=type.name#</p></div>
-		<div style="float:right">
-MMK #=kendo.toString(amount, "n2")#
-</div>
-		<div style="clear:both"></div>
-	</div>
-
-
-</script>
-		</div>	
-
-
-	<div>
-		<h3 style="float: left">Exemptions</h3>
-		<hr style="clear: both" />
-	</div>
 	
-		<div id="exampleExempWin" class="k-content">
 
-						<div data-template="row-ExempWin"
-							data-bind="source: ExempWins"></div>
-
-
-						<script id="row-ExempWin" type="text/x-kendo-template"> 
-<div>
-		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">#=type.name#</p></div>
-		<div style="float:right">
-MMK #=kendo.toString(amount, "n2")#
-</div>
-		<div style="clear:both"></div>
-	</div>
-
-
-</script>
-		</div>	
-
-	<hr>
-	<div>
-		<div style="float: left">
-			<h3>Total</h3>
-		</div>
-		
-		<div id="exampleTotalWin" class="k-content">
-
-						<div data-template="row-TotalWin"
-							data-bind="source: TotalWins"></div>
-
-
-						<script id="row-TotalWin" type="text/x-kendo-template"> 
-
-
-		<div style="float: right">
-		
-MMK #=kendo.toString(totalDeductions, "n2")#
-		</div>
-		<div style="clear: both"></div>
-	</div>
-	
-	
-	
-	<hr>
-
-	<div>
-		<div style="float: left">
-			<h3>Net Pay</h3>
-		</div>
-		<div style="float: right">
-			
-MMK #=kendo.toString(netPay, "n2")#
-			<hr>
-			<hr>
-		</div>
-		<div style="clear: both"></div>
-	</div>
-
-</script>
-		</div>	
-		
-		
-
-</div>
-
-
-
+</div>	
 
 </div>
 
 <script>
 $(function(){
+	
+	var croppingData;
 	
 	var jsonObject;
 
@@ -232,55 +132,99 @@ $(function(){
 
 	var jsonExemp;
 	
-	
-	$.ajax({
+	$("#paySlipDiv").hide();
+	$("#saveEmp").bind("click",function(){
+		var payRollDates=$("#payRollDates").val();
+		 croppingData = JSON.stringify({
+		 		"id":payRollDates,
+			
+		});
+		
+		//alert("hello"+payRollDates);
+		
+		
+		
+		
+		
+		
+
+		$.ajax({
+			type: 'POST',
+		
+			 url:'<%=request.getContextPath()
+	+ "/do/EmployeeCommanAction?parameter=getEmpPayMentDetails"%>',
+
+			 dataType : 'json',
+			 contentType : 'application/json; charset=utf-8',
+			 cache: false,
+			 data 		: croppingData,
+			 success : function(data){
+				//alert(data.id);
+				jsonObject=data;
+				
+				$("#payDateDiv").hide();
+				$("#paySlipDiv").show();
+				var SalryListWin= kendo.observable({
+					SalryListWins : jsonObject
+				});
+				kendo.bind($("#exampleSalryListWin"),SalryListWin);
+		 			var IncomeWin= kendo.observable({
+						IncomeWins : jsonObject
+					});
+					kendo.bind($("#exampleIncomeWin"),IncomeWin);
+		 			var DeducWin= kendo.observable({
+								DeducWins : jsonObject
+					});
+					kendo.bind($("#exampleDeducWin"),DeducWin);
+		 			var ExempWin= kendo.observable({
+						ExempWins : jsonObject
+					});
+					kendo.bind($("#exampleExempWin"), ExempWin);
+		 			var TotalWin= kendo.observable({
+						TotalWins : jsonObject
+					});
+					kendo.bind($("#exampleTotalWin"), TotalWin);
+				
+			 }
+		});
+		
+		
+		
+		
+	});
+	var payRollDatesDataSource1= new kendo.data.DataSource({
+		  
+		  transport : {
+
+		read : {
 		type: 'POST',
-		 url:'<%=request.getContextPath()
-+ "/do/EmployeeCommanAction?parameter=getEmpPayMentDetails"%>',
+		 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getPayRollDates"%>',
 		 dataType : 'json',
 		 contentType : 'application/json; charset=utf-8',
 		 cache: false,
-		 success : function(data){
-			//alert(data.id);
-			jsonObject=data;
-			
-			var array = data.deductionsDone;
-			 var decTxt = "[";
-			for ( var i = 0; i < array.length; i++) {
-				if (i == array.length - 1) {
-					decTxt = decTxt+ kendo.stringify(jsonObject.deductionsDone[i]);
-				} else {
-					decTxt = decTxt+ kendo.stringify(jsonObject.deductionsDone[i])+ ",";
-				}
+		 complete : function(jqXHR, textStatus){
+			 //alert(jqXHR.responseText);
+	     }
+	}
 
-			}
-			decTxt = decTxt + "]";
-			var sss = decTxt;
-			
-			 jsonDeduc=JSON.parse(sss);
-			
-			
-			 var arrayExemp = jsonObject.exemptionsDone;
-				var excemTxt = "[";
-				for ( var i = 0; i < arrayExemp.length; i++) {
-
-					if (i == arrayExemp.length - 1) {
-						excemTxt = excemTxt + kendo.stringify(jsonObject.exemptionsDone[i]);
-					} 
-					else {
-						excemTxt = excemTxt+ kendo.stringify(jsonObject.exemptionsDone[i])+ ",";
-					}
-				}
-				excemTxt = excemTxt + "]";
-									
-				var exs = excemTxt;
-				var resultExemp = JSON.parse(exs);
-									
-				jsonExemp=JSON.parse(exs);
-			
-			
-		 }
+		  },
+	autoSync : true,
+		batch : true 
+		
 	});
+	$(".payRollDatesDropDownList").kendoDropDownList({
+		  
+		  dataTextField : "runDate",
+			dataValueField : "id",
+			 optionLabel:"Select Date",
+			dataSource :payRollDatesDataSource1,
+			
+			
+	 }).data("kendoDropDownList");
+	
+	
+
+	
 	
 	
 	
@@ -292,33 +236,22 @@ $(function(){
 		});
 		$("#pay_summary_cont").data("kendoWindow").center();
 		$("#pay_summary_cont").data("kendoWindow").open();
- 		var SalryListWin= kendo.observable({
-			SalryListWins : jsonObject
-		});
-		kendo.bind($("#exampleSalryListWin"),SalryListWin);
- 			var IncomeWin= kendo.observable({
-				IncomeWins : jsonObject
-			});
-			kendo.bind($("#exampleIncomeWin"),IncomeWin);
- 			var DeducWin= kendo.observable({
-						DeducWins : jsonDeduc
-			});
-			kendo.bind($("#exampleDeducWin"),DeducWin);
- 			var ExempWin= kendo.observable({
-				ExempWins : jsonExemp
-			});
-			kendo.bind($("#exampleExempWin"), ExempWin);
- 			var TotalWin= kendo.observable({
-				TotalWins : jsonObject
-			});
-			kendo.bind($("#exampleTotalWin"), TotalWin);
+		
+		$("#payDateDiv").show();
+		$("#payRollDates").data("kendoDropDownList").value('');	    
+		
+	
+ 		
+		$("#paySlipDiv").hide();
+		
+		
  		});
 	
 	
 	
 	function PrintDiv() {    
 		$(".print").hide();
-		var divToPrint = document.getElementById('pay_summary_cont');
+		var divToPrint = document.getElementById('paySlipDiv');
 		var popupWin = window.open('', '_blank', 'width=300,height=300');
 		popupWin.document.open();
 		popupWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</html>');

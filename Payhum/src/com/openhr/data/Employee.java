@@ -151,6 +151,10 @@ public class Employee implements Serializable {
 	@Column(name = "ppNumber", nullable = true, length = 15)
 	private String ppNumber;
 	
+	@JoinColumn(name = "currency", referencedColumnName = "id", nullable = false)
+	@ManyToOne(optional = false)
+	private TypesData currency;
+	
 	@Basic(optional = true)
 	@Column(name = "ppExpDate", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -160,9 +164,7 @@ public class Employee implements Serializable {
 	@Column(name = "ppIssuePlace", nullable = true, length = 45)
 	private String ppIssuePlace;
 	
-	@JoinColumn(name = "currency", referencedColumnName = "id", nullable = false)
-	@ManyToOne(optional = false)
-	private TypesData currency;
+	
 	
 	public String getEmpNationalID() {
 		return empNationalID;

@@ -57,12 +57,14 @@ public class UpdateEmployeeAction extends Action {
 		
 		
 		Date hireDate=null;
-		Employee e = new Employee();
+		Employee e = null;
 		for (EmployeeForm eFromJSON : aCollection) {
+		e=EmployeeFactory.findById(eFromJSON.getId()).get(0);
 			empID=eFromJSON.getEmployeeId();
 			acomId=eFromJSON.getAccommodationVal();
 			lastName=eFromJSON.getLastname();
 			hireDate=new Date(eFromJSON.getHiredate());
+			e.setId(eFromJSON.getId());
 			e.setMarried(eFromJSON.getFamly());
 			e.setEmployeeId(empID);
 			e.setFirstname(eFromJSON.getFirstname());
@@ -88,10 +90,14 @@ public class UpdateEmployeeAction extends Action {
 			e.setPpNumber(eFromJSON.getPassNo());
 			
 			e.setPpExpDate(new Date(eFromJSON.getPassExpDate()));
-			
+			e.setPpIssuePlace(eFromJSON.getPassPlace());
 			e.setPhoneNo(eFromJSON.getPhNo());
 			
 			e.setNationality(eFromJSON.getEmpNation());
+			
+			TypesData tydcur=EmployeeFactory.findTypesById(eFromJSON.getCurnsy());
+			e.setCurrency(tydcur);
+			
 			TypesData tyd=EmployeeFactory.findTypesById(eFromJSON.getResidentVal());
 			e.setResidentType(tyd);
 			

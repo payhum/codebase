@@ -60,6 +60,8 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	private String contNumber;
 
 	private Integer residentVal;
+	
+	private Integer curnsy;
 
 	private String nationID;
 
@@ -408,6 +410,14 @@ public void setCount(Long count) {
 
 	public void setEmpNation(String empNation) {
 		this.empNation = empNation;
+	}
+
+	public Integer getCurnsy() {
+		return curnsy;
+	}
+
+	public void setCurnsy(Integer curnsy) {
+		this.curnsy = curnsy;
 	}
 	
 	}

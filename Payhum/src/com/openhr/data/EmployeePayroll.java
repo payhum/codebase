@@ -182,6 +182,8 @@ public class EmployeePayroll implements Serializable {
         this.otherIncome = 0D;
         this.leaveLoss = 0D;
         this.taxPaidByEmployer = 0;
+        this.withholdSS=0;
+        this.withholdTax=0;
     }
     
     public Double getAccomodationAmount() {

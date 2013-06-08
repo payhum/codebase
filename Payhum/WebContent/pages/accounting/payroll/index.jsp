@@ -1,3 +1,4 @@
+
 <%@include file="../../common/jspHeader.jsp"%>
 <style>
 .k-textbox {
@@ -396,6 +397,7 @@ span.k-tooltip {
 			<li>Tax Rates for NRF</li>
  			<li>Deduction Setting</li>
 			<li>Payroll period Setting</li>
+			<li>TaxDetails</li>
 		</ul>
 
 		<div>
@@ -514,7 +516,26 @@ span.k-tooltip {
 
 
 		</div>
+<div id="taxDetailsdiv">
 
+			<form>
+				<fieldset>
+					<legend>Payroll period Definition</legend>
+					  
+					<div id="taxDetailsGridTable">
+					<span id="inGridTaxDet">
+					<input type="hidden" id="taxDetID"/>
+								Amount:<input type="text"  id="taxDetailsAmount"  class="taxDetailsAmontclass" Value=""/>
+								<a class="k-button k-icontext" id="upTaxdet"><span class="k-add k-icon"></span>Update</a> <a
+					class="k-button k-icontext" id="cancelTaxdet"><span class="k-cancel k-icon"></span>Cancel</a>
+					</span>
+					</div>
+		
+				</fieldset>
+			</form>
+
+
+		</div>
 	</div>
 
 </div>
@@ -554,7 +575,7 @@ span.k-tooltip {
 			<p style="width: 400px; font-size: 13px; text-align: right">Salary</p>
 		</div>
 		<div style="float: right">
-<h3 style="float: right">#=kendo.toString(employeeId.positionId.salary, "n2")#</h3>
+<h3 style="float: right">#=kendo.toString(baseSalary, "n2")#</h3>
 
 
 		</div>
@@ -980,7 +1001,7 @@ h3 {
 					
 						wnd = $("#payrollSettingsWindow").kendoWindow({
 						
-							width : 700,
+							width : 800,
 							hieght:800,
 							title : "Payroll Settings"
 						}).data("kendoWindow");
@@ -1031,8 +1052,105 @@ h3 {
 							 reuseScript();
 			 			}
 				 	});
+						
+						$("#taxDetailsdiv").ready(function() {
+							
+							
+							$("#inGridTaxDet").hide();
+							var  taxtDetailsDataSource = new kendo.data.DataSource({
+					        	transport : {
+					           		read : {
+					           			url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=getAllTaxDetails"%>',
+					           			dataType : "json",
+					           			cache : false
+					           		}
+						         },
+					           	pageSize: 3,
+					           	autoSync : true,
+					           	batch : true 
+					        });
+							
+							
+							var gridTaxdeet1 = $("#taxDetailsGridTable").kendoGrid({
+					            dataSource : taxtDetailsDataSource,
+					            pageable: true,
+					            columns: [
+				                          { hidden:true,field:"id", title: "id" },
+				                          { field:"typeId", title: "Name" ,  template: '#=typeId?typeId.name: ""#',   width: "50px"},
+				                         
+				                          { field: "amount", title:"Value",width: "30px" },
+				                          { command: [ {"name" :"edit", text:"", className:"editTaxDetails"}], title: "", width: "50px" }],
+				 		 	        	 
+				                          
+					 						 sortable: true,  
+					 			            scrollable : true,
+					 			            
+					 			            pageable:true,
+					 			           
+					 			            resizeable : true,
+					 			            reorderable: true,
+					 			          
+					 		           
+					 		         
+					 		            selectable : "row"}).data("kendoGrid");
+							
+							$(".taxDetailsAmontclass").kendoNumericTextBox();
+							
+							
+$("#cancelTaxdet").click(function(){
+								
+								//alert("hello");
+								
+								$("#inGridTaxDet").hide();
+							
+							
+							});
+							
+							$("#upTaxdet").click(function(){
+								
+								//alert("hello");
+								var checkValue=$("#taxDetailsAmount").val();
+								
+								var id=$("#taxDetID").val();
+								var dedDelete = JSON.stringify({
+						   			"id"	  : id,
+						   			"amount"	  : checkValue
+						    	}); 
+						    	$.ajax({
+						       		url 		: "<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=updateTaxDetailsAmount"%>",
+						       		type 		: 'POST',
+						    		dataType 	: 'json',
+						    		contentType : 'application/json; charset=utf-8',
+						    		data 		: dedDelete,
+						    		success     : function(data){
+						    			//$("#addOverTimeDiv").addClass("displayClass");
+						    		    taxtDetailsDataSource.read();
+						    			
+						    			alert(data);
+						    			$("#inGridTaxDet").hide();
+						    		}
+						       
+						    
+						    	});
+							});
+							
+							$("#taxDetailsGridTable").delegate(".editTaxDetails", "click", function(e) {
+								var dataItem = gridTaxdeet1.dataItem($(this).closest("tr"));
+								//alert("taxDetailsAmontclass"+dataItem.id);
+								
+								  
+								$(".taxDetailsAmontclass").val(dataItem.amount);
+								$("#taxDetID").val(dataItem.id);
+								$("#inGridTaxDet").show();
+							
+							});
+							
+							
+						});
+						
 					
 					$("#taxratesdiv").ready(function() {
+						
 		 				$.ajax({
 								 type : "POST",
 								 url:'<%=request.getContextPath() + "/do/CommanTaxReatesActions?parameter=getTaxRate"%>',
@@ -1164,6 +1282,7 @@ h3 {
 						var idTax= $("#incomeFromId").val();
 						
 						var incomeFrom=$("#incomeFrom").val();
+						
 						
 						var rate = JSON.stringify([{
 							"id":idTax,

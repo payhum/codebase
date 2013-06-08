@@ -31,9 +31,22 @@ public class PdfFactory {
 		PDPageContentStream contentStream = new PDPageContentStream(doc,page);
 		contentStream.beginText();
 		  contentStream.setFont(PDType1Font.HELVETICA_BOLD,20);
-      contentStream.moveTextPositionByAmount(250,730);
+      contentStream.moveTextPositionByAmount(200,730);
 
-      contentStream.drawString("Employee Accumulators Report");
+
+      
+      if(cols==3)
+      {
+    	 
+    	  contentStream.drawString("CompanyView Report");
+    	  
+      }
+      else
+      {
+    	  
+    	  
+    	  contentStream.drawString("EmployeeView Report");
+      }
       contentStream.endText();
 		  float y=700;
 		  float margin=100;
@@ -188,7 +201,7 @@ public class PdfFactory {
 		  
 		  contentStream.beginText();
 		  contentStream.setFont(PDType1Font.HELVETICA_BOLD,20);
-        contentStream.moveTextPositionByAmount(250,730);
+        contentStream.moveTextPositionByAmount(200,730);
 
         contentStream.drawString("Employee Accumulators Report");
         contentStream.endText();
@@ -357,9 +370,9 @@ public class PdfFactory {
 		PDPageContentStream contentStream = new PDPageContentStream(doc,page);
 		contentStream.beginText();
 		  contentStream.setFont(PDType1Font.HELVETICA_BOLD,20);
-    contentStream.moveTextPositionByAmount(250,730);
+    contentStream.moveTextPositionByAmount(200,730);
 
-    contentStream.drawString("Employee Accumulators Report");
+    contentStream.drawString("Employee Earns Report");
     contentStream.endText();
 		float y=700;
 		  float margin=100;
@@ -740,19 +753,31 @@ public class PdfFactory {
 	    final float tableHeight = rowHeight * row;
 	    final float colWidth = tableWidth/(float)cols;
 	    final float cellMargin=5f;
+	    
+	    
+	    
+	    
+	    
 	 
 	    //draw the rows
 	    float nexty = y ;
 	   
 	    for (int i = 0; i <= row; i++) {
-	        contentStream.drawLine(margin,nexty,margin+tableWidth,nexty);
+	        contentStream.drawLine(margin,nexty,margin+tableWidth-40,nexty);
 	        nexty-= rowHeight;
 	    }
 	 
 	    //draw the columns
 	    float nextx = margin;
 	    for (int i = 0; i <= cols; i++) {
+	    	
+	    	if(i==6)
+	        {
+	    		nextx=nextx-40;
+	        }
 	        contentStream.drawLine(nextx,y,nextx,y-tableHeight);
+	        
+	        
 	        nextx += colWidth;
 	    }
 	 
@@ -768,6 +793,11 @@ public class PdfFactory {
 	        for(int j = 0 ; j < content[i].length; j++){
 	            String text = content[i][j];
 	            contentStream.beginText();
+	            if(j==6)
+	            {
+	            	
+	            	textx=textx-40;
+	            }
 	            contentStream.moveTextPositionByAmount(textx,texty);
 	            contentStream.setFont(PDType1Font.HELVETICA_BOLD,12);
 	            contentStream.drawString(text);
@@ -836,7 +866,9 @@ public class PdfFactory {
 					 break;
 				case 6:
 					
+					
 					 contentStream.beginText();
+					 
 			            contentStream.moveTextPositionByAmount(textx,texty);
 			        	contentStream.drawString(glf.getNetPay().toString());
 					
@@ -844,7 +876,7 @@ public class PdfFactory {
 			            textx += colWidth;
 					 break;
 				case 7:
-					
+					textx=textx-40;
 					 contentStream.beginText();
 			            contentStream.moveTextPositionByAmount(textx,texty);
 			        	contentStream.drawString(glf.getBaseSalary().toString());
@@ -1071,7 +1103,7 @@ public class PdfFactory {
 		  contentStream.setFont(PDType1Font.HELVETICA_BOLD,20);
     contentStream.moveTextPositionByAmount(200,730);
 
-    contentStream.drawString("EmployeeByDepartments");
+    contentStream.drawString("EmployeesActivated");
     contentStream.endText();
     float y=700;
 	  float margin=100;
@@ -1462,13 +1494,13 @@ public class PdfFactory {
 		  contentStream.setFont(PDType1Font.HELVETICA_BOLD,20);
     contentStream.moveTextPositionByAmount(200,730);
 
-    contentStream.drawString("EmployeeAddress");
+    contentStream.drawString("TaxMonthly");
     contentStream.endText();
     float y=700;
-    float margin=20;
+	  float margin=100;
 		  int row=rows+1;
 		  final float rowHeight = 20f;
-		    final float tableWidth = page.findMediaBox().getWidth()-20;
+		  final float tableWidth = page.findMediaBox().getWidth()-(2*margin);
 		    final float tableHeight = rowHeight * row;
 		    final float colWidth = tableWidth/(float)cols;
 		    final float cellMargin=5f;
@@ -1477,13 +1509,20 @@ public class PdfFactory {
 	    float nexty = y ;
 	   
 	    for (int i = 0; i <= row; i++) {
-	        contentStream.drawLine(margin,nexty,margin+tableWidth,nexty);
+	        contentStream.drawLine(margin,nexty,margin+tableWidth+50,nexty);
 	        nexty-= rowHeight;
 	    }
 	 
+	    
+	   
 	    //draw the columns
 	    float nextx = margin;
 	    for (int i = 0; i <= cols; i++) {
+	    	
+if(i==5)
+{
+	nextx=nextx+50;
+}
 	        contentStream.drawLine(nextx,y,nextx,y-tableHeight);
 	        nextx += colWidth;
 	    }

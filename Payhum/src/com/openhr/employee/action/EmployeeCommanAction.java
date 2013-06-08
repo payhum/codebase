@@ -26,6 +26,7 @@ import com.openhr.data.Department;
 import com.openhr.data.Dtest;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpDependents;
+import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
@@ -149,7 +150,7 @@ public class EmployeeCommanAction extends DispatchAction
 			
 			JSONObject result = null;
 			
-		
+			 JSONObject result1 = null;
 			try
 			
 			{
@@ -157,22 +158,34 @@ public class EmployeeCommanAction extends DispatchAction
 				
 				Integer empID=(Integer) request.getSession().getAttribute("empPay");
 				
-				JsonConfig config = new JsonConfig();
-				config.setIgnoreDefaultExcludes(false);
-				config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
 			
-				//JSONObject json = JSONObject.fromObject(sb.toString());
+				long start=0,end=0,diff=0;
+				BufferedReader bf = request.getReader();
+			    StringBuffer sb = new StringBuffer();
+			    String line = null;
+			    while ((line = bf.readLine()) != null) {
+			        sb.append(line);
+			    }
+			    
+			    JSONObject json = JSONObject.fromObject(sb.toString());
+				//JsonConfig config = new JsonConfig();
+				//config.setIgnoreDefaultExcludes(false);
+				//config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			    Integer a= json.getInt("id");
 				
-				//Integer id=json.getInt("id");
-			//Collection<EmployeeDepartFrom> aCollection = JSONArray.toCollection(json, EmployeeDepartFrom.class);
-				
-				
-				
-				Employee  emp=EmployeeFactory.findById(id).get(0);
-				
-				EmployeePayroll empPay=EmpPayTaxFactroy.findEmpPayrollbyEmpID(emp);
-				
-				result=JSONObject.fromObject(empPay,config);
+					
+					Employee e=new Employee();
+					
+					e.setId(id);
+					
+					EmployeePayroll emp=EmpPayTaxFactroy.findEmpPayrollbyEmpID(e);
+					emp.setEmployeeId(e);
+					EmpPayrollMap employees = EmpPayTaxFactroy.findTaxMonthlyForEmployee(a,emp);
+					start=System.currentTimeMillis();
+					JsonConfig config = new JsonConfig();
+					config.setIgnoreDefaultExcludes(false);
+					config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+				   result1 = JSONObject.fromObject(employees, config);
 			
 			}
 			catch(Exception e)
@@ -181,7 +194,7 @@ public class EmployeeCommanAction extends DispatchAction
 			}
 			 response.setContentType("application/json; charset=utf-8");
 		        PrintWriter out = response.getWriter();
-		        out.print(result.toString());
+		        out.print(result1.toString());
 		        out.flush();
 	        return mapping.findForward("success");
 	    }

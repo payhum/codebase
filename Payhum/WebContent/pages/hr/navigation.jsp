@@ -229,9 +229,15 @@
 		<li class="topitem"><div
 			class="buttonbg gradient_button gradient27" style="width: auto;">
 			<div>
-				<a class="compLicenses" style="color: #000">Company License</a>
+				<a class="compLicenses">Company License</a>
 			</div>
 		</div></li>
+		
+		<li class="topitem">
+		<div class="buttonbg gradient_button gradient27" style="width: auto;">
+		   <span>	<a href="<%=request.getContextPath() + "/do/BranchDept"%>">Branches and Departments</a></span>
+ 		</div>
+ 	</li>
 </ul>
 
 <script>

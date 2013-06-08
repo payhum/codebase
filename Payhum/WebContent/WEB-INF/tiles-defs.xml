@@ -228,5 +228,9 @@
     	<put name="body" value="/pages/masteradmin/masterCompany.jsp" />
 	</definition>
 
+	<definition name="branchDept.form" extends="adminHome">
+    	<put name="navigation" value="/pages/hr/navigation.jsp" />
+    	<put name="body" value="/pages/hr/company/branchDept.jsp" />
+	</definition>
 
 </tiles-definitions>

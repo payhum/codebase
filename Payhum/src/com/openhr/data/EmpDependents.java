@@ -21,6 +21,7 @@ import com.openhr.common.PayhumConstants;
 @Table(name = "emp_dependents", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "EmpDependents.findAll", query = "SELECT e FROM  EmpDependents e"),
+    @NamedQuery(name = "EmpDependents.findEmpWithDepType", query = "SELECT e FROM  EmpDependents e where e.employeeId=? and  e.depType=?"),
     @NamedQuery(name = "EmpDependents.findIndual", query = "SELECT e FROM  EmpDependents e WHERE e.employeeId=?")}
 		)
 public class EmpDependents  implements Serializable {

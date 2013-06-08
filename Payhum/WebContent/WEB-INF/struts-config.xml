@@ -52,6 +52,7 @@
 		<action path="/Payroll" forward="financeHome" />
         <action path="/MasterHome" forward="masterhome.form" />
         <action path="/MasterCompany" forward="masterCompany.form" />
+        <action path="/BranchDept" forward="branchDept.form" />
         
         
 		<!-- start of Report actions -->

@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.openhr.data.Employee;
 import com.openhr.data.TaxDetailsData;
 import com.openhr.data.TaxRatesData;
 import com.openhr.data.TypesData;
@@ -200,4 +201,34 @@ public class TaxFactory implements Serializable {
 		lsession.close();
  		return trd;
  	}
+	
+	
+	public static boolean updateTaxDetailsData(TaxDetailsData tdl)
+	
+	{
+		boolean done = false;
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		TaxDetailsData tdls = (TaxDetailsData) session.get(TaxDetailsData.class, tdl.getId());
+		
+		tdls.setAmount(tdl.getAmount());
+		session.getTransaction().commit();
+		done = true;
+
+		return done;
+	}
+	
+	public static TaxDetailsData findTaxDetialId(int typeId) {
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		query = lsession.getNamedQuery("TaxDetailsData.findById");
+		query.setInteger(0, typeId);
+		TaxDetailsData txd =(TaxDetailsData) query.uniqueResult();
+		lsession.getTransaction().commit();
+		lsession.close();
+ 		return txd;
+ 	}
+	
+	
+	
 }

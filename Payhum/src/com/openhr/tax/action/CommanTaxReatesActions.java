@@ -11,12 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
+import com.openhr.data.TaxDetailsData;
 import com.openhr.data.TaxRatesData;
 import com.openhr.factories.TaxFactory;
 
@@ -212,4 +215,57 @@ public class CommanTaxReatesActions extends DispatchAction {
 		return map.findForward("");
 
 	}
+	
+	
+	public ActionForward updateTaxDetailsAmount(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+ 		BufferedReader bf = request.getReader();
+		StringBuffer sb = new StringBuffer();
+		String line = null;
+
+		boolean flag = false;
+		while ((line = bf.readLine()) != null) {
+			sb.append(line);
+		}
+		JSONObject json = JSONObject.fromObject(sb.toString());
+	
+Integer id=json.getInt("id");
+		
+Double amount=json.getDouble("amount");
+TaxDetailsData tdl=new TaxDetailsData();
+tdl.setAmount(amount);
+tdl.setId(id);
+flag=TaxFactory.updateTaxDetailsData(tdl);
+ 		PrintWriter out = response.getWriter();
+		out.print(flag);
+		out.flush();
+
+		return map.findForward("");
+
+	}
+	
+
+	public ActionForward getAllTaxDetails(ActionMapping map, ActionForm form,HttpServletRequest request, HttpServletResponse response) throws Exception {
+ 		JSONArray result = null;
+		try {
+			JsonConfig config = new JsonConfig();
+			config.setIgnoreDefaultExcludes(false);
+			config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+  			List<TaxDetailsData> txl = TaxFactory.findAllTaxDetails();
+   			result = JSONArray.fromObject(txl,config);
+ 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+ 		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+ 		return map.findForward("");
+ 	}
+	
+	
+	
+	
 }

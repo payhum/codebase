@@ -5,7 +5,7 @@
 	<div class="clear"></div>
 	<fieldset style="margin-top: -22px;">
   <legend>PersonalDetials:</legend>
-	<div style="float:left;height: 380px;">
+	<div style="float:left;height: 340px;">
 	<div id="left-col">
 		<div>
 			<div class="label">EMP-ID</div>
@@ -18,8 +18,7 @@
 
 <div>
 			<div class="label">EMP-NationalID</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
+			<div class="field"><input type="text" required=required class="k-input k-textbox" id="nationID"  value="" />
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -77,22 +76,14 @@
 			</div>
 			<div class="clear"></div>
 		</div>	
-				<div>
-			<div class="label">Address</div>
-			<div class="field">
-<textarea class="k-textbox" id="empAddrss">
-
-
-</textarea>
-			</div>
-			<div class="clear"></div>
-		</div>
+		
 	</div>
 	<div id="right-col">
 		<div>
 			<div class="label" style="width: 160px;">Sex</div>
 			<div class="field" >
-					<label for="sexmale">
+<label for="sexmale" style="margin-top: -25px;  margin-left: 38px;">
+
 				<input  type="radio" id="sexm" value="Male" name="sex" />
 			Male
 			</label>
@@ -109,7 +100,8 @@
 			
 <div>
 <div class="label">Family</div>
-			<label for="family_single">
+			<label for="family_single" style="margin-top: -25px;  margin-left: 110px;">
+
 				<input  type="radio" id="family_single" value="false" name="family"  />
 				Single
 			</label>
@@ -128,16 +120,22 @@
 
 	
 <div>
-			<div class="label" >Emergency Contact Name</div>
+			<div class="label" style="
+    width: 400px;
+">Emergency Contact Name</div>
+
 			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="contName"  value="" />
+				<input type="text" required="required" class="k-input k-textbox" id="contName" value="" style="margin-left: 200px; margin-top: -25px;">
+				
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div>
-<div class="label" style="width: 160px;">Emergency Contact Num</div>
+<div class="label" style="width: 160px;">Emergency Contact Number</div>
+
 			<div class="field">
-				<input type="text" style="margin-top: -2px; margin-right: -60px;" required=required class="k-input k-textbox" id="contNumber"  value="" />
+				<input type="text" style="margin-top: -25px; margin-left: 200px;" required="required" class="k-input k-textbox" id="contNumber" value="">
+				
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -148,14 +146,15 @@
 		
 		<div>
 <div class="label" >Passport No</div>
-			<div class="field">
-				<input type="text" required=required class="k-input k-textbox" id="passNo"  value="" />
+			<div class="field" style="margin-top: 3px;  margin-left: 200px;">				<input type="text" required=required class="k-input k-textbox" id="passNo"  value="" />
 			</div>
 			<div class="clear"></div>
 		</div>
 		
 		<div>
 			<div class="label" style="width: 160px;">Passport Exp Date</div>
+			<div class="field" style="  margin-left: 200px;margin-top: 3px;">
+
 			<div class="field">
 				<input type="text" class="k-input k-textbox" 
 					id="passExpDate" value="" />
@@ -165,27 +164,50 @@
 		
 		<div>
 			<div class="label" style="width: 160px;">Passport Issue place</div>
-			<div class="field">
+			<div class="field" style="margin-top: 2px;  margin-left: 195px;">
+
 				<input type="text" required=required class="k-input k-textbox" id="passPlace"  value="" />
 			</div>
 			<div class="clear"></div>
 		</div>
 		<div>
 <div class="label">Nationality</div>
-			<div class="field">
+			<div class="field" style="margin-left: 195px;">
 				<input type="text" required=required class="k-input k-textbox" id="empNation"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div>
+<div class="label">Phone Number</div>
+			<div class="field" style="  
+    margin-left: 195px;
+">
+				<input type="text" required=required class="k-input k-textbox" id="phno"  value="" />
 			</div>
 			<div class="clear"></div>
 		</div>
 		
 		
-		
+				<div>
+			<div class="label" >Address</div>
+			<div class="field"  style="  
+    margin-left: 195px;
+			">
+<textarea class="k-textbox" id="empAddrss">
+
+
+</textarea>
+			</div>
+			<div class="clear"></div>
+		</div>
 		
 
 		
 	</div>
 </div>
+</div>
 </fieldset>
+
  <fieldset>
   <legend>HireDetials:</legend>
 	<div style="float:left;height: 150px">
@@ -199,14 +221,7 @@
 		
 		
 		
-		<div>
-			<div class="label">Hire date</div>
-			<div class="field">
-				<input type="text" class="k-input k-textbox" 
-					id="hiredate" value="" />
-			</div>
-			<div class="clear"></div>
-		</div>
+	
 		
 		<div>
 			<div class="label">Position</div>
@@ -224,7 +239,13 @@
 		   	</div>
 			<div class="clear"></div>
 		</div> 
-		    
+		   	<div>
+			<div class="label">Select Currency</div>
+			<div class="field">
+				<input  class="currency"  id="curnsy"/>
+			</div>
+			<div class="clear"></div>
+		</div> 
 		<div> <div class="label">Branch</div>
 			<div class="field">
 				<input id="brachDropDownList"/>
@@ -287,7 +308,14 @@
 			<div class="clear"></div>
 		</div>
 		
-		
+			<div>
+			<div class="label">Hire date</div>
+			<div class="field">
+				<input type="text" class="k-input k-textbox" 
+					id="hiredate" value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
 	</div>
 
 
@@ -318,7 +346,7 @@
 			  $("#numericSal").kendoNumericTextBox();
 			//$('input:radio[name=family]').val('false');
 			
-			 $("#passNo").kendoNumericTextBox();
+			// $("#passNo").kendoNumericTextBox();
 			
 			$("#dp1").hide();
 			var today = new Date();
@@ -485,7 +513,24 @@
              	batch : true 
              	
 			  });
-			 
+			var  currencyDataSource1=new kendo.data.DataSource({
+				  
+				  transport : {
+			  
+       		read : {
+     			type: 'POST',
+     			 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getCurrensy"%>',
+ 				 dataType : 'json',
+ 				 contentType : 'application/json; charset=utf-8',
+ 				 cache: false
+ 				 
+     		}
+			  
+				  },
+     		autoSync : true,
+            	batch : true 
+            	
+			  });
 			  $(".residentDropDownList").kendoDropDownList({
 				  
 				  dataTextField : "name",
@@ -495,6 +540,21 @@
 					
 		       }).data("kendoDropDownList");
 			 
+			  
+			  
+			  
+			  
+			  
+$(".currency").kendoDropDownList({
+				  
+				  dataTextField : "name",
+					dataValueField : "id",
+					optionLabel: "Select Currency",
+					dataSource :currencyDataSource1
+					
+		       }).data("kendoDropDownList");
+			  
+			  
 			 
 			  
 			  
@@ -530,7 +590,7 @@
                 	
                 	firstname, middlename, lastname, passNo, passExpDate,passPlace,
                 	
-                	birthdate, hiredate, empNation, empAddrss, photo,paidTax, phNo;
+                	birthdate, hiredate, empNation, empAddrss, photo,paidTax, phNo, curnsy;
          			//crop variables
          			var x, y, width, height;
                 	//id = $("#id").val(); 
@@ -557,7 +617,9 @@
          			contNumber=$("#contNumber").val();
          		nationID=$("#nationID").val();
          		
-         		phNo="534534534";
+         		phNo=$("#phno").val();
+         		
+         		curnsy=$("#curnsy").val();
          		
          		passNo=$("#passNo").val();
          		
@@ -684,7 +746,8 @@
     					"empNation":empNation,
     					"passNo":passNo,
     					"paidTax":paidTax,
-    					"phNo":phNo
+    					"phNo":phNo,
+    					"curnsy":curnsy
     					
     				 }]);       			
          			

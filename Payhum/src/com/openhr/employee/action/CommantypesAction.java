@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import net.sf.json.util.CycleDetectionStrategy;
+
 
 
 import org.apache.struts.action.ActionForm;
@@ -19,7 +18,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 
 import com.openhr.data.Branch;
-import com.openhr.data.EmployeePayroll;
+
 import com.openhr.data.PayrollDate;
 import com.openhr.data.TypesData;
 import com.openhr.factories.EmpPayTaxFactroy;
@@ -83,6 +82,39 @@ public class CommantypesAction extends DispatchAction {
 
 		return map.findForward("");
 	}
+	
+	
+	
+	public ActionForward getCurrensy(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+	JSONArray result = new JSONArray();
+		try {
+			
+			//JsonConfig config = new JsonConfig();
+			//config.setIgnoreDefaultExcludes(false);
+			//config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			
+			List<TypesData> eptx = EmployeeFactory.findTypes("CURRENCY");
+			result = JSONArray.fromObject(eptx);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.print(result.toString());
+
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+
+		return map.findForward("");
+	}
+	
+	
+	
+	
 	
 	
 	

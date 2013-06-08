@@ -99,7 +99,8 @@ public class EmployeeAction extends Action {
 			
 			TypesData tyd=EmployeeFactory.findTypesById(eFromJSON.getResidentVal());
 			e.setResidentType(tyd);
-			
+			TypesData tydcur=EmployeeFactory.findTypesById(eFromJSON.getCurnsy());
+			e.setCurrency(tydcur);
 			Position p = null;
 			if(PositionFactory.findById(eFromJSON.getPositionId())!=null)
 			p = PositionFactory.findById(eFromJSON.getPositionId()).get(0);

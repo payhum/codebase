@@ -82,11 +82,12 @@ public class ReadEmployeeAction extends Action {
 				empFrm.setPassExpDate(emp.getPpExpDate());
 				empFrm.setPassPlace(emp.getPpIssuePlace());
 				empFrm.setPassNo(emp.getPpNumber());
-				empFrm.setPhNo(emp.getPhoto());
+				empFrm.setPhNo(emp.getPhoneNo());
+				empFrm.setCurnsy(emp.getCurrency().getId());
 				
 				empFrm.setEmpAddrss(emp.getAddress());
 				
-				
+				empFrm.setEmpNation(emp.getNationality());
 				File photo = new File(getServlet().getServletContext()
 						.getRealPath(emp.getPhoto()));
 				if (!photo.exists()) {
