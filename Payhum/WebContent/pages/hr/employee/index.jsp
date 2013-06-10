@@ -159,16 +159,14 @@
 
 <div id="grid">
 
-	<span id="rpsm1"> <a class="k-button" id="depdentsId" href='#'><span
-			class="k-icon "></span>Dependents</a> <a class="k-button" href='#'
-		id="changeSalryId"><span class="k-icon "></span>Change Salary</a> <a
-		class="k-button" href='#' id="giveBonusId"><span class="k-icon"></span>Give
+	<span id="rpsm1" style="margin-left: 175px;"> <a class="k-button" id="depdentsId" href='#'><span
+			class=" "></span>Dependents</a> <a class="k-button" href='#'
+		id="changeSalryId"><span class=""></span>Change Salary</a> <a
+		class="k-button" href='#' id="giveBonusId"><span class=""></span>Give
 			Bonus</a> <a class="k-button" href='#' id="bankAccountId"><span
-			class="k-icon "></span>Bank Account</a> <a class="k-button" href='#'
-		id="editEmp1"><span class="k-icon "></span>Edit</a>
-		
-		<a class="k-button" href='#'
-		id="pdfEmp1"><span class="k-icon "></span></a>
+			class=""></span>Bank Account</a> <a class="k-button" href='#'
+		id="editEmp1"><span class=""></span>Edit</a>
+	
 	
 	</span>
 
@@ -1334,9 +1332,9 @@ e.preventDefault();
 	    				
 	    				var id,status,famly,nationID,contName,contNumber,
 	                	
-	                	sex,accommodationVal,residentVal,employeeId, departId,passNo, passExpDate,passPlace,
+	                	sex,accommodationVal,residentVal,employeeId, departId,passNo, passExpDate,passPlace,nationID1,nationID2,nationID3,
 	                	
-	                	firstname, middlename, lastname,  empNation, empAddrss, paidTax, phNo,
+	                	firstname, middlename, lastname,  empNation, empAddrss, paidTax, phNo,phNo1,
 	                	
 	                	birthdate, hiredate,  photo, numericSal1,curnsy;
 	    				
@@ -1366,10 +1364,15 @@ e.preventDefault();
 	         			contName=$("#contName").val();
 	         			contNumber=$("#contNumber").val();
 	         		nationID=$("#nationID").val();
-	         		
+nationID1=$("#nationID1").val();
+         			
+         			nationID2=$("#nationID2").val();
+         			
+         			nationID3=$("#nationID3").val();
+
 	         		curnsy=$("#curnsy").val();
 	         		phNo=$("#phno").val();
-	         		
+	         		phNo1=$("#phno1").val();
 	         		passNo=$("#passNo").val();
 	         		
 	         		empNation=$("#empNation").val();
@@ -1485,7 +1488,11 @@ e.preventDefault();
 	    					"passNo":passNo,
 	    					"paidTax":paidTax,
 	    					"phNo":phNo,
-	    					"curnsy":curnsy
+	    				     "phNo1":phNo1,
+	    					"curnsy":curnsy,
+	    					"nationID1":nationID1,
+	    					"nationID2":nationID2,
+	    					"nationID3":nationID3
 	    				 }]);  
 	         	
 	         			$.ajax({
@@ -1511,11 +1518,11 @@ e.preventDefault();
 <div id="employeeForm">
 	<div class="clear"></div>
 	<fieldset style="margin-top: -22px;">
-  <legend>PersonalDetials:</legend>
+  <legend>Personal Details</legend>
 	<div style="float:left;height: 340px;">
 	<div id="left-col">
 			<div>
-			<div class="label">EMP-ID</div>
+			<div class="label">Employee ID</div>
 			<div class="field">
 				<input type="hidden" id="id" value="#=id#"/>
                 <input type="hidden" id="photo" value="#=photo#"/>
@@ -1523,17 +1530,23 @@ e.preventDefault();
 			</div>
 			<div class="clear"></div>
 		</div>
+
+
 <div>
-			<div class="label">EMP-NationalID</div>
-			<div class="field">
-						<input type="text"  class="k-input k-textbox" id="nationID"  value="#=empNationalID#" />
+			<div class="label">National ID</div>
+			<div class="field"><input type="text" required=required class="k-input k-textbox" id="nationID1"  value="#=nationID1#" style="width:25px"/>/
+			<input type="text" required=required class="k-input k-textbox" id="nationID2"  value="#=nationID2#" style="width:50px"/>
+			(<input type="text" required=required class="k-input k-textbox" id="nationID3"  value="#=nationID3#" style="width:25px"/>)
+			<input type="text" required=required class="k-input k-textbox" id="nationID"  value="#=empNationalID#"  style="width:60px"/>
 			</div>
-			<div class="clear"></div>
+			
+			
+		<span style="margin-left:90px">Ex:12/yakaha(N)123456</span>
+			
+		
 		</div>
-
-
 		<div>
-			<div class="label">First name</div>
+			<div class="label">First Name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="firstname"  value="#=firstname#"/>
 			</div>
@@ -1543,7 +1556,7 @@ e.preventDefault();
 
 
 		<div>
-			<div class="label">Middle name</div>
+			<div class="label">Middle Name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="middlename"  value="#=middlename#"/>
 			</div>
@@ -1553,7 +1566,7 @@ e.preventDefault();
 
 
 		<div>
-			<div class="label">Last name</div>
+			<div class="label">Last Name</div>
 			<div class="field">
 				<input type="text" required=required class="k-input k-textbox" id="lastname"  value="#=lastname#"  />
 			</div>
@@ -1583,9 +1596,9 @@ e.preventDefault();
 	
 		
 	<div>
-			<div class="label">Birth date</div>
+			<div class="label">Birth Date</div>
 			<div class="field">
-				<input type="text" class="k-input k-textbox" 
+				<input type="text" 
 					id="birthdate" value="#= kendo.toString(new Date(birthdate), 'MMM, dd yyyy')#" />
 			</div>
 			<div class="clear"></div>
@@ -1614,7 +1627,7 @@ e.preventDefault();
 
 			
 <div>
-<div class="label">Family</div>
+<div class="label">Marital Status</div>
 			<label for="family_single" style="margin-top: -25px;  margin-left: 110px;">
 
 				<input  type="radio" id="family_single" value="false" name="family" data-bind="checked: selectedFamily"  />
@@ -1661,7 +1674,7 @@ e.preventDefault();
 		
 		<div>
 <div class="label" >Passport No</div>
-			<div class="field" style="margin-top: 3px;  margin-left: 200px;">				<input type="text" required=required class="k-input k-textbox" id="passNo"  value="#=passNo#"  />
+			<div class="field" style="margin-top: 3px;  margin-left: 195px;">				<input type="text" required=required class="k-input k-textbox" id="passNo"  value="#=passNo#"  />
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -1671,7 +1684,7 @@ e.preventDefault();
 			<div class="field" style="  margin-left: 200px;margin-top: 3px;">
 
 			<div class="field">
-				<input type="text" class="k-input k-textbox" 
+				<input type="text" 
 					id="passExpDate" 	   value="#= kendo.toString(new Date(passExpDate), 'MMM, dd yyyy')#"  />
 
 			</div>
@@ -1693,16 +1706,17 @@ e.preventDefault();
 			</div>
 			<div class="clear"></div>
 		</div>
-		<div>
+	
+				<div>
 <div class="label">Phone Number</div>
 			<div class="field" style="  
-    margin-left: 195px;
-">
-				<input type="text" required=required class="k-input k-textbox" id="phno"  value="#=phNo#" />
+    margin-left: 185px; width: 300px;
+">+
+<input type="text" style="width:30px" required=required class="k-input k-textbox" id="phno1"  value="#=phNo1#" />-
+				<input type="text" style="width:135px" required=required class="k-input k-textbox" id="phno"  value="#=phNo#" />
 			</div>
 			<div class="clear"></div>
 		</div>
-		
 		
 				<div>
 			<div class="label" >Address</div>
@@ -1725,7 +1739,7 @@ e.preventDefault();
 </fieldset>
 
  <fieldset>
-  <legend>HireDetials:</legend>
+  <legend>Hiring Details</legend>
 	<div style="float:left;height: 150px">
 
 
@@ -1794,7 +1808,7 @@ e.preventDefault();
 	
 	<div id="left-col">
 	<div>
-			<div class="label">AccommodationType </div>
+			<div class="label">Accommodation</div>
 			<div class="field">
 							<input class="accommodationDropDownList" id="accommodationVal"/>
 			</div>
@@ -1818,16 +1832,16 @@ e.preventDefault();
 			Employee
 			</label>
 				<label for="statusInactive">
-			<input  type="radio" id="inactive" value="-1" name="status"  data-bind="checked: selectedStatus" />
+			<input  type="radio" id="inactive" value="0" name="status"  data-bind="checked: selectedStatus" />
 				Employer
 			</label>
 			<div class="clear"></div>
 		</div>
 		
 			<div>
-			<div class="label">Hire date</div>
+			<div class="label">Hire Date</div>
 			<div class="field">
-				<input type="text" class="k-input k-textbox" 
+				<input type="text"  
 					id="hiredate" value="#= kendo.toString(new Date(hiredate), 'MMM, dd yyyy')#" />
 			</div>
 			<div class="clear"></div>

@@ -76,7 +76,7 @@ public class UpdateEmployeeAction extends Action {
 			e.setHiredate(hireDate);
 			e.setInactiveDate(hireDate);
 			
-			e.setEmpNationalID(eFromJSON.getNationID());
+			e.setEmpNationalID(eFromJSON.getNationID1()+"%"+eFromJSON.getNationID2()+"%"+eFromJSON.getNationID3()+"%"+eFromJSON.getNationID());
 			e.setMarried(eFromJSON.getFamly());
 			
 			e.setStatus(eFromJSON.getStatus());
@@ -91,7 +91,7 @@ public class UpdateEmployeeAction extends Action {
 			
 			e.setPpExpDate(new Date(eFromJSON.getPassExpDate()));
 			e.setPpIssuePlace(eFromJSON.getPassPlace());
-			e.setPhoneNo(eFromJSON.getPhNo());
+			e.setPhoneNo(eFromJSON.getPhNo1()+"%"+eFromJSON.getPhNo());
 			
 			e.setNationality(eFromJSON.getEmpNation());
 			

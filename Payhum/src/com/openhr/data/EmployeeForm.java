@@ -33,7 +33,15 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	private Integer positionId;
 	private String status;
 	private Integer deptIdVal;
-
+  
+	private String nationID1;
+	
+	private String nationID2;
+	
+	private String nationID3;
+	
+	
+	
 	private Integer paidTax;
 	public Integer getPaidTax() {
 		return paidTax;
@@ -50,6 +58,8 @@ public class EmployeeForm extends ActionForm implements Serializable {
 	private String passNo;
 	
 	private String phNo;
+	
+	private String phNo1;
 	
 	private String passPlace;
 	
@@ -419,5 +429,40 @@ public void setCount(Long count) {
 	public void setCurnsy(Integer curnsy) {
 		this.curnsy = curnsy;
 	}
+
+	public String getNationID1() {
+		return nationID1;
+	}
+
+	public void setNationID1(String nationID1) {
+		this.nationID1 = nationID1;
+	}
+
+	public String getNationID2() {
+		return nationID2;
+	}
+
+	public void setNationID2(String nationID2) {
+		this.nationID2 = nationID2;
+	}
+
+	public String getNationID3() {
+		return nationID3;
+	}
+
+	public void setNationID3(String nationID3) {
+		this.nationID3 = nationID3;
+	}
+
+	public String getPhNo1() {
+		return phNo1;
+	}
+
+	public void setPhNo1(String phNo1) {
+		this.phNo1 = phNo1;
+	}
+	
+	
+	
 	
 	}

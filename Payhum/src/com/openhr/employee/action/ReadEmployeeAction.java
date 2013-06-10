@@ -68,7 +68,23 @@ public class ReadEmployeeAction extends Action {
 				empFrm.setDeptId(emp.getDeptId());
 				
 				empFrm.setEmployeeId(emp.getEmployeeId());
-				empFrm.setEmpNationalID(emp.getEmpNationalID());
+				String empnid[]=emp.getEmpNationalID().split("%");
+				empFrm.setNationID1(empnid[0]);
+				if(empnid.length<2)
+				{
+					empFrm.setNationID2("");
+					empFrm.setNationID3("");
+					empFrm.setEmpNationalID("");
+				}
+				else
+				{
+					empFrm.setNationID1(empnid[0]);
+					
+					empFrm.setNationID2(empnid[1]);
+					empFrm.setNationID3(empnid[2]);
+					empFrm.setEmpNationalID(empnid[3]);
+				}
+				
 				empFrm.setFirstname(emp.getFirstname());
 				empFrm.setMiddlename(emp.getMiddlename());
 				empFrm.setLastname(emp.getLastname());
@@ -82,7 +98,19 @@ public class ReadEmployeeAction extends Action {
 				empFrm.setPassExpDate(emp.getPpExpDate());
 				empFrm.setPassPlace(emp.getPpIssuePlace());
 				empFrm.setPassNo(emp.getPpNumber());
-				empFrm.setPhNo(emp.getPhoneNo());
+				String ph[]=emp.getPhoneNo().split("%");
+				if(ph.length<2)
+				{
+					empFrm.setPhNo1("");
+					empFrm.setPhNo(ph[0]);
+				}
+				else
+				{
+					empFrm.setPhNo1(ph[0]);
+					empFrm.setPhNo(ph[1]);	
+					
+				}
+				
 				empFrm.setCurnsy(emp.getCurrency().getId());
 				
 				empFrm.setEmpAddrss(emp.getAddress());

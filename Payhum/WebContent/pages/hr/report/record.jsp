@@ -1,6 +1,9 @@
 <%@include file="../../common/jspHeader.jsp" %>
-<h2 class="legend">Earnings Per Department</h2> 
+<h2 class="legend">Employee Accumulators</h2> 
 <div id="grid">
+
+
+<a href='#' id="pdfEmp1"> <span id="rpsm"></span> </a>
 <span id="rpsm1">
 
 <span id="selectval"></span>
@@ -11,8 +14,6 @@
 		<a class="k-button k-icontext" id="saveEmp"><span class="k-add k-icon"></span>Search</a> <a
 					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel k-icon"></span>Cancel</a>
 
-<a class="k-button" href='#'
-		id="pdfEmp1"><span class="k-icon "></span>PDF</a>
 
 </span>
 

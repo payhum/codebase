@@ -12,8 +12,6 @@
 jQuery.download = function(url, data, method){
 	//url and data options required
 	if( url && data ){ 
-		alert(url);
-		alert(data);
 		//data can be string of parameters or array/object
 		data = typeof data == 'string' ? data : jQuery.param(data);
 		//split params into form inputs
@@ -25,6 +23,5 @@ jQuery.download = function(url, data, method){
 		//send request
 		jQuery('<form action="'+ url +'" method="'+ (method||'post') +'">'+inputs+'</form>')
 		.appendTo('body').submit().remove();
-		alert("done");
 	};
 };

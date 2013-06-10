@@ -1,5 +1,6 @@
 
 <%@include file="../../common/jspHeader.jsp"%>
+<h2 class="legend">Payroll Details</h2> 
 <style scoped="scoped" type="text/css">
 .k-detail-cell .k-tabstrip .k-content {
 	padding: 0.2em;

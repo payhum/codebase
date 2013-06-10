@@ -111,7 +111,7 @@ var payRollDatesDataSource1= new kendo.data.DataSource({
 	 contentType : 'application/json; charset=utf-8',
 	 cache: false,
 	 complete : function(jqXHR, textStatus){
-		 alert(jqXHR.responseText);
+		 // alert(jqXHR.responseText);
      }
 }
 

@@ -393,7 +393,7 @@ PDPage page1 = new PDPage();
 					glf.setCredt((Double) obj[3]);
 					break;
 				case 5:
-					glf.setEname("Total Allowanse");
+					glf.setEname("Total Allowance");
 
 					glf.setCredt((Double) obj[4]);
 				}
@@ -661,7 +661,7 @@ PDPage page1 = new PDPage();
 		    	}
 		    	
 		    	
-		    	 String[][] content  = {{"Id", "Name","Designation","Salary","Acom","Others","Total","LifeIns","Supose","Children","Income"}} ;
+		    	 String[][] content  = {{"Id", "Name","Desgn","Salary","Acom","Others","Total","LifeIns","Spouse","Children","Income"}} ;
 		    	PdfFactory.taxAnnualPdf(doc,actRow,cols,i,employees1,end, start, content);
 		    }
 		    
@@ -1313,7 +1313,7 @@ PDPage page1 = new PDPage();
 		doc.close();
 		
 		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition","attachment; filename=\"payrollsummary.pdf\"");
+		response.setHeader("Content-Disposition","attachment; filename=\"employeedepartments.pdf\"");
 		  
 		ServletOutputStream os = response.getOutputStream();
 		baos.writeTo(os);
@@ -1436,7 +1436,7 @@ PDPage page1 = new PDPage();
 		doc.close();
 		
 		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition","attachment; filename=\"payrollsummary.pdf\"");
+		response.setHeader("Content-Disposition","attachment; filename=\"employeestatus.pdf\"");
 		  
 		ServletOutputStream os = response.getOutputStream();
 		baos.writeTo(os);
@@ -1558,7 +1558,7 @@ PDPage page1 = new PDPage();
 		doc.close();
 		
 		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition","attachment; filename=\"payrollsummary.pdf\"");
+		response.setHeader("Content-Disposition","attachment; filename=\"employeebyaddress.pdf\"");
 		  
 		ServletOutputStream os = response.getOutputStream();
 		baos.writeTo(os);

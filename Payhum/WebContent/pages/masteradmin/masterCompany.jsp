@@ -1,6 +1,6 @@
 
-<%-- <%@include file="../../common/jspHeader.jsp"%>
- --%>
+ <%@include file="../common/jspHeader.jsp"%>
+ 
 <style scoped="scoped" type="text/css">
 .k-detail-cell .k-tabstrip .k-content {
 	padding: 0.2em;
@@ -336,17 +336,7 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
 
             $("#grid").delegate(".dwndLicense", "click", function(e) {
             	var cId = $("#grid").find(".currentCompany").find('td').eq(2).text();
-            	
-            	$.ajax({
-                    type: "POST",
-                    url: "<%=request.getContextPath() + "/do/GenLicenseFile"%>",
-                    data: {cId : cId},
-                    success: function(data) {
-                    	alert(data);
-                    }
-                });
-            	
-            	$.download('/do/GenLicenseFile','cId=' + cId,'post');
+            	$.download("<%=request.getContextPath() + "/do/GenLicenseFile"%>",'cId=' + cId,'post');
             	
             });
             

@@ -27,7 +27,7 @@
         <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/jquery.color.js"%>"></script>
         <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/jquery.Jcrop.min.js"%>"></script>
         <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/jquery.jqprint-0.3.js"%>"></script>
-        
+         <script type="text/javascript" src="<%=request.getContextPath() + "/javascript/jquery.download.js"%>"></script>
         
     </head>
     <body>

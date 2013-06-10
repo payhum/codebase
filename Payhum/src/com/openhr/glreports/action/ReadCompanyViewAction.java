@@ -80,7 +80,7 @@ public class ReadCompanyViewAction extends Action {
 						glf.setCredt((Double) obj[3]);
 						break;
 					case 5:
-						glf.setEname("Total Allowanse");
+						glf.setEname("Total Allowance");
 
 						glf.setCredt((Double) obj[4]);
 					}

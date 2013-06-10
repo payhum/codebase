@@ -73,11 +73,11 @@ public class EmployeeAction extends Action {
 			e.setLastname(eFromJSON.getLastname());
 			e.setSex(eFromJSON.getSex());
 			e.setBirthdate(new Date(eFromJSON.getBirthdate()));
-			System.out.println("BIRTHDATE "+ eFromJSON.getBirthdate());
+	
 			e.setHiredate(hireDate);
 			e.setInactiveDate(hireDate);
 			
-			e.setEmpNationalID(eFromJSON.getNationID());
+			e.setEmpNationalID(eFromJSON.getNationID1()+"%"+eFromJSON.getNationID2()+"%"+eFromJSON.getNationID3()+"%"+eFromJSON.getNationID());
 			e.setMarried(eFromJSON.getFamly());
 			
 			e.setStatus(eFromJSON.getStatus());
@@ -93,7 +93,7 @@ public class EmployeeAction extends Action {
 			
 			e.setPpExpDate(new Date(eFromJSON.getPassExpDate()));
 			
-			e.setPhoneNo(eFromJSON.getPhNo());
+			e.setPhoneNo(eFromJSON.getPhNo1()+"%"+eFromJSON.getPhNo());
 			
 			e.setNationality(eFromJSON.getEmpNation());
 			

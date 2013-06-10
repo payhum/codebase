@@ -608,7 +608,7 @@ public class PdfFactory {
 				case 2:
 				contentStream.beginText();
 			            contentStream.moveTextPositionByAmount(textx,texty);
-			        	contentStream.drawString(glf.getEpay().getEmployeeId().getEmployeeId());
+			        	contentStream.drawString(glf.getEpay().getEmployeeId().getFirstname());
 					 contentStream.endText();
 			            textx += colWidth;
 					
@@ -618,7 +618,7 @@ public class PdfFactory {
 			            contentStream.moveTextPositionByAmount(textx,texty);
 						
 						
-			        	contentStream.drawString(glf.getEpay().getEmployeeId().getEmployeeId());
+			        	contentStream.drawString(glf.getEpay().getEmployeeId().getPositionId().getName());
 						
 					
 					 contentStream.endText();
@@ -628,7 +628,7 @@ public class PdfFactory {
 					 contentStream.beginText();
 					 contentStream.moveTextPositionByAmount(textx,texty);
 					
-						contentStream.drawString(glf.getEpay().getEmployeeId().getEmployeeId());
+						contentStream.drawString(glf.getEpay().getBaseSalary().toString());
 					 contentStream.endText();
 			            textx += colWidth;
 					break;
@@ -637,7 +637,7 @@ public class PdfFactory {
 					 contentStream.beginText();
 			            contentStream.moveTextPositionByAmount(textx,texty);
 					
-			        	contentStream.drawString(glf.getEpay().getEmployeeId().getEmployeeId());
+			        	contentStream.drawString(glf.getEpay().getAccomodationAmount().toString());
 					
 					 contentStream.endText();
 			            textx += colWidth;
@@ -646,7 +646,7 @@ public class PdfFactory {
 					
 					 contentStream.beginText();
 			            contentStream.moveTextPositionByAmount(textx,texty);
-			        	contentStream.drawString(glf.getEpay().getEmployeeId().getEmployeeId());
+			        	contentStream.drawString(glf.getEpay().getOtherIncome().toString());
 					
 					 contentStream.endText();
 			            textx += colWidth;
@@ -932,7 +932,7 @@ public class PdfFactory {
 		  contentStream.setFont(PDType1Font.HELVETICA_BOLD,20);
     contentStream.moveTextPositionByAmount(200,730);
 
-    contentStream.drawString("EmployeeByDepartments");
+    contentStream.drawString("Employees By Department");
     contentStream.endText();
     float y=700;
 	  float margin=100;
@@ -1103,7 +1103,7 @@ public class PdfFactory {
 		  contentStream.setFont(PDType1Font.HELVETICA_BOLD,20);
     contentStream.moveTextPositionByAmount(200,730);
 
-    contentStream.drawString("EmployeesActivated");
+    contentStream.drawString("Employee Status");
     contentStream.endText();
     float y=700;
 	  float margin=100;

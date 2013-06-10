@@ -54,15 +54,15 @@ span.k-tooltip {
 					<div class="label" style="width : 95px !important;"><b>Currency Rates</b></div><br><br>
 					<div class="label">1 USD </div>
 					<div class="field">
-						<input type="text" required=required class="k-input k-textbox" id="usdVal" value="" /> MMK
+						<input type="text" required=required class="k-input k-textbox" id="usdVal" value="" /> 
 					</div>
 					<div class="label">1 EURO</div>
 					<div class="field">
-						<input type="text" required=required class="k-input k-textbox" id="euroVal" value="" /> MMK
+						<input type="text" required=required class="k-input k-textbox" id="euroVal" value="" /> 
 					</div>
 					<div class="label">1 POUND</div>
 					<div class="field">
-						<input type="text" required=required class="k-input k-textbox" id="poundVal" value="" /> MMK
+						<input type="text" required=required class="k-input k-textbox" id="poundVal" value="" /> 
 					</div>
 					<a class="k-button k-icontext" id="processBranch">Process</a> <br> <br>
 					<div class="clear"></div>
@@ -395,9 +395,9 @@ span.k-tooltip {
 			<li class="k-state-active">Overtime Setting</li>
 			<li>Tax Rates for Local</li>
 			<li>Tax Rates for NRF</li>
- 			<li>Deduction Setting</li>
-			<li>Payroll period Setting</li>
-			<li>TaxDetails</li>
+ 			<li>Deduction Settings</li>
+			<li>Payroll period Settings</li>
+			<li>Tax Details</li>
 		</ul>
 
 		<div>
@@ -424,8 +424,8 @@ span.k-tooltip {
 			<form>
 				<fieldset>
 					<legend>Tax Rates Settings</legend>
-					<label>From (MMK)</label> <input type="text" id="incomeFrom"
-						disabled /><br> <label>To(MMK)</label> <input type="text"
+					<label>From </label> <input type="text" id="incomeFrom"
+						disabled /><br> <label>To</label> <input type="text"
 						id="incomeTo" /><br> <input type="hidden" id="incomeFromId" /><br>
 					<label>Rate </label> <select id="taxpercent">
 
@@ -445,8 +445,8 @@ span.k-tooltip {
 			<form>
 				<fieldset>
 					<legend>Tax Rates Settings For Non Resident Foreigner</legend>
-					<label style="display : none !important;">From (MMK)</label> <input type="text" id="foriegnincomeFrom"
-						disabled  style="display : none !important;"/><label style="display :none !important;">To(MMK)</label> <input type="text"
+					<label style="display : none !important;">From </label> <input type="text" id="foriegnincomeFrom"
+						disabled  style="display : none !important;"/><label style="display :none !important;">To</label> <input type="text"
 						id="foriegnincomeTo" value="1"  disabled style="display:none !important;"/><input type="hidden" id="foriegnincomeFromId" />
 					
 					<label>All income is taxed at <span id = "forTax" ></span></label><br/>
@@ -520,7 +520,7 @@ span.k-tooltip {
 
 			<form>
 				<fieldset>
-					<legend>Payroll period Definition</legend>
+					<legend>Tax Details</legend>
 					  
 					<div id="taxDetailsGridTable">
 					<span id="inGridTaxDet">
@@ -608,7 +608,7 @@ span.k-tooltip {
 			<p style="width: 400px; font-size: 13px; text-align: right">Allowances</p>
 		</div>
 		<div style="float: right">
-			MMK #=kendo.toString(allowances, "n2")#
+			 #=kendo.toString(allowances, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
@@ -618,7 +618,7 @@ span.k-tooltip {
 			<p style="width: 400px; font-size: 13px; text-align: right">Accomodationtion</p>
 		</div>
 		<div style="float: right">
-	MMK #=kendo.toString(accomodationAmount, "n2")#
+	 #=kendo.toString(accomodationAmount, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
@@ -627,7 +627,7 @@ span.k-tooltip {
 			<p style="width: 400px; font-size: 13px; text-align: right">taxableOverseasIncome</p>
 		</div>
 		<div style="float: right">
-	  	MMK #=kendo.toString(taxableOverseasIncome, "n2")#
+	  	 #=kendo.toString(taxableOverseasIncome, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
@@ -637,7 +637,7 @@ span.k-tooltip {
 			<p style="width: 400px; font-size: 13px; text-align: right">employerSS</p>
 		</div>
 		<div style="float: right">
-			 	MMK #=kendo.toString(employerSS, "n2")#
+			 	 #=kendo.toString(employerSS, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
@@ -672,7 +672,7 @@ span.k-tooltip {
 <div>
 		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">#=type.name#</p></div>
 		<div style="float:right">
-MMK #=kendo.toString(amount, "n2")#
+ #=kendo.toString(amount, "n2")#
 </div>
 		<div style="clear:both"></div>
 	</div>
@@ -697,7 +697,7 @@ MMK #=kendo.toString(amount, "n2")#
 <div>
 		<div style="float:left"><p style="width:400px;font-size:13px;text-align:right">#=type.name#</p></div>
 		<div style="float:right">
-MMK #=kendo.toString(amount, "n2")#
+ #=kendo.toString(amount, "n2")#
 </div>
 		<div style="clear:both"></div>
 	</div>
@@ -723,7 +723,7 @@ MMK #=kendo.toString(amount, "n2")#
 
 		<div style="float: right">
 		
-MMK #=kendo.toString(totalDeductions, "n2")#
+ #=kendo.toString(totalDeductions, "n2")#
 		</div>
 		<div style="clear: both"></div>
 	</div>
@@ -738,7 +738,7 @@ MMK #=kendo.toString(totalDeductions, "n2")#
 		</div>
 		<div style="float: right">
 			
-MMK #=kendo.toString(netPay, "n2")#
+ #=kendo.toString(netPay, "n2")#
 			<hr>
 			<hr>
 		</div>
@@ -1126,7 +1126,7 @@ $("#cancelTaxdet").click(function(){
 						    			//$("#addOverTimeDiv").addClass("displayClass");
 						    		    taxtDetailsDataSource.read();
 						    			
-						    			alert(data);
+						    			//alert(data);
 						    			$("#inGridTaxDet").hide();
 						    		}
 						       

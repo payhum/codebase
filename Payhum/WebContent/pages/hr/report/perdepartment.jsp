@@ -1,8 +1,8 @@
 <%@include file="../../common/jspHeader.jsp" %>
-<h2 class="legend">Earnings Per Department</h2> 
+<h2 class="legend">Employee Earnings </h2> 
 <div id="grid">
 
-
+<a href='#' id="pdfEmp1"> <span id="rpsm"></span> </a>
 <span id="rpsm1">
 
 <span id="selectval"></span>
@@ -10,22 +10,12 @@
 		<span id="deparSpan">
 		SelectDepartment<input class="departDropDownList" id="departVal"/></span>
 		
-		<a class="k-button k-icontext" id="saveEmp"><span class="k-add k-icon"></span>Search</a> <a
+		<a class="k-button k-icontext" id="saveEmp"><span class="k-add"></span>Search</a> <a
 	
 	
-					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel k-icon"></span>Cancel</a>
-
-
-<a class="k-button" href='#'
-		id="pdfEmp1"><span class="k-icon "></span>PDF</a>
+					class="k-button k-icontext" id="cancelEmp"><span class="k-cancel"></span>Cancel</a>
 
 </span>
-
-
-
-	
-
-
 
 </div>
 
@@ -65,9 +55,9 @@ var departDrp, selectDepar;
         $("#grid").kendoGrid({
             dataSource :empAll, 
             columns: [
-                      { field: "employeeId", title: "fullName", template: '#=employeeId ? employeeId.employeeId: ""#',  width: "100px" },
+                      { field: "employeeId", title: "EmpID", template: '#=employeeId ? employeeId.employeeId: ""#',  width: "100px" },
                 
-                { field: "employeeId", title: "fullName", template: '#=employeeId ? employeeId.firstname+"."+employeeId.middlename: ""#',  width: "100px" },
+                { field: "employeeId", title: "FullName", template: '#=employeeId ? employeeId.firstname+"."+employeeId.middlename: ""#',  width: "100px" },
                 { field: "employeeId", title: "Department", template: '#=employeeId ? employeeId.deptId.deptname: ""#',  width: "100px" },
                 { field: "paidNetPay", title: "Amount Earned",  width: "100px" }
                

@@ -102,5 +102,8 @@ INSERT INTO `emp_bonus` (`id`, `employeeId`, `givendate`,`amount`) VALUES
 
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`,`username`,`password`,`employeeId`,`roleId`,`version`) VALUES 
- (3,'john','welcome',2,1,1);
+ (3,'johnemp','welcome',2,4,1),
+ (4,'johnhr','welcome',2,1,1),
+ (5,'johnfin','welcome',2,3,1),
+ (6,'johnadmin','welcome',2,2,1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;

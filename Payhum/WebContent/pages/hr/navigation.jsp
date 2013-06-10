@@ -137,9 +137,7 @@
 				</div>
 
 				<ul class="gradient_menu gradient95">
-					<li class="gradient_menuitem gradient31"><a
-						href="<%=request.getContextPath() + "/do/PayrollLiability"%>">
-							Liability</a></li>
+					
 					<li class="gradient_menuitem gradient31 last_item"><a
 						href="<%=request.getContextPath() + "/do/PayrollSummary"%>">
 							Summary</a></li>
@@ -206,11 +204,6 @@
 			<li class="gradient_menuitem gradient31 first_item"><a
 				href="<%=request.getContextPath() + "/do/EmployeesAddress"%>">
 					Employees Address</a></li>
-
-
-			<li class="gradient_menuitem gradient31 first_item"><a
-				href="<%=request.getContextPath() + "/do/PaidCheckHistory"%>">
-					Paid Check History</a></li>
 
 					
 					</ul>

@@ -57,15 +57,15 @@
  						
  					<span><input type="text" class="k-textbox"  id="dedcDesc" /></span>
 						</form>
-  					<div style="float:right;">
+  			
 	  					<span><input type="submit" class="addDeduc" value="Apply"/></span>&nbsp;&nbsp;
 						<span><input type="button" class="canceDeduc" value="Cancel"/></span>
 				
                
-               
+               </span>
  					</div>
  					
- 				</span>
+ 				
   			</div>
 
   	<div id="grid3"> </div>
@@ -73,7 +73,7 @@
 
 				
 	</div>
-	</div>
+	
 	  		
 
 

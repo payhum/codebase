@@ -73,7 +73,7 @@ public class ReadEmployeeViewAction extends Action {
 						glf.setDebit(emp.getBaseSalary());
 						break;
 					case 5:
-						glf.setEname("Allowanse");
+						glf.setEname("Allowance");
 
 						glf.setEmpName(emp.getFullName());
 						glf.setDebit(emp.getAllowancesAmount());
