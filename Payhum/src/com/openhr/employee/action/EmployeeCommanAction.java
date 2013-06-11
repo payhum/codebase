@@ -535,10 +535,14 @@ public class EmployeeCommanAction extends DispatchAction
 	            HttpServletRequest request, HttpServletResponse response)
 	            throws Exception {
 	     String s=null;
+	     JSONArray result =null;
+	     
 	     try
 			
 			{
-				List<Dtest>  eptx=UsersFactory.findBy();
+	    	
+
+				/*List<Dtest>  eptx=UsersFactory.findBy();
 				//result = JSONArray.fromObject(eptx);
 			for(Dtest d:eptx)
 			{
@@ -547,19 +551,32 @@ public class EmployeeCommanAction extends DispatchAction
 					
 				{	System.out.println(e.getFirstname());}
 			
-			}
+			}*/
 			//JSONArray result1 = JSONArray.fromObject(eptx);
 			//System.out.println(result1.toString());
-	       
-	    }
-	 	catch(Exception e)
-		{
-			e.printStackTrace();
+	    	 
+	    	 JsonConfig config = new JsonConfig();
+				config.setIgnoreDefaultExcludes(false);
+				config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+				List<Employee> employees = EmployeeFactory.findAll();
+				//result = JSONArray.fromObject(emplist, config);
+				result = JSONArray.fromObject(employees, config);
+
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			
+			response.setContentType("application/json; charset=utf-8");
+			PrintWriter out = response.getWriter();
+			
+				out.print(result.toString());
+			
+			out.flush();
+
+			return mapping.findForward("");
 		}
-	     
-	     return mapping.findForward("success");
-	 }
-	 
 	 
 	 
 	 

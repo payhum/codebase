@@ -185,7 +185,7 @@ public class UploadFile extends Action {
         	ex.printStackTrace();
         }
         
-		return map.findForward("masterhome.form");
+		return map.findForward("MasterHome");
 	}
 	
 

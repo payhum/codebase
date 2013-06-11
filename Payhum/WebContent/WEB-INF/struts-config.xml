@@ -782,7 +782,7 @@
 		</action>
 		
 		<action path="/UploadFile" type="com.openhr.UploadFile" scope="request">
-		<forward name="continue" path="report.form" />
+		<forward name="MasterHome" path="masterhome.form" />
 		</action>
 
 		<action path="/GenerateBankFile" type="com.openhr.payroll.BankFile" scope="request">
@@ -809,10 +809,12 @@
 		</action>
 
 		<action path="/UploadCompLicenseFile" type="com.openhr.company.UploadCompLicenseFile" scope="request">
+		<forward name="CompLicHome" path="branchDept.form" />
 		</action>
 		<action path="/GenLicenseFile" type="com.openhr.company.GenerateCompLicenseFile" scope="request">
 		</action>
 		<action path="/UploadEmployeeDataFile" type="com.openhr.employee.UploadEmployeeDataFile" scope="request">
+		<forward name="HRHome" path="employee.form" />
 		</action>
 		
 	</action-mappings>

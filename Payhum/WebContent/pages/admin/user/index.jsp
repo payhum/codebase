@@ -53,6 +53,8 @@
            		read : {
            			url : "<%=request.getContextPath() + "/do/ReadUserAction"%>",
            			dataType : "json",
+                    contentType : 'application/json; charset=utf-8',
+                    type : 'POST',
            			cache : false
            		},
                 create : {
@@ -117,7 +119,10 @@
                 dataSource: {
                     type: "json",
                     transport: {
-                        read: "<%=request.getContextPath() + "/do/ReadEmployeeAction"%>"
+                        read: "<%=request.getContextPath() + "/do/EmployeeCommanAction?parameter=test"%>",
+                        		
+                        		contentType : 'application/json; charset=utf-8',
+                                type : 'POST'
                     }
                 }
             }); 
@@ -129,7 +134,9 @@
                 dataSource: {
                     type: "json",
                     transport: {
-                        read: "<%=request.getContextPath() + "/do/ReadRoleAction"%>"
+                        read: "<%=request.getContextPath() + "/do/ReadRoleAction"%>",
+                        contentType : 'application/json; charset=utf-8',
+                        type : 'POST'
                     }
                 }
             }); 

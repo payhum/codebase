@@ -182,6 +182,6 @@ public class UploadCompLicenseFile extends Action {
         	ex.printStackTrace();
         }
         
-		return map.findForward("HRHome");
+		return map.findForward("CompLicHome");
 	}
 }
