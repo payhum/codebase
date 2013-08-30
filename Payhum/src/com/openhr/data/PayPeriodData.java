@@ -31,17 +31,32 @@ public class PayPeriodData implements Serializable {
 	@Column(name = "name", nullable = false, length = 45)
 	private String periodName;
 	@Basic(optional = false)
-	@Column(name = "selected", nullable = false, length = 65535)
+	@Column(name = "selected", nullable = false, length = 10)
 	private Integer periodValue;
 
-	public PayPeriodData(Integer id, String periodName, Integer periodValue) {
+	@Basic(optional = true)
+	@Column(name = "dayofmonth", nullable = true, length = 10)
+	private Integer dayofmonth;
+	
+	public PayPeriodData(Integer id, String periodName, Integer periodValue,
+			Integer dayofmonth) {
 		super();
 		this.id = id;
 		this.periodName = periodName;
 		this.periodValue = periodValue;
+		this.dayofmonth = dayofmonth;
 	}
 
 	public PayPeriodData() {
+		this.dayofmonth = 26;
+	}
+
+	public Integer getDayofmonth() {
+		return dayofmonth;
+	}
+
+	public void setDayofmonth(Integer dayofmonth) {
+		this.dayofmonth = dayofmonth;
 	}
 
 	public Integer getId() {

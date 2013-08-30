@@ -103,6 +103,7 @@ var deptFormPath = "<%=request.getContextPath()%>"+ "/pages/masteradmin/deptForm
  									{ template:'#=companyId.companyId ? companyId.id: ""#', width : 1},  								
 									{ field : "companyId.companyId", title : " Company Id",    width : 100  },
 									{ field : "companyId.name", title : "Company Name",    width : 100  },
+									{ field : "companyId.fystart", title : "Financial Year Start Month",    width : 100  },
 				  		            { field : "active", title : "Status", template : "#= active != 0 ? 'Active' : 'Inactive' #", width : 100 },
 
  								  ]     

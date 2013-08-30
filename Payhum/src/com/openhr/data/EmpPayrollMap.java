@@ -26,6 +26,7 @@ import com.openhr.common.PayhumConstants;
 @XmlRootElement
 @NamedQueries({
    @NamedQuery(name = "EmpPayrollMap.findAll", query = "SELECT p FROM EmpPayrollMap p"),
+   @NamedQuery(name = "EmpPayrollMap.findBypayrollId",query ="select emap from  EmpPayrollMap emap  where emap.payrollId= ?"),
    @NamedQuery(name = "EmpPayrollMap.findByPayDateId",query ="select emap from  EmpPayrollMap emap, Payroll pr where pr.id=emap.payrollId and pr.payDateId= ?"),
    @NamedQuery(name = "EmpPayrollMap.findByEmpPayrollId", query = "SELECT p FROM EmpPayrollMap p WHERE p.emppayId = ?"),
    @NamedQuery(name = "EmpPayrollMap.findByEmpPayrollIdAndPayrollId", query = "SELECT p FROM EmpPayrollMap p WHERE p.emppayId = ? AND p.payrollId = ?")})
@@ -59,9 +60,34 @@ public class EmpPayrollMap implements Serializable {
    private Double socialSec;
    
    @Basic(optional = false)
+   @Column(name = "overtimeAmt", nullable = false)
+   private Double overtimeAmt;
+
+   @Basic(optional = false)
+   @Column(name = "otherIncome", nullable = false)
+   private Double otherIncome;
+
+   @Basic(optional = false)
    @Column(name = "mode", nullable = false)
    private Integer mode;
    
+   
+   public Double getOvertimeAmt() {
+	   return overtimeAmt;
+	}
+	
+	public void setOvertimeAmt(Double overtimeAmt) {
+		this.overtimeAmt = overtimeAmt;
+	}
+	
+	public Double getOtherIncome() {
+		return otherIncome;
+	}
+	
+	public void setOtherIncome(Double otherIncome) {
+		this.otherIncome = otherIncome;
+	}
+	
    public EmpPayrollMap() {
 	   
    }

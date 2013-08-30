@@ -8,6 +8,8 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.openhr.company.Company;
+import com.openhr.data.Branch;
 import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Payroll;
@@ -104,7 +106,7 @@ public class PayrollFactory implements Serializable {
 		return payrollList;
 	}
 	
-	public static List<PayrollDate> findAllPayrollDate() throws Exception {
+	/*public static List<PayrollDate> findAllPayrollDate() throws Exception {
 		
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
@@ -112,8 +114,31 @@ public class PayrollFactory implements Serializable {
 
 		payrollDateList = query.list();
 		return payrollDateList;
+	}*/
+	
+	public static List<PayrollDate> findPayrollDateByBranch(Integer branchId) throws Exception {
+		Branch branch= new Branch();
+		branch.setId(branchId);
+		
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("PayrollDate.findByBranchId");
+		query.setParameter(0,  branch);
+
+		payrollDateList = query.list();
+		return payrollDateList;
 	}
 
+	public static List<PayrollDate> findPayrollDateByID(Integer id) throws Exception {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("PayrollDate.findById");
+		query.setInteger(0,  id);
+
+		payrollDateList = query.list();
+		return payrollDateList;
+	}
+	
 	public static void insertPayrollDate(PayrollDate rDate) {
 
 		Session lsession = OpenHRSessionFactory.getInstance().openSession();

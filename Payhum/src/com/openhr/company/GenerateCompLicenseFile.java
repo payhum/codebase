@@ -64,6 +64,9 @@ public class GenerateCompLicenseFile extends Action {
 			throw new Exception("Unable to get Company's licenses details");
 		}
 		
+		String processedAddr = branch.getAddress();
+		processedAddr = processedAddr.replace(",", ";");
+		
 		StringBuilder compDetailsStr = new StringBuilder();
 		compDetailsStr.append(comp.getCompanyId());
 		compDetailsStr.append(COMMA);
@@ -71,13 +74,15 @@ public class GenerateCompLicenseFile extends Action {
 		compDetailsStr.append(COMMA);
 		compDetailsStr.append(branch.getName());
 		compDetailsStr.append(COMMA);
-		compDetailsStr.append(branch.getAddress());
+		compDetailsStr.append(processedAddr);
 		compDetailsStr.append(COMMA);
 		compDetailsStr.append(license.getFromdate());
 		compDetailsStr.append(COMMA);
 		compDetailsStr.append(license.getTodate());
 		compDetailsStr.append(COMMA);
 		compDetailsStr.append(license.getLicensekey());
+		compDetailsStr.append(COMMA);
+		compDetailsStr.append(comp.getFinStartMonth());
 		
 		OutputStream os = response.getOutputStream();
 		os.write(compDetailsStr.toString().getBytes());

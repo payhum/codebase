@@ -24,14 +24,24 @@
 			Select the Client Company from the list here and click <b>Process</b> to process the selected company payroll and then download the required file.
 		<br><br>
 		<div>
-			<div class="label" style="width : 75px !important;">Company</div>
-			<div class="field">
-				<select id="compName"></select>
+					<div class="label">Company</div>
+					<div class="field">
+						<input id="compDropDownList" />
+					</div>
+					<div class="clear"></div>
+				</div> <br>
+
+				<div id="dp1">
+					<div class="label">Branch</div>
+					<div class="field">
+						<input class="branchDropDownList" id="branchVal" />
 				<a class="k-button k-icontext" id="processComp">Process</a> <br> <br>
-			</div>
-			<div class="clear"></div>
-		</div>
+							</div>
+					<div class="clear"></div>
+				</div>
 		
+		
+			
 		<div style="display:none" id="genBankDiv">	
 		    <form method="post" action="<%=request.getContextPath() + "/do/GenerateBankFile"%>" enctype="multipart/form-data">
 		    	<input class="k-button k-icontext" type="submit" value="Download Bank File"/> to be sent to Bank for crediting the Salary to Employees.<br>
@@ -62,27 +72,78 @@
 
 <script>
 			$(document).ready(function(){
-				$("#compName").kendoDropDownList({
-					dataTextField : "companyId.name",
-					dataValueField : "companyId.id",
-					optionLabel: "Select Company",
-					dataSource : {
-						type : "json",
-						transport : {
-							read : "<%=request.getContextPath() + "/do/ReadCompanyAction"%>"
+				 $("#compDropDownList").kendoDropDownList({
+					  
+					  dataTextField : "companyId.name",
+						dataValueField : "companyId.id",
+						optionLabel: "Select Company",
+						dataSource :{
+							type : "json",
+							transport : {
+								read : "<%=request.getContextPath() + "/do/ReadCompanyAction"%>"
+							}
 						}
-					}
-			    });
+						
+				  }).data("kendoDropDownList");
+				 
+				 $("#dp1").hide();
+			});
+			
+			$("#compDropDownList").change( function() {
+				$(".branchDropDownList").html('');
+				$("#dp1").show();
+				//alert("value"+$(this).val());
+				var dId = $(this).val();
+				
+				var CompData = JSON.stringify({
+					"compId":dId 
+				 });  
+				
+				var branchDataSource1 = new kendo.data.DataSource({
+	                	 transport : {
+	                    		read : {
+	                    			type: 'POST',
+	                    			 url:'<%=request.getContextPath()
+				+ "/do/CommantypesAction?parameter=getAllBranchesOfComp"%>',
+			        				 dataType : 'json',
+			        				 contentType : 'application/json; charset=utf-8',
+			        				 cache: false,
+			        				 
+			        		},
+	                     
+	                    		parameterMap: function (data, type) {
+	                    			if(type = "read"){
+	                    			//	alert(BrachData+"hello updateData");
+	                    				return CompData;
+	                    			}
+	                    			
+	                    		}
+	                    	},
+	                   
+	                      
+	                       	autoSync : true,
+	                       	batch : true 
+	                    });
+				
+				 
+				  
+				$(".branchDropDownList").kendoDropDownList({
+					dataTextField : "name",
+					dataValueField : "id",
+					optionLabel: "Select Branch",
+					dataSource :branchDataSource1
+				
+			       }).data("kendoDropDownList");
 			});
 			
 			$("#processComp").bind("click", function() {    				
-      			compId = $("#compName").val();
+      			branchId = $("#branchVal").val();
         		
-      			if(compId == "") {
-      				alert("Select a Company to process.");
-      			} else {
+      			if (branchId == "") {
+      				alert("Select a Branch to process.");
+			    } else {
 	     			var comp = JSON.stringify({
-	     	   			"compId"	  : compId
+	     	   			"branchId"    : branchId
 	      			});   
 	     			
 	     			$.ajax({

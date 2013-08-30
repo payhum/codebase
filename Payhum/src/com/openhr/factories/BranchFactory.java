@@ -42,6 +42,17 @@ public class BranchFactory implements Serializable {
 		return comps;
 	}
 
+	public static List<Branch> findByName(String name) throws Exception{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Branch.findByName");
+		query.setString(0, name);
+		List<Branch> brs = query.list();
+		session.getTransaction().commit();
+
+		return brs;
+	}
+	
 	public static List<Branch> findByCompanyId(Integer compId) throws Exception{
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();

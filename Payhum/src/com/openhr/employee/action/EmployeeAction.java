@@ -123,7 +123,7 @@ public class EmployeeAction extends Action {
 				TypesData acomTyds=EmployeeFactory.findTypesById(acomId);
 				
 				epl.setAccomodationType(acomTyds);
-				epl.setFullName(lastName);
+				epl.setFullName(eFromJSON.getFirstname() + " " + eFromJSON.getMiddlename() + " " + eFromJSON.getLastname());
 				epl.setTaxPaidByEmployer(eFromJSON.getPaidTax());
 				epl.setEmployeeId(e);
 				//flag=EmpPayTaxFactroy.save(epl);

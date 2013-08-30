@@ -60,7 +60,7 @@
            
            <%if (request.getSession().getAttribute("loggedUser") != null) {
                      if(!request.getSession().getAttribute("loggedUser").toString().equalsIgnoreCase("")){%>
-            <div id="footer"><p>&copy;2013 Copyright. MPTS. </p></div>
+            <div id="footer"><p>&copy;2013 Copyright. MPTS v1.0.4 </p></div>
             <%}
            } %>
         </div>

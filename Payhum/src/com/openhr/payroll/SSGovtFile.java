@@ -18,7 +18,9 @@ import org.apache.struts.action.ActionMapping;
 import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
+import com.openhr.data.Branch;
 import com.openhr.data.ConfigData;
+import com.openhr.factories.BranchFactory;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
 import com.openhr.factories.ConfigDataFactory;
@@ -31,10 +33,15 @@ public class SSGovtFile extends Action {
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception { 
-		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_COMPANY); 
-		int compId = Integer.parseInt(config.getConfigValue());
+		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH); 
+		int branchId = Integer.parseInt(config.getConfigValue());
+		List<Branch> branches = BranchFactory.findById(branchId);
 		
-		List<Company> comps = CompanyFactory.findById(compId);
+		Branch branch = null;
+		if(branches != null && !branches.isEmpty()) {
+			branch = branches.get(0);
+		}
+		List<Company> comps = CompanyFactory.findById(branch.getCompanyId().getId());
 		Company comp = comps.get(0);
 		String compName = comp.getName();
 		compName = compName.replace(" ", "_");
@@ -49,7 +56,7 @@ public class SSGovtFile extends Action {
         
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		
-		String fileName = "SocialSec_" + compName + "_Payroll_" + monthYear + ".csv";
+		String fileName = "SocialSec_" + compName + "_" + branch.getName() + "_Payroll_" + monthYear + ".csv";
 		
 		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		response.setContentType("application/force-download");
@@ -57,14 +64,16 @@ public class SSGovtFile extends Action {
 		// Columns in the file will be:
 		// EmployeeName,EmpNationalID,SocialSecAmt
 		Double totalAmt = 0D;
+		Double totalEmprAmt = 0D;
+		Double totalEmpeAmt = 0D;
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMyyyy");
 		
-		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(comp, cal.getTime());
+		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(branch, cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
 
 		allEmpPayStr.append("Company Name");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Company ID");
+		allEmpPayStr.append("Branch Name");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Employee Name");
 		allEmpPayStr.append(COMMA);
@@ -74,18 +83,23 @@ public class SSGovtFile extends Action {
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Payroll Cycle");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Amount (MMK)");
+		allEmpPayStr.append("Employer SS Amount (MMK)");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Employee SS Amount (MMK)");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Total SS Amount (MMK)");
 		allEmpPayStr.append("\n");
 		
 		for(CompanyPayroll compPay : compPayroll) {
-			if(compPay.getSocialSec() == 0D) {
+			if(compPay.getEmprSocialSec() == 0D
+			   && compPay.getEmpeSocialSec() == 0D ) {
 				continue;
 			}
 			
 			StringBuilder empPayStr = new StringBuilder();
-			empPayStr.append(compPay.getCompanyId().getName());
+			empPayStr.append(comp.getName());
 			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getCompanyId().getId());
+			empPayStr.append(branch.getName());
 			empPayStr.append(COMMA);			
 			empPayStr.append(compPay.getEmpFullName());
 			empPayStr.append(COMMA);
@@ -95,15 +109,25 @@ public class SSGovtFile extends Action {
 			empPayStr.append(COMMA);
 			empPayStr.append(sdf.format(compPay.getProcessedDate()));
 			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(compPay.getSocialSec()));
+			empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmprSocialSec()));
+			empPayStr.append(COMMA);
+			empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmpeSocialSec()));
+			empPayStr.append(COMMA);
+			empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmprSocialSec() + compPay.getEmpeSocialSec()));
 			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);
 			
-			totalAmt += compPay.getSocialSec();
+			totalAmt += compPay.getEmprSocialSec() + compPay.getEmpeSocialSec();
+			totalEmprAmt += compPay.getEmprSocialSec();
+			totalEmpeAmt += compPay.getEmpeSocialSec();
 		}
 		
 		allEmpPayStr.append("\n,,,,,TOTAL:,");
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmprAmt));
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeAmt));
+		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append(new DecimalFormat("###.##").format(totalAmt));
 		
 		OutputStream os = response.getOutputStream();

@@ -33,7 +33,9 @@ import com.openhr.common.PayhumConstants;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Payroll.findAll", query = "SELECT p FROM Payroll p"),
+    @NamedQuery(name = "Payroll.findcountRunOnDate", query = "SELECT count(distinct p.runOnDate) FROM Payroll p"),
     @NamedQuery(name = "Payroll.findById", query = "SELECT p FROM Payroll p WHERE p.id = ?"),
+    @NamedQuery(name = "Payroll.findByPayDateAndBranch", query = "SELECT p FROM Payroll p WHERE p.payDateId= ? AND p.branchId = ?"),
     @NamedQuery(name = "Payroll.findByRunOnDate", query = "SELECT p FROM Payroll p WHERE p.runOnDate = ?")})
 public class Payroll implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -56,7 +58,19 @@ public class Payroll implements Serializable {
     @ManyToOne(optional = false)
     private PayrollDate payDateId;
 
-    public Payroll() {
+    @JoinColumn(name = "branchId", referencedColumnName = "id", nullable = false)
+    @ManyToOne(optional = false)
+    private Branch branchId;
+
+    public Branch getBranchId() {
+		return branchId;
+	}
+
+	public void setBranchId(Branch branchId) {
+		this.branchId = branchId;
+	}
+
+	public Payroll() {
     }
 
     public Payroll(Integer id) {

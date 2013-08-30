@@ -27,11 +27,12 @@ import com.openhr.factories.LeaveRequestFactory;
 import com.openhr.factories.OverTimeFactory;
 import com.openhr.taxengine.IncomeCalculator;
 import com.openhr.taxengine.TaxDetails;
+import com.util.payhumpackages.PayhumUtil;
 
 public class BaseIC implements IncomeCalculator {
 
 	@Override
-	public EmployeePayroll calculate(Employee emp, Calendar currDtCal, boolean active) {
+	public EmployeePayroll calculate(Employee emp, Calendar currDtCal, boolean active, int finStartMonth) {
 		/* Total Income involves the following:
 		 * - Base Salary
 		 * - Bonus
@@ -53,9 +54,9 @@ public class BaseIC implements IncomeCalculator {
 		
 		// First check if there is a BaseSalary change and then update the baseSalary in Payroll table.
 		if(active) {
-			checkAndUpdateBaseSalary(emp, empPayroll, currDtCal);
+			checkAndUpdateBaseSalary(emp, empPayroll, currDtCal, finStartMonth);
 		} else {
-			computeBaseSalaryForInactive(emp, empPayroll, currDtCal);
+			computeBaseSalaryForInactive(emp, empPayroll, currDtCal, finStartMonth);
 		}
 		
 		// Check if there is a Bonus allocated in the current month and then update the bonus in Payroll table.
@@ -67,6 +68,9 @@ public class BaseIC implements IncomeCalculator {
 		for(Benefit bf : empBenefits){
 			allowancesAmt += bf.getAmount();
 		}
+		
+		//convert allowance from user's currency to MMK
+		allowancesAmt = getAmountInMMK(emp.getCurrency(), allowancesAmt);
 		
 		empPayroll.setAllowances(allowancesAmt);
 		
@@ -93,7 +97,8 @@ public class BaseIC implements IncomeCalculator {
 		// Process loss of Pay
 		Double leaveLoss = calculateLossOfPay(emp, empPayroll, currDtCal);
 
-		empPayroll.setTotalIncome(totalIncome - leaveLoss);
+		// empPayroll.setTotalIncome(totalIncome - leaveLoss );
+		empPayroll.setTotalIncome(totalIncome - leaveLoss + empPayroll.getOtherIncome() + empPayroll.getOvertimeamt());
 		
 		return empPayroll;
 	}	
@@ -197,7 +202,7 @@ public class BaseIC implements IncomeCalculator {
 			}
 		}
 		
-		empPayroll.setOvertimeamt(amount);
+		empPayroll.addOvertimeamt(amount);
 	}
 
 	private boolean isDateHoliday(Calendar currDtCal) {
@@ -229,7 +234,7 @@ public class BaseIC implements IncomeCalculator {
 	}
 
 	private void computeBaseSalaryForInactive(Employee emp,
-			EmployeePayroll empPayroll, Calendar currDtCal) {
+			EmployeePayroll empPayroll, Calendar currDtCal, int finStartMonth) {
 		List<EmployeeSalary> empSalList = EmpPayTaxFactroy.findEmpSalary(empPayroll.getEmployeeId());
 
 		// Zero out the hour, minute, second, and millisecond
@@ -268,23 +273,17 @@ public class BaseIC implements IncomeCalculator {
 				// Not a last record
 				int toDtMonth = toDtCal.get(Calendar.MONTH) + 1; 
 				int effDtMonth = effDtCal.get(Calendar.MONTH) + 1;
-				
-				if( toDtMonth >= 4) {
+		
+				if(toDtMonth > effDtMonth) {
 					int count = toDtMonth - effDtMonth;
 					Double sal = salAmount/12 * count;
 					totalSal += sal;
 				} else {
-					if(effDtMonth >= 4){
-						int count = 12 - effDtMonth;
-						count += toDtMonth;
-						
-						Double sal = salAmount/12 * count;
-						totalSal += sal;
-					} else {
-						int count = toDtMonth - effDtMonth;
-						Double sal = salAmount/12 * count;
-						totalSal += sal;
-					}
+					int count = effDtMonth - 12;
+					count += toDtMonth;
+					
+					Double sal = salAmount/12 * count;
+					totalSal += sal;
 				}
 			} else {
 				// Last record
@@ -346,7 +345,7 @@ public class BaseIC implements IncomeCalculator {
 	    }
 	}
 
-	private void checkAndUpdateBaseSalary(Employee emp, EmployeePayroll empPayroll, Calendar currDtCal) {
+	private void checkAndUpdateBaseSalary(Employee emp, EmployeePayroll empPayroll, Calendar currDtCal, int finStartMonth) {
 		List<EmployeeSalary> empSalList = EmpPayTaxFactroy.findEmpSalary(empPayroll.getEmployeeId());
 		EmployeeSalary latestEmpSal = null;
 		EmployeeSalary prevEmpSal = null;
@@ -412,7 +411,7 @@ public class BaseIC implements IncomeCalculator {
 			Double diff = latestSal/12 - prevSal/12;
 			Double existingSal = empPayroll.getBaseSalary();
 			
-			Double newSal = existingSal + diff * remainingMonths(currDtCal);
+			Double newSal = existingSal + diff * PayhumUtil.remainingMonths(currDtCal, finStartMonth);
 			
 			empPayroll.setBaseSalary(newSal);
 		} else if(latestEmpSal != null) {
@@ -421,7 +420,33 @@ public class BaseIC implements IncomeCalculator {
 			Double existingSal = empPayroll.getBaseSalary();
 			
 			if(existingSal == 0D) {
-				Double newSal = monthlyBase * remainingMonths(currDtCal);
+				Double newSal = monthlyBase * PayhumUtil.remainingMonths(currDtCal, finStartMonth);
+				
+				Date hireDate = empPayroll.getEmployeeId().getHiredate();
+				Calendar hireDtCal = Calendar.getInstance();
+				hireDtCal.setTime(hireDate);
+			    // Zero out the hour, minute, second, and millisecond
+				hireDtCal.set(Calendar.HOUR_OF_DAY, 0);
+				hireDtCal.set(Calendar.MINUTE, 0);
+				hireDtCal.set(Calendar.SECOND, 0);
+				hireDtCal.set(Calendar.MILLISECOND, 0);
+			    
+				int currMonth = currDtCal.get(Calendar.MONTH);
+				int hireMonth = hireDtCal.get(Calendar.MONTH);
+				int hireYear = hireDtCal.get(Calendar.YEAR);
+				int currYear = currDtCal.get(Calendar.YEAR);
+				
+				if(currYear == hireYear && currMonth == hireMonth) {
+					int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
+					
+					int diffDays = 1;
+					if(hireDay < 31) {
+						diffDays = 31 - hireDay;
+					}
+					
+					newSal = monthlyBase * (PayhumUtil.remainingMonths(currDtCal, finStartMonth) - 1);
+					newSal += monthlyBase / 30 * diffDays;
+				} 
 				
 				empPayroll.setBaseSalary(newSal);	
 			}
@@ -445,21 +470,5 @@ public class BaseIC implements IncomeCalculator {
 		} 
 		
 		return amount * conversionRate;
-	}
-
-	private int remainingMonths(Calendar currDate) {
-		int retVal = 0;
-		
-		// Get the remaining months in the year.
-		int currentMonth = currDate.get(Calendar.MONTH) + 1;
-		
-		if(currentMonth >= 4) {
-			retVal = 12 - currentMonth + 1;
-			retVal += 3;
-		} else {
-			retVal = 3 - currentMonth + 1;	
-		}
-		
-		return retVal;
 	}
 }

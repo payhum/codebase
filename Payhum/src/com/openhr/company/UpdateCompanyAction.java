@@ -29,7 +29,6 @@ public class UpdateCompanyAction extends Action {
 		JSONObject json = JSONObject.fromObject(sb.toString());
 		String companyId   = json.getString("companyId");
 		String companyName = json.getString("name");
-		String address     = json.getString("address");
 		 
 		Company company = CompanyFactory.findByCompanyId(companyId).get(0);
  		company.setName(companyName);

@@ -28,6 +28,7 @@ CREATE TABLE `company` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `companyId` varchar(45) NOT NULL,
   `name` varchar(45) NOT NULL,
+  `fystart` int(10) unsigned NOT NULL default 1,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -403,22 +404,23 @@ CREATE TABLE `licenses` (
 DROP TABLE IF EXISTS `company_payroll`;
 CREATE TABLE `company_payroll` (
   `id` int(10) unsigned NOT NULL auto_increment,
-  `companyId` int(10) unsigned NOT NULL,
+  `branchId` int(10) unsigned NOT NULL,
   `processedDate` datetime NOT NULL,
-  `employeeId` int(10) unsigned NOT NULL,
+  `employeeId` varchar (45) NOT NULL,
   `empFullName` varchar(60) NOT NULL,
   `empNationalID` varchar(45) NOT NULL, 
   `taxAmount` double NOT NULL,
   `netPay` double NOT NULL,
-  `socialSec` double NOT NULL,
+  `emprSocialSec` double NOT NULL,
+  `empeSocialSec` double NOT NULL,
   `bankName` varchar(45) NOT NULL,
   `bankBranch` varchar(45) NOT NULL,
   `routingNo` varchar(45) NOT NULL,
   `accountNo` varchar(45) NOT NULL,
   `currencySym` varchar(10) NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `FK_comppay_comp` (`companyId`),
-  CONSTRAINT `FK_comppay_comp` FOREIGN KEY (`companyId`) REFERENCES `company` (`id`) 
+  KEY `FK_comppay_branch` (`branchId`),
+  CONSTRAINT `FK_comppay_branch` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -477,6 +479,7 @@ CREATE TABLE `paycycle`
   `id` int(10)  NOT NULL auto_increment,
   `name` varchar(30) NOT NULL,
   `selected` int (2) NOT NULL,
+  `dayofmonth` int (2) default 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -579,7 +582,10 @@ DROP TABLE IF EXISTS `payroll_date`;
 CREATE TABLE `payroll_date` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `runDate` datetime NOT NULL,
-  PRIMARY KEY  (`id`)
+  `branchId` int(10) unsigned NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `FK_paydate_branch` (`branchId`),
+  CONSTRAINT `FK_paydate_branch` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -591,10 +597,13 @@ CREATE TABLE `payroll` (
   `runOnDate` datetime NOT NULL,
   `runBy` int(10) unsigned NOT NULL,
   `payDateId` int(10) unsigned NOT NULL,
+  `branchId` int(10) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `FK_payroll_paydate`(`payDateId`),
   KEY `FK_payroll_run_by_user`(`runBy`),
+  KEY `FK_payroll_branch`(`branchId`),
   CONSTRAINT `FK_payroll_run_by_user` FOREIGN KEY (`runBy`) REFERENCES `users` (`id`),
+  CONSTRAINT `FK_payroll_branch` FOREIGN KEY (`branchId`) REFERENCES `branch` (`id`),
   CONSTRAINT `FK_payroll_paydate` FOREIGN KEY (`payDateId`) REFERENCES `payroll_date` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -610,6 +619,8 @@ CREATE TABLE `emp_payroll_map` (
   `taxAmount` double NOT NUll,
   `netPay` double NOT NUll,
   `socialSec` double NOT NUll,
+  `overtimeAmt` double NOT NUll,
+  `otherIncome` double NOT NUll,
   `mode` int(2) NOT NULL default 0,
   PRIMARY KEY  (`id`),
   KEY `FK_emppaymap_emp` (`emppayId`),
@@ -700,6 +711,7 @@ CREATE TABLE `audit_employee` (
   `ppNumber` varchar(15),
   `ppExpDate` datetime,
   `ppIssuePlace` varchar(45),
+  `currency` int(10) unsigned NOT NULL,
   `updatedDate` datetime NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

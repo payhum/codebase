@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -447,8 +446,8 @@ public class EmployeePayroll implements Serializable {
 		return overtimeamt;
 	}
 
-	public void setOvertimeamt(Double overtimeamt) {
-		this.overtimeamt = overtimeamt;
+	public void addOvertimeamt(Double overtimeamt) {
+		this.overtimeamt += overtimeamt;
 	}
 
 	public Double getPaidTaxAmt() {

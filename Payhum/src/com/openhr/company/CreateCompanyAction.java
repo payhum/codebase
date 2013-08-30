@@ -2,6 +2,7 @@ package com.openhr.company;
 
 
 import java.io.BufferedReader;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,10 +38,18 @@ public class CreateCompanyAction extends Action {
 		String address     = json.getString("address");
 		String fromDate    = json.getString("fromDate");
 		String toDate      = json.getString("toDate");
+		String fystart	   = json.getString("fystart");
 
+		Date fydate = new Date(fystart);
+		
+		Calendar effDtCal = Calendar.getInstance();
+	    effDtCal.setTime(fydate);
+		int startmonth = effDtCal.get(Calendar.MONTH) + 1;
+	    
 		Company company = new Company();
 		company.setCompanyId(companyId);
  		company.setName(companyName);
+ 		company.setFystart(new Integer(startmonth));
 		CompanyFactory.insert(company);
 		
 		Branch branch = new Branch();
@@ -48,8 +57,7 @@ public class CreateCompanyAction extends Action {
 		branch.setCompanyId(company);
 		branch.setName("Main");
 		BranchFactory.insert(branch);
-		
-		
+				
 		Licenses license = new Licenses();
 		license.setActive(1);
 		license.setCompanyId(company);

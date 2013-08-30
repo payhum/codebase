@@ -51,8 +51,8 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 --
 
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` (`id`,`companyId`,`name`) VALUES 
- (1,'C-0001','MasterComp');
+INSERT INTO `company` (`id`,`companyId`,`name`,`fystart`) VALUES 
+ (1,'C-0001','MasterComp',1);
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 
 --
@@ -185,15 +185,17 @@ INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 (7,7,300000),
 (8,8,12.5),
 (9,9,10),
-(10,10,2.5);
+(10,10,2.5),
+(11,22,9300),
+(12,23,5580);
 /*!40000 ALTER TABLE `taxdetails` ENABLE KEYS */;
 
 --
 -- Dumping data for table paycycle
 --
 /*!40000 ALTER TABLE `paycycle` DISABLE KEYS */;
-INSERT INTO `paycycle` (`id`, `name`, `selected`) VALUES
-(1,'Monthly',3);
+INSERT INTO `paycycle` (`id`, `name`, `selected`, `dayofmonth`) VALUES
+(1,'Monthly',3, 20);
 /*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;
 
 --
@@ -202,8 +204,8 @@ INSERT INTO `paycycle` (`id`, `name`, `selected`) VALUES
 /*!40000 ALTER TABLE `payhum_config` DISABLE KEYS */;
 INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
 ('EMODE','MMODE'),
+('PBRANCH','0'),
 ('LUSERCOMP','1'),
-('PCOMP','0'),
 ('USD_MMK','1'),
 ('EURO_MMK','1'),
 ('POUND_MMK','1');

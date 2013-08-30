@@ -18,7 +18,9 @@ import org.apache.struts.action.ActionMapping;
 import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
+import com.openhr.data.Branch;
 import com.openhr.data.ConfigData;
+import com.openhr.factories.BranchFactory;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
 import com.openhr.factories.ConfigDataFactory;
@@ -32,9 +34,15 @@ public class CashFile extends Action {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 
-		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_COMPANY); 
-		int compId = Integer.parseInt(config.getConfigValue());
-		List<Company> comps = CompanyFactory.findById(compId);
+		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH); 
+		int branchId = Integer.parseInt(config.getConfigValue());
+		List<Branch> branches = BranchFactory.findById(branchId);
+		
+		Branch branch = null;
+		if(branches != null && !branches.isEmpty()) {
+			branch = branches.get(0);
+		}
+		List<Company> comps = CompanyFactory.findById(branch.getCompanyId().getId());
 		Company comp = comps.get(0);
 		String compName = comp.getName();
 		compName = compName.replace(" ", "_");
@@ -50,7 +58,7 @@ public class CashFile extends Action {
         
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		
-		String fileName = "Cash_" + compName + "_Payroll_" + monthYear + ".csv";
+		String fileName = "Cash_" + compName + "_" + branch.getName() + "_Payroll_" + monthYear + ".csv";
 		
 		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		response.setContentType("application/force-download");
@@ -59,46 +67,59 @@ public class CashFile extends Action {
 		// CompanyName, Company ID, EmployeeName, Emp ID, Emp National ID, Payroll Cycle, NetPay
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMyyyy");
 		
-		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(comp, cal.getTime());
-		StringBuilder allEmpPayStr = new StringBuilder();
-		// Populate the header.
-		allEmpPayStr.append("Section 1: Salary paid by cash for employees.\n");
-		allEmpPayStr.append("Company Name");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Company ID");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee Name");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee ID");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee National ID / Passport No");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Payroll Cycle");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Amount");
-		allEmpPayStr.append("\n");
+		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(branch, cal.getTime());
+		String[] supportedCurrencies = new String [4];
+		supportedCurrencies[0] = PayhumConstants.CURRENCY_MMK;
+		supportedCurrencies[1] = PayhumConstants.CURRENCY_USD;
+		supportedCurrencies[2] = PayhumConstants.CURRENCY_EURO;
+		supportedCurrencies[3] = PayhumConstants.CURRENCY_POUND;
 		
-		for(CompanyPayroll compPay : compPayroll) {
-			if(compPay.getBankName().equals("-")) {
-				// Its Employee who is paid by cash
-				StringBuilder empPayStr = new StringBuilder();
-				empPayStr.append(compPay.getCompanyId().getName());
-				empPayStr.append(COMMA);
-				empPayStr.append(compPay.getCompanyId().getId());
-				empPayStr.append(COMMA);			
-				empPayStr.append(compPay.getEmpFullName());
-				empPayStr.append(COMMA);
-				empPayStr.append(compPay.getEmployeeId());
-				empPayStr.append(COMMA);
-				empPayStr.append(compPay.getEmpNationalID());
-				empPayStr.append(COMMA);
-				empPayStr.append(sdf.format(compPay.getProcessedDate()));
-				empPayStr.append(COMMA);
-				empPayStr.append(new DecimalFormat("###.##").format(compPay.getNetPay()));
-				empPayStr.append(compPay.getCurrencySym());
-				empPayStr.append("\n");
-	
-				allEmpPayStr.append(empPayStr);
+		StringBuilder allEmpPayStr = new StringBuilder();
+		int sectionCounter = 1;
+		for(int i = 0; i < supportedCurrencies.length; i++) {
+			if(hasEmpWithThisCurrency(supportedCurrencies[i], compPayroll)) {
+				// Populate the header.
+				allEmpPayStr.append("Section " + sectionCounter++ + ": Salary paid by cash for employees in " + supportedCurrencies[i] + " .\n");
+				
+				allEmpPayStr.append("Company Name");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Branch Name");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee Name");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee ID");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee National ID / Passport No");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Payroll Cycle");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Net Pay(" + supportedCurrencies[i] + ")");
+				allEmpPayStr.append("\n");
+		
+				for(CompanyPayroll compPay : compPayroll) {
+					if(compPay.getBankName().equals("-")) {
+						// Its Employee who is paid by cash
+						if(compPay.getCurrencySym().equalsIgnoreCase(supportedCurrencies[i])) {
+							StringBuilder empPayStr = new StringBuilder();
+							empPayStr.append(comp.getName());
+							empPayStr.append(COMMA);
+							empPayStr.append(branch.getName());
+							empPayStr.append(COMMA);			
+							empPayStr.append(compPay.getEmpFullName());
+							empPayStr.append(COMMA);
+							empPayStr.append(compPay.getEmployeeId());
+							empPayStr.append(COMMA);
+							empPayStr.append(compPay.getEmpNationalID());
+							empPayStr.append(COMMA);
+							empPayStr.append(sdf.format(compPay.getProcessedDate()));
+							empPayStr.append(COMMA);
+							empPayStr.append(new DecimalFormat("###.##").format(compPay.getNetPay()));
+							empPayStr.append("\n");
+				
+							allEmpPayStr.append(empPayStr);
+						}
+					}
+				}
 			}
 		}
 		
@@ -107,5 +128,16 @@ public class CashFile extends Action {
 		os.close();
 		
 		return map.findForward("masteradmin");
+	}
+	
+	private boolean hasEmpWithThisCurrency(String currency,
+			List<CompanyPayroll> compPayroll) {
+		for(CompanyPayroll compPay : compPayroll) {
+			if(compPay.getCurrencySym().equalsIgnoreCase(currency)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

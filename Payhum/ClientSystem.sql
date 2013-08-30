@@ -51,8 +51,8 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 --
 
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` (`id`,`companyId`,`name`) VALUES 
- (1,'C-0000','MasterComp');
+INSERT INTO `company` (`id`,`companyId`,`name`, `fystart`) VALUES 
+ (1,'C-0000','MasterComp', 1);
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 
 --
@@ -190,8 +190,8 @@ INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 -- Dumping data for table paycycle
 --
 /*!40000 ALTER TABLE `paycycle` DISABLE KEYS */;
-INSERT INTO `paycycle` (`id`, `name`, `selected`) VALUES
-(1,'Monthly',3);
+INSERT INTO `paycycle` (`id`, `name`, `selected`, `dayofmonth`) VALUES
+(1,'Monthly',3, 20);
 /*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;
 
 --

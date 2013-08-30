@@ -1,5 +1,6 @@
 package com.openhr.factories;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -7,7 +8,11 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import com.openhr.common.PayhumConstants;
+import com.openhr.data.Branch;
+import com.openhr.data.ConfigData;
 import com.openhr.data.PayPeriodData;
+import com.openhr.data.Payroll;
 import com.openhr.data.PayrollDate;
 import com.openhr.data.Position;
 
@@ -28,6 +33,19 @@ public class PayPeriodFactory {
 		return payprd;
 	}
 
+	
+	public static List<Payroll> findCountRunOndate() {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Payroll.findcountRunOnDate");
+		List<Payroll>	payprd = query.list();
+		session.getTransaction().commit();
+
+		return payprd;
+	}
+	
+	
+	
 	public static boolean update(PayPeriodData prds) {
 		boolean done = false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
@@ -41,6 +59,7 @@ public class PayPeriodFactory {
 						prds.getId());
 				prd.setPeriodName(prds.getPeriodName());
 				prd.setPeriodValue(prds.getPeriodValue());
+				prd.setDayofmonth(prds.getDayofmonth());
 
 				session.update(prd);
 				done = true;
@@ -61,7 +80,16 @@ public class PayPeriodFactory {
 	}
 	
 	private static void checkAndUpdatePayCycleDates(PayPeriodData pp) throws Exception {
-		List<PayrollDate> payrollDates = PayrollFactory.findAllPayrollDate();
+		ConfigData userComp = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP); 
+		Integer compId = Integer.parseInt(userComp.getConfigValue());
+		
+		List<Branch> branches = BranchFactory.findByCompanyId(compId);
+		List<PayrollDate> payrollDates = new ArrayList<PayrollDate>();
+		
+		for(Branch br : branches) {
+			payrollDates.addAll(PayrollFactory.findPayrollDateByBranch(br.getId()));	
+		}
+		
 		
 		Calendar currCal = Calendar.getInstance();
 		int currMonth = currCal.get(Calendar.MONTH);
@@ -89,7 +117,7 @@ public class PayPeriodFactory {
 			if(nextMonth >= 3) {
 				// Populate from current month to december
 				for(int i = nextMonth; i < 12; i++) {
-					Date rDate = getLastFridayOfMonth(i, currYear);
+					Date rDate = getPayRunDateForMonth(i, currYear, pp.getDayofmonth());
 					PayrollDate payDate = new PayrollDate();
 					payDate.setRunDate(rDate);
 					PayrollFactory.insertPayrollDate(payDate);
@@ -99,7 +127,7 @@ public class PayPeriodFactory {
 				
 				// Populate from current month to March
 				for(int i = 0; i < 3; i++) {
-					Date rDate = getLastFridayOfMonth(i, currYear+1);
+					Date rDate = getPayRunDateForMonth(i, currYear+1, pp.getDayofmonth());
 					PayrollDate payDate = new PayrollDate();
 					payDate.setRunDate(rDate);
 					PayrollFactory.insertPayrollDate(payDate);
@@ -108,7 +136,7 @@ public class PayPeriodFactory {
 				}
 			} else {
 				for(int i = 0; i <= nextMonth; i++) {
-					Date rDate = getLastFridayOfMonth(i, currYear + 1);
+					Date rDate = getPayRunDateForMonth(i, currYear + 1, pp.getDayofmonth());
 					PayrollDate payDate = new PayrollDate();
 					payDate.setRunDate(rDate);
 					PayrollFactory.insertPayrollDate(payDate);
@@ -236,21 +264,52 @@ public class PayPeriodFactory {
 		}
 	}
 	
-	private static Date getLastFridayOfMonth( int month, int year ) {
+	private static Date getLastFridayOfMonth( int month, int year) {
 		Calendar retCal = Calendar.getInstance();
 		retCal.set(Calendar.YEAR, year);
 		retCal.set(Calendar.MONTH, month);
 		retCal.set(Calendar.DAY_OF_WEEK,Calendar.FRIDAY);
 		retCal.set(Calendar.DAY_OF_WEEK_IN_MONTH, -1);
+		
+		retCal.set(Calendar.HOUR_OF_DAY, 0);
+		retCal.set(Calendar.MINUTE, 0);
+		retCal.set(Calendar.SECOND, 0);
+		retCal.set(Calendar.MILLISECOND, 0);
+	    
 		return retCal.getTime();
 	}
 	
+	private static Date getPayRunDateForMonth( int month, int year, int dayofmonth) {
+		Calendar retCal = Calendar.getInstance();
+		retCal.set(Calendar.YEAR, year);
+		retCal.set(Calendar.MONTH, month);
+		
+		if(dayofmonth != 0) {
+			retCal.set(Calendar.DAY_OF_MONTH, dayofmonth);
+		} else {
+			retCal.set(Calendar.DAY_OF_WEEK,Calendar.FRIDAY);
+			retCal.set(Calendar.DAY_OF_WEEK_IN_MONTH, -1);
+		}
+		
+		retCal.set(Calendar.HOUR_OF_DAY, 0);
+		retCal.set(Calendar.MINUTE, 0);
+		retCal.set(Calendar.SECOND, 0);
+		retCal.set(Calendar.MILLISECOND, 0);
+	    
+		return retCal.getTime();
+	}
 	private static Date getSecondFridayOfMonth( int month, int year ) {
 		Calendar retCal = Calendar.getInstance();
 		retCal.set(Calendar.YEAR, year);
 		retCal.set(Calendar.MONTH, month);
 		retCal.set(Calendar.DAY_OF_WEEK,Calendar.FRIDAY);
 		retCal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 2);
+		
+		retCal.set(Calendar.HOUR_OF_DAY, 0);
+		retCal.set(Calendar.MINUTE, 0);
+		retCal.set(Calendar.SECOND, 0);
+		retCal.set(Calendar.MILLISECOND, 0);
+	    
 		return retCal.getTime();
 	}
 

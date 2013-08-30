@@ -18,15 +18,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.openhr.common.PayhumConstants;
+import com.openhr.data.Branch;
 
 @Entity
 @Table(name = "company_payroll", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
     @NamedQuery(name = "CompanyPayroll.findAll", query = "SELECT e FROM CompanyPayroll e"),
     @NamedQuery(name = "CompanyPayroll.findById", query = "SELECT e FROM CompanyPayroll e WHERE e.id = ?"),
-    @NamedQuery(name = "CompanyPayroll.findByCompAndProcessedDate", query = "SELECT e FROM CompanyPayroll e WHERE e.companyId = ? " + 
-    		" AND MONTH(e.processedDate) = MONTH(?) AND YEAR(e.processedDate) = YEAR(?)"),
-    @NamedQuery(name = "CompanyPayroll.findByCompanyId", query = "SELECT e FROM CompanyPayroll e WHERE e.companyId = ?")})
+    @NamedQuery(name = "CompanyPayroll.findByCompAndProcessedDate", query = "SELECT e FROM CompanyPayroll e WHERE e.branchId = ? " + 
+    		" AND MONTH(e.processedDate) = MONTH(?) AND YEAR(e.processedDate) = YEAR(?)")})
 public class CompanyPayroll implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,9 +36,9 @@ public class CompanyPayroll implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @JoinColumn(name = "companyId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "branchId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Company companyId;
+    private Branch branchId;
     
     @Basic(optional = false)
     @Column(name = "processedDate", nullable = false)
@@ -46,8 +46,8 @@ public class CompanyPayroll implements Serializable {
     private Date processedDate;
     
     @Basic(optional = false)
-    @Column(name = "employeeId", nullable = false)
-    private Integer employeeId;
+    @Column(name = "employeeId", nullable = false, length=45)
+    private String employeeId;
     
     @Basic(optional = false)
     @Column(name = "taxAmount", nullable = false)
@@ -58,8 +58,12 @@ public class CompanyPayroll implements Serializable {
     private Double netPay;
     
     @Basic(optional = false)
-    @Column(name = "socialSec", nullable = false)
-    private Double socialSec;
+    @Column(name = "emprSocialSec", nullable = false)
+    private Double emprSocialSec;
+    
+    @Basic(optional = false)
+    @Column(name = "empeSocialSec", nullable = false)
+    private Double empeSocialSec;
     
     @Basic(optional = false)
     @Column(name = "empFullName", nullable = false, length=60)
@@ -110,14 +114,22 @@ public class CompanyPayroll implements Serializable {
 		return bankName;
 	}
 
-	public Double getSocialSec() {
-		return socialSec;
+	public Double getEmprSocialSec() {
+		return emprSocialSec;
 	}
 
-	public void setSocialSec(Double socialSec) {
-		this.socialSec = socialSec;
+	public void setEmprSocialSec(Double socialSec) {
+		this.emprSocialSec = socialSec;
 	}
 
+	public Double getEmpeSocialSec() {
+		return empeSocialSec;
+	}
+
+	public void setEmpeSocialSec(Double socialSec) {
+		this.empeSocialSec = socialSec;
+	}
+	
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
 	}
@@ -149,12 +161,12 @@ public class CompanyPayroll implements Serializable {
 		this.id = id;
 	}
 
-	public Company getCompanyId() {
-		return companyId;
+	public Branch getBranchId() {
+		return branchId;
 	}
 
-	public void setCompanyId(Company companyId) {
-		this.companyId = companyId;
+	public void setBranchId(Branch branchId) {
+		this.branchId = branchId;
 	}
 
 	public Date getProcessedDate() {
@@ -165,11 +177,11 @@ public class CompanyPayroll implements Serializable {
 		this.processedDate = processedDate;
 	}
 
-	public Integer getEmployeeId() {
+	public String getEmployeeId() {
 		return employeeId;
 	}
 
-	public void setEmployeeId(Integer employeeId) {
+	public void setEmployeeId(String employeeId) {
 		this.employeeId = employeeId;
 	}
 

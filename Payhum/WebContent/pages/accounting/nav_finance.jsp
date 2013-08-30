@@ -6,6 +6,8 @@
 		<div style="float:right;padding-right: 15px;">
 			<a id="launchSettingsWindow">
 			<input type="button" value="Settings"/></a>
+			<a id="PaystubsPdf">
+			<input type="button" value="Download Paystubs"/></a>
 		</div>
 	
 	

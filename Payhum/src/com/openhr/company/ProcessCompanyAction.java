@@ -30,11 +30,11 @@ public class ProcessCompanyAction extends Action  {
 			sb.append(line);
 		}
 		JSONObject json = JSONObject.fromObject(sb.toString());
-		int compId   		= json.getInt("compId");
+		int branchId   		= json.getInt("branchId");
 		
-		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_COMPANY);
-		config.setConfigValue(Integer.toString(compId));
- 		ConfigDataFactory.update(config);
+		ConfigData config1 = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH);
+		config1.setConfigValue(Integer.toString(branchId));
+ 		ConfigDataFactory.update(config1);
  		
 		return null;
 	}

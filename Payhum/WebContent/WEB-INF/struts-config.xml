@@ -236,6 +236,47 @@
 				
 		<!--end of TaxRatesAction-->
 		
+		
+			<!--start  LBT iteams actions -->
+		
+		
+		<action path="/ReadIteamsAction" 
+    		type="com.lbt.actions.ReadIteamsAction">
+    		<forward name="success" path="/UserSuccess.jsp" />
+    		<forward name="failure" path="/UserSuccess.jsp" />
+		</action>
+		
+		<action path="/DeleteIteamTaxAction"
+    		type="com.lbt.actions.DeleteIteamTaxAction">
+    		<forward name="success" path="/UserSuccess.jsp" />
+    		<forward name="failure" path="/UserSuccess.jsp" />
+		</action>
+		
+		<action path="/ReadIteamTaxesAction"
+    		type="com.lbt.actions.ReadIteamTaxesAction">
+    		<forward name="success" path="/UserSuccess.jsp" />
+    		<forward name="failure" path="/UserSuccess.jsp" />
+		</action>
+		
+		<action path="/CreatIteamTaxAction"
+    		type="com.lbt.actions.CreatIteamTaxAction">
+    		<forward name="success" path="/UserSuccess.jsp" />
+    		<forward name="failure" path="/UserSuccess.jsp" />
+		</action>
+		
+		
+		<action path="/UpdateIteamTaxAction"
+    		type="com.lbt.actions.UpdateIteamTaxAction">
+    		<forward name="success" path="/UserSuccess.jsp" />
+    		<forward name="failure" path="/UserSuccess.jsp" />
+		</action>
+		
+		<action path="/ReadIteamTaxesAction"
+    		type="com.lbt.actions.ReadIteamTaxesAction">
+    		<forward name="success" path="/UserSuccess.jsp" />
+    		<forward name="failure" path="/UserSuccess.jsp" />
+		</action>
+			<!--end of LBT iteams actions-->
 		<!--start  Deductions actions -->
 		
 		<action path="/ReadDeductionDeclAction" parameter="parameter"
@@ -812,6 +853,8 @@
 		<forward name="CompLicHome" path="branchDept.form" />
 		</action>
 		<action path="/GenLicenseFile" type="com.openhr.company.GenerateCompLicenseFile" scope="request">
+		</action>
+		<action path="/GenZipFile" type="com.openhr.zipfile.PayZipDownload" scope="request" parameter="parameter">
 		</action>
 		<action path="/UploadEmployeeDataFile" type="com.openhr.employee.UploadEmployeeDataFile" scope="request">
 		<forward name="HRHome" path="employee.form" />

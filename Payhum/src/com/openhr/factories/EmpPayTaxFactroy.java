@@ -1,12 +1,14 @@
 package com.openhr.factories;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.openhr.data.Branch;
 import com.openhr.data.DeductionsType;
 import com.openhr.data.EmpDependents;
 import com.openhr.data.EmpPayTax;
@@ -16,6 +18,7 @@ import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.EmployeeSalary;
 import com.openhr.data.OverTimePayRateData;
+import com.openhr.data.Payroll;
 import com.openhr.data.PayrollDate;
 import com.openhr.data.TaxRatesData;
 import com.openhr.data.TypesData;
@@ -43,6 +46,31 @@ public class EmpPayTaxFactroy implements Serializable {
 		employees = query.list();
 
 		return employees;
+	}
+	
+	public static List<Payroll>  findPayrollByIDAndBranch(String payd, Integer branchId)
+	{
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		if (session == null || session.isOpen() == false) 
+		{
+			//flagSession=true;
+			 session=OpenHRSessionFactory.getInstance().openSession();
+		}
+        session.beginTransaction();
+		query = session.getNamedQuery("Payroll.findByPayDateAndBranch");
+
+		PayrollDate prd = new PayrollDate();
+		prd.setId(Integer.parseInt(payd));
+		
+		Branch br = new Branch();
+		br.setId(branchId);
+		
+		query.setParameter(0, prd);
+		query.setParameter(1, br);
+		
+		List<Payroll> prs = query.list();
+		session.getTransaction().commit();
+		return prs;
 	}
 	
 	public static boolean save(EmployeePayroll ep) throws Exception {
@@ -429,6 +457,32 @@ public class EmpPayTaxFactroy implements Serializable {
 
 
 }
+	
+	
+	
+	
+	public static List<EmpPayrollMap> findTaxMonthlyForEmployeeByDate(Payroll pr)
+	
+	{
+			
+
+
+
+
+			session = OpenHRSessionFactory.getInstance().getCurrentSession();
+			session.beginTransaction();
+
+				query = session.getNamedQuery("EmpPayrollMap.findBypayrollId");
+				query.setParameter(0, pr);
+				
+				
+			List<EmpPayrollMap> empSalList = query.list();
+			session.getTransaction().commit();
+			return empSalList;
+
+
+	}
+	
 	
 	public static  DeductionsDone  findDeductionDone(DeductionsType a, EmployeePayroll emp)
 	{

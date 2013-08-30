@@ -459,6 +459,17 @@ public class EmployeeFactory implements Serializable {
 		return brd;
 	}
 
+	public static List<Branch> findBranchByCompId(Integer compId) {
+		Session session12 = OpenHRSessionFactory.getInstance().openSession();
+		session12.beginTransaction();
+		query = session12.getNamedQuery("Branch.findByCompanyId");
+		query.setInteger(0, compId);
+		List<Branch> brd = query.list();
+		session12.getTransaction().commit();
+		session12.close();
+		return brd;
+	}
+
 	public static List<Department> findBrachDepart(Integer compID)
 			throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();

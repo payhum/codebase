@@ -3,6 +3,8 @@ package com.openhr.pdfreports;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -248,6 +250,7 @@ PDPage page1 = new PDPage();
 		    for (int i=1; i<=n; i++) {
 		    	
 		    	
+
 		    	if(rows>30)
 		    	{
 		    		
@@ -287,11 +290,11 @@ PDPage page1 = new PDPage();
 			    		if(check>30)
 			    			
 			    		{
-                            start=end;
+                          start=end;
 			    			
 			    			end=end+30;
 			    			
-			    			
+			    			actRow=30;
 			    		}
 			    		else
 			    		{
@@ -390,12 +393,12 @@ PDPage page1 = new PDPage();
 				case 4:
 					glf.setEname("Total Earnings");
 
-					glf.setCredt((Double) obj[3]);
+					glf.setDebit((Double) obj[3]);
 					break;
 				case 5:
 					glf.setEname("Total Allowance");
 
-					glf.setCredt((Double) obj[4]);
+					glf.setDebit((Double) obj[4]);
 				}
 
 				empFrm.add(glf);
@@ -795,18 +798,68 @@ PDPage page1 = new PDPage();
 		
 		
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		doc.save(baos);
-
-		doc.close();
-		
-		response.setContentType("application/pdf");
-		response.setHeader("Content-Disposition","attachment; filename=\"taxmonth.pdf\"");
+	
+		response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", "attachment; filename=\"DATA.ZIP\"");
 		  
 		ServletOutputStream os = response.getOutputStream();
-		baos.writeTo(os);
+		
+	
+		
+		ZipOutputStream zos = new ZipOutputStream(os);
+		
+			
+		//byte bytes[] = new byte[2048];
+
+		//PDPage p=new PDPage();
+		
+		
+		//doc.addPage(page)
+		for(int i=1; i<=3; i++)
+		{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		doc.save(baos);
+		
+		
+zos.putNextEntry(new ZipEntry("taxmonth"+i+".pdf"));
+
+zos.write(baos.toByteArray());
+zos.closeEntry();
+baos.flush();
+baos.close();
+		}
+	//doc.		
+//zos.write(250);
+//doc.save(zos);
+
+	//doc.
+//zos.write(bytes, 0, 1);
+//zos.setComment("Sraavan");
+
+		
+		//zos.closed=true;
+		
+		//zos.
+		
+		//baos.writeTo(os);
+		
+		
+		
+		//doc.close();
+		//zos.closeEntry();
+		//doc.save(baos);
+		//baos.writeTo(os);
+		zos.flush();
+		
+       
+        zos.close();
+        
+        
 		os.flush();
 		os.close();
+		//zos.closeEntry();
+		
 		
 	}
 		catch(Exception e){

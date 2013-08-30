@@ -274,5 +274,43 @@ public class CommantypesAction extends DispatchAction {
 
 		return map.findForward("");
 	}
+
+
+	public ActionForward getAllBranchesOfComp(ActionMapping map, ActionForm form,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
+	JSONArray result = new JSONArray();
+		try {
+			
+			//JsonConfig config = new JsonConfig();
+			//config.setIgnoreDefaultExcludes(false);
+			//config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			
+			BufferedReader bf = request.getReader();
+			StringBuffer sb = new StringBuffer();
+			String line = null;
+			while ((line = bf.readLine()) != null) {
+				sb.append(line);
+			}
+			JSONObject json = JSONObject.fromObject(sb.toString());
+			String compId   		= json.getString("compId");
+			
+			List<Branch> eptx = EmployeeFactory.findBranchByCompId(Integer.parseInt(compId));
+			result = JSONArray.fromObject(eptx);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		System.out.print(result.toString());
+
+		response.setContentType("application/json; charset=utf-8");
+		PrintWriter out = response.getWriter();
+		out.print(result.toString());
+		out.flush();
+
+		return map.findForward("");
+	}
 	
+
 }

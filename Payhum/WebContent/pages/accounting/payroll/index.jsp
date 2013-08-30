@@ -186,18 +186,18 @@ span.k-tooltip {
 			 <td >#=kendo.toString(allowances, "n2")#</td>
 							</tr>
 <tr>
-								<td >accomodation</td>
+								<td >Accomodation</td>
 			 <td >#=kendo.toString(accomodationAmount, "n2")#</td>
 							</tr>
        
 <tr>
-								<td >employerSS</td>
+								<td >Employer Social Security</td>
 
 								 <td >#=kendo.toString(employerSS, "n2")#</td></tr>
 
 
 <tr>
-								<td >taxableOverseasIncome</td>
+								<td >Taxable Overseas Income</td>
 		
 								 <td >#=kendo.toString(taxableOverseasIncome, "n2")#</td></tr>
 
@@ -388,7 +388,13 @@ span.k-tooltip {
 
 </div>
 
+<div id="payrollZipsWindow" style="display: none">
 
+
+Payroll Date <input class="payRollDatesDropDownList" id="payRollDates"/>
+	<a class="k-button k-icontext" id="payAllEmpZip">Download</a>
+
+</div>
 <div id="payrollSettingsWindow" style="display: none">
 	<div id="payrollSettingTabs">
 		<ul class="list">
@@ -508,7 +514,7 @@ span.k-tooltip {
 					<label>Choose Payroll period</label><br> <select
 						id="payperiodval">
 
-					</select> <input type="hidden" id="idPayPeriod" /> <input type="button"
+					</select> <input type="hidden" id="idPayPeriod" /> <input type="text" id="dayofmonth" /> <input type="button"
 						class="payPrdSave" value="Change" /> <input type="reset"
 						class="payPrdClear" value="Clear" />
 				</fieldset>
@@ -615,7 +621,7 @@ span.k-tooltip {
 
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">Accomodationtion</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">Accomodation</p>
 		</div>
 		<div style="float: right">
 	 #=kendo.toString(accomodationAmount, "n2")#
@@ -624,7 +630,7 @@ span.k-tooltip {
 	</div>
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">taxableOverseasIncome</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">Taxable Overseas Income</p>
 		</div>
 		<div style="float: right">
 	  	 #=kendo.toString(taxableOverseasIncome, "n2")#
@@ -634,7 +640,7 @@ span.k-tooltip {
 
 	<div>
 		<div style="float: left">
-			<p style="width: 400px; font-size: 13px; text-align: right">employerSS</p>
+			<p style="width: 400px; font-size: 13px; text-align: right">Employer Social Security</p>
 		</div>
 		<div style="float: right">
 			 	 #=kendo.toString(employerSS, "n2")#
@@ -789,6 +795,77 @@ h3 {
 				}
 			}
 	    });
+		
+		
+		$("#payAllEmpZip").bind("click",function(){
+			var payRollDates =$("#payRollDates").val();
+			
+			//alert($("#payRollDates").val());
+			 $.download("<%=request.getContextPath() + "/do/GenZipFile?parameter=create"%>",'payRollDates=' + payRollDates,'post');
+			
+		});
+		
+		$("#PaystubsPdf").bind("click", function() {
+
+			//alert("hello");
+			
+
+		var	payzipwnd = $("#payrollZipsWindow").kendoWindow({
+				
+				width : 800,
+				hieght:800,
+				title : "Download Paystubs"
+			}).data("kendoWindow");
+
+			payzipwnd.center();
+			payzipwnd.open(); 
+			
+			
+			var payRollDatesDataSource1= new kendo.data.DataSource({
+				  
+				  transport : {
+
+				read : {
+				type: 'POST',
+				 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getPayRollDates"%>',
+				 dataType : 'json',
+				 contentType : 'application/json; charset=utf-8',
+				 cache: false,
+				 complete : function(jqXHR, textStatus){
+					//alert(jqXHR.responseText);
+			     }
+			}
+
+				  },
+			autoSync : true,
+				batch : true 
+				
+			});
+			
+			$(".payRollDatesDropDownList").kendoDropDownList({
+				  
+				  dataTextField : "runDate",
+					dataValueField : "id",
+					 optionLabel:"Select Date",
+					dataSource :payRollDatesDataSource1,
+					
+					
+			 }).data("kendoDropDownList");
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+		 }); 
+		
+		
 		
 		$("#processBranch").bind("click", function() {    				
 			branchId = $("#branchName").val();
@@ -1008,6 +1085,8 @@ h3 {
 		
 						wnd.center();
 						wnd.open();
+						
+						
 					 
 						$("#daygroup").kendoDropDownList({
 							dataTextField : "dayGroupName",
@@ -1052,6 +1131,14 @@ h3 {
 							 reuseScript();
 			 			}
 				 	});
+						
+						
+						
+						
+						
+						
+						
+						
 						
 						$("#taxDetailsdiv").ready(function() {
 							
@@ -1209,6 +1296,7 @@ $("#cancelTaxdet").click(function(){
 		 						var d=data1;
 								$("#idPayPeriod").val(d[0].id);
 		 						paydrop.value(d[0].periodValue);
+		 						$("#dayofmonth").val(d[0].dayofmonth);
 		 					 }
 		 				});
 					});
@@ -1531,14 +1619,16 @@ $("#cancelTaxdet").click(function(){
 						 	reuseScript();
 		 				}
 		 	  }); 	
-			  $(".payPrdSave").bind("click", function() {  
+			  $(".payPrdSave").bind("click", function() {
 		 			var idPayPeriod=$("#idPayPeriod").val();
 					var payperiodval =$("#payperiodval :selected").val();
 		 			var payperiodText =$("#payperiodval :selected").text();
+		 			var dayofmonthText =$("#dayofmonth").val();
 		 			var rate = JSON.stringify([{
 						"id":idPayPeriod,
 						"periodValue" :payperiodval,
-						"periodName":payperiodText
+						"periodName" :payperiodText,
+						"dayofmonth" :dayofmonthText
 		 			 }]);
 		 			$.ajax({
 						 type : "POST",
@@ -1549,7 +1639,7 @@ $("#cancelTaxdet").click(function(){
 						 data :rate,
 						 success : function(data1){
 		 					 if(data1)
-								 {alert("tue");}
+								 {}
 							 else
 								 {}
 							 reuseScript(4);
@@ -1777,7 +1867,7 @@ $("#cancelTaxdet").click(function(){
 				$("#view_pay_summary").css("display", "block");
  			    $("#empId") .text(dataItem.employeeId.employeeId);
 			    $("#fullNames") .text(dataItem.employeeId.firstname + ' ' + dataItem.employeeId.middlename + ' ' + dataItem.employeeId.lastname);
-			    $("#photo").attr("src", "/OpenHR" + dataItem.photo);
+			  //  $("#photo").attr("src", "/OpenHR" + dataItem.photo);
 			    var viewModel = kendo.observable({
  					products : dataItem
 				});

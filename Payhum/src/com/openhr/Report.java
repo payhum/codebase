@@ -18,6 +18,7 @@ import org.apache.struts.action.ActionMapping;
 
 import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
+import com.openhr.data.Branch;
 import com.openhr.data.ConfigData;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpPayrollMap;
@@ -27,12 +28,15 @@ import com.openhr.data.Payroll;
 import com.openhr.data.PayrollDate;
 import com.openhr.data.TypesData;
 import com.openhr.data.Users;
+import com.openhr.factories.BranchFactory;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.ConfigDataFactory;
 import com.openhr.factories.EmpBankAccountFactory;
 import com.openhr.factories.EmployeeFactory;
 import com.openhr.factories.PayrollFactory;
+import com.openhr.taxengine.DeductionsDone;
 import com.openhr.taxengine.TaxEngine;
+import com.util.payhumpackages.PayhumUtil;
 
 public class Report extends Action {
 	private static final String COMMA = ",";
@@ -55,34 +59,18 @@ public class Report extends Action {
 
 	    Date now = currDtCal.getTime();
 
-		List<Company> comps = CompanyFactory.findAll();
+	    ConfigData userComp = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP); 
+		Integer compId = Integer.parseInt(userComp.getConfigValue());
+		
+		List<Company> comps = CompanyFactory.findById(compId);
 		Company comp = null;
-		for(Company cp: comps) {
-			if (!PayhumConstants.MASTER_COMP.equalsIgnoreCase(cp.getName())){
-				comp = cp;
-				break;
-			}
+		if(comps != null && !comps.isEmpty()) {
+			comp = comps.get(0);
 		}
 		
 		String compName = comp.getName();
 		compName = compName.replace(" ", "_");
-		
-		boolean adhoc = false;
-		PayrollDate payrollDate = null;
-		try {
-			payrollDate = getTobeProcessedDate(now);
-		}
-		catch(Exception e) {
-			// Its an adhoc one.
-			adhoc = true;
-			payrollDate = new PayrollDate();
-			payrollDate.setRunDate(now);
-			
-			PayrollFactory.insertPayrollDate(payrollDate);
-		}
 
-		Calendar salaryProcessDate = Calendar.getInstance();
-		salaryProcessDate.setTime(payrollDate.getRunDateofDateObject());
 		List<Employee> activeEmpList = new ArrayList<Employee>();
 		List<Employee> inActiveEmpList = new ArrayList<Employee>();
 		
@@ -94,8 +82,23 @@ public class Report extends Action {
 		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH); 
 		Integer branchId = Integer.parseInt(config.getConfigValue());
 		
-		ConfigData userComp = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP); 
-		Integer compId = Integer.parseInt(userComp.getConfigValue());
+		List<Branch> branches = BranchFactory.findById(branchId);
+		
+		boolean adhoc = false;
+		PayrollDate payrollDate = null;
+		try {
+			payrollDate = getTobeProcessedDate(now, branches.get(0));
+		}
+		catch(Exception e) {
+			// Its an adhoc one.
+			adhoc = true;
+			payrollDate = new PayrollDate();
+			payrollDate.setRunDate(now);
+			
+			PayrollFactory.insertPayrollDate(payrollDate);
+		}
+		Calendar salaryProcessDate = Calendar.getInstance();
+		salaryProcessDate.setTime(payrollDate.getRunDateofDateObject());
 		
 		if(branchId == 0) {
 			// Employees of all Branches
@@ -113,17 +116,23 @@ public class Report extends Action {
 			}
 		}
 		
+
 		Payroll payroll = new Payroll();
 		payroll.setRunOnDate(salaryProcessDate.getTime());
 		payroll.setRunBy(runBy);
 		payroll.setPayDateId(payrollDate);
+		payroll.setBranchId(branches.get(0));
 		PayrollFactory.insertPayroll(payroll);
 		
-		TaxEngine taxEngine = new TaxEngine(comp, activeEmpList, inActiveEmpList);
+		TaxEngine taxEngine = new TaxEngine(comp, branches.get(0), activeEmpList, inActiveEmpList);
 		List<EmployeePayroll> empPayrollList = taxEngine.execute(payroll, adhoc);
 		
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		String fileName = compName + "_" + branchId  + "_"  + deptId + "_Payroll_" + monthYear + ".csv";
+
+		List<PayrollDate> payrollDates = PayrollFactory.findPayrollDateByBranch(branchId);
+		List<Payroll> payRuns = PayrollFactory.findAllPayrollRuns();
+		int remainingPayCycles = PayhumUtil.remainingPaycycles(payrollDates, payRuns);
 		
 		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		response.setContentType("application/force-download");
@@ -143,7 +152,9 @@ public class Report extends Action {
 			StringBuilder empPayStr = new StringBuilder();
 			empPayStr.append(empPay.getEmployeeId().getDeptId().getBranchId().getCompanyId().getId());
 			empPayStr.append(COMMA);
-			empPayStr.append(empPay.getEmployeeId().getId());
+			empPayStr.append(empPay.getEmployeeId().getDeptId().getBranchId().getName());
+			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getEmployeeId().getEmployeeId());
 			empPayStr.append(COMMA);
 			empPayStr.append(empPay.getFullName());
 			empPayStr.append(COMMA);
@@ -185,7 +196,18 @@ public class Report extends Action {
 				empPayStr.append("0.00");
 			}
 			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getSocialSec()));
+			empPayStr.append(new DecimalFormat("###.##").format(empPay.getEmployerSS() / remainingPayCycles));
+			empPayStr.append(COMMA);
+			Double empeSS = 0D;
+			
+			List<DeductionsDone> deductionsList = empPay.getDeductionsDone();
+			for(DeductionsDone dd: deductionsList) {
+				if(dd.getType().getName().equalsIgnoreCase(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY)) {
+					empeSS = dd.getAmount();
+					break;
+				}
+			}
+			empPayStr.append(new DecimalFormat("###.##").format(empeSS / remainingPayCycles));
 			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);
@@ -198,14 +220,15 @@ public class Report extends Action {
 		return map.findForward("report.form");
 	}
 	
-	private PayrollDate getTobeProcessedDate(Date currDate) throws Exception {
-		List<PayrollDate> payDates =  PayrollFactory.findAllPayrollDate();
+	private PayrollDate getTobeProcessedDate(Date currDate, Branch branch) throws Exception {
+		List<PayrollDate> payDates =  PayrollFactory.findPayrollDateByBranch(branch.getId());
 		List<Payroll> payRuns = PayrollFactory.findAllPayrollRuns();
 		
 		for(PayrollDate payDate: payDates) {
 			boolean processed = false;
 			for(Payroll run: payRuns) {
-				if(run.getPayDateId() == payDate) {
+				if(run.getPayDateId() == payDate
+				&& branch.getId().compareTo(run.getBranchId().getId()) == 0) {
 					processed = true;
 					break;
 				}

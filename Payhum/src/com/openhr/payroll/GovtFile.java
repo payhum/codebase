@@ -18,7 +18,9 @@ import org.apache.struts.action.ActionMapping;
 import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
+import com.openhr.data.Branch;
 import com.openhr.data.ConfigData;
+import com.openhr.factories.BranchFactory;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
 import com.openhr.factories.ConfigDataFactory;
@@ -31,10 +33,15 @@ public class GovtFile extends Action {
 	public ActionForward execute(ActionMapping map, ActionForm form,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception { 
-		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_COMPANY); 
-		int compId = Integer.parseInt(config.getConfigValue());
+		ConfigData config = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH); 
+		int branchId = Integer.parseInt(config.getConfigValue());
+		List<Branch> branches = BranchFactory.findById(branchId);
 		
-		List<Company> comps = CompanyFactory.findById(compId);
+		Branch branch = null;
+		if(branches != null && !branches.isEmpty()) {
+			branch = branches.get(0);
+		}
+		List<Company> comps = CompanyFactory.findById(branch.getCompanyId().getId());
 		Company comp = comps.get(0);
 		String compName = comp.getName();
 		compName = compName.replace(" ", "_");
@@ -49,7 +56,7 @@ public class GovtFile extends Action {
         
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		
-		String fileName = "IRD_" + compName + "_Payroll_" + monthYear + ".csv";
+		String fileName = "IRD_" + compName + "_" + branch.getName() + "_Payroll_" + monthYear + ".csv";
 		
 		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		response.setContentType("application/force-download");
@@ -59,11 +66,11 @@ public class GovtFile extends Action {
 		Double totalAmt = 0D;
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMyyyy");
 		
-		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(comp, cal.getTime());
+		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(branch, cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
 		allEmpPayStr.append("Company Name");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Company ID");
+		allEmpPayStr.append("Branch Name");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Employee Name");
 		allEmpPayStr.append(COMMA);
@@ -82,9 +89,9 @@ public class GovtFile extends Action {
 			}
 			
 			StringBuilder empPayStr = new StringBuilder();
-			empPayStr.append(compPay.getCompanyId().getName());
+			empPayStr.append(comp.getName());
 			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getCompanyId().getId());
+			empPayStr.append(branch.getName());
 			empPayStr.append(COMMA);			
 			empPayStr.append(compPay.getEmpFullName());
 			empPayStr.append(COMMA);

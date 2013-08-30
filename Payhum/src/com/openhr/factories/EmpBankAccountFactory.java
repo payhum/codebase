@@ -32,48 +32,53 @@ public class EmpBankAccountFactory implements Serializable {
 	public EmpBankAccountFactory() {
 	}
 
-	public static List<EmpBankAccount> findAll() throws Exception{
+	public static List<EmpBankAccount> findAll() throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("EmpBankAccount.findAll");
 		empBankAccounts = query.list();
 		session.getTransaction().commit();
-		
+
 		return empBankAccounts;
 	}
 
-	public static List<EmpBankAccount> findById(Integer id) throws Exception{
+	public static List<EmpBankAccount> findById(Integer id) throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("EmpBankAccount.findById");
 		query.setInteger(0, id);
 		empBankAccounts = query.list();
 		session.getTransaction().commit();
-		
+
 		return empBankAccounts;
 	}
 
-	public static EmpBankAccount findByEmployeeId(Integer employeeId) throws Exception{
-		session = OpenHRSessionFactory.getInstance().openSession();
+	public static EmpBankAccount findByEmployeeId(Integer employeeId)
+			throws Exception {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
-		EmpBankAccount eBank = (EmpBankAccount) session.get(EmpBankAccount.class, employeeId);
-		
-		if(eBank == null ) {
-			query = session.getNamedQuery("EmpBankAccount.findByEmployeeId");
-			query.setInteger(0, employeeId);
+		EmpBankAccount eBank = null;
+
+		query = session.getNamedQuery("EmpBankAccount.findByEmployeeId");
+		query.setInteger(0, employeeId);
+
+		List<EmpBankAccount> empBankList = query.list();
+		if (empBankList != null && !empBankList.isEmpty()) {
 			eBank = (EmpBankAccount) query.list().get(0);
-			session.getTransaction().commit();
 		}
-		session.close();
+
+		session.getTransaction().commit();
+
 		return eBank;
 	}
-	
-	public static boolean delete(EmpBankAccount e) throws Exception{
+
+	public static boolean delete(EmpBankAccount e) throws Exception {
 		boolean done = false;
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 
-		EmpBankAccount eBankAccnt = (EmpBankAccount) session.get(EmpBankAccount.class, e.getId());
+		EmpBankAccount eBankAccnt = (EmpBankAccount) session.get(
+				EmpBankAccount.class, e.getId());
 		session.delete(eBankAccnt);
 		session.flush();
 		session.getTransaction().commit();

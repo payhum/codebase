@@ -1,5 +1,7 @@
 package com.openhr.taxengine.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.openhr.common.PayhumConstants;
@@ -10,14 +12,16 @@ import com.openhr.data.Exemptionstype;
 import com.openhr.factories.DeductionFactory;
 import com.openhr.taxengine.ExemptionCalculator;
 import com.openhr.taxengine.TaxDetails;
+import com.util.payhumpackages.PayhumUtil;
 
 public class BaseEC implements ExemptionCalculator {
 
 	@Override
-	public void calculate(Employee emp, EmployeePayroll empPayroll) {
+	public void calculate(Employee emp, EmployeePayroll empPayroll, int finStartMonth, Calendar toBeProcessedFor) {
 		TaxDetails taxDetails = TaxDetails.getTaxDetailsForCountry();
 		List<EmpDependents> dependents = emp.getDependents();
 		
+		int monthsInCurrentFY = getApplicableMonthsInCurrentFY(emp, finStartMonth, toBeProcessedFor);
 		List<Exemptionstype> exemptionsTypes = DeductionFactory.findAllExemptionTypes();
 		
 		// Handle Married person supporting spouse
@@ -26,7 +30,7 @@ public class BaseEC implements ExemptionCalculator {
 				if(dependent.getDepType().getName().equalsIgnoreCase(PayhumConstants.DEP_SPOUSE)
 				  && dependent.getOccupationType().getName().equalsIgnoreCase(PayhumConstants.OCCUP_NONE)) {
 					empPayroll.addExemption(getExemptionType(exemptionsTypes, PayhumConstants.SUPPORTING_SPOUSE),
-							taxDetails.getExemption(PayhumConstants.SUPPORTING_SPOUSE));
+							(taxDetails.getExemption(PayhumConstants.SUPPORTING_SPOUSE) / 12) * monthsInCurrentFY);
 				}
 			}
 		} 
@@ -41,7 +45,7 @@ public class BaseEC implements ExemptionCalculator {
 		}
 		
 		empPayroll.addExemption(getExemptionType(exemptionsTypes, PayhumConstants.CHILDREN),
-				taxDetails.getExemption(PayhumConstants.CHILDREN),
+				(taxDetails.getExemption(PayhumConstants.CHILDREN) / 12) * monthsInCurrentFY,
 				noOfChildern);
 		
 		
@@ -56,6 +60,28 @@ public class BaseEC implements ExemptionCalculator {
 		} else {
 			empPayroll.addExemption(getExemptionType(exemptionsTypes, PayhumConstants.BASIC_ALLOWANCE), basicAllowancePerRate);
 		}	
+	}
+
+	private int getApplicableMonthsInCurrentFY(Employee emp, int finStartMonth, Calendar toBeProcessedFor) {
+		Date empStartDate = emp.getHiredate();
+		
+		Calendar empStartCurr = Calendar.getInstance();
+		empStartCurr.setTime(empStartDate);
+		empStartCurr.set(Calendar.HOUR_OF_DAY, 0);
+		empStartCurr.set(Calendar.MINUTE, 0);
+		empStartCurr.set(Calendar.SECOND, 0);
+		empStartCurr.set(Calendar.MILLISECOND, 0);
+		empStartCurr.set(Calendar.DAY_OF_MONTH, 1);
+	    
+		int empStartYear = empStartCurr.get(Calendar.YEAR);
+		int currYear = toBeProcessedFor.get(Calendar.YEAR);
+		
+		//TODO VJ
+		//if(currYear > empStartYear) {
+			//return 12;
+		//}
+		
+		return PayhumUtil.remainingMonths(toBeProcessedFor, finStartMonth);
 	}
 
 	private Exemptionstype getExemptionType(

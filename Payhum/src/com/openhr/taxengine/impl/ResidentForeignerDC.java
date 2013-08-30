@@ -1,5 +1,6 @@
 package com.openhr.taxengine.impl;
 
+import java.util.Calendar;
 import java.util.List;
 
 import com.openhr.common.PayhumConstants;
@@ -13,7 +14,7 @@ import com.openhr.taxengine.TaxDetails;
 public class ResidentForeignerDC extends BaseDC {
 
 	@Override
-	public void calculate(Employee emp, EmployeePayroll empPayroll) {
+	public void calculate(Employee emp, EmployeePayroll empPayroll, Calendar currDt, int finStartMonth) {
 		// Life Insurance
 		List<DeductionsDeclared> dDeclared = empPayroll.getDeductionsDeclared();
 		List<DeductionsType> deductionsTypes = DeductionFactory.findAll();

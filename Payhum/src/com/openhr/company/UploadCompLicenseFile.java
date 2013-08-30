@@ -91,14 +91,14 @@ public class UploadCompLicenseFile extends Action {
                     	
                     	String[] lineColumns = strLine.split(COMMA);
                     	
-                    	if(lineColumns.length < 7) {
+                    	if(lineColumns.length < 8) {
                     		br.close();
                     		in.close();
                     		fstream.close();
                     		throw new Exception("The required columns are missing in the line - " + strLine);
                     	}
                     	
-                    	// Format is - CompID,CompName,Branch,Address,From,To,LicenseKey
+                    	// Format is - CompID,CompName,Branch,Address,From,To,LicenseKey,FinStartMonth
                     	String companyId   = lineColumns[0];
                 		String companyName = lineColumns[1];
                 		String branchName  = lineColumns[2];
@@ -106,15 +106,18 @@ public class UploadCompLicenseFile extends Action {
                 		String fromDateStr = lineColumns[4];
                 		String toDateStr   = lineColumns[5];
                 		String licenseKey  = lineColumns[6];
+                		String finStartMonthStr = lineColumns[7];
                 		
-                		Date fromDate = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.ENGLISH).parse(fromDateStr);
-                		Date toDate = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss", Locale.ENGLISH).parse(toDateStr);
+                		Date fromDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH).parse(fromDateStr);
+                		Date toDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH).parse(toDateStr);
+                		address = address.replace(";", ",");
                 		
                 		List<Company> eComp = CompanyFactory.findByName(companyName);
                 		if(eComp == null || eComp.isEmpty()) {                		
 	                		Company company = new Company();
 	                		company.setCompanyId(companyId);
 	                 		company.setName(companyName);
+	                 		company.setFystart(Integer.parseInt(finStartMonthStr));
 	                		
 	                		Branch branch = new Branch();
 	                		branch.setAddress(address);
@@ -128,6 +131,8 @@ public class UploadCompLicenseFile extends Action {
 	                		license.setTodate(toDate);
 	                 		license.formLicenseKey();
 	                 		
+	                 		System.out.println("License key formed - " + license.getLicensekey());
+	                 		System.out.println("License key given - " + licenseKey);
 	                 		if(license.getLicensekey().equalsIgnoreCase(licenseKey)) {
 	                 			CompanyFactory.insert(company);
 	                 			BranchFactory.insert(branch);
@@ -151,6 +156,9 @@ public class UploadCompLicenseFile extends Action {
                 			newLicense.setTodate(toDate);
                 			newLicense.formLicenseKey();
                 			
+                			System.out.println("License key formed - " + newLicense.getLicensekey());
+	                 		System.out.println("License key given - " + licenseKey);
+	                 		
                 			if(newLicense.getLicensekey().equalsIgnoreCase(licenseKey)) {
                 				for(Licenses lic: licenses) {
                     				if(lic.getActive().compareTo(1) == 0) {

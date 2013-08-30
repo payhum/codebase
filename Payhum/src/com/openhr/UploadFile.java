@@ -26,6 +26,8 @@ import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
 import com.openhr.company.LicenseValidator;
 import com.openhr.company.Licenses;
+import com.openhr.data.Branch;
+import com.openhr.factories.BranchFactory;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
 import com.openhr.factories.LicenseFactory;
@@ -87,6 +89,7 @@ public class UploadFile extends Action {
                     BufferedReader br = new BufferedReader(new InputStreamReader(in));
                     String strLine;
                     Company comp = null;
+                    Branch branch = null;
                     Calendar currDtCal = Calendar.getInstance();
 
             	    // Zero out the hour, minute, second, and millisecond
@@ -103,14 +106,16 @@ public class UploadFile extends Action {
                     	
                     	String[] lineColumns = strLine.split(COMMA);
                     	
-                    	if(lineColumns.length < 12) {
+                    	if(lineColumns.length < 13) {
                     		br.close();
                     		in.close();
                     		fstream.close();
                     		throw new Exception("The required columns are missing in the line - " + strLine);
                     	}
                     	
-                    	// Format is - CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,RoutingNo,AccountNo,NetPay,Currency,TaxAmount,SS,
+                    	// Format is - 
+                    	// CompID,BranchName,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,RoutingNo,AccountNo,NetPay,Currency,
+                    	// TaxAmount,EmployerSS,EmployeeSS
                     	if(comp == null || comp.getId() != Integer.parseInt(lineColumns[0])) {
                     		List<Company> comps = CompanyFactory.findById(Integer.parseInt(lineColumns[0]));
                     		
@@ -137,12 +142,59 @@ public class UploadFile extends Action {
                                 		
                     					// License has expired and throw an error
                     					throw new Exception("License has expired");
+                    					
+                    					//TODO remove the below code and enable above
+                    					/*List<Branch> branches = BranchFactory.findByCompanyId(comp.getId());
+                						String branchName = lineColumns[1];
+                						if(branches != null && !branches.isEmpty()) {
+                							for(Branch bb: branches) {
+                								if(branchName.equalsIgnoreCase(bb.getName())) {
+                									branch = bb;
+                									break;
+                								}
+                							}
+                							
+                							if(branch == null) {
+                								Branch bb = new Branch();
+                                				bb.setName(branchName);
+                                				bb.setAddress("NA");
+                                				bb.setCompanyId(comp);
+                                				
+                                				BranchFactory.insert(bb);
+                                				
+                                				List<Branch> lbranches = BranchFactory.findByName(branchName);
+                                				branch = lbranches.get(0);
+                							}
+                						}*/
+                    					//TODO
                     				} else {
                     					// License enddate is valid, so lets check the key.
                     					String compName = comp.getName();
                     					String licenseKeyStr = LicenseValidator.formStringToEncrypt(compName, endDate);
                     					if(LicenseValidator.encryptAndCompare(licenseKeyStr, lis.getLicensekey())) {
                     						// License key is valid, so proceed.
+                    						List<Branch> branches = BranchFactory.findByCompanyId(comp.getId());
+                    						String branchName = lineColumns[1];
+                    						if(branches != null && !branches.isEmpty()) {
+                    							for(Branch bb: branches) {
+                    								if(branchName.equalsIgnoreCase(bb.getName())) {
+                    									branch = bb;
+                    									break;
+                    								}
+                    							}
+                    							
+                    							if(branch == null) {
+                    								Branch bb = new Branch();
+                                    				bb.setName(branchName);
+                                    				bb.setAddress("NA");
+                                    				bb.setCompanyId(comp);
+                                    				
+                                    				BranchFactory.insert(bb);
+                                    				
+                                    				List<Branch> lbranches = BranchFactory.findByName(branchName);
+                                    				branch = lbranches.get(0);
+                    							}
+                    						}
                     						break;
                     					} else {
                     						br.close();
@@ -157,18 +209,19 @@ public class UploadFile extends Action {
                     	}
                     	
                     	CompanyPayroll compPayroll = new CompanyPayroll();
-                    	compPayroll.setCompanyId(comp);
-                    	compPayroll.setEmployeeId(Integer.parseInt(lineColumns[1]));
-                    	compPayroll.setEmpFullName(lineColumns[2]);
-                    	compPayroll.setEmpNationalID(lineColumns[3]);
-                    	compPayroll.setBankName(lineColumns[4]);
-                    	compPayroll.setBankBranch(lineColumns[5]);
-                    	compPayroll.setRoutingNo(lineColumns[6]);
-                    	compPayroll.setAccountNo(lineColumns[7]);
-                    	compPayroll.setNetPay(Double.parseDouble(lineColumns[8]));
-                    	compPayroll.setCurrencySym(lineColumns[9]);
-                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[10]));
-                    	compPayroll.setSocialSec(Double.parseDouble(lineColumns[11]));
+                    	compPayroll.setBranchId(branch);
+                    	compPayroll.setEmployeeId(lineColumns[2]);
+                    	compPayroll.setEmpFullName(lineColumns[3]);
+                    	compPayroll.setEmpNationalID(lineColumns[4]);
+                    	compPayroll.setBankName(lineColumns[5]);
+                    	compPayroll.setBankBranch(lineColumns[6]);
+                    	compPayroll.setRoutingNo(lineColumns[7]);
+                    	compPayroll.setAccountNo(lineColumns[8]);
+                    	compPayroll.setNetPay(Double.parseDouble(lineColumns[9]));
+                    	compPayroll.setCurrencySym(lineColumns[10]);
+                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[11]));
+                    	compPayroll.setEmprSocialSec(Double.parseDouble(lineColumns[12]));
+                    	compPayroll.setEmpeSocialSec(Double.parseDouble(lineColumns[13]));
                     	compPayroll.setProcessedDate(now);
                     	CompanyPayrollFactory.insert(compPayroll);
                     }

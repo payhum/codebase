@@ -30,7 +30,17 @@
 				<input type="text" required=required class="k-input k-textbox" id="address"  value="" />
 			</div>
 			<div class="clear"></div>
-		</div><br/>
+		</div>
+		
+		<div>
+			<div class="label" style="width : 135px !important;">Financial Year Start Date</div>
+			<div class="field">
+				<input type="text" required=required class="k-input k-textbox" id="fystart"  value="" />
+			</div>
+			<div class="clear"></div>
+		</div>
+		
+		<br/>
 		
 		<div>
 			<div class="label" style="width : 135px !important;">License Valid From</div>
@@ -98,6 +108,7 @@
 		$(document).ready(function(){
 			$("#fromDate").kendoDatePicker();
 			$("#toDate").kendoDatePicker();
+			$("#fystart").kendoDatePicker();
 		});
  
 		$("#cancelCmp").bind("click", function() { 
@@ -111,13 +122,15 @@
          			address   = $("#address").val();
          			fromDate  = $("#fromDate").val();
          			toDate    = $("#toDate").val();
+         			fystart   = $("#fystart").val();
           			 
          			var comp = JSON.stringify({
          	   			"companyId"	  : companyId,
          	   			"name" 	      : name, 
          	   			"address"     : address,
          	   			"fromDate"    : fromDate,
-         	   			"toDate"      : toDate
+         	   			"toDate"      : toDate,
+         	   			"fystart"     : fystart
          			 });   
      				 
          			

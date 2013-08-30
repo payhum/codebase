@@ -43,7 +43,9 @@ public class Company implements Serializable {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
     
-    
+    @Basic(optional = false)
+    @Column(name = "fystart", nullable = false)
+    private Integer fystart;
     
 	public Company () {
 	}
@@ -72,5 +74,16 @@ public class Company implements Serializable {
 		this.name = name;
 	}
 
+	public Integer getFystart() {
+		return fystart;
+	}
+
+	public void setFystart(Integer fystart) {
+		this.fystart = fystart;
+	}
+
+	public int getFinStartMonth() {
+		return getFystart();
+	}
 	 
 }

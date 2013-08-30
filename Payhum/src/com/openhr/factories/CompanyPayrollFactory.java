@@ -11,8 +11,8 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
+import com.openhr.data.Branch;
 import com.openhr.factories.common.OpenHRSessionFactory;
 
 /**
@@ -54,22 +54,11 @@ public class CompanyPayrollFactory implements Serializable {
 		return compPayrolls;
 	}
 
-	public static List<CompanyPayroll> findByCompanyId(Integer compId) throws Exception{
-		session = OpenHRSessionFactory.getInstance().getCurrentSession();
-		session.beginTransaction();
-		query = session.getNamedQuery("CompanyPayroll.findByCompanyId");
-		query.setInteger(0, compId);
-		compPayrolls = query.list();
-		session.getTransaction().commit();
-
-		return compPayrolls;
-	}
-	
-	public static List<CompanyPayroll> findByCompAndProcessedDate(Company comp, Date processed) throws Exception{
+	public static List<CompanyPayroll> findByCompAndProcessedDate(Branch branch, Date processed) throws Exception{
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		query = session.getNamedQuery("CompanyPayroll.findByCompAndProcessedDate");
-		query.setParameter(0, comp);
+		query.setParameter(0, branch);
 		query.setDate(1, processed);
 		query.setDate(2, processed);
 		compPayrolls = query.list();

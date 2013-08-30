@@ -92,7 +92,7 @@ public class TestTaxEngine {
 		payroll.setRunBy(new Users());
 		payroll.setPayDateId(payrollDate);
 		
-		TaxEngine taxEngine = new TaxEngine(comp, empList1, empList2);
+		TaxEngine taxEngine = new TaxEngine(comp, null, empList1, empList2);
 		Map<Employee, EmployeePayroll> retData = null;
 		try {
 			retData = taxEngine.testExecute(payroll);

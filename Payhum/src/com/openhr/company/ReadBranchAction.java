@@ -20,8 +20,10 @@ import org.apache.struts.action.ActionMapping;
 
 import com.openhr.common.PayhumConstants;
 import com.openhr.data.Branch;
+import com.openhr.data.ConfigData;
 import com.openhr.factories.BranchFactory;
 import com.openhr.factories.CompanyFactory;
+import com.openhr.factories.ConfigDataFactory;
  
 public class ReadBranchAction extends Action {
 
@@ -33,13 +35,13 @@ public class ReadBranchAction extends Action {
 		JSONArray result = null;
 		long start = 0, end = 0, diff = 0;
 		try {
-			List<Company> comps = CompanyFactory.findAll();
+			ConfigData userComp = ConfigDataFactory.findByName(PayhumConstants.LOGGED_USER_COMP); 
+			Integer compId = Integer.parseInt(userComp.getConfigValue());
+			
+			List<Company> comps = CompanyFactory.findById(compId);
 			Company comp = null;
-			for(Company cp: comps) {
-				if (!PayhumConstants.MASTER_COMP.equalsIgnoreCase(cp.getName())){
-					comp = cp;
-					break;
-				}
+			if(comps != null && !comps.isEmpty()) {
+				comp = comps.get(0);
 			}
 			
 			if(comp!=null) {

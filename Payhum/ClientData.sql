@@ -7,8 +7,8 @@ USE payhumrepo;
 --
 
 /*!40000 ALTER TABLE `company` DISABLE KEYS */;
-INSERT INTO `company` (`id`,`companyId`,`name`) VALUES 
- (2,'C-0001','Comp2');
+INSERT INTO `company` (`id`,`companyId`,`name`,`fystart`) VALUES 
+ (2,'C-0001','RMA',1);
 /*!40000 ALTER TABLE `company` ENABLE KEYS */;
 
 --
@@ -50,7 +50,7 @@ INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`s
 
 /*!40000 ALTER TABLE `benefit` DISABLE KEYS */;
 INSERT INTO `benefit` (`id`,`typeId`,`amount`,`employeeId`) VALUES 
- (1,1,50000,2);
+ (1,1,0,2);
 /*!40000 ALTER TABLE `benefit` ENABLE KEYS */;
 
 --
@@ -85,7 +85,7 @@ INSERT INTO `emp_dependents` (`id`, `employeeId`, `name`, `age`, `occupationType
 --
 /*!40000 ALTER TABLE `emp_salary` DISABLE KEYS */;
 INSERT INTO `emp_salary` (`id`, `employeeId`, `fromdate`,`todate`,`basesalary`) VALUES
-(1,2,'2013-04-01 00:00:00','2013-04-01 00:00:00',30000000);
+(1,2,'2013-04-01 00:00:00','2013-04-01 00:00:00',0);
 /*!40000 ALTER TABLE `emp_salary` ENABLE KEYS */;
 
 --
@@ -93,7 +93,7 @@ INSERT INTO `emp_salary` (`id`, `employeeId`, `fromdate`,`todate`,`basesalary`) 
 --
 /*!40000 ALTER TABLE `emp_bonus` DISABLE KEYS */;
 INSERT INTO `emp_bonus` (`id`, `employeeId`, `givendate`,`amount`) VALUES
-(1,2,'2013-05-01 00:00:00',4000000);
+(1,2,'2013-05-01 00:00:00',0);
 /*!40000 ALTER TABLE `emp_bonus` ENABLE KEYS */;
 
 --
