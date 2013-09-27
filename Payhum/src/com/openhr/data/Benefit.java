@@ -32,7 +32,10 @@ public class Benefit implements Serializable {
     @Basic(optional = false)
     @Column(name = "amount", nullable = false)
     private double amount;
-    @JoinColumn(name = "typeId", referencedColumnName = "id", nullable = false)
+
+    @Basic(optional = false)
+    @Column(name = "perMonthAmt", nullable = false)
+    private double perMonthAmt;	@JoinColumn(name = "typeId", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private BenefitType typeId;
     @JoinColumn(name = "employeeId", referencedColumnName = "id", nullable = false)
@@ -62,6 +65,17 @@ public class Benefit implements Serializable {
     public double getAmount() {
         return amount;
     }
+    
+
+    public double getPerMonthAmt() {
+		return perMonthAmt;
+	}
+
+	public void setPerMonthAmt(double perMonthAmt) {
+		this.perMonthAmt = perMonthAmt;
+	}
+
+
 
     public void setAmount(double amount) {
         this.amount = amount;

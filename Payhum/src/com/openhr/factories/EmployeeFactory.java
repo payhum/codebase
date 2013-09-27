@@ -306,6 +306,19 @@ public class EmployeeFactory implements Serializable {
 		
 		return employees;
 	}
+	
+	public static List<Employee> findAllEmpByComp(Integer compId) throws Exception {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		
+		query = session.getNamedQuery("Employee.findAllByComp");
+		query.setInteger(0, compId);
+		
+		employees = query.list();
+		session.getTransaction().commit();
+		
+		return employees;
+	}
 
 	public static List<EmployeeSalary> findEmpSalryById(Integer Id)
 			throws Exception {
@@ -443,6 +456,8 @@ public class EmployeeFactory implements Serializable {
 		emp.setPositionId(e.getPositionId());
 		emp.setPhoto(e.getPhoto());
 		emp.setStatus(e.getStatus());
+		emp.setDeptId(e.getDeptId());
+		emp.setInactiveDate(e.getInactiveDate());
 		session.getTransaction().commit();
 		done = true;
 

@@ -17,11 +17,14 @@ import com.util.payhumpackages.PayhumUtil;
 public class BaseEC implements ExemptionCalculator {
 
 	@Override
-	public void calculate(Employee emp, EmployeePayroll empPayroll, int finStartMonth, Calendar toBeProcessedFor) {
+	public void calculate(Employee emp, EmployeePayroll empPayroll, int finStartMonth, Calendar toBeProcessedFor, boolean active) {
 		TaxDetails taxDetails = TaxDetails.getTaxDetailsForCountry();
 		List<EmpDependents> dependents = emp.getDependents();
 		
 		int monthsInCurrentFY = getApplicableMonthsInCurrentFY(emp, finStartMonth, toBeProcessedFor);
+		if(!active)
+			monthsInCurrentFY = 1;
+		
 		List<Exemptionstype> exemptionsTypes = DeductionFactory.findAllExemptionTypes();
 		
 		// Handle Married person supporting spouse

@@ -63,77 +63,116 @@ public class SSGovtFile extends Action {
 		
 		// Columns in the file will be:
 		// EmployeeName,EmpNationalID,SocialSecAmt
-		Double totalAmt = 0D;
-		Double totalEmprAmt = 0D;
-		Double totalEmpeAmt = 0D;
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMyyyy");
 		
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(branch, cal.getTime());
+		String[] supportedCurrencies = new String [4];
+		supportedCurrencies[0] = PayhumConstants.CURRENCY_MMK;
+		supportedCurrencies[1] = PayhumConstants.CURRENCY_USD;
+		supportedCurrencies[2] = PayhumConstants.CURRENCY_EURO;
+		supportedCurrencies[3] = PayhumConstants.CURRENCY_POUND;
+		
+		int sectionCounter = 1;
+		
 		StringBuilder allEmpPayStr = new StringBuilder();
 
+		// Header details
+		// Company Name, ABC
+		// Branch Name, MAIN
 		allEmpPayStr.append("Company Name");
 		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(compName);
+		allEmpPayStr.append("\n");
 		allEmpPayStr.append("Branch Name");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee Name");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee ID");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee National ID / Passport No");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Payroll Cycle");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employer SS Amount (MMK)");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Employee SS Amount (MMK)");
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Total SS Amount (MMK)");
+		allEmpPayStr.append(branch.getName());
 		allEmpPayStr.append("\n");
 		
-		for(CompanyPayroll compPay : compPayroll) {
-			if(compPay.getEmprSocialSec() == 0D
-			   && compPay.getEmpeSocialSec() == 0D ) {
-				continue;
-			}
+		for(int i = 0; i < supportedCurrencies.length; i++) {
+			Double totalAmt = 0D;
+			Double totalEmprAmt = 0D;
+			Double totalEmpeAmt = 0D;
 			
-			StringBuilder empPayStr = new StringBuilder();
-			empPayStr.append(comp.getName());
-			empPayStr.append(COMMA);
-			empPayStr.append(branch.getName());
-			empPayStr.append(COMMA);			
-			empPayStr.append(compPay.getEmpFullName());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getEmployeeId());
-			empPayStr.append(COMMA);
-			empPayStr.append(compPay.getEmpNationalID());
-			empPayStr.append(COMMA);
-			empPayStr.append(sdf.format(compPay.getProcessedDate()));
-			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmprSocialSec()));
-			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmpeSocialSec()));
-			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmprSocialSec() + compPay.getEmpeSocialSec()));
-			empPayStr.append("\n");
-			
-			allEmpPayStr.append(empPayStr);
-			
-			totalAmt += compPay.getEmprSocialSec() + compPay.getEmpeSocialSec();
-			totalEmprAmt += compPay.getEmprSocialSec();
-			totalEmpeAmt += compPay.getEmpeSocialSec();
-		}
+			if(hasEmpWithThisCurrency(supportedCurrencies[i], compPayroll)) {
+				// Populate the header.
+				allEmpPayStr.append("Section " + sectionCounter++ + ": Social Security for employees in " + supportedCurrencies[i] + " .\n");
+				
+				allEmpPayStr.append("Employee Name");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee ID");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Department Name");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee National ID / Passport No");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Payroll Cycle");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employer SS Amount (" + supportedCurrencies[i] + ")");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Employee SS Amount (" + supportedCurrencies[i] + ")");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Total SS Amount (" + supportedCurrencies[i] + ")");
+				allEmpPayStr.append("\n");
 		
-		allEmpPayStr.append("\n,,,,,TOTAL:,");
-		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmprAmt));
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeAmt));
-		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append(new DecimalFormat("###.##").format(totalAmt));
+				for(CompanyPayroll compPay : compPayroll) {
+					if(compPay.getEmprSocialSec() == 0D
+					   && compPay.getEmpeSocialSec() == 0D ) {
+						continue;
+					}
+					
+					if(compPay.getCurrencySym().equalsIgnoreCase(supportedCurrencies[i])) {
+						StringBuilder empPayStr = new StringBuilder();
+						empPayStr.append(compPay.getEmpFullName());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getEmployeeId());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getDeptName());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getEmpNationalID());
+						empPayStr.append(COMMA);
+						empPayStr.append(sdf.format(compPay.getProcessedDate()));
+						empPayStr.append(COMMA);
+						empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmprSocialSec()));
+						empPayStr.append(COMMA);
+						empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmpeSocialSec()));
+						empPayStr.append(COMMA);
+						empPayStr.append(new DecimalFormat("###.##").format(compPay.getEmprSocialSec() + compPay.getEmpeSocialSec()));
+						empPayStr.append("\n");
+						
+						allEmpPayStr.append(empPayStr);
+						
+						totalAmt += compPay.getEmprSocialSec() + compPay.getEmpeSocialSec();
+						totalEmprAmt += compPay.getEmprSocialSec();
+						totalEmpeAmt += compPay.getEmpeSocialSec();
+					}
+				}
+				
+				allEmpPayStr.append("\n,,,,TOTAL:,");
+				allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmprAmt));
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeAmt));
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append(new DecimalFormat("###.##").format(totalAmt));
+				allEmpPayStr.append("\n");
+			}
+		}
 		
 		OutputStream os = response.getOutputStream();
 		os.write(allEmpPayStr.toString().getBytes());
 		os.close();
 		
 		return map.findForward("masteradmin");
+	}
+	
+
+	private boolean hasEmpWithThisCurrency(String currency,
+			List<CompanyPayroll> compPayroll) {
+		for(CompanyPayroll compPay : compPayroll) {
+			if(compPay.getCurrencySym().equalsIgnoreCase(currency)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

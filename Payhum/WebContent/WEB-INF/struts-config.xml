@@ -859,6 +859,9 @@
 		<action path="/UploadEmployeeDataFile" type="com.openhr.employee.UploadEmployeeDataFile" scope="request">
 		<forward name="HRHome" path="employee.form" />
 		</action>
+		<action path="/UploadEmpUpdateFile" type="com.openhr.employee.UploadEmpUpdateFile" scope="request">
+		<forward name="HRHome" path="employee.form" />
+		</action>
 		
 	</action-mappings>
 

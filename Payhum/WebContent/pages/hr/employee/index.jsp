@@ -116,6 +116,25 @@
 
 	</div>
 </div>
+<div id="relieveWinId" style="display: none">
+
+	<div>
+		<div class="label">Last Date</div>
+		<div class="field">
+			<input id="relieveDate" />
+		</div>
+		<div class="clear"></div>
+	</div><br>
+	<div>
+		<div class="field">
+			<a class="k-button k-icontext" id="relieveEmp"><span
+				class="k-add k-icon"></span>Save</a> <a class="k-button k-icontext"
+				id="cancellAll"><span class="k-cancel k-icon"></span>Cancel</a>
+		</div>
+		<div class="clear"></div>
+
+	</div>
+</div>
 <div id="bankAccountWinId" style="display: none">
 
 	<div>
@@ -159,13 +178,14 @@
 
 <div id="grid">
 
-	<span id="rpsm1" style="margin-left: 175px;"> <a class="k-button" id="depdentsId" href='#'><span
+	<span id="rpsm1" style="margin-left: 365px;"> <a class="k-button" id="depdentsId" href='#'><span
 			class=" "></span>Dependents</a> <a class="k-button" href='#'
 		id="changeSalryId"><span class=""></span>Change Salary</a> <a
 		class="k-button" href='#' id="giveBonusId"><span class=""></span>Give
 			Bonus</a> <a class="k-button" href='#' id="bankAccountId"><span
 			class=""></span>Bank Account</a> <a class="k-button" href='#'
-		id="editEmp1"><span class=""></span>Edit</a>
+		id="editEmp1"><span class=""></span>Edit</a> <a class="k-button" href='#'
+		id="relieveId"><span class=""></span>Relieve</a>
 	
 	
 	</span>
@@ -181,6 +201,7 @@ var wndDepdent;
 var wndBankAccount;
 var wndChangeSalary;
 var wndBonus;
+var wndRelieve;
 var dependWindow;
 var empFormPath = "<%=request.getContextPath()%>"+ "/pages/hr/employee/employeeForm.jsp";
 var tempEmpid;
@@ -199,6 +220,7 @@ var postDropDownList;
  		var today = new Date();
  		 $("#changeSalaryDate").kendoDatePicker({value : today});
  		 $("#bonusDate").kendoDatePicker({value : today});
+ 		$("#relieveDate").kendoDatePicker({value : today});
  		 $("#passNo").kendoNumericTextBox();
  		$("#passExpDate").kendoDatePicker({value : today
 		});
@@ -338,7 +360,7 @@ var postDropDownList;
 	            	});
 	            },
 	            
-	            toolbar : [{"name" : "create", className : "newEmp", text : "Add New Employee" }, {"name" : "upload", className : "upldEmpFile", text : "Upload Employee Data File" }],
+	            toolbar : [{"name" : "create", className : "newEmp", text : "Add New Employee" }, {"name" : "upload", className : "upldEmpFile", text : "Upload New Employee File" }, {"name" : "uploadUpd", className : "upldEmpUpdFile", text : "Upload Updated Employee File" }],
 	            sortable: true,  
 	            scrollable : true,
 	            height : 400,
@@ -768,7 +790,61 @@ $("#giveBonusWinId").css("display",
 	    });
 
 	    
-	    
+		//Relieve the emp
+	    $("#relieveId").bind("click", function (e) {        
+	        e.preventDefault();
+			$("#relieveWinId").css("display","block"); 
+	         createWndRelieve();
+        	 wndRelieve.open();
+        	 wndRelieve.center();
+       	
+        	 var relieveDate = new Date($("#relieveDate").val());
+        	 relieveDate= relieveDate.getTime();
+     		
+         });
+          
+         
+         createWndRelieve = function (){        	         	 
+	 	      	if(wndRelieve)
+	        			{wndRelieve.content('');}
+	 	      	wndRelieve = $("#relieveWinId").kendoWindow({
+					modal : true,
+					resizable : false,
+					width : 300,
+					height : 100,
+					title : "Resign Employee"
+				}).data("kendoWindow");
+	 	      	wndRelieve.open();
+	 	      	wndRelieve.center();
+    };
+    
+    
+    $("#relieveEmp").bind("click", function () {     
+        	var relieveDate = new Date($("#relieveDate").val());
+   	 		relieveDate = relieveDate.getTime();
+    	
+    	var editData = JSON.stringify([{
+    	
+    				"relieveDate":relieveDate,
+    					"empId":tempEmpid,
+    		 }]); 
+    	
+    	  $.ajax({
+    				 type : "POST",
+    					url:'<%=request.getContextPath()
+				+ "/do/EmployeeCommanAction?parameter=relieveEmp"%>',
+    				 dataType : 'json',
+    				 contentType : 'application/json; charset=utf-8',
+    				 data : editData,
+    				 success : function(data){
+    					 empDataSource.read();
+    					wndRelieve.content('');
+    					wndRelieve.close();
+    				 }	        				
+    			});	
+    	
+    });
+		// end of relieve
 	    
 	    //alert(document.forms.length);
 	         $("#bankAccountId").bind("click", function (e) {        
@@ -1028,7 +1104,7 @@ e.preventDefault();
 	    			
 	    			
 	    			paidTax=$('input:radio[name=status]:checked').val();
-         			status="Active";
+         			status="ACTIVE";
 	    			
 	    			
 	    			
@@ -1358,7 +1434,7 @@ e.preventDefault();
 	         			departId=$("#departVal").val();
 	         			sex=$('input:radio[name=sex]:checked').val();
 	         			
-	         			status="Active";
+	         			status="ACTIVE";
 	         			famly=$('input:radio[name=family]:checked').val();
 	         			paidTax=$('input:radio[name=status]:checked').val();
 	         			contName=$("#contName").val();
@@ -1829,11 +1905,11 @@ nationID1=$("#nationID1").val();
 			
 			<label for="statusactive">
 	<input  type="radio" id="active" value="1" name="status" data-bind="checked: selectedStatus" />
-			Employee
+			Employer
 			</label>
 				<label for="statusInactive">
 			<input  type="radio" id="inactive" value="0" name="status"  data-bind="checked: selectedStatus" />
-				Employer
+				Employee
 			</label>
 			<div class="clear"></div>
 		</div>
@@ -1908,6 +1984,30 @@ nationID1=$("#nationID1").val();
 	        	 empWindow.center();
 	        	 
 	         }
+  		 
+  		 
+  	    var empUpdWindow;
+  	    $("#grid").delegate(".upldEmpUpdFile", "click", function(e) {
+  			e.preventDefault();	        
+  			createNewUpdEmpUpdForm();
+  			empUpdWindow.open();
+  			empUpdWindow.center();
+  		});
+  	  		 
+  	  		 createNewUpdEmpUpdForm = function (){        	         	 
+  		        	if(empUpdWindow)
+  		        		empUpdWindow.content("");
+  		        	empUpdWindow = $("#upldEmpUpdFileWnd").kendoWindow({
+  		                 title: "",
+  	 	                 modal : true,
+  		                 resizable: false,
+  		                 width : 650
+  		             }).data("kendoWindow");
+  		        	 
+  		        	empUpdWindow.open();
+  		        	empUpdWindow.center();
+  		        	 
+  		         }
 </script>
 
 <div class="k-content" id="upldEmpFileWnd" style="display:none">
@@ -1918,13 +2018,38 @@ nationID1=$("#nationID1").val();
 					<span style="display : none;"><a class="k-button k-icontext" id="cancelCmp" style="display:none !important;"><span class="k-cancel k-icon"></span>Cancel</a></span>
 					<div  style="width: 630px;">
 			<fieldset>
-				<legend>Upload New Employee Details File</legend>
+				<legend>Upload New Employee Data File</legend>
 		
 		<div>
 			<form method="post" action="<%=request.getContextPath() + "/do/UploadEmployeeDataFile"%>" enctype="multipart/form-data">
 			Upload the file containing the list of employees and their details to be added into this application.
 			<br><br>Select the file to be uploaded and click on <b>Upload</b> button.<br><br>
-			    New Employee Details file to upload: <input type="file" name="uploadFile" />
+			    New Employee Data file to upload: <input type="file" name="uploadFile" />
+	            <br/><br/> 
+	            <input class="k-button k-icontext" type="submit" value="Upload" />
+	        </form>
+		</div>
+		</fieldset>
+	</div>
+				</div>
+
+			</div>
+		</div>
+</div>
+<div class="k-content" id="upldEmpUpdFileWnd" style="display:none">
+		<div >
+			<div id="form">
+				<div>
+					<span style="display : none;"><a class="k-button k-icontext" id="cancelCmp" style="display:none !important;"><span class="k-cancel k-icon"></span>Cancel</a></span>
+					<div  style="width: 630px;">
+			<fieldset>
+				<legend>Upload Updated Employee Data File</legend>
+		
+		<div>
+			<form method="post" action="<%=request.getContextPath() + "/do/UploadEmpUpdateFile"%>" enctype="multipart/form-data">
+			Upload the file containing the list of employees and their details to be updated into this application.
+			<br><br>Select the file to be uploaded and click on <b>Upload</b> button.<br><br>
+			    Updated Employee Data file to upload: <input type="file" name="uploadFile" />
 	            <br/><br/> 
 	            <input class="k-button k-icontext" type="submit" value="Upload" />
 	        </form>

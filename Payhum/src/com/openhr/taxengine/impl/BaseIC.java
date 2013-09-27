@@ -77,6 +77,7 @@ public class BaseIC implements IncomeCalculator {
 		Double annualGrossPay = empPayroll.getBaseSalary();
 		annualGrossPay += empPayroll.getBonus();
 		annualGrossPay += allowancesAmt;
+		annualGrossPay += empPayroll.getRetroBaseSal();
 		
 		empPayroll.setGrossSalary(annualGrossPay);
 		
@@ -97,6 +98,9 @@ public class BaseIC implements IncomeCalculator {
 		// Process loss of Pay
 		Double leaveLoss = calculateLossOfPay(emp, empPayroll, currDtCal);
 
+		// process otherincome
+		empPayroll.setOtherIncome(empPayroll.getOtherIncome() + empPayroll.getNewOtherIncome());
+		
 		// empPayroll.setTotalIncome(totalIncome - leaveLoss );
 		empPayroll.setTotalIncome(totalIncome - leaveLoss + empPayroll.getOtherIncome() + empPayroll.getOvertimeamt());
 		
@@ -202,7 +206,8 @@ public class BaseIC implements IncomeCalculator {
 			}
 		}
 		
-		empPayroll.addOvertimeamt(amount);
+		empPayroll.setNewOvertimeAmt(empPayroll.getNewOvertimeAmt() + amount);
+		empPayroll.addOvertimeamt(empPayroll.getNewOvertimeAmt());
 	}
 
 	private boolean isDateHoliday(Calendar currDtCal) {
@@ -234,9 +239,11 @@ public class BaseIC implements IncomeCalculator {
 	}
 
 	private void computeBaseSalaryForInactive(Employee emp,
-			EmployeePayroll empPayroll, Calendar currDtCal, int finStartMonth) {
+			EmployeePayroll empPayroll, Calendar payRollCal, int finStartMonth) {
 		List<EmployeeSalary> empSalList = EmpPayTaxFactroy.findEmpSalary(empPayroll.getEmployeeId());
 
+		Calendar currDtCal = Calendar.getInstance();
+		currDtCal.setTime(payRollCal.getTime());
 		// Zero out the hour, minute, second, and millisecond
 	    currDtCal.set(Calendar.HOUR_OF_DAY, 0);
 	    currDtCal.set(Calendar.MINUTE, 0);
@@ -292,13 +299,24 @@ public class BaseIC implements IncomeCalculator {
 				exitDtCal.setTime(exitDate);
 				
 				int noOfDays = exitDtCal.get(Calendar.DAY_OF_MONTH);
+				int exitMonth = exitDtCal.get(Calendar.MONTH);
 				
 				Double monthSal = salAmount/12;
-				Double daySal = monthSal / exitDtCal.getActualMaximum(Calendar.DAY_OF_MONTH);
+				Double daySal = monthSal / 30;
 				
 				Double amount = daySal * noOfDays;
 				
-				totalSal += amount;
+				if(totalSal.compareTo(0D) == 0) {
+					int remainingMonths = PayhumUtil.remainingMonths(currDtCal, finStartMonth);
+					totalSal = empPayroll.getBaseSalary() - monthSal * remainingMonths;
+					totalSal += amount;
+				} else {
+					int effDtMonth = effDtCal.get(Calendar.MONTH);
+					int diff = exitMonth - effDtMonth;
+					
+					totalSal += monthSal * diff; 
+					totalSal += amount;
+				}
 			}
 		}
 	    
@@ -307,10 +325,11 @@ public class BaseIC implements IncomeCalculator {
 
 	// Private Methods
 	private void checkAndUpdateBonus(EmployeePayroll empPayroll,
-			Calendar currDtCal) {
+			Calendar payRollCal) {
 		List<EmployeeBonus> empBonusList = EmpPayTaxFactroy.findEmpBonus(empPayroll.getEmployeeId());
 		EmployeeBonus latestEmpBonus = null;
-		
+		Calendar currDtCal = Calendar.getInstance();
+		currDtCal.setTime(payRollCal.getTime());
 		currDtCal.set(Calendar.HOUR_OF_DAY, 0);
 	    currDtCal.set(Calendar.MINUTE, 0);
 	    currDtCal.set(Calendar.SECOND, 0);
@@ -342,13 +361,16 @@ public class BaseIC implements IncomeCalculator {
 	    	Double newBouns = getAmountInMMK(latestEmpBonus.getEmployeeId().getCurrency(), latestEmpBonus.getAmount());
 	    	
 	    	empPayroll.setBonus(existingBonusAmt + newBouns);
+	    	empPayroll.setNewBonus(newBouns);
 	    }
 	}
 
-	private void checkAndUpdateBaseSalary(Employee emp, EmployeePayroll empPayroll, Calendar currDtCal, int finStartMonth) {
+	private void checkAndUpdateBaseSalary(Employee emp, EmployeePayroll empPayroll, Calendar payRollCal, int finStartMonth) {
 		List<EmployeeSalary> empSalList = EmpPayTaxFactroy.findEmpSalary(empPayroll.getEmployeeId());
 		EmployeeSalary latestEmpSal = null;
 		EmployeeSalary prevEmpSal = null;
+		Calendar currDtCal = Calendar.getInstance();
+		currDtCal.setTime(payRollCal.getTime());
 		
 	    // Zero out the hour, minute, second, and millisecond
 	    currDtCal.set(Calendar.HOUR_OF_DAY, 0);
@@ -392,7 +414,7 @@ public class BaseIC implements IncomeCalculator {
 		    effDtCal.set(Calendar.MILLISECOND, 0);
 		    effDtCal.set(Calendar.DAY_OF_MONTH, 1);
 		    
-		    if(currDtCal.after(effDtCal)) {
+		    //if(currDtCal.after(effDtCal)) {
 		    	// Check if this is prev salary just before the current one.
 		    	if(latestEmpSal != null) {
 		    		if(currDtCal.equals(effDtCal)) {
@@ -401,7 +423,7 @@ public class BaseIC implements IncomeCalculator {
 		    			break;
 		    		}
 		    	}
-		    }
+		    //}
 		}
 		
 		if(latestEmpSal != null && prevEmpSal != null) {
@@ -446,7 +468,20 @@ public class BaseIC implements IncomeCalculator {
 					
 					newSal = monthlyBase * (PayhumUtil.remainingMonths(currDtCal, finStartMonth) - 1);
 					newSal += monthlyBase / 30 * diffDays;
-				} 
+				} else if (PayhumUtil.isRetroActive(payRollCal, empPayroll.getEmployeeId().getHiredate(), finStartMonth)){
+					// Means existing sal is 0 and this is the new month, means he joined sometime in the
+					// prev month after payroll is processed.
+					
+					int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
+					
+					int diffDays = 1;
+					if(hireDay < 31) {
+						diffDays = 31 - hireDay;
+					}
+					
+					Double retroBaseSal = monthlyBase / 30 * diffDays;
+					empPayroll.setRetroBaseSal(retroBaseSal);
+				}
 				
 				empPayroll.setBaseSalary(newSal);	
 			}
@@ -455,7 +490,7 @@ public class BaseIC implements IncomeCalculator {
 		}
 	}
 
-	private Double getAmountInMMK(TypesData currency, Double amount) {
+	protected Double getAmountInMMK(TypesData currency, Double amount) {
 		Double conversionRate = 1D;
 		
 		if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {

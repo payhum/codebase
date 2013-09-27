@@ -56,8 +56,12 @@ public class EmpPayrollMap implements Serializable {
    private Double netPay;
    
    @Basic(optional = false)
-   @Column(name = "socialSec", nullable = false)
-   private Double socialSec;
+   @Column(name = "empeSocialSec", nullable = false)
+   private Double empeSocialSec;
+   
+   @Basic(optional = false)
+   @Column(name = "emprSocialSec", nullable = false)
+   private Double emprSocialSec;
    
    @Basic(optional = false)
    @Column(name = "overtimeAmt", nullable = false)
@@ -71,8 +75,64 @@ public class EmpPayrollMap implements Serializable {
    @Column(name = "mode", nullable = false)
    private Integer mode;
    
+   @Basic(optional = false)
+   @Column(name = "baseSalary", nullable = false)
+   private Double baseSalary;
    
-   public Double getOvertimeAmt() {
+   @Basic(optional = false)
+   @Column(name = "bonus", nullable = false)
+   private Double bonus;
+   
+   @Basic(optional = false)
+   @Column(name = "retroBaseSal", nullable = false)
+   private Double retroBaseSal;
+   
+   @Basic(optional = false)
+   @Column(name = "currencyConverRate", nullable = false)
+   private Double currencyConverRate;
+   
+   @Basic(optional = false)
+   @Column(name = "salPayDate", nullable = false)
+   private Integer salPayDate;
+   
+   @Basic(optional = false)
+   @Column(name = "taxableAmt", nullable = false)
+   private Double taxableAmt;
+
+   @Basic(optional = false)
+   @Column(name = "accomAmt", nullable = false)
+   private Double accomAmt;
+
+   @Basic(optional = false)
+   @Column(name = "basicAllow", nullable = false)
+   private Double basicAllow;
+   
+   
+   public Double getBasicAllow() {
+		return basicAllow;
+	}
+	
+	public void setBasicAllow(Double basicAllow) {
+		this.basicAllow = basicAllow;
+	}
+	
+	public Double getAccomAmt() {
+	   return accomAmt;
+	}
+	
+	public void setAccomAmt(Double accomAmt) {
+		this.accomAmt = accomAmt;
+	}
+	
+	public Double getTaxableAmt() {
+		return taxableAmt;
+	}
+	
+	public void setTaxableAmt(Double taxableAmt) {
+		this.taxableAmt = taxableAmt;
+	}
+
+	public Double getOvertimeAmt() {
 	   return overtimeAmt;
 	}
 	
@@ -132,12 +192,20 @@ public class EmpPayrollMap implements Serializable {
 		this.netPay = netPay;
 	}
 	
-	public Double getSocialSec() {
-		return socialSec;
+	public Double getEmpeSocialSec() {
+		return empeSocialSec;
 	}
 	
-	public void setSocialSec(Double socialSec) {
-		this.socialSec = socialSec;
+	public void setEmpeSocialSec(Double socialSec) {
+		this.empeSocialSec = socialSec;
+	}
+
+	public Double getEmprSocialSec() {
+		return emprSocialSec;
+	}
+	
+	public void setEmprSocialSec(Double socialSec) {
+		this.emprSocialSec = socialSec;
 	}
 
 	public Integer getMode() {
@@ -147,4 +215,45 @@ public class EmpPayrollMap implements Serializable {
 	public void setMode(Integer mode) {
 		this.mode = mode;
 	}
+
+	public Double getBaseSalary() {
+		return baseSalary;
+	}
+
+	public void setBaseSalary(Double baseSalary) {
+		this.baseSalary = baseSalary;
+	}
+
+	public Double getBonus() {
+		return bonus;
+	}
+
+	public void setBonus(Double bonus) {
+		this.bonus = bonus;
+	}
+
+	public Double getRetroBaseSal() {
+		return retroBaseSal;
+	}
+
+	public void setRetroBaseSal(Double retroBaseSal) {
+		this.retroBaseSal = retroBaseSal;
+	}
+
+	public Double getCurrencyConverRate() {
+		return currencyConverRate;
+	}
+
+	public void setCurrencyConverRate(Double currencyConverRate) {
+		this.currencyConverRate = currencyConverRate;
+	}
+
+	public Integer getSalPayDate() {
+		return salPayDate;
+	}
+
+	public void setSalPayDate(Integer salPayDate) {
+		this.salPayDate = salPayDate;
+	}
+	
 }

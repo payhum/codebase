@@ -132,8 +132,12 @@ public class EmployeePayroll implements Serializable {
     private Double paidNetPay;
 
     @Basic(optional = false)
-    @Column(name = "paidSS")
-    private Double paidSS;
+    @Column(name = "paidEmpeSS")
+    private Double paidEmpeSS;
+    
+    @Basic(optional = false)
+    @Column(name = "paidEmprSS")
+    private Double paidEmprSS;
     
     @Basic(optional = false)
     @Column(name = "otherIncome")
@@ -155,6 +159,98 @@ public class EmployeePayroll implements Serializable {
     @Column(name = "withholdSS")
     private Integer withholdSS;
     
+    @Basic(optional = false)
+    @Column(name = "retroBaseSal")
+    private Double retroBaseSal;
+    
+    @Basic(optional = false)
+    @Column(name = "newOvertimeAmt")
+    private Double newOvertimeAmt;
+    
+    @Basic(optional = false)
+    @Column(name = "newOtherIncome")
+    private Double newOtherIncome;
+    
+    @Basic(optional = false)
+    @Column(name = "newBonus")
+    private Double newBonus;
+    
+    @Basic(optional = false)
+    @Column(name = "paidBaseSalary")
+    private Double paidBaseSalary;
+    
+    @Basic(optional = false)
+    @Column(name = "paidTaxableAmt")
+    private Double paidTaxableAmt;
+    
+    @Basic(optional = false)
+    @Column(name = "paidAccomAmt")
+    private Double paidAccomAmt;
+    
+    @Basic(optional = false)
+    @Column(name = "paidBasicAllow")
+    private Double paidBasicAllow;
+    
+    public Double getPaidBasicAllow() {
+		return paidBasicAllow;
+	}
+
+	public void setPaidBasicAllow(Double paidBasicAllow) {
+		this.paidBasicAllow = paidBasicAllow;
+	}
+
+	public Double getPaidAccomAmt() {
+		return paidAccomAmt;
+	}
+
+	public void setPaidAccomAmt(Double paidAccomAmt) {
+		this.paidAccomAmt = paidAccomAmt;
+	}
+
+	public Double getNewBonus() {
+		return newBonus;
+	}
+
+	public void setNewBonus(Double newBonus) {
+		this.newBonus = newBonus;
+	}
+
+	public void clearNewBonus() {
+    	this.newBonus = 0D;
+    }
+    
+    public void clearNewOvertimeAmt() {
+    	this.newOvertimeAmt = 0D;
+    }
+    
+    public void clearNewOtherIncome() {
+    	this.newOtherIncome = 0D;
+    }
+    
+	public Double getNewOvertimeAmt() {
+		return newOvertimeAmt;
+	}
+
+	public void setNewOvertimeAmt(Double newOvertimeAmt) {
+		this.newOvertimeAmt = newOvertimeAmt;
+	}
+
+	public Double getNewOtherIncome() {
+		return newOtherIncome;
+	}
+
+	public void setNewOtherIncome(Double newOtherIncome) {
+		this.newOtherIncome = newOtherIncome;
+	}
+
+	public Double getRetroBaseSal() {
+		return retroBaseSal;
+	}
+
+	public void setRetroBaseSal(Double retroBaseSal) {
+		this.retroBaseSal = retroBaseSal;
+	}
+
 	public EmployeePayroll() {
     	this.taxableIncome = 0D;
         this.taxAmount = 0D;
@@ -176,16 +272,45 @@ public class EmployeePayroll implements Serializable {
         this.netPay = 0D;
         this.leaveLoss = 0D;
         this.paidNetPay = 0D;
-        this.paidSS = 0D;
+        this.paidEmpeSS = 0D;
+        this.paidEmprSS = 0D;
         this.paidTaxAmt = 0D;
         this.otherIncome = 0D;
         this.leaveLoss = 0D;
         this.taxPaidByEmployer = 0;
         this.withholdSS=0;
         this.withholdTax=0;
+        this.newBonus = 0D;
+        this.newOvertimeAmt= 0D;
+        this.newOtherIncome= 0D;
+        this.retroBaseSal= 0D;
+        this.paidBaseSalary = 0D;
+        this.paidTaxableAmt = 0D;
+        this.paidAccomAmt = 0D;
+        this.paidBasicAllow = 0D;
     }
     
-    public Double getAccomodationAmount() {
+	public Double getPaidTaxableAmt() {
+		return paidTaxableAmt;
+	}
+
+	public void setPaidTaxableAmt(Double paidTaxableAmt) {
+		this.paidTaxableAmt = paidTaxableAmt;
+	}
+
+	public void addPaidBaseSalary(Double sal) {
+		this.paidBaseSalary += sal;
+	}
+	
+    public Double getPaidBaseSalary() {
+		return paidBaseSalary;
+	}
+
+	public void setPaidBaseSalary(Double paidBaseSalary) {
+		this.paidBaseSalary = paidBaseSalary;
+	}
+
+	public Double getAccomodationAmount() {
 		return accomodationAmount;
 	}
 
@@ -232,8 +357,8 @@ public class EmployeePayroll implements Serializable {
 	public void addExemption(Exemptionstype eType, Double exemption) {
 		boolean found = false;
 		for(ExemptionsDone ed: exemptionsDone) {
-		    if(ed.getType().getId() == eType.getId()) {
-				ed.setAmount(ed.getAmount() + exemption);
+		    if(ed.getType().getId().compareTo(eType.getId()) == 0D) {
+				ed.setAmount(exemption);
 				found = true;
 				
 				EmpPayTaxFactroy.updateExemptionsDone(ed);
@@ -270,8 +395,8 @@ public class EmployeePayroll implements Serializable {
 	public void addDeduction(DeductionsType entity, Double amount) {
 		boolean found = false;
 		for(DeductionsDone dd: deductionsDone) {
-			if(dd.getType().getId() == entity.getId()) {
-				dd.setAmount(dd.getAmount() + amount);
+			if(dd.getType().getId().compareTo(entity.getId()) == 0) {
+				dd.setAmount(amount);
 				found = true;
 				
 				EmpPayTaxFactroy.updateDeductionsDone(dd);
@@ -482,12 +607,20 @@ public class EmployeePayroll implements Serializable {
 		this.leaveLoss = leaveLoss;
 	}
 
-	public Double getPaidSS() {
-		return paidSS;
+	public Double getPaidEmpeSS() {
+		return paidEmpeSS;
 	}
 
-	public void setPaidSS(Double paidSS) {
-		this.paidSS = paidSS;
+	public void setPaidEmpeSS(Double paidSS) {
+		this.paidEmpeSS = paidSS;
+	}
+
+	public Double getPaidEmprSS() {
+		return paidEmprSS;
+	}
+
+	public void setPaidEmprSS(Double paidSS) {
+		this.paidEmprSS = paidSS;
 	}
 
 	public Integer getTaxPaidByEmployer() {

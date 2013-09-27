@@ -8,7 +8,7 @@ import com.openhr.data.EmployeePayroll;
 public class NonResidentForeignerDC extends BaseDC {
 
 	@Override
-	public void calculate(Employee emp, EmployeePayroll empPayroll, Calendar currDt, int finStartMonth) {
+	public void calculate(Employee emp, EmployeePayroll empPayroll, Calendar currDt, int finStartMonth, boolean active) {
 		// There are no deductions for Non-Resident Foreigner
 	}
 

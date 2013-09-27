@@ -132,9 +132,17 @@ public class CommantypesAction extends DispatchAction {
 			//JsonConfig config = new JsonConfig();
 			//config.setIgnoreDefaultExcludes(false);
 			//config.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT);
+			BufferedReader bf = request.getReader();
+			StringBuffer sb = new StringBuffer();
+			String line = null;
+			while ((line = bf.readLine()) != null) {
+				sb.append(line);
+			}
+			JSONObject json = JSONObject.fromObject(sb.toString());
+			String branchId   		= json.getString("branchId");
+			
 
-
-			List<PayrollDate> eptx = EmpPayTaxFactroy.findPayrollDates();
+			List<PayrollDate> eptx = EmpPayTaxFactroy.findPayrollDates(Integer.parseInt(branchId));
 			result = JSONArray.fromObject(eptx);
 		} catch (Exception e) {
 			e.printStackTrace();

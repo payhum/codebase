@@ -83,17 +83,27 @@ public class BankFile extends Action {
 		StringBuilder allEmpPayStr = new StringBuilder();
 		int sectionCounter = 1;
 		
+		// Header details
+		// Company Name, ABC
+		// Branch Name, MAIN
+		allEmpPayStr.append("Company Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(compName);
+		allEmpPayStr.append("\n");
+		allEmpPayStr.append("Branch Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(branch.getName());
+		allEmpPayStr.append("\n");
+		
 		for(int i = 0; i < supportedCurrencies.length; i++) {
 			if(hasEmpWithThisCurrency(supportedCurrencies[i], compPayroll)) {
 				// Populate the header.
 				allEmpPayStr.append("Section " + sectionCounter++ + ": Deposit request for employees in " + supportedCurrencies[i] + " .\n");
-				allEmpPayStr.append("Company Name");
-				allEmpPayStr.append(COMMA);
-				allEmpPayStr.append("Branch Name");
-				allEmpPayStr.append(COMMA);
 				allEmpPayStr.append("Employee Name");
 				allEmpPayStr.append(COMMA);
 				allEmpPayStr.append("Employee ID");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Department Name");
 				allEmpPayStr.append(COMMA);
 				allEmpPayStr.append("Employee National ID / Passport No");
 				allEmpPayStr.append(COMMA);
@@ -108,28 +118,9 @@ public class BankFile extends Action {
 				allEmpPayStr.append("Payroll Cycle");
 				allEmpPayStr.append(COMMA);
 
-				//TODO VJ
-				/*
-				allEmpPayStr.append("Total Income");
-				allEmpPayStr.append(COMMA);
-
-				allEmpPayStr.append("Total Deductions");
-				allEmpPayStr.append(COMMA);
-
-				allEmpPayStr.append("Taxable Income");
-				allEmpPayStr.append(COMMA);
-				
-				allEmpPayStr.append("Tax Amount");
-				allEmpPayStr.append(COMMA);
-				*/
-				//TODO VJ
-				
 				allEmpPayStr.append("Net Pay(" + supportedCurrencies[i] + ")");
 				allEmpPayStr.append("\n");
 				
-				//TODO VJ
-				//List<EmployeePayroll> empPayrolls = EmpPayTaxFactroy.findAllEmpPayroll();
-				//TODO VJ
 				
 				for(CompanyPayroll compPay : compPayroll) {
 					if(compPay.getBankName().equals("-")) {
@@ -139,13 +130,11 @@ public class BankFile extends Action {
 					
 					if(compPay.getCurrencySym().equalsIgnoreCase(supportedCurrencies[i])) {
 						StringBuilder empPayStr = new StringBuilder();
-						empPayStr.append(comp.getName());
-						empPayStr.append(COMMA);
-						empPayStr.append(branch.getName());
-						empPayStr.append(COMMA);			
 						empPayStr.append(compPay.getEmpFullName());
 						empPayStr.append(COMMA);
 						empPayStr.append(compPay.getEmployeeId());
+						empPayStr.append(COMMA);
+						empPayStr.append(compPay.getDeptName());
 						empPayStr.append(COMMA);
 						empPayStr.append(compPay.getEmpNationalID());
 						empPayStr.append(COMMA);
@@ -159,24 +148,6 @@ public class BankFile extends Action {
 						empPayStr.append(COMMA);
 						empPayStr.append(sdf.format(compPay.getProcessedDate()));
 						empPayStr.append(COMMA);
-						
-						//TODO VJ
-						// Here emp id is int, but this is the string id ..need to fix this as well.
-						/*EmployeePayroll empP = getEmpPayroll(empPayrolls, compPay.getEmployeeId());
-						
-						empPayStr.append(empP.getTotalIncome() / 6);
-						empPayStr.append(COMMA);
-						
-						empPayStr.append(empP.getTotalDeductions() / 6);
-						empPayStr.append(COMMA);
-						
-						empPayStr.append(empP.getTaxableIncome() / 6);
-						empPayStr.append(COMMA);
-						
-						empPayStr.append(empP.getTaxAmount() / 6);
-						empPayStr.append(COMMA);
-						*/
-						//TODO VJ
 						
 						empPayStr.append(new DecimalFormat("###.##").format(compPay.getNetPay()));
 						empPayStr.append("\n");
@@ -205,7 +176,7 @@ public class BankFile extends Action {
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Company ID");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Department");
+		allEmpPayStr.append("Office");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Payroll Cycle");
 		allEmpPayStr.append(COMMA);
@@ -227,7 +198,7 @@ public class BankFile extends Action {
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Company ID");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Department");
+		allEmpPayStr.append("Office");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Payroll Cycle");
 		allEmpPayStr.append(COMMA);
@@ -257,18 +228,6 @@ public class BankFile extends Action {
 		os.close();
 		
 		return map.findForward("masteradmin");
-	}
-
-	//TODO VJ
-	private EmployeePayroll getEmpPayroll(List<EmployeePayroll> empPayrolls,
-			Integer employeeId) {
-		String empId = Integer.toString(employeeId);
-		for(EmployeePayroll emp: empPayrolls) {
-			if(emp.getEmployeeId().getEmployeeId().equalsIgnoreCase(empId)) {
-				return emp;
-			}
-		}
-		return null;
 	}
 
 	private boolean hasEmpWithThisCurrency(String currency,

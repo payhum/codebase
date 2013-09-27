@@ -2,7 +2,6 @@ package com.openhr.factories;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,14 +12,17 @@ import java.util.zip.ZipOutputStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFontFactory;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import com.openhr.common.PayhumConstants;
+import com.openhr.data.ConfigData;
 import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeForm;
 import com.openhr.data.EmployeePayroll;
-import com.openhr.data.EmployeeSalary;
 import com.openhr.data.PayrollDate;
+import com.openhr.data.TypesData;
 import com.openhr.glreports.form.GlReportForm;
 import com.openhr.tax.form.TaxAnnualForm;
 import com.openhr.taxengine.DeductionsDone;
@@ -33,12 +35,13 @@ import com.util.payhumpackages.PayhumUtil;
  */
 public class PdfFactory {
 	private static final String pdfHeadLinesPart1[][] = {
-		{ "Company Name:", "Payroll Process Date:" },
-		{ "Employee ID:", "Pay Period:" }, { "Employee Name:" },
-		{ "Hired Date:" } };
+		{ "Employee ID:", "Payroll Process Date:" },
+		{ "Employee Name:", "Pay Period:" }, { "Department Name:", "Pay Date:"},
+		{ "Hired Date:", "Currency Conversion Rate:"}, 
+		{ "Last Working Date:"} };
 
 	private static final String pdfHeadLinesPart2[][] = {
-		{ "Income", "Current Pay", "Annual Pay(YTD)" }, { "Gross Salary" },
+		{ "Income", "Current Pay", "Annual Pay(YTD)" }, { "Gross Salary", "   BaseSalary", "   Bonus", "   Overtime Amount", "   Commission", "   Retroactive Salary"},
 		{ "Allowance" }, { "Accommodation" }, { "Taxable Overseas Income" },
 		{ "Employer Social Security" } };
 
@@ -51,7 +54,7 @@ public class PdfFactory {
 		{ "Donation-4" } };
 
 	private static final String pdfHeadLinesPart5[][] = { {"Other Income"},{ "Taxable Income" },
-			{ "Tax Amount" }, { "Net Pay" } };
+			{ "Tax Amount", "   Tax Amount(MMK)" }, { "Net Pay" } };
 
 	private static final String UNDERSCOER = "_";
 
@@ -62,10 +65,6 @@ public class PdfFactory {
 			"Employee Name & ID", "Income", "Current Pay", "YTD", "Deduction",
 			"Current Pay", "YTD", "Taxable Income", "Current Pay",
 			"Tax withholding", "Net Pay" } };
-
-	// private static int divNo = 12;
-
-	// private static int mulNO = 12;
 
 	public static void glreportTaxPDF(List<EmpPayrollMap> emp, PDDocument doc,
 			Integer divNo, Integer mulNO) {
@@ -422,6 +421,7 @@ float textColy;
 		try {
 			for (int i = 0; i < 1; i++) {
 				contentStream.beginText();
+				contentStream.setFont(PDType1Font.TIMES_BOLD, 8);
 				contentStream.moveTextPositionByAmount(textx, texty);
 				contentStream.drawString(st.toString());
 
@@ -444,6 +444,39 @@ float textColy;
 		return obj;
 	}
 	
+	
+	static Float[] drawRowStringNoBold(StringBuilder st, EmpPayrollMap empMap,
+			int rowValues, PDPageContentStream contentStream, float textx,
+			float texty, float colWidth, float margin, float rowHeight,
+			float cellMargin) {
+
+		int c = 0;
+		Float obj[] = { 0f, 0f };
+		try {
+			for (int i = 0; i < 1; i++) {
+				contentStream.beginText();
+				contentStream.setFont(PDType1Font.TIMES_ROMAN, 8);
+				contentStream.moveTextPositionByAmount(textx, texty);
+				contentStream.drawString(st.toString());
+
+				contentStream.endText();
+				// nexty-= rowHeight;
+				textx += colWidth;
+				// texty -= rowHeight;
+
+				st.delete(0, st.length());
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		obj[0] = textx;
+
+		obj[1] = texty;
+
+		return obj;
+	}
 	
 	
 	
@@ -1686,41 +1719,6 @@ float textColy;
 			boolean monthly, PayrollDate pDate)
 
 	{
-		Double proRate = 1D;
-		Double divNoWithProrate = 1D;
-		Date hireDate = empMap.getEmppayId().getEmployeeId().getHiredate();
-		Calendar hireDtCal = Calendar.getInstance();
-		hireDtCal.setTime(hireDate);
-	    // Zero out the hour, minute, second, and millisecond
-		hireDtCal.set(Calendar.HOUR_OF_DAY, 0);
-		hireDtCal.set(Calendar.MINUTE, 0);
-		hireDtCal.set(Calendar.SECOND, 0);
-		hireDtCal.set(Calendar.MILLISECOND, 0);
-	    
-		Date payDate = pDate.getRunDateofDateObject();
-		Calendar payCal = Calendar.getInstance();
-		payCal.setTime(payDate);
-		
-		int currMonth = payCal.get(Calendar.MONTH);
-		int hireMonth = hireDtCal.get(Calendar.MONTH);
-		int hireYear = hireDtCal.get(Calendar.YEAR);
-		int currYear = payCal.get(Calendar.YEAR);
-		
-		if(currYear == hireYear && currMonth == hireMonth) {
-			int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
-			
-			int diffDays = 1;
-			if(hireDay < 31) {
-				diffDays = 31 - hireDay;
-			}
-			
-			proRate = diffDays / 30D;
-			divNoWithProrate = (divNo - 1) + proRate;
-		} else {
-			// no change in div no
-			divNoWithProrate = new Double(divNo);
-		}
-			
 		PDDocument doc = null;
 		PDPage page = null;
 		PDPageContentStream contentStream = null;
@@ -1731,30 +1729,39 @@ float textColy;
 			doc.addPage(page);
 			contentStream = new PDPageContentStream(doc, page);
 			contentStream.beginText();
-			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
-			contentStream.moveTextPositionByAmount(150, 730);
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 18);
+			contentStream.moveTextPositionByAmount(230, 730);
+			String compBranch = empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getCompanyId().getName();
+			compBranch = compBranch + ", ";
+			compBranch = compBranch + empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getName();
+			contentStream.drawString(compBranch);
+			contentStream.endText();
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+			contentStream.moveTextPositionByAmount(160, 710);
 			String payHead=PayhumUtil.getDateFormatString(empMap.getPayrollId().getRunOnDate());
 			String payheadString[]=PayhumUtil.splitString(payHead,0, "-");
-			contentStream.drawString("Paystub for the month  "+payheadString[1]+" "+payheadString[2]);
-
+			contentStream.drawString("Paystub for the month of "+payheadString[1]+", "+payheadString[2]);
 			contentStream.endText();
-
-			float y = 710;
+			
+			TypesData currency = empMap.getEmppayId().getEmployeeId().getCurrency();
+			Double currencyConverRate = empMap.getCurrencyConverRate();
+			
+			float y = 690;
 			float margin = 40;
 			int row = 5;
 			float cols = 4;
-			final float rowHeight = 20f;
+			final float rowHeight = 18f;
 			final float tableWidth = page.findMediaBox().getWidth()
 					- (2 * margin);
-			final float tableHeight = rowHeight * row;
 			final float colWidth = tableWidth / cols;
 			final float cellMargin = 50f;
 
-			contentStream.setFont(PDType1Font.TIMES_BOLD, 10);
+			contentStream.setFont(PDType1Font.TIMES_BOLD, 8);
 
 			float textx = margin + cellMargin;
 			float texty = y;
-			int c = 0;
 			int rowValues = 1;
 
 			StringBuilder stdb = new StringBuilder();
@@ -1786,9 +1793,7 @@ float textColy;
 
 									texty = b[1];
 									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getDeptId()
-											.getBranchId().getCompanyId()
-											.getName());
+											.getEmployeeId().getEmployeeId());
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -1855,8 +1860,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getEmployeeId());
+									stdb.append(empMap.getEmppayId().getFullName());
 									//stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -1944,7 +1948,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(empMap.getEmppayId().getFullName());
+									stdb.append(empMap.getEmppayId().getEmployeeId().getDeptId().getDeptname());
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 
 									b = drawRowString(stdb, empMap, rowValues,
@@ -1967,10 +1971,18 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getDeptId()
-											.getBranchId().getCompanyId()
-											.getName());
+									Integer dayOfPay = empMap.getSalPayDate();
+									Date runDate = empMap.getPayrollId().getRunOnDate();
+									Calendar runCal = Calendar.getInstance();
+									runCal.setTime(runDate);
+									runCal.set(Calendar.HOUR_OF_DAY, 0);
+									runCal.set(Calendar.MINUTE, 0);
+									runCal.set(Calendar.SECOND, 0);
+									runCal.set(Calendar.MILLISECOND, 0);
+									runCal.set(Calendar.DAY_OF_MONTH, dayOfPay);
+									runDate = runCal.getTime();
+									
+									stdb.append(PayhumUtil.getDateFormatString(runDate));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -2024,32 +2036,78 @@ float textColy;
 									break;
 
 								case 1:
-									stdb.append(pdfHeadLinesPart1[i1][j1]);
+									if(! currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_MMK)) {
+										stdb.append(pdfHeadLinesPart1[i1][j1]);
 
-									// stdb.append(PayhumUtil.getNumberSpaces(50));
-									b = drawRowString(stdb, empMap, rowValues,
-											contentStream, textx, texty,
-											colWidth, margin, rowHeight,
-											cellMargin);
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
 
-									textx = b[0];
+										textx = b[0];
 
-									texty = b[1];
-									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getDeptId()
-											.getBranchId().getCompanyId()
-											.getName());
-									// stdb.append(PayhumUtil.getNumberSpaces(50));
-									b = drawRowString(stdb, empMap, rowValues,
-											contentStream, textx, texty,
-											colWidth, margin, rowHeight,
-											cellMargin);
+										texty = b[1];
+										
+										String toPrint = "1 " + currency.getName() 
+												+ " = " +PayhumUtil.decimalFormat(currencyConverRate) + " MMK"; 
+										stdb.append(toPrint);
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
 
-									textx = b[0];
+										textx = b[0];
 
-									texty = b[1];
+										texty = b[1];	
+									}
+
 									break;
+								}
 
+								if (j1 == pdfHeadLinesPart1[i1].length - 1) {
+									texty -= rowHeight;
+									textx = margin + cellMargin;
+								}							}
+
+							break;
+							
+						case 4:
+
+							for (int j1 = 0; j1 < pdfHeadLinesPart1[i1].length; j1++) {
+
+								switch (j1) {
+
+								case 0:
+									String empStatus = empMap.getEmppayId().getEmployeeId().getStatus();
+									if(PayhumConstants.EMP_STATUS_INACTIVE.equalsIgnoreCase(empStatus)) {
+										stdb.append(pdfHeadLinesPart1[i1][j1]);
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										stdb.append(PayhumUtil
+												.getDateFormatString(empMap
+														.getEmppayId()
+														.getEmployeeId()
+														.getInactiveDate()));
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										break;
+									}
 								}
 
 								if (j1 == pdfHeadLinesPart1[i1].length - 1) {
@@ -2057,14 +2115,10 @@ float textColy;
 									textx = margin + cellMargin;
 									contentStream.drawLine(textx+300, texty+10, margin+50,
 											texty+10);
-
 								}
 							}
-
 							break;
-
 						}
-
 					}
 					break;
 
@@ -2151,10 +2205,11 @@ float textColy;
 
 									texty = b[1];
 									
-									//TODO VJ
-									Double monthlyIncome = (empMap.getEmppayId().getBaseSalary() / divNoWithProrate) * proRate;
 									
-									stdb.append(PayhumUtil.decimalFormat(monthlyIncome + empMap.getOtherIncome() + empMap.getOvertimeAmt()));
+									Double monthlyGross = empMap.getBaseSalary() + empMap.getOtherIncome() + 
+											empMap.getOvertimeAmt() + empMap.getBonus() + empMap.getRetroBaseSal();
+									
+									stdb.append(PayhumUtil.decimalFormat(monthlyGross / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2165,9 +2220,9 @@ float textColy;
 
 									texty = b[1];
 
-									//TODO 
-									stdb.append(PayhumUtil.decimalFormat((monthlyIncome * mulNO) + empMap.getEmppayId().getOtherIncome()
-											+ empMap.getEmppayId().getOvertimeamt()));
+									Double annualGross = empMap.getEmppayId().getPaidBaseSalary() + empMap.getEmppayId().getOtherIncome()
+											+ empMap.getEmppayId().getOvertimeamt() + empMap.getEmppayId().getBonus() + empMap.getEmppayId().getRetroBaseSal();
+									stdb.append(PayhumUtil.decimalFormat(annualGross / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2177,13 +2232,17 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									texty -= rowHeight;
+									textx = margin + cellMargin;
+									
 									break;
 
 								case 1:
 									stdb.append(pdfHeadLinesPart2[i2][j2]);
 
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
-									b = drawRowString(stdb, empMap, rowValues,
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
 											cellMargin);
@@ -2191,12 +2250,9 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getDeptId()
-											.getBranchId().getCompanyId()
-											.getName());
+									stdb.append(PayhumUtil.decimalFormat(empMap.getBaseSalary() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
-									b = drawRowString(stdb, empMap, rowValues,
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
 											cellMargin);
@@ -2205,12 +2261,9 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getDeptId()
-											.getBranchId().getCompanyId()
-											.getName());
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidBaseSalary() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
-									b = drawRowString(stdb, empMap, rowValues,
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
 											cellMargin);
@@ -2218,13 +2271,170 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									break;
-
-								}
-
-								if (j2 == pdfHeadLinesPart2[i2].length - 1) {
+									
 									texty -= rowHeight;
 									textx = margin + cellMargin;
+									
+									break;
+								
+								case 2:
+									stdb.append(pdfHeadLinesPart2[i2][j2]);
+
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+									stdb.append(PayhumUtil.decimalFormat(empMap.getBonus() / currencyConverRate));
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getBonus() / currencyConverRate));
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+									
+									texty -= rowHeight;
+									textx = margin + cellMargin;
+									
+									break;
+								
+								case 3:
+									stdb.append(pdfHeadLinesPart2[i2][j2]);
+
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+									stdb.append(PayhumUtil.decimalFormat(empMap.getOvertimeAmt() / currencyConverRate));
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getOvertimeamt() / currencyConverRate));
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+									
+									texty -= rowHeight;
+									textx = margin + cellMargin;
+									
+									break;
+								
+								case 4:
+									stdb.append(pdfHeadLinesPart2[i2][j2]);
+
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+									stdb.append(PayhumUtil.decimalFormat(empMap.getOtherIncome() / currencyConverRate));
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getOtherIncome() / currencyConverRate));
+									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									b = drawRowStringNoBold(stdb, empMap, rowValues,
+											contentStream, textx, texty,
+											colWidth, margin, rowHeight,
+											cellMargin);
+
+									textx = b[0];
+
+									texty = b[1];
+									
+									texty -= rowHeight;
+									textx = margin + cellMargin;
+									
+									break;
+									
+								case 5:
+									Double retroSal = empMap.getEmppayId().getRetroBaseSal();
+									if(retroSal != null && retroSal.compareTo(0D) != 0) {
+										stdb.append(pdfHeadLinesPart2[i2][j2]);
+	
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										stdb.append(PayhumUtil.decimalFormat(empMap.getRetroBaseSal() / currencyConverRate));
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+	
+										stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getRetroBaseSal() / currencyConverRate));
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										
+										texty -= rowHeight;
+										textx = margin + cellMargin;	
+									}
+									
+									break;
 
 								}
 							}
@@ -2249,7 +2459,7 @@ float textColy;
 
 									texty = b[1];
 									stdb.append(PayhumUtil.decimalFormat((empMap.getEmppayId()
-											.getAllowances() / divNo)));
+											.getAllowances() / divNo) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2259,8 +2469,8 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat(((empMap.getEmppayId()
-											.getAllowances() / divNo)) * mulNO));
+									stdb.append(PayhumUtil.decimalFormat((((empMap.getEmppayId()
+											.getAllowances() / divNo)) * mulNO) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2335,8 +2545,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat((empMap.getEmppayId()
-											.getAccomodationAmount() / divNo)));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getAccomAmt() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2346,9 +2555,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat(((empMap.getEmppayId()
-											.getAccomodationAmount() / divNo))
-											* mulNO));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidAccomAmt() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2423,8 +2630,8 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId()
-											.getTaxableOverseasIncome() / divNo));
+									stdb.append(PayhumUtil.decimalFormat((empMap.getEmppayId()
+											.getTaxableOverseasIncome() / divNo) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2434,9 +2641,9 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat((empMap.getEmppayId()
+									stdb.append(PayhumUtil.decimalFormat(((empMap.getEmppayId()
 											.getTaxableOverseasIncome() / divNo)
-											* mulNO));
+											* mulNO) / currencyConverRate));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -2511,8 +2718,8 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat((empMap.getEmppayId()
-											.getEmployerSS() / divNo)) );
+										stdb.append(PayhumUtil.decimalFormat(empMap.getEmprSocialSec() / currencyConverRate) );
+										
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2522,8 +2729,8 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat(((empMap.getEmppayId()
-											.getEmployerSS() / divNo)) * mulNO));
+										stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidEmprSS() / currencyConverRate));
+									
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2619,11 +2826,11 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									float nexty = y;
 
-								
-										contentStream.drawLine(textx+50, texty-10, margin+50,
-												texty-10);
+									contentStream.drawLine(textx-80, texty-5, margin+50,
+											texty-5);
+
+									//contentStream.drawLine(textx+50, texty-10, margin+50,texty-10);
 										
 									
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
@@ -2669,7 +2876,7 @@ float textColy;
 										exmsIntKeyVal = exmap.get(exmsInt);
 									}
 									
-									stdb.append(PayhumUtil.decimalFormat((exmsIntKeyVal / divNo)));
+									stdb.append(PayhumUtil.decimalFormat((exmsIntKeyVal / divNo) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2680,7 +2887,7 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil.decimalFormat((exmsIntKeyVal / divNo) * mulNO));
+									stdb.append(PayhumUtil.decimalFormat(((exmsIntKeyVal / divNo) * mulNO) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2713,8 +2920,6 @@ float textColy;
 									String exms1[] = PayhumUtil.splitString(
 											pdfHeadLinesPart3[i3][j3], 0, "-");
 									// Integer a=exms[1];
-									Integer exmsInt1 = PayhumUtil
-											.parseInt(exms1[1]);
 									stdb.append(exms1[0]);
 
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
@@ -2727,13 +2932,7 @@ float textColy;
 
 									texty = b[1];
 									
-									Double exmsInt1KeyVal = 0D;
-									
-									if(exmap.containsKey(exmsInt1)) {
-										exmsInt1KeyVal = exmap.get(exmsInt1);
-									}
-									
-									stdb.append(PayhumUtil.decimalFormat((exmsInt1KeyVal / divNo)));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getBasicAllow() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2744,7 +2943,7 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil.decimalFormat((exmsInt1KeyVal /divNo ) * mulNO));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidBasicAllow() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2795,7 +2994,7 @@ float textColy;
 										exmsInt12KeyVal = exmap.get(exmsInt12);
 									}
 									
-									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo)));
+									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2806,7 +3005,7 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo) * mulNO));
+									stdb.append(PayhumUtil.decimalFormat(((exmsInt12KeyVal / divNo) * mulNO) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2856,8 +3055,9 @@ float textColy;
 
 									texty = b[1];
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
-									contentStream.drawLine(textx+50, texty-10, margin+50,
-											texty-10);
+									contentStream.drawLine(textx-80, texty-5, margin+50,
+											texty-5);
+
 									break;
 
 								}
@@ -2901,7 +3101,7 @@ float textColy;
 										exmsInt12KeyVal = decmap.get(exmsInt12);
 									}
 									
-									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo)));
+									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2912,7 +3112,7 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo) * mulNO));
+									stdb.append(PayhumUtil.decimalFormat(((exmsInt12KeyVal / divNo) * mulNO) / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2942,16 +3142,11 @@ float textColy;
 								switch (j4) {
 
 								case 0:
-									// stdb.append(pdfHeadLinesPart4[i4][j4]);
-
-									String dedcs12[] = PayhumUtil.splitString(
+									String exms1[] = PayhumUtil.splitString(
 											pdfHeadLinesPart4[i4][j4], 0, "-");
 									// Integer a=exms[1];
-									Integer exmsInt12 = PayhumUtil
-											.parseInt(dedcs12[1]);
-									stdb.append(dedcs12[0]);
+									stdb.append(exms1[0]);
 
-									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -2961,12 +3156,8 @@ float textColy;
 
 									texty = b[1];
 									
-									Double exmsInt12KeyVal = 0D;
-									if(decmap.containsKey(exmsInt12)) {
-										exmsInt12KeyVal = decmap.get(exmsInt12);
-									}
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmpeSocialSec() / currencyConverRate));
 									
-									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo)));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2976,8 +3167,8 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-
-									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo ) * mulNO));
+										stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidEmpeSS() / currencyConverRate));
+									
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -3031,7 +3222,8 @@ float textColy;
 										exmsInt12KeyVal = decmap.get(exmsInt12);
 									} 
 									
-									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo)));
+									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo) / currencyConverRate));
+									
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -3042,7 +3234,8 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil.decimalFormat((exmsInt12KeyVal / divNo) * mulNO));
+									stdb.append(PayhumUtil.decimalFormat(((exmsInt12KeyVal / divNo) * mulNO) / currencyConverRate));
+									
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -3080,7 +3273,7 @@ float textColy;
 
 								case 0:
 
-									stdb.append(pdfHeadLinesPart5[i5][j5]);
+									/*stdb.append(pdfHeadLinesPart5[i5][j5]);
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -3090,9 +3283,9 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil.decimalFormat(empMap
+									stdb.append(PayhumUtil.decimalFormat((empMap
 											.getEmppayId().getOtherIncome()
-											/ divNo));
+											/ divNo) / currencyConverRate));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -3103,10 +3296,10 @@ float textColy;
 									texty = b[1];
 
 									stdb.append(PayhumUtil
-											.decimalFormat((empMap
+											.decimalFormat(((empMap
 													.getEmppayId()
 													.getOtherIncome() / divNo)
-													* mulNO));
+													* mulNO) / currencyConverRate));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -3114,7 +3307,7 @@ float textColy;
 
 									textx = b[0];
 
-									texty = b[1];
+									texty = b[1];*/
 
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									break;
@@ -3151,9 +3344,7 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil.decimalFormat((empMap
-											.getEmppayId().getTaxableIncome()
-											/ divNo) * proRate));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getTaxableAmt()  / currencyConverRate));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -3163,11 +3354,7 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil
-											.decimalFormat(((empMap
-													.getEmppayId()
-													.getTaxableIncome() / divNo) * proRate)
-													* mulNO));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidTaxableAmt()));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -3211,7 +3398,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat(empMap.getTaxAmount()));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getTaxAmount() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -3223,7 +3410,7 @@ float textColy;
 									texty = b[1];
 
 									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId()
-											.getPaidTaxAmt()));
+											.getPaidTaxAmt() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -3233,6 +3420,46 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									break;
+									
+								case 1:
+									if(! currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_MMK)) {
+										texty -= rowHeight;
+										textx = margin + cellMargin;
+										
+										stdb.append(pdfHeadLinesPart5[i5][j5]);
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										stdb.append(PayhumUtil.decimalFormat(empMap.getTaxAmount()));
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+	
+										stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId()
+												.getPaidTaxAmt()));
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+									}
 									break;
 
 								}
@@ -3266,7 +3493,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat(empMap.getNetPay()));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getNetPay() / currencyConverRate));
 
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
@@ -3279,7 +3506,7 @@ float textColy;
 									texty = b[1];
 
 									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId()
-											.getPaidNetPay()));
+											.getPaidNetPay() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -3289,7 +3516,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									contentStream.drawLine(textx, texty-10, margin+50,
+									contentStream.drawLine(textx-100, texty-10, margin+50,
 											texty-10);
 									break;
 
@@ -3730,7 +3957,46 @@ float textColy;
 
 				}
 
-				docobjct = getPDfOBject(empMap, exmap, decmap,mulNo,divNo, monthly, pDate);
+				
+				Integer newMulNo = EmpPayTaxFactroy.findAllEmpPayrollMapForGivenEmpPayroll(empMap.getEmppayId().getId()).size();
+				Integer newdivNo = divNo;
+				
+				if(empMap.getEmppayId().getEmployeeId().getStatus().equalsIgnoreCase(PayhumConstants.EMP_STATUS_INACTIVE)) {
+					newdivNo = 1;
+				} else {
+					Calendar hireDtCal = Calendar.getInstance();
+					hireDtCal.setTime(empMap.getEmppayId().getEmployeeId().getHiredate());
+					hireDtCal.set(Calendar.HOUR_OF_DAY, 0);
+					hireDtCal.set(Calendar.MINUTE, 0);
+					hireDtCal.set(Calendar.SECOND, 0);
+					hireDtCal.set(Calendar.MILLISECOND, 0);
+					hireDtCal.set(Calendar.DAY_OF_MONTH, 1);
+				    
+					Calendar payDtCal = Calendar.getInstance();
+					payDtCal.setTime(pDate.getRunDateofDateObject());
+					payDtCal.set(Calendar.HOUR_OF_DAY, 0);
+					payDtCal.set(Calendar.MINUTE, 0);
+					payDtCal.set(Calendar.SECOND, 0);
+					payDtCal.set(Calendar.MILLISECOND, 0);
+					payDtCal.set(Calendar.DAY_OF_MONTH, 1);
+					
+					int finStart = empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getCompanyId().getFinStartMonth();
+					
+					Integer payCyclesCt = 12;
+					if(hireDtCal.get(Calendar.YEAR) == payDtCal.get(Calendar.YEAR) ) {
+						payCyclesCt = PayhumUtil.remainingMonths(hireDtCal, finStart);
+					}
+					
+					if(payCyclesCt.compareTo(divNo) > 0) {
+						newdivNo = divNo;
+					} else {
+						newdivNo = payCyclesCt;
+					}
+				}
+				
+				System.out.println("Emp Id - " + empMap.getEmppayId().getEmployeeId().getEmployeeId());
+				
+				docobjct = getPDfOBject(empMap, exmap, decmap,newMulNo,newdivNo, monthly, pDate);
 
 				String pdfname = getPdfName(empMap);
 

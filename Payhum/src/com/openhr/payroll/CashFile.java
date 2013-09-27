@@ -76,18 +76,29 @@ public class CashFile extends Action {
 		
 		StringBuilder allEmpPayStr = new StringBuilder();
 		int sectionCounter = 1;
+		
+		// Header details
+		// Company Name, ABC
+		// Branch Name, MAIN
+		allEmpPayStr.append("Company Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(compName);
+		allEmpPayStr.append("\n");
+		allEmpPayStr.append("Branch Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(branch.getName());
+		allEmpPayStr.append("\n");
+		
 		for(int i = 0; i < supportedCurrencies.length; i++) {
 			if(hasEmpWithThisCurrency(supportedCurrencies[i], compPayroll)) {
 				// Populate the header.
 				allEmpPayStr.append("Section " + sectionCounter++ + ": Salary paid by cash for employees in " + supportedCurrencies[i] + " .\n");
 				
-				allEmpPayStr.append("Company Name");
-				allEmpPayStr.append(COMMA);
-				allEmpPayStr.append("Branch Name");
-				allEmpPayStr.append(COMMA);
 				allEmpPayStr.append("Employee Name");
 				allEmpPayStr.append(COMMA);
 				allEmpPayStr.append("Employee ID");
+				allEmpPayStr.append(COMMA);
+				allEmpPayStr.append("Department Name");
 				allEmpPayStr.append(COMMA);
 				allEmpPayStr.append("Employee National ID / Passport No");
 				allEmpPayStr.append(COMMA);
@@ -101,13 +112,11 @@ public class CashFile extends Action {
 						// Its Employee who is paid by cash
 						if(compPay.getCurrencySym().equalsIgnoreCase(supportedCurrencies[i])) {
 							StringBuilder empPayStr = new StringBuilder();
-							empPayStr.append(comp.getName());
-							empPayStr.append(COMMA);
-							empPayStr.append(branch.getName());
-							empPayStr.append(COMMA);			
 							empPayStr.append(compPay.getEmpFullName());
 							empPayStr.append(COMMA);
 							empPayStr.append(compPay.getEmployeeId());
+							empPayStr.append(COMMA);
+							empPayStr.append(compPay.getDeptName());
 							empPayStr.append(COMMA);
 							empPayStr.append(compPay.getEmpNationalID());
 							empPayStr.append(COMMA);

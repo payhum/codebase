@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -50,27 +51,33 @@ public class ProcessBranchAction extends Action{
 		while ((line = bf.readLine()) != null) {
 			sb.append(line);
 		}
-		JSONObject json = JSONObject.fromObject(sb.toString());
-		int branchId   		= json.getInt("branchId");
-		String usd   		= json.getString("usd");
-		String euro   		= json.getString("euro");
-		String pound 		= json.getString("pound");
+		
+		JSONArray json = JSONArray.fromObject(sb.toString());
+		Collection<ProcessBranchForm> formObjs = JSONArray.toCollection(json, ProcessBranchForm.class);
+		ProcessBranchForm formObj = formObjs.iterator().next();
 		
 		ConfigData config1 = ConfigDataFactory.findByName(PayhumConstants.PROCESS_BRANCH);
-		config1.setConfigValue(Integer.toString(branchId));
+		config1.setConfigValue(Integer.toString(formObj.getBranchId()));
  		ConfigDataFactory.update(config1);
  		
  		ConfigData config2 = ConfigDataFactory.findByName(PayhumConstants.USD_MMK_CONVER);
-		config2.setConfigValue(usd);
+		config2.setConfigValue(formObj.getUsd());
  		ConfigDataFactory.update(config2);
  		
  		ConfigData config3 = ConfigDataFactory.findByName(PayhumConstants.EURO_MMK_CONVER);
-		config3.setConfigValue(euro);
+		config3.setConfigValue(formObj.getEuro());
  		ConfigDataFactory.update(config3);
  		
  		ConfigData config4 = ConfigDataFactory.findByName(PayhumConstants.POUND_MMK_CONVER);
-		config4.setConfigValue(pound);
+		config4.setConfigValue(formObj.getPound());
  		ConfigDataFactory.update(config4);
+ 		
+ 		ConfigData config5 = ConfigDataFactory.findByName(PayhumConstants.SAL_PAY_DATE);
+ 		Calendar salPayCal = Calendar.getInstance();
+ 		salPayCal.setTimeInMillis(formObj.getSalPayDate());
+ 		int salPayDay = salPayCal.get(Calendar.DAY_OF_MONTH);
+		config5.setConfigValue(Integer.toString(salPayDay));
+ 		ConfigDataFactory.update(config5);
  		
  		int a[] = {0};
  		Calendar currDtCal = Calendar.getInstance();
@@ -125,14 +132,14 @@ public class ProcessBranchAction extends Action{
 		
 		if(a[0] == 0) {
 			// If the payroll run dates is empty, it means this is first time, so lets populate.
-			List<Branch> branches = BranchFactory.findById(branchId);
+			List<Branch> branches = BranchFactory.findById(formObj.getBranchId());
 			
 			if(branches == null || branches.isEmpty()) {
 				a[0] = 5;
 			} else {
 				List<PayrollDate> payrollDates = populatePayrollDates(branches.get(0), comp.getFinStartMonth());
 
-				int returnRes = getTobeProcessedDate(payrollDates, branchId);
+				int returnRes = getTobeProcessedDate(payrollDates, formObj.getBranchId());
 				
 				if(returnRes == 1) {
 					// adhoc

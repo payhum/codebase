@@ -39,6 +39,7 @@ import com.openhr.employee.form.EmpDependentsFrom;
 import com.openhr.employee.form.EmployeeDepartFrom;
 import com.openhr.employee.form.EmployeeForm;
 import com.openhr.employee.form.EmployeeSalaryForm;
+import com.openhr.employee.form.RelieveEmpForm;
 import com.openhr.factories.DeductionFactory;
 import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.EmployeeFactory;
@@ -472,6 +473,39 @@ public class EmployeeCommanAction extends DispatchAction
 	 
 	 
 	 
+	 public ActionForward relieveEmp(ActionMapping map, ActionForm form,
+	            HttpServletRequest request, HttpServletResponse response)
+	            throws Exception {
+		 
+		 BufferedReader bf = request.getReader();
+			StringBuffer sb = new StringBuffer();
+			String line = null;
+			 JSONArray result = null;
+			while ((line = bf.readLine()) != null) {
+				sb.append(line);
+			}
+			try
+			
+			{
+				 JSONArray json = JSONArray.fromObject(sb.toString());
+				 Collection<RelieveEmpForm> aCollection = JSONArray.toCollection(json, RelieveEmpForm.class);
+				 RelieveEmpForm ref = aCollection.iterator().next();
+				 
+				 Employee emp = EmployeeFactory.findById(ref.getEmpId()).get(0);
+				 emp.setStatus("IN ACTIVE");
+				 emp.setInactiveDate(new Date(ref.getRelieveDate()));
+				 EmployeeFactory.update(emp);
+				 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			 response.setContentType("application/json; charset=utf-8");
+		        PrintWriter out = response.getWriter();
+		        out.flush();
+		 
+		 return map.findForward("");
+	 }
 	 
 	 public ActionForward saveBonus(ActionMapping map, ActionForm form,
 	            HttpServletRequest request, HttpServletResponse response)

@@ -18,7 +18,7 @@ public class PayhumUtil {
 
 	static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");// 02-11-2012
 
-	static DecimalFormat decmalfrmt = new DecimalFormat("###.##");
+	static DecimalFormat decmalfrmt = new DecimalFormat("###.00");
 
 	// String s="E1_JohnSo_29_07_13";
 
@@ -33,7 +33,10 @@ public class PayhumUtil {
 	}
 
 	public static String decimalFormat(double d) {
-
+		if(d == 0D) {
+			return "0.00";
+		}
+		
 		return decmalfrmt.format(d);
 
 	}
@@ -142,5 +145,30 @@ public class PayhumUtil {
 		return retVal;
 	}
 
+	public static boolean isRetroActive(Calendar currDate, Date hireDate, int finStartMonth) {
+		Calendar hireDtCal = Calendar.getInstance();
+		hireDtCal.setTime(hireDate);
+	    // Zero out the hour, minute, second, and millisecond
+		hireDtCal.set(Calendar.HOUR_OF_DAY, 0);
+		hireDtCal.set(Calendar.MINUTE, 0);
+		hireDtCal.set(Calendar.SECOND, 0);
+		hireDtCal.set(Calendar.MILLISECOND, 0);
+	    
+		int currMonth = currDate.get(Calendar.MONTH);
+		int currYear = currDate.get(Calendar.YEAR);
+		int currDay = currDate.get(Calendar.DAY_OF_MONTH);
+		int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
+		int hireMonth = hireDtCal.get(Calendar.MONTH);
+		int hireYear = hireDtCal.get(Calendar.YEAR);
+		
+		if(currYear == hireYear && currMonth == hireMonth + 1 && hireDay >= currDay) {
+			return true;
+		}
+		else if(finStartMonth != 1 &&  currYear == hireYear + 1 && currMonth == 0 && hireDay >= currDay){
+			return true;
+		}
+		
+		return false;
+	}
 
 }

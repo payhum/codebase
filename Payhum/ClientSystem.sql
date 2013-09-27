@@ -43,7 +43,9 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 (24,'MMK','Myanmar Currency - Kyats','CURRENCY'),
 (25,'USD','United States of America Currency - Dollars($)','CURRENCY'),
 (26,'EURO','European Union Currency - EURO','CURRENCY'),
-(27,'POUND','United Kingdom Currency - Pounds','CURRENCY');
+(27,'POUND','United Kingdom Currency - Pounds','CURRENCY'),
+(28,'Limit for the Employer contribution for Social Security for USD','Maximum amount limit for the Employer contribution for Social Security for USD','TAXDETAILS'),
+(29,'Limit for the Employee contribution for Social Security for USD','Maximum amount limit for the Employee contribution for Social Security for USD','TAXDETAILS');
 /*!40000 ALTER TABLE `types` ENABLE KEYS */;
 
 --
@@ -183,7 +185,9 @@ INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 (9,9,10),
 (10,10,2.5),
 (11,22,9300),
-(12,23,5580);
+(12,23,5580),
+(13,28,60),
+(14,29,36);
 /*!40000 ALTER TABLE `taxdetails` ENABLE KEYS */;
 
 --
@@ -204,7 +208,9 @@ INSERT INTO `payhum_config` (`configName`, `configValue`) VALUES
 ('LUSERCOMP','1'),
 ('USD_MMK','1'),
 ('EURO_MMK','1'),
-('POUND_MMK','1');
+('POUND_MMK','1'),
+('PAYROLLDATE_ID','0'),
+('SAL_PAY_DATE', '');
 /*!40000 ALTER TABLE `payhum_config` ENABLE KEYS */;
 
 --

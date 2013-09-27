@@ -18,6 +18,8 @@ public class TaxDetails {
 	private Boolean employerSSDone;
 	private Double limitForEmployerSS;
 	private Double limitForEmployeeSS;
+	private Double limitForEmployeeSSInUSD;
+	private Double limitForEmployerSSInUSD;
 	
 	private static TaxDetails taxDetailsObj;
 	
@@ -76,6 +78,10 @@ public class TaxDetails {
 				td.setLimitForEmployerSS(tdd.getAmount());
 			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.LIMIT_FOR_EMPLOYEE_SS)) {
 				td.setLimitForEmployeeSS(tdd.getAmount());
+			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.LIMIT_FOR_EMPLOYER_SS_IN_USD)) {
+				td.setLimitForEmployerSSInUSD(tdd.getAmount());
+			}else if(tdd.getTypeId().getName().equalsIgnoreCase(PayhumConstants.LIMIT_FOR_EMPLOYEE_SS_IN_USD)) {
+				td.setLimitForEmployeeSSInUSD(tdd.getAmount());
 			}
 		}
 		
@@ -91,6 +97,22 @@ public class TaxDetails {
 		this.limitForEmployerSS = amount;
 	}
 
+	private void setLimitForEmployerSSInUSD(Double amount) {
+		this.limitForEmployerSSInUSD = amount;
+	}
+
+	public Double getLimitForEmployerSSInUSD() {
+		return this.limitForEmployerSSInUSD;
+	}
+	
+	private void setLimitForEmployeeSSInUSD(Double amount) {
+		this.limitForEmployeeSSInUSD = amount;
+	}
+
+	public Double getLimitForEmployeeSSInUSD() {
+		return this.limitForEmployeeSSInUSD;
+	}
+	
 	public Double getExemption(String typeStr) {
 		if(exemptionList.containsKey(typeStr)) {
 			return exemptionList.get(typeStr);

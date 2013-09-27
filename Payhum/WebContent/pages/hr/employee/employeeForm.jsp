@@ -316,9 +316,9 @@
 					<div class="label">Tax Paid By</div>
 
 					<label for="statusactive"> <input type="radio" id="active"
-						value="1" name="status" /> Employee
+						value="1" name="status" /> Employer
 					</label> <label for="statusInactive"> <input type="radio"
-						id="inactive" value="0" name="status" /> Employer
+						id="inactive" value="0" name="status" /> Employee
 					</label>
 					<div class="clear"></div>
 				</div>

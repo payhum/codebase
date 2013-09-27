@@ -68,13 +68,24 @@ public class GovtFile extends Action {
 		
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(branch, cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
+		
+		// Header details
+		// Company Name, ABC
+		// Branch Name, MAIN
 		allEmpPayStr.append("Company Name");
 		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(compName);
+		allEmpPayStr.append("\n");
 		allEmpPayStr.append("Branch Name");
 		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(branch.getName());
+		allEmpPayStr.append("\n");
+		
 		allEmpPayStr.append("Employee Name");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Employee ID");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Department Name");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Employee National ID / Passport No");
 		allEmpPayStr.append(COMMA);
@@ -89,13 +100,11 @@ public class GovtFile extends Action {
 			}
 			
 			StringBuilder empPayStr = new StringBuilder();
-			empPayStr.append(comp.getName());
-			empPayStr.append(COMMA);
-			empPayStr.append(branch.getName());
-			empPayStr.append(COMMA);			
 			empPayStr.append(compPay.getEmpFullName());
 			empPayStr.append(COMMA);
 			empPayStr.append(compPay.getEmployeeId());
+			empPayStr.append(COMMA);
+			empPayStr.append(compPay.getDeptName());
 			empPayStr.append(COMMA);
 			empPayStr.append(compPay.getEmpNationalID());
 			empPayStr.append(COMMA);
@@ -109,7 +118,7 @@ public class GovtFile extends Action {
 			totalAmt += compPay.getTaxAmount();
 		}
 		
-		allEmpPayStr.append("\n,,,,,TOTAL:,");
+		allEmpPayStr.append("\n,,,,TOTAL:,");
 		allEmpPayStr.append(new DecimalFormat("###.##").format(totalAmt));
 		
 		OutputStream os = response.getOutputStream();

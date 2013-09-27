@@ -42,7 +42,7 @@ span.k-tooltip {
 		<div style="width: 800px;">
 			<fieldset>
 				<legend>Run Payroll</legend>
-				<div style="float: left">
+				<div style="float: left;">
 					Generate the payroll for the current pay period.<br> <br>
 					<b><i>NOTE: Ensure the employee status is updated before
 							generating the payroll for the current pay period.</i></b> <br> <br>
@@ -51,27 +51,36 @@ span.k-tooltip {
 						<select id="branchName"></select>
 					</div><br>
 					<div>
-					<div class="label" style="width : 95px !important;"><b>Currency Rates</b></div><br><br>
-					<div class="label">1 USD </div>
-					<div class="field">
-						<input type="text" required=required class="k-input k-textbox" id="usdVal" value="" /> 
+						<div class="label" style="width : 95px !important;"><b>Salary Pay Date</b></div>
+						<div class="field">
+							<input id="salPayDate" /> 
+						</div><br><br>
+						<div class="label" style="width : 95px !important;"><b>Currency Rates</b></div><br><br>
+						<div class="label">1 USD </div>
+						<div class="field">
+							<input type="text" required=required class="k-input k-textbox" id="usdVal" value="" /> 
+						</div>
+						<div class="label">1 EURO</div>
+						<div class="field">
+							<input type="text" required=required class="k-input k-textbox" id="euroVal" value="" /> 
+						</div>
+						<div class="label">1 POUND</div>
+						<div class="field">
+							<input type="text" required=required class="k-input k-textbox" id="poundVal" value="" /> 
+						</div>
+						<a class="k-button k-icontext" id="processBranch">Process</a> <br> <br>
+						<div class="clear"></div>
 					</div>
-					<div class="label">1 EURO</div>
-					<div class="field">
-						<input type="text" required=required class="k-input k-textbox" id="euroVal" value="" /> 
-					</div>
-					<div class="label">1 POUND</div>
-					<div class="field">
-						<input type="text" required=required class="k-input k-textbox" id="poundVal" value="" /> 
-					</div>
-					<a class="k-button k-icontext" id="processBranch">Process</a> <br> <br>
-					<div class="clear"></div>
-				</div>
 				
-				<div style="float: left; display:none" id="runPayrollDiv">	
-				    <form method="post" action="<%=request.getContextPath() + "/do/GeneratePayroll"%>" enctype="multipart/form-data">
-				    	<input class="k-button k-icontext" type="submit" value="Download Payroll File"/> to be sent to Master for processing.<br>
-			        </form> <br>
+					<div style="float: left; display:none" id="runPayrollDiv">	
+					    <form method="post" action="<%=request.getContextPath() + "/do/GeneratePayroll"%>" enctype="multipart/form-data">
+					    	<input class="k-button k-icontext" type="submit" value="Download Payroll File"/> to be sent to Master for processing.<br>
+				        </form> <br>
+				        <form method="post" action="<%=request.getContextPath() + "/do/GenZipFile"%>" enctype="multipart/form-data">
+					    	<input class="k-button k-icontext" type="submit" value="Download Paystubs"/> of all the employees processed now for the selected branch.<br>
+				        </form> <br>
+					</div>
+										
 				</div>
 			</fieldset>
 		</div>
@@ -388,13 +397,6 @@ span.k-tooltip {
 
 </div>
 
-<div id="payrollZipsWindow" style="display: none">
-
-
-Payroll Date <input class="payRollDatesDropDownList" id="payRollDates"/>
-	<a class="k-button k-icontext" id="payAllEmpZip">Download</a>
-
-</div>
 <div id="payrollSettingsWindow" style="display: none">
 	<div id="payrollSettingTabs">
 		<ul class="list">
@@ -783,6 +785,8 @@ h3 {
 
 	var no_Of_steps = 3, first_step = 1;
 	$(document).ready(function() {
+		//var today = new Date();
+		$("#salPayDate").kendoDatePicker({value : ""});
 		
 		$("#branchName").kendoDropDownList({
 			dataTextField : "name",
@@ -796,95 +800,35 @@ h3 {
 			}
 	    });
 		
-		
-		$("#payAllEmpZip").bind("click",function(){
-			var payRollDates =$("#payRollDates").val();
-			
-			//alert($("#payRollDates").val());
-			 $.download("<%=request.getContextPath() + "/do/GenZipFile?parameter=create"%>",'payRollDates=' + payRollDates,'post');
-			
-		});
-		
-		$("#PaystubsPdf").bind("click", function() {
-
-			//alert("hello");
-			
-
-		var	payzipwnd = $("#payrollZipsWindow").kendoWindow({
-				
-				width : 800,
-				hieght:800,
-				title : "Download Paystubs"
-			}).data("kendoWindow");
-
-			payzipwnd.center();
-			payzipwnd.open(); 
-			
-			
-			var payRollDatesDataSource1= new kendo.data.DataSource({
-				  
-				  transport : {
-
-				read : {
-				type: 'POST',
-				 url:'<%=request.getContextPath()+ "/do/CommantypesAction?parameter=getPayRollDates"%>',
-				 dataType : 'json',
-				 contentType : 'application/json; charset=utf-8',
-				 cache: false,
-				 complete : function(jqXHR, textStatus){
-					//alert(jqXHR.responseText);
-			     }
-			}
-
-				  },
-			autoSync : true,
-				batch : true 
-				
-			});
-			
-			$(".payRollDatesDropDownList").kendoDropDownList({
-				  
-				  dataTextField : "runDate",
-					dataValueField : "id",
-					 optionLabel:"Select Date",
-					dataSource :payRollDatesDataSource1,
-					
-					
-			 }).data("kendoDropDownList");
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-		 }); 
-		
-		
-		
-		$("#processBranch").bind("click", function() {    				
+		var salPayDate= new Date($("#salPayDate").val());
+	 	salPayDate = salPayDate.getTime();
+	 	
+	});
+	
+		$("#processBranch").bind("click", function() {
+			var salPayDate= new Date($("#salPayDate").val());
+   	 		salPayDate = salPayDate.getTime();
+   	 		
 			branchId = $("#branchName").val();
 			usd = $("#usdVal").val();
 			euro = $("#euroVal").val();
 			pound = $("#poundVal").val();
     		
-			var branch = JSON.stringify({
+			var branch = JSON.stringify([{
  	   			"branchId"	  : branchId,
  	   			"usd"		  : usd,
  	   			"euro"		  : euro,
- 	   			"pound"		  : pound
-  			});   
+ 	   			"pound"		  : pound,
+ 	   			"salPayDate"  : salPayDate
+  			}]);   
  			
 			if(branchId == "") {
   				alert("Select a Branch to process.");
   			} else if (usd == "" || euro == "" || pound == "") {
   				alert("Enter values for the currency conversion. It has to be set to 1 to proceed further.");
-  			} else {
+  			} else if (salPayDate == "") {
+  				alert("Pick the Salary Pay Date.");
+		    } else {
 	 			$.ajax({
 					url 		: "<%=request.getContextPath() + "/do/SaveBranchToProcess"%>",
 					type 		: 'POST',
@@ -2005,7 +1949,7 @@ $("#cancelTaxdet").click(function(){
 			PrintDiv();
 			$(".print").show();
 		});
-	});
+	
 </script>
 
 

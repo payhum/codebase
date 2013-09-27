@@ -267,10 +267,10 @@ public class UploadEmployeeDataFile extends Action {
                 		empPayroll.setWithholdTax(1);
                 		
                 		//Other Income
-                		empPayroll.setOtherIncome(Double.parseDouble(otherIncome));
+                		empPayroll.setNewOtherIncome(Double.parseDouble(otherIncome));
                 		
                 		//Initial Overtime
-                		empPayroll.addOvertimeamt(Double.parseDouble(otAmount));
+                		empPayroll.setNewOvertimeAmt(Double.parseDouble(otAmount));
                 		
                 		if(accomType.equalsIgnoreCase("free fully furnished accomodation")
                 			|| accomType.equalsIgnoreCase("fully furnished accomodation")

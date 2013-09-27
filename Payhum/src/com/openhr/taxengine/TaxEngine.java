@@ -10,6 +10,7 @@ import java.util.Map;
 import com.openhr.common.PayhumConstants;
 import com.openhr.company.Company;
 import com.openhr.data.Branch;
+import com.openhr.data.ConfigData;
 import com.openhr.data.EmpBankAccount;
 import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
@@ -17,6 +18,8 @@ import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Payroll;
 import com.openhr.data.PayrollDate;
+import com.openhr.data.TypesData;
+import com.openhr.factories.ConfigDataFactory;
 import com.openhr.factories.EmpBankAccountFactory;
 import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.PayrollFactory;
@@ -32,9 +35,7 @@ public class TaxEngine {
 	
 	private Double prevNetPay = 0D;
 	private Double prevTaxAmt = 0D;
-	private Double prevEmpSS = 0D;
-	private Double prevOvertimeAmt = 0D;
-	private Double prevOtherIncome = 0D;
+	private Double prevEmprSS = 0D;
 	
 	public TaxEngine(Company company, Branch branch, List<Employee> activeList, List<Employee> inactiveList) {
 		this.comp = company;
@@ -75,18 +76,16 @@ public class TaxEngine {
 			EmployeePayroll empPayroll = incomeCalc.calculate(emp, toBeProcessedFor, true, comp.getFinStartMonth());
 			
 			prevNetPay = empPayroll.getNetPay();
-			prevEmpSS = empPayroll.getEmployerSS();
+			prevEmprSS = empPayroll.getEmployerSS();
 			prevTaxAmt = empPayroll.getTaxAmount();			
-			prevOvertimeAmt = empPayroll.getOvertimeamt();
-			prevOtherIncome = empPayroll.getOtherIncome();
 					
 			// Calculate the Exemptions
 			ExemptionCalculator exmpCalc = ResidentTypeFactory.getExemptionCalculator(emp);
-			exmpCalc.calculate(emp, empPayroll, comp.getFinStartMonth(), toBeProcessedFor);
+			exmpCalc.calculate(emp, empPayroll, comp.getFinStartMonth(), toBeProcessedFor, true);
 			
 			// Calculate the deductions
 			DeductionCalculator deducCalc = ResidentTypeFactory.getDeductionCalculator(emp);
-			deducCalc.calculate(emp, empPayroll, toBeProcessedFor, comp.getFinStartMonth());
+			deducCalc.calculate(emp, empPayroll, toBeProcessedFor, comp.getFinStartMonth(), true);
 			
 			// Finally calculate the tax to be paid
 			TaxCalculator taxCalc = ResidentTypeFactory.getTaxCalculator(emp);
@@ -117,7 +116,7 @@ public class TaxEngine {
 			
 			// Update on the split per month/week/biweekly
 			computeDetailsPerPayPeriod(empPayroll, toBeProcessedFor, payroll, adhoc,
-					payrollDates, payRuns);
+					payrollDates, payRuns, comp.getFinStartMonth());
 			
 			if(System.getProperty("DRYRUN") != null 
 			&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
@@ -143,11 +142,11 @@ public class TaxEngine {
 			
 			// Calculate the Exemptions
 			ExemptionCalculator exmpCalc = ResidentTypeFactory.getExemptionCalculator(emp);
-			exmpCalc.calculate(emp, empPayroll, comp.getFinStartMonth(), toBeProcessedFor);
+			exmpCalc.calculate(emp, empPayroll, comp.getFinStartMonth(), toBeProcessedFor, false);
 			
 			// Calculate the deductions
 			DeductionCalculator deducCalc = ResidentTypeFactory.getDeductionCalculator(emp);
-			deducCalc.calculate(emp, empPayroll, toBeProcessedFor, comp.getFinStartMonth());
+			deducCalc.calculate(emp, empPayroll, toBeProcessedFor, comp.getFinStartMonth(), false);
 			
 			// Finally calculate the tax to be paid
 			TaxCalculator taxCalc = ResidentTypeFactory.getTaxCalculator(emp);
@@ -176,9 +175,7 @@ public class TaxEngine {
 				empPayroll.setNetPay(income - empPayroll.getEmployerSS() - empeSS);
 			}
 			
-			empPayroll.setPaidNetPay(empPayroll.getNetPay());
-			empPayroll.setPaidSS(empPayroll.getEmployerSS());
-			empPayroll.setPaidTaxAmt(empPayroll.getTaxAmount());
+			computeDetailsPerPayPeriodForInactive(empPayroll, toBeProcessedFor, payroll, payrollDates, payRuns, comp.getFinStartMonth());
 			
 			if(System.getProperty("DRYRUN") != null 
 			&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
@@ -223,17 +220,52 @@ public class TaxEngine {
 
 	private void computeDetailsPerPayPeriod(EmployeePayroll empPayroll,
 			Calendar toBeProcessedFor, Payroll payroll, boolean adhoc,
-			List<PayrollDate> payrollDates, List<Payroll> payRuns) throws Exception {		
+			List<PayrollDate> payrollDates, List<Payroll> payRuns, int finStartMonth) throws Exception {
+		boolean isRetroEmp = PayhumUtil.isRetroActive(toBeProcessedFor, empPayroll.getEmployeeId().getHiredate(), finStartMonth);
+		
+		Integer divNo = payrollDates.size();
+		int remainingPaycycles = PayhumUtil.remainingPaycycles(payrollDates, payRuns);
+		Double proRate = 1D;
+		Double divNoWithProrate = 1D;
+		Date hireDate = empPayroll.getEmployeeId().getHiredate();
+		Calendar hireDtCal = Calendar.getInstance();
+		hireDtCal.setTime(hireDate);
+	    // Zero out the hour, minute, second, and millisecond
+		hireDtCal.set(Calendar.HOUR_OF_DAY, 0);
+		hireDtCal.set(Calendar.MINUTE, 0);
+		hireDtCal.set(Calendar.SECOND, 0);
+		hireDtCal.set(Calendar.MILLISECOND, 0);
+	    
+		int currMonth = toBeProcessedFor.get(Calendar.MONTH);
+		int hireMonth = hireDtCal.get(Calendar.MONTH);
+		int hireYear = hireDtCal.get(Calendar.YEAR);
+		int currYear = toBeProcessedFor.get(Calendar.YEAR);
+		
+		if(currYear == hireYear && currMonth == hireMonth) {
+			int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
+			
+			int diffDays = 1;
+			if(hireDay < 31) {
+				diffDays = 31 - hireDay;
+			}
+			
+			proRate = diffDays / 30D;
+			divNoWithProrate = (remainingPaycycles - 1) + proRate;
+		} else {
+			// no change in div no
+			divNoWithProrate = new Double(divNo);
+		}
+		
 		if(adhoc) {
 			EmployeeBonus latestBonus = getLatestBonus(empPayroll, toBeProcessedFor);
 			if(latestBonus != null && prevNetPay != 0D) {
 				Double diffNetPay = empPayroll.getNetPay() - prevNetPay;
 				Double diffTaxAmt = empPayroll.getTaxAmount() - prevTaxAmt;
-				Double diffEmpSS = empPayroll.getEmployerSS() - prevEmpSS;
+				Double diffEmpSS = empPayroll.getEmployerSS() - prevEmprSS;
 				
 				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + diffNetPay);
 				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + diffTaxAmt);
-				empPayroll.setPaidSS(empPayroll.getPaidSS() + diffEmpSS);
+				empPayroll.setPaidEmprSS(empPayroll.getPaidEmprSS() + diffEmpSS);
 				
 				// Save to emp_payroll_map table.
 				EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPayroll.getEmployeeId().getId());
@@ -241,7 +273,7 @@ public class TaxEngine {
 				empPayMap.setEmppayId(empPayroll);
 				empPayMap.setNetPay(diffNetPay);
 				empPayMap.setTaxAmount(diffTaxAmt);
-				empPayMap.setSocialSec(diffEmpSS);
+				empPayMap.setEmprSocialSec(diffEmpSS);
 				empPayMap.setPayrollId(payroll);
 				
 				if(empBankAcct != null) {
@@ -260,6 +292,9 @@ public class TaxEngine {
 			Double totalNeyPay = empPayroll.getNetPay();
 			Double totalEmprSS = empPayroll.getEmployerSS();
 			Double totalEmpeSS = 0D;
+			Double totalTaxableAmt = empPayroll.getTaxableIncome();
+			Double totalAccomAmt = empPayroll.getAccomodationAmount();
+			Double totalBasicAllow = 0D;
 			
 			// get employee contribution of SS
 			List<DeductionsDone> deductionsList = empPayroll.getDeductionsDone();
@@ -271,43 +306,46 @@ public class TaxEngine {
 				}
 			}
 			
-			int remainingPaycycles = PayhumUtil.remainingPaycycles(payrollDates, payRuns);
+			List<ExemptionsDone> exemptionsList = empPayroll.getExemptionsDone();
 			
-			Double newOvertimeAmt = 0D;
-			Double newOtherIncome = 0D;
-			Double pendingNeyPay = 0D;
-			
-			if(remainingPaycycles == payrollDates.size()) {
-				newOvertimeAmt = empPayroll.getOvertimeamt();
-				newOtherIncome = empPayroll.getOtherIncome();
-				pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay() - empPayroll.getOtherIncome() - empPayroll.getOvertimeamt();
-			} else {
-				newOvertimeAmt = empPayroll.getOvertimeamt() - prevOvertimeAmt;
-				newOtherIncome = empPayroll.getOtherIncome() - prevOtherIncome;
-				pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay() - newOvertimeAmt - newOtherIncome;
+			for(ExemptionsDone ed: exemptionsList) {
+				if(ed.getType().getName().equalsIgnoreCase(PayhumConstants.BASIC_ALLOWANCE)) {
+					totalBasicAllow += ed.getAmount();
+					break;
+				}
 			}
 			
+			TypesData currency = empPayroll.getEmployeeId().getCurrency();
+			Double currencyCoverVal = 1D;
+			
+			if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+				ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.USD_MMK_CONVER);
+				currencyCoverVal = Double.valueOf(currencyConver.getConfigValue());
+			} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_EURO)) {
+				ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.EURO_MMK_CONVER);
+				currencyCoverVal = Double.valueOf(currencyConver.getConfigValue());
+			} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_POUND)) {
+				ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.POUND_MMK_CONVER);
+				currencyCoverVal = Double.valueOf(currencyConver.getConfigValue());
+			}
+			
+			Double newOvertimeAmt = empPayroll.getNewOvertimeAmt();
+			Double newOtherIncome = empPayroll.getNewOtherIncome();
+			Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay() - newOtherIncome - newOvertimeAmt;
 			Double pendingTaxAmt = totalTaxAmt - empPayroll.getPaidTaxAmt();
-			
-			Double pendingEmpSS = totalEmprSS + totalEmpeSS - empPayroll.getPaidSS();
-			
-			Date hireDate = empPayroll.getEmployeeId().getHiredate();
-			Calendar hireDtCal = Calendar.getInstance();
-			hireDtCal.setTime(hireDate);
-		    // Zero out the hour, minute, second, and millisecond
-			hireDtCal.set(Calendar.HOUR_OF_DAY, 0);
-			hireDtCal.set(Calendar.MINUTE, 0);
-			hireDtCal.set(Calendar.SECOND, 0);
-			hireDtCal.set(Calendar.MILLISECOND, 0);
-		    
-			int currMonth = toBeProcessedFor.get(Calendar.MONTH);
-			int hireMonth = hireDtCal.get(Calendar.MONTH);
-			int hireYear = hireDtCal.get(Calendar.YEAR);
-			int currYear = toBeProcessedFor.get(Calendar.YEAR);
+			Double pendingEmprSS = totalEmprSS - empPayroll.getPaidEmprSS();
+			Double pendingEmpeSS = totalEmpeSS - empPayroll.getPaidEmpeSS();
+			Double pendingTaxableAmt = totalTaxableAmt - empPayroll.getPaidTaxableAmt();
+			Double pendingAccomAmt = totalAccomAmt - empPayroll.getPaidAccomAmt();
+			Double pendingBasicAllow = totalBasicAllow - empPayroll.getPaidBasicAllow();
 			
 			Double thisMonthPaidNetPay = 0D;
 			Double thisMonthPaidTaxAmt = 0D;
-			Double thisMonthPaidSS = 0D;
+			Double thisMonthPaidEmpeSS = 0D;
+			Double thisMonthPaidEmprSS = 0D;
+			Double thisMonthPaidTaxableAmt = 0D;
+			Double thisMonthPaidAccomAmt = 0D;
+			Double thisMonthPaidBasicAllow = 0D;
 			if(currYear == hireYear && currMonth == hireMonth) {
 				int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
 				
@@ -319,26 +357,76 @@ public class TaxEngine {
 				Double divideBy = (remainingPaycycles - 1) + diffDays / 30D;
 				thisMonthPaidNetPay = ((pendingNeyPay / divideBy) / 30 ) * diffDays + newOvertimeAmt + newOtherIncome;
 				thisMonthPaidTaxAmt = ((pendingTaxAmt / divideBy) / 30 ) * diffDays;
-				Double thisMonthPaidEmpeSS = ((totalEmpeSS / divideBy) / 30 ) * diffDays;
+				thisMonthPaidTaxableAmt = ((pendingTaxableAmt / divideBy) / 30 ) * diffDays;
+				thisMonthPaidAccomAmt = ((pendingAccomAmt / divideBy) / 30 ) * diffDays;
+				thisMonthPaidBasicAllow = ((pendingBasicAllow / divideBy) / 30 ) * diffDays;
+				thisMonthPaidEmpeSS = totalEmpeSS / remainingPaycycles;
+				thisMonthPaidEmprSS = totalEmprSS / remainingPaycycles;
 				
-				Double actualPaidSS = totalEmpeSS / remainingPaycycles;
-				Double diffPaidSS = actualPaidSS - thisMonthPaidEmpeSS;
-				
-				thisMonthPaidNetPay -= diffPaidSS;
-				thisMonthPaidSS = pendingEmpSS / remainingPaycycles;
+				Double extraEmpeSS = (((thisMonthPaidEmpeSS / divideBy) / 30 ) * (30 - diffDays)) * (remainingPaycycles - 1);
+				thisMonthPaidNetPay = thisMonthPaidNetPay - extraEmpeSS;
 				
 				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay );
 				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
-				empPayroll.setPaidSS(empPayroll.getPaidSS() + thisMonthPaidSS);
-			} else {
-				
+				empPayroll.setPaidEmpeSS(thisMonthPaidEmpeSS);
+				empPayroll.setPaidEmprSS(thisMonthPaidEmprSS);
+				empPayroll.setPaidTaxableAmt(thisMonthPaidTaxableAmt);
+				empPayroll.setPaidAccomAmt(thisMonthPaidAccomAmt);
+				empPayroll.setPaidBasicAllow(thisMonthPaidBasicAllow);
+			} else if(isRetroEmp) {
 				thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome;
 				thisMonthPaidTaxAmt = pendingTaxAmt / remainingPaycycles;
-				thisMonthPaidSS = pendingEmpSS / remainingPaycycles;
+				thisMonthPaidEmpeSS = pendingEmpeSS / (remainingPaycycles + 1);
+				thisMonthPaidEmprSS = pendingEmprSS / (remainingPaycycles + 1);
+				thisMonthPaidTaxableAmt = pendingTaxableAmt / remainingPaycycles;
+				thisMonthPaidAccomAmt = pendingAccomAmt / remainingPaycycles;
+				thisMonthPaidBasicAllow = pendingBasicAllow / remainingPaycycles;
+				
+				// If retro lets get 2 months SS
+				thisMonthPaidEmpeSS = thisMonthPaidEmpeSS * 2;
+				thisMonthPaidEmprSS = thisMonthPaidEmprSS * 2;
 				
 				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay);
 				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
-				empPayroll.setPaidSS(empPayroll.getPaidSS() + thisMonthPaidSS);
+				empPayroll.setPaidEmpeSS(empPayroll.getPaidEmpeSS() + thisMonthPaidEmpeSS);
+				empPayroll.setPaidEmprSS(empPayroll.getPaidEmprSS() + thisMonthPaidEmprSS);
+				empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
+				empPayroll.setPaidAccomAmt(empPayroll.getPaidAccomAmt() + thisMonthPaidAccomAmt);
+				empPayroll.setPaidBasicAllow(empPayroll.getPaidBasicAllow() + thisMonthPaidBasicAllow);
+			} else {
+				thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome;
+				thisMonthPaidTaxAmt = pendingTaxAmt / remainingPaycycles;
+				thisMonthPaidEmpeSS = pendingEmpeSS / remainingPaycycles;
+				thisMonthPaidEmprSS = pendingEmprSS / remainingPaycycles;
+				thisMonthPaidTaxableAmt = pendingTaxableAmt / remainingPaycycles;
+				thisMonthPaidAccomAmt = pendingAccomAmt / remainingPaycycles;
+				thisMonthPaidBasicAllow = pendingBasicAllow / remainingPaycycles;
+				
+				// Now if the employee is USD, then his number for SS should be 5 and 3 only.
+				if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+					Double valForEmprSS = 5D;
+					Double valForEmpeSS = 3D;
+					
+					Double currValForEmprSS = thisMonthPaidEmprSS / currencyCoverVal;
+					Double currValForEmpeSS = thisMonthPaidEmpeSS / currencyCoverVal;
+					
+					Double diffForEmprSS = currValForEmprSS - valForEmprSS;
+					Double diffForEmpeSS = currValForEmpeSS - valForEmpeSS;
+					
+					thisMonthPaidNetPay += diffForEmprSS * currencyCoverVal;
+					thisMonthPaidNetPay += diffForEmpeSS * currencyCoverVal;
+					
+					thisMonthPaidEmpeSS = valForEmpeSS * currencyCoverVal;
+					thisMonthPaidEmprSS = valForEmprSS * currencyCoverVal;
+				} 
+				
+				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay);
+				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
+				empPayroll.setPaidEmpeSS(empPayroll.getPaidEmpeSS() + thisMonthPaidEmpeSS);
+				empPayroll.setPaidEmprSS(empPayroll.getPaidEmprSS() + thisMonthPaidEmprSS);
+				empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
+				empPayroll.setPaidAccomAmt(empPayroll.getPaidAccomAmt() + thisMonthPaidAccomAmt);
+				empPayroll.setPaidBasicAllow(empPayroll.getPaidBasicAllow() + thisMonthPaidBasicAllow);
 			}
 			
 			// Save to emp_payroll_map table.
@@ -347,9 +435,42 @@ public class TaxEngine {
 			empPayMap.setEmppayId(empPayroll);
 			empPayMap.setNetPay(thisMonthPaidNetPay);
 			empPayMap.setTaxAmount(thisMonthPaidTaxAmt);
-			empPayMap.setSocialSec(thisMonthPaidSS);
+			empPayMap.setTaxableAmt(thisMonthPaidTaxableAmt);
+			empPayMap.setEmpeSocialSec(thisMonthPaidEmpeSS);
+			empPayMap.setEmprSocialSec(thisMonthPaidEmprSS);
+			empPayMap.setAccomAmt(thisMonthPaidAccomAmt);
+			empPayMap.setBasicAllow(thisMonthPaidBasicAllow);
+			
 			empPayMap.setOvertimeAmt(newOvertimeAmt);
+			empPayroll.clearNewOvertimeAmt();
+			
 			empPayMap.setOtherIncome(newOtherIncome);
+			empPayroll.clearNewOtherIncome();
+			
+			if(isRetroEmp) {
+				empPayMap.setRetroBaseSal(empPayroll.getRetroBaseSal());
+			} else {
+				empPayMap.setRetroBaseSal(0D);
+			}
+			
+			Double baseSalforMonth = empPayroll.getBaseSalary() - empPayroll.getPaidBaseSalary();
+			baseSalforMonth = baseSalforMonth / remainingPaycycles;
+			if(proRate.compareTo(1D) == 0) {
+				empPayMap.setBaseSalary(baseSalforMonth);
+				empPayroll.addPaidBaseSalary(baseSalforMonth);
+			} else {
+				empPayMap.setBaseSalary((empPayroll.getBaseSalary() / divNoWithProrate) * proRate);
+				empPayroll.addPaidBaseSalary((empPayroll.getBaseSalary() / divNoWithProrate) * proRate);
+			}
+			
+			empPayMap.setBonus(empPayroll.getNewBonus());
+			empPayroll.clearNewBonus();
+			
+			empPayMap.setCurrencyConverRate(currencyCoverVal);
+			
+			ConfigData salPayDate = ConfigDataFactory.findByName(PayhumConstants.SAL_PAY_DATE);
+			empPayMap.setSalPayDate(Integer.parseInt(salPayDate.getConfigValue()));
+			
 			empPayMap.setPayrollId(payroll);
 			
 			if(empBankAcct != null) {
@@ -362,6 +483,251 @@ public class TaxEngine {
 			|| ! System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
 				PayrollFactory.insertEmpPayrollMap(empPayMap);
 			}
+		}
+	}
+
+	private void computeDetailsPerPayPeriodForInactive(EmployeePayroll empPayroll,
+			Calendar toBeProcessedFor, Payroll payroll,
+			List<PayrollDate> payrollDates, List<Payroll> payRuns, int finStartMonth) throws Exception {
+		boolean isRetroEmp = PayhumUtil.isRetroActive(toBeProcessedFor, empPayroll.getEmployeeId().getHiredate(), finStartMonth);
+		
+		Integer divNo = 1;
+		Double proRate = 1D;
+		Double divNoWithProrate = 1D;
+		Date hireDate = empPayroll.getEmployeeId().getHiredate();
+		Date lastDate = empPayroll.getEmployeeId().getInactiveDate();
+		
+		Calendar hireDtCal = Calendar.getInstance();
+		hireDtCal.setTime(hireDate);
+	    // Zero out the hour, minute, second, and millisecond
+		hireDtCal.set(Calendar.HOUR_OF_DAY, 0);
+		hireDtCal.set(Calendar.MINUTE, 0);
+		hireDtCal.set(Calendar.SECOND, 0);
+		hireDtCal.set(Calendar.MILLISECOND, 0);
+	    
+		Calendar lastDtCal = Calendar.getInstance();
+		lastDtCal.setTime(lastDate);
+	    // Zero out the hour, minute, second, and millisecond
+		lastDtCal.set(Calendar.HOUR_OF_DAY, 0);
+		lastDtCal.set(Calendar.MINUTE, 0);
+		lastDtCal.set(Calendar.SECOND, 0);
+		lastDtCal.set(Calendar.MILLISECOND, 0);
+	    
+		int currMonth = toBeProcessedFor.get(Calendar.MONTH);
+		int hireMonth = hireDtCal.get(Calendar.MONTH);
+		int hireYear = hireDtCal.get(Calendar.YEAR);
+		int currYear = toBeProcessedFor.get(Calendar.YEAR);
+		int lastMonth = lastDtCal.get(Calendar.MONTH);
+		int lastYear = lastDtCal.get(Calendar.YEAR);
+		int lastDay = lastDtCal.get(Calendar.DAY_OF_MONTH);
+		
+		if(currYear == hireYear && currMonth == hireMonth) {
+			int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
+			
+			int diffDays = 1;
+			if(hireDay < 31) {
+				diffDays = lastDay + 1 - hireDay;
+			}
+			
+			proRate = diffDays / (double)lastDay;
+			divNoWithProrate = divNo + proRate;
+		} else {
+			// no change in div no
+			divNoWithProrate = new Double(divNo);
+		}
+		
+		Double totalTaxAmt = empPayroll.getTaxAmount();
+		Double totalNeyPay = empPayroll.getNetPay();
+		Double totalEmprSS = empPayroll.getEmployerSS();
+		Double totalEmpeSS = 0D;
+		Double totalTaxableAmt = empPayroll.getTaxableIncome();
+		Double totalAccomAmt = empPayroll.getAccomodationAmount();
+		Double totalBasicAllow = 0D;
+		
+		// get employee contribution of SS
+		List<DeductionsDone> deductionsList = empPayroll.getDeductionsDone();
+		
+		for(DeductionsDone dd: deductionsList) {
+			if(dd.getType().getName().equalsIgnoreCase(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY)) {
+				totalEmpeSS += dd.getAmount();
+				break;
+			}
+		}
+		
+		List<ExemptionsDone> exemptionsList = empPayroll.getExemptionsDone();
+		
+		for(ExemptionsDone ed: exemptionsList) {
+			if(ed.getType().getName().equalsIgnoreCase(PayhumConstants.BASIC_ALLOWANCE)) {
+				totalBasicAllow += ed.getAmount();
+				break;
+			}
+		}
+		
+		int remainingPaycycles = 1;
+		
+		TypesData currency = empPayroll.getEmployeeId().getCurrency();
+		Double currencyCoverVal = 1D;
+		
+		if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.USD_MMK_CONVER);
+			currencyCoverVal = Double.valueOf(currencyConver.getConfigValue());
+		} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_EURO)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.EURO_MMK_CONVER);
+			currencyCoverVal = Double.valueOf(currencyConver.getConfigValue());
+		} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_POUND)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.POUND_MMK_CONVER);
+			currencyCoverVal = Double.valueOf(currencyConver.getConfigValue());
+		}
+		
+		Double newOvertimeAmt = empPayroll.getNewOvertimeAmt();
+		Double newOtherIncome = empPayroll.getNewOtherIncome();
+		Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay() - newOtherIncome - newOvertimeAmt;
+		Double pendingTaxAmt = totalTaxAmt - empPayroll.getPaidTaxAmt();
+		Double pendingEmprSS = totalEmprSS - empPayroll.getPaidEmprSS();
+		Double pendingEmpeSS = totalEmpeSS - empPayroll.getPaidEmpeSS();
+		Double pendingTaxableAmt = totalTaxableAmt - empPayroll.getPaidTaxableAmt();
+		Double pendingAccomAmt = totalAccomAmt - empPayroll.getPaidAccomAmt();
+		Double pendingBasicAllow = totalBasicAllow - empPayroll.getPaidBasicAllow();
+		
+		Double thisMonthPaidNetPay = 0D;
+		Double thisMonthPaidTaxAmt = 0D;
+		Double thisMonthPaidEmpeSS = 0D;
+		Double thisMonthPaidEmprSS = 0D;
+		Double thisMonthPaidTaxableAmt = 0D;
+		Double thisMonthPaidAccomAmt = 0D;
+		Double thisMonthPaidBasicAllow = 0D;
+		if(currYear == hireYear && currMonth == hireMonth) {
+			int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
+			
+			int diffDays = 1;
+			if(hireDay < 31) {
+				diffDays = lastDay + 1 - hireDay;
+			}
+			
+			Double divideBy = (remainingPaycycles - 1) + diffDays / (double) lastDay;
+			thisMonthPaidNetPay = ((pendingNeyPay / divideBy) / 30 ) * diffDays + newOvertimeAmt + newOtherIncome;
+			thisMonthPaidTaxAmt = ((pendingTaxAmt / divideBy) / 30 ) * diffDays;
+			thisMonthPaidTaxableAmt = ((pendingTaxableAmt/ divideBy) / 30 ) * diffDays;
+			thisMonthPaidEmpeSS = totalEmpeSS / remainingPaycycles;
+			thisMonthPaidEmprSS = totalEmprSS / remainingPaycycles;
+			thisMonthPaidAccomAmt = ((pendingAccomAmt / divideBy) / 30 ) * diffDays;
+			thisMonthPaidBasicAllow = ((pendingBasicAllow / divideBy) / 30 ) * diffDays;
+			
+			empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay );
+			empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
+			empPayroll.setPaidEmpeSS(thisMonthPaidEmpeSS);
+			empPayroll.setPaidEmprSS(thisMonthPaidEmprSS);
+			empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
+			empPayroll.setPaidAccomAmt(thisMonthPaidAccomAmt);
+			empPayroll.setPaidBasicAllow(thisMonthPaidBasicAllow);
+		} else if(isRetroEmp) {
+			thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome;
+			thisMonthPaidTaxAmt = pendingTaxAmt / remainingPaycycles;
+			thisMonthPaidTaxableAmt = pendingTaxableAmt / remainingPaycycles;
+			thisMonthPaidEmpeSS = pendingEmpeSS / (remainingPaycycles + 1);
+			thisMonthPaidEmprSS = pendingEmprSS / (remainingPaycycles + 1);
+			thisMonthPaidAccomAmt = pendingAccomAmt / remainingPaycycles;
+			thisMonthPaidBasicAllow = pendingBasicAllow / remainingPaycycles;
+			
+			// If retro lets get 2 months SS
+			thisMonthPaidEmpeSS = thisMonthPaidEmpeSS * 2;
+			thisMonthPaidEmprSS = thisMonthPaidEmprSS * 2;
+			
+			empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay);
+			empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
+			empPayroll.setPaidEmpeSS(empPayroll.getPaidEmpeSS() + thisMonthPaidEmpeSS);
+			empPayroll.setPaidEmprSS(empPayroll.getPaidEmprSS() + thisMonthPaidEmprSS);
+			empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
+			empPayroll.setPaidAccomAmt(empPayroll.getPaidAccomAmt() + thisMonthPaidAccomAmt);
+			empPayroll.setPaidBasicAllow(empPayroll.getPaidBasicAllow() + thisMonthPaidBasicAllow);
+		} else {
+			thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome;
+			thisMonthPaidTaxAmt = pendingTaxAmt / remainingPaycycles;
+			thisMonthPaidTaxableAmt = pendingTaxableAmt / remainingPaycycles;
+			thisMonthPaidEmpeSS = pendingEmpeSS / remainingPaycycles;
+			thisMonthPaidEmprSS = pendingEmprSS / remainingPaycycles;
+			thisMonthPaidAccomAmt = pendingAccomAmt / remainingPaycycles;
+			thisMonthPaidBasicAllow = pendingBasicAllow / remainingPaycycles;
+			
+			// Now if the employee is USD, then his number for SS should be 5 and 3 only.
+			if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+				Double valForEmprSS = 5D;
+				Double valForEmpeSS = 3D;
+				
+				Double currValForEmprSS = thisMonthPaidEmprSS / currencyCoverVal;
+				Double currValForEmpeSS = thisMonthPaidEmpeSS / currencyCoverVal;
+				
+				Double diffForEmprSS = currValForEmprSS - valForEmprSS;
+				Double diffForEmpeSS = currValForEmpeSS - valForEmpeSS;
+				
+				thisMonthPaidNetPay += diffForEmprSS * currencyCoverVal;
+				thisMonthPaidNetPay += diffForEmpeSS * currencyCoverVal;
+				
+				thisMonthPaidEmpeSS = valForEmpeSS * currencyCoverVal;
+				thisMonthPaidEmprSS = valForEmprSS * currencyCoverVal;
+			} 
+			
+			empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay);
+			empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
+			empPayroll.setPaidEmpeSS(empPayroll.getPaidEmpeSS() + thisMonthPaidEmpeSS);
+			empPayroll.setPaidEmprSS(empPayroll.getPaidEmprSS() + thisMonthPaidEmprSS);
+			empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
+			empPayroll.setPaidAccomAmt(empPayroll.getPaidAccomAmt() + thisMonthPaidAccomAmt);
+			empPayroll.setPaidBasicAllow(empPayroll.getPaidBasicAllow() + thisMonthPaidBasicAllow);
+		}
+		
+		// Save to emp_payroll_map table.
+		EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPayroll.getEmployeeId().getId());
+		EmpPayrollMap empPayMap = new EmpPayrollMap();
+		empPayMap.setEmppayId(empPayroll);
+		empPayMap.setNetPay(thisMonthPaidNetPay);
+		empPayMap.setTaxAmount(thisMonthPaidTaxAmt);
+		empPayMap.setTaxableAmt(thisMonthPaidTaxableAmt);
+		empPayMap.setEmpeSocialSec(thisMonthPaidEmpeSS);
+		empPayMap.setEmprSocialSec(thisMonthPaidEmprSS);
+		empPayMap.setAccomAmt(thisMonthPaidAccomAmt);
+		empPayMap.setBasicAllow(thisMonthPaidBasicAllow);
+		
+		empPayMap.setOvertimeAmt(newOvertimeAmt);
+		empPayroll.clearNewOvertimeAmt();
+		
+		empPayMap.setOtherIncome(newOtherIncome);
+		empPayroll.clearNewOtherIncome();
+		
+		if(isRetroEmp) {
+			empPayMap.setRetroBaseSal(empPayroll.getRetroBaseSal());
+		} else {
+			empPayMap.setRetroBaseSal(0D);
+		}
+		
+		Double baseSalforMonth = empPayroll.getBaseSalary() - empPayroll.getPaidBaseSalary();
+		if(proRate.compareTo(1D) == 0) {
+			empPayMap.setBaseSalary(baseSalforMonth);
+			empPayroll.addPaidBaseSalary(baseSalforMonth);
+		} else {
+			empPayMap.setBaseSalary((empPayroll.getBaseSalary() / divNoWithProrate) * proRate);
+			empPayroll.addPaidBaseSalary((empPayroll.getBaseSalary() / divNoWithProrate) * proRate);
+		}
+		
+		empPayMap.setBonus(empPayroll.getNewBonus());
+		empPayroll.clearNewBonus();
+		
+		empPayMap.setCurrencyConverRate(currencyCoverVal);
+		
+		ConfigData salPayDate = ConfigDataFactory.findByName(PayhumConstants.SAL_PAY_DATE);
+		empPayMap.setSalPayDate(Integer.parseInt(salPayDate.getConfigValue()));
+		
+		empPayMap.setPayrollId(payroll);
+		
+		if(empBankAcct != null) {
+			empPayMap.setMode(1);
+		} else {
+			empPayMap.setMode(0);
+		}
+		
+		if(System.getProperty("DRYRUN") == null 
+		|| ! System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
+			PayrollFactory.insertEmpPayrollMap(empPayMap);
 		}
 	}
 

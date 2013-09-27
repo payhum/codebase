@@ -129,16 +129,12 @@ public class Report extends Action {
 		
 		String monthYear = new SimpleDateFormat("MMM_yyyy").format(now);
 		String fileName = compName + "_" + branchId  + "_"  + deptId + "_Payroll_" + monthYear + ".csv";
-
-		List<PayrollDate> payrollDates = PayrollFactory.findPayrollDateByBranch(branchId);
-		List<Payroll> payRuns = PayrollFactory.findAllPayrollRuns();
-		int remainingPayCycles = PayhumUtil.remainingPaycycles(payrollDates, payRuns);
 		
 		response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 		response.setContentType("application/force-download");
 		
 		// Columns in the file will be:
-		// CompID,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,RoutingNo,AccountNo,NetPay,TaxAmt,SS
+		// CompID,BranchName,EmpID,EmpFullName,EmpNationalID,DeptName,BankName,BankBranch,RoutingNo,AccountNo,NetPay,currency,TaxAmt,emprSS,empess
 		StringBuilder allEmpPayStr = new StringBuilder();
 		for(EmployeePayroll empPay : empPayrollList) {
 			EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPay.getEmployeeId().getId());
@@ -163,6 +159,8 @@ public class Report extends Action {
 			} else {
 				empPayStr.append(empPay.getEmployeeId().getPpNumber());
 			}
+			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getEmployeeId().getDeptId().getDeptname());
 			empPayStr.append(COMMA);
 			if(empPayrollMap.getMode().compareTo(0) == 0) {
 				empPayStr.append("-");
@@ -196,22 +194,17 @@ public class Report extends Action {
 				empPayStr.append("0.00");
 			}
 			empPayStr.append(COMMA);
-			empPayStr.append(new DecimalFormat("###.##").format(empPay.getEmployerSS() / remainingPayCycles));
+			empPayStr.append(new DecimalFormat("###.##").format(getAmountInRespectiveCurrency(empPay.getEmployeeId().getCurrency(), empPayrollMap.getEmprSocialSec())));
 			empPayStr.append(COMMA);
-			Double empeSS = 0D;
-			
-			List<DeductionsDone> deductionsList = empPay.getDeductionsDone();
-			for(DeductionsDone dd: deductionsList) {
-				if(dd.getType().getName().equalsIgnoreCase(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY)) {
-					empeSS = dd.getAmount();
-					break;
-				}
-			}
-			empPayStr.append(new DecimalFormat("###.##").format(empeSS / remainingPayCycles));
+			empPayStr.append(new DecimalFormat("###.##").format(getAmountInRespectiveCurrency(empPay.getEmployeeId().getCurrency(), empPayrollMap.getEmpeSocialSec())));
 			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);
 		}
+		
+		ConfigData configpay = ConfigDataFactory.findByName(PayhumConstants.PAYROLLDATE_ID); 
+		configpay.setConfigValue(Integer.toString(payrollDate.getId()));
+		ConfigDataFactory.update(configpay);
 		
 		OutputStream os = response.getOutputStream();
 		os.write(allEmpPayStr.toString().getBytes());

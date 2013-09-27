@@ -4,9 +4,12 @@ import java.util.Calendar;
 import java.util.List;
 
 import com.openhr.common.PayhumConstants;
+import com.openhr.data.ConfigData;
 import com.openhr.data.DeductionsType;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
+import com.openhr.data.TypesData;
+import com.openhr.factories.ConfigDataFactory;
 import com.openhr.factories.DeductionFactory;
 import com.openhr.taxengine.DeductionCalculator;
 import com.openhr.taxengine.DeductionsDeclared;
@@ -17,7 +20,7 @@ import com.util.payhumpackages.PayhumUtil;
 public class BaseDC implements DeductionCalculator{
 	
 	@Override
-	public void calculate(Employee emp, EmployeePayroll empPayroll, Calendar currDt, int finStartMonth) {
+	public void calculate(Employee emp, EmployeePayroll empPayroll, Calendar currDt, int finStartMonth, boolean active) {
 		// Life Insurance
 		List<DeductionsDeclared> dDeclared = empPayroll.getDeductionsDeclared();
 		List<DeductionsType> deductionsTypes = DeductionFactory.findAll();
@@ -63,22 +66,64 @@ public class BaseDC implements DeductionCalculator{
 		
 		// Check if the employee contributes to SS or not
 		if(empPayroll.getWithholdSS().compareTo(1) == 0) {
-			Double employeeSS = taxDetails.getDeduction(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY) * empPayroll.getBaseSalary() / 100;
-			Double maxLimit = 0D;
+			Double empeSSinUSD;
+			boolean isRetroActiveEmp = PayhumUtil.isRetroActive(currDt, emp.getHiredate(), finStartMonth);
+			TypesData currency = empPayroll.getEmployeeId().getCurrency();
 			
-			if(empeSSAmt == 0D) {
-				int remainingMonths = PayhumUtil.remainingMonths(currDt, finStartMonth);
-				maxLimit = (taxDetails.getLimitForEmployeeSS() / 12) * remainingMonths; 
+			if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {			
+				if(empeSSAmt == 0D || !active) {
+					int remainingMonths = PayhumUtil.remainingMonths(currDt, finStartMonth);
+					
+					if(!active)
+						remainingMonths = 1;
+					
+					if(isRetroActiveEmp) {
+						empeSSinUSD = (taxDetails.getLimitForEmployeeSSInUSD() / 12) * (remainingMonths + 1);
+					} else {
+						empeSSinUSD = (taxDetails.getLimitForEmployeeSSInUSD() / 12) * remainingMonths;	
+					}
+					
+					empeSSinUSD = getAmountInMMK(currency, empeSSinUSD);
+				} else {
+					empeSSinUSD = empeSSAmt;
+				}
+				
+				empPayroll.addDeduction(getDeductionsType(deductionsTypes, PayhumConstants.EMPLOYEE_SOCIAL_SECURITY), empeSSinUSD);
 			} else {
-				maxLimit = empeSSAmt;
+				Double employeeSS = 0D;
+				
+				/*if(empPayroll.getPaidNetPay().compareTo(0D) == 0) {
+					// This is the first time payroll is processed and he is already inactive. Lets keep it 0 so that max limit is used.
+				} else {
+					employeeSS = taxDetails.getDeduction(PayhumConstants.EMPLOYEE_SOCIAL_SECURITY) * empPayroll.getBaseSalary() / 100;
+				}*/
+				
+				Double maxLimit = 0D;
+				
+				if(empeSSAmt == 0D || !active) {
+					int remainingMonths = PayhumUtil.remainingMonths(currDt, finStartMonth);
+					
+					if(!active) {
+						remainingMonths = remainingMonths - 1;
+						Double amt = empeSSAmt - (taxDetails.getLimitForEmployeeSS() / 12) * remainingMonths;
+						maxLimit = amt;
+					} else {
+						if(isRetroActiveEmp) {
+							maxLimit = (taxDetails.getLimitForEmployeeSS() / 12) * (remainingMonths + 1);
+						} else {
+							maxLimit = (taxDetails.getLimitForEmployeeSS() / 12) * remainingMonths;
+						}
+					}
+				} else {
+					maxLimit = empeSSAmt;
+				}
+				
+				if((employeeSS > maxLimit && maxLimit != 0D) || employeeSS == 0D) {
+					employeeSS = maxLimit;
+				}
+				
+				empPayroll.addDeduction(getDeductionsType(deductionsTypes, PayhumConstants.EMPLOYEE_SOCIAL_SECURITY), employeeSS);
 			}
-			
-			if(employeeSS > maxLimit 
-				&& maxLimit != 0D) {
-				employeeSS = maxLimit;
-			}
-			
-			empPayroll.addDeduction(getDeductionsType(deductionsTypes, PayhumConstants.EMPLOYEE_SOCIAL_SECURITY), employeeSS);
 		}
 	}
 
@@ -90,5 +135,22 @@ public class BaseDC implements DeductionCalculator{
 		}
 		
 		return null;
+	}
+	
+	protected Double getAmountInMMK(TypesData currency, Double amount) {
+		Double conversionRate = 1D;
+		
+		if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.USD_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_EURO)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.EURO_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} else if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_POUND)) {
+			ConfigData currencyConver = ConfigDataFactory.findByName(PayhumConstants.POUND_MMK_CONVER);
+			conversionRate = Double.valueOf(currencyConver.getConfigValue());
+		} 
+		
+		return amount * conversionRate;
 	}
 }

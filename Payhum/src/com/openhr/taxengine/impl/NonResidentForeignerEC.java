@@ -8,7 +8,7 @@ import com.openhr.data.EmployeePayroll;
 public class NonResidentForeignerEC extends BaseEC {
 
 	@Override
-	public void calculate(Employee emp, EmployeePayroll empPayroll, int finStartMonth, Calendar toBeProcessedFor) {
+	public void calculate(Employee emp, EmployeePayroll empPayroll, int finStartMonth, Calendar toBeProcessedFor, boolean active) {
 		// No Exemptions for Non-Resident Foreigners
 	}
 

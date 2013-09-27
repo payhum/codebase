@@ -159,12 +159,10 @@ public class Employee implements Serializable {
 	@Column(name = "ppExpDate", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date ppExpDate;
-	
+
 	@Basic(optional = true)
 	@Column(name = "ppIssuePlace", nullable = true, length = 45)
 	private String ppIssuePlace;
-	
-	
 	
 	public String getEmpNationalID() {
 		return empNationalID;
@@ -420,5 +418,4 @@ public class Employee implements Serializable {
 	public void setCurrency(TypesData currency) {
 		this.currency = currency;
 	}
-	
 }

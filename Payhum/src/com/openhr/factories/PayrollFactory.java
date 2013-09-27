@@ -96,6 +96,17 @@ public class PayrollFactory implements Serializable {
 		return payrollList;
 	}
 
+	public static List<Payroll> findAllPayrollRunsPerBranch(Integer branchId) throws Exception {
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("Payroll.findByBranch");
+		query.setInteger(0, branchId);
+		
+		List<Payroll> payrollList = query.list();
+
+		return payrollList;
+	}
+
 	public static List<Payroll> findPayrollRunByDate(Date runDate) throws Exception {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();

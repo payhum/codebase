@@ -91,7 +91,7 @@ public class EmpPayTaxFactroy implements Serializable {
 		
 	}
 	
-	public static List<PayrollDate> findPayrollDates() {
+	public static List<PayrollDate> findPayrollDates(Integer branchId) {
 		Session session=null;
 			boolean flagSession=false;
 			session = OpenHRSessionFactory.getInstance().getCurrentSession();
@@ -101,7 +101,8 @@ public class EmpPayTaxFactroy implements Serializable {
 				 session=OpenHRSessionFactory.getInstance().openSession();
 			}
 			session.beginTransaction();
-			query = session.getNamedQuery("PayrollDate.findAll");
+			query = session.getNamedQuery("PayrollDate.findByBranchId");
+			query.setInteger(0, branchId);
 			
 			List<PayrollDate> tyd = query.list();
 			session.getTransaction().commit();
@@ -436,6 +437,19 @@ public class EmpPayTaxFactroy implements Serializable {
 		return empSalList;
 	}
 	
+	public static List<EmpPayrollMap> findAllEmpPayrollMapForGivenEmpPayroll(Integer empPayrollId)
+	{
+		
+		session = OpenHRSessionFactory.getInstance().getCurrentSession();
+		session.beginTransaction();
+		query = session.getNamedQuery("EmpPayrollMap.findByEmpPayrollId");
+		query.setInteger(0, empPayrollId);
+		
+		List<EmpPayrollMap> empSalList = query.list();
+		session.getTransaction().commit();
+		return empSalList;
+	}
+	
 	public static EmpPayrollMap findTaxMonthlyForEmployee(Integer a, EmployeePayroll emp)
 	
 {
@@ -523,6 +537,35 @@ public class EmpPayTaxFactroy implements Serializable {
 		session.getTransaction().commit();
 		return decDone;
 
+	}
+
+	public static void insertEmpSal(EmployeeSalary empSal) {
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		try {
+			lsession.save(empSal);
+			lsession.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			lsession.close();
+		}
+		
+		
+	}
+
+	public static void insertBonus(EmployeeBonus empB) {
+		Session lsession = OpenHRSessionFactory.getInstance().openSession();
+		lsession.beginTransaction();
+		try {
+			lsession.save(empB);
+			lsession.getTransaction().commit();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			lsession.close();
+		}
+		
 	}
 	
 	

@@ -93,8 +93,19 @@ public class CompanyPayroll implements Serializable {
     @Column(name = "currencySym", nullable = false, length=10)
     private String currencySym;
     
+    @Basic(optional = false)
+    @Column(name = "deptName", nullable = false, length=45)
+    private String deptName;
     
-    public String getRoutingNo() {
+    public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
+	public String getRoutingNo() {
 		return routingNo;
 	}
 

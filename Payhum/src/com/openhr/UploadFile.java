@@ -207,21 +207,23 @@ public class UploadFile extends Action {
                     			}
                     		}
                     	}
-                    	
+
+                    	// CompID,BranchName,EmpID,EmpFullName,EmpNationalID,DeptName,BankName,BankBranch,RoutingNo,AccountNo,NetPay,currency,TaxAmt,emprSS,empess                    	
                     	CompanyPayroll compPayroll = new CompanyPayroll();
                     	compPayroll.setBranchId(branch);
                     	compPayroll.setEmployeeId(lineColumns[2]);
                     	compPayroll.setEmpFullName(lineColumns[3]);
                     	compPayroll.setEmpNationalID(lineColumns[4]);
-                    	compPayroll.setBankName(lineColumns[5]);
-                    	compPayroll.setBankBranch(lineColumns[6]);
-                    	compPayroll.setRoutingNo(lineColumns[7]);
-                    	compPayroll.setAccountNo(lineColumns[8]);
-                    	compPayroll.setNetPay(Double.parseDouble(lineColumns[9]));
-                    	compPayroll.setCurrencySym(lineColumns[10]);
-                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[11]));
-                    	compPayroll.setEmprSocialSec(Double.parseDouble(lineColumns[12]));
-                    	compPayroll.setEmpeSocialSec(Double.parseDouble(lineColumns[13]));
+                    	compPayroll.setDeptName(lineColumns[5]);
+                    	compPayroll.setBankName(lineColumns[6]);
+                    	compPayroll.setBankBranch(lineColumns[7]);
+                    	compPayroll.setRoutingNo(lineColumns[8]);
+                    	compPayroll.setAccountNo(lineColumns[9]);
+                    	compPayroll.setNetPay(Double.parseDouble(lineColumns[10]));
+                    	compPayroll.setCurrencySym(lineColumns[11]);
+                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[12]));
+                    	compPayroll.setEmprSocialSec(Double.parseDouble(lineColumns[13]));
+                    	compPayroll.setEmpeSocialSec(Double.parseDouble(lineColumns[14]));
                     	compPayroll.setProcessedDate(now);
                     	CompanyPayrollFactory.insert(compPayroll);
                     }

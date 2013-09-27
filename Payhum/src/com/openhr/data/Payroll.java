@@ -36,6 +36,7 @@ import com.openhr.common.PayhumConstants;
     @NamedQuery(name = "Payroll.findcountRunOnDate", query = "SELECT count(distinct p.runOnDate) FROM Payroll p"),
     @NamedQuery(name = "Payroll.findById", query = "SELECT p FROM Payroll p WHERE p.id = ?"),
     @NamedQuery(name = "Payroll.findByPayDateAndBranch", query = "SELECT p FROM Payroll p WHERE p.payDateId= ? AND p.branchId = ?"),
+    @NamedQuery(name = "Payroll.findByBranch", query = "SELECT p FROM Payroll p WHERE p.branchId = ?"),
     @NamedQuery(name = "Payroll.findByRunOnDate", query = "SELECT p FROM Payroll p WHERE p.runOnDate = ?")})
 public class Payroll implements Serializable {
     private static final long serialVersionUID = 1L;
