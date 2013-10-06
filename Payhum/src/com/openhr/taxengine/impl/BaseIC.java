@@ -9,6 +9,7 @@ import java.util.Map;
 import com.openhr.common.PayhumConstants;
 import com.openhr.data.Benefit;
 import com.openhr.data.ConfigData;
+import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
@@ -430,12 +431,26 @@ public class BaseIC implements IncomeCalculator {
 			Double latestSal = getAmountInMMK(latestEmpSal.getEmployeeId().getCurrency(), latestEmpSal.getBasesalary());
 			Double prevSal = getAmountInMMK(prevEmpSal.getEmployeeId().getCurrency(), prevEmpSal.getBasesalary());
 			
-			Double diff = latestSal/12 - prevSal/12;
-			Double existingSal = empPayroll.getBaseSalary();
+			if(latestEmpSal.getEmployeeId().getCurrency().getName().equalsIgnoreCase(PayhumConstants.CURRENCY_MMK)) {
+				Double diff = latestSal/12 - prevSal/12;
+				Double existingSal = empPayroll.getBaseSalary();
+				Double newSal = existingSal + diff * PayhumUtil.remainingMonths(currDtCal, finStartMonth);
+				empPayroll.setBaseSalary(newSal);
+			} else {
+				// For other currencies, lets do this:
+				// Get the paycycles and get base salary and conversion from it and add them and then
+				// add the latest sal in current rate.
+				
+				List<EmpPayrollMap> empPayMaps = EmpPayTaxFactroy.findAllEmpPayrollMapForGivenEmpPayroll(empPayroll.getId());
+				Double newSal = 0D;
+				for(EmpPayrollMap empPayMap : empPayMaps) {
+					newSal += empPayMap.getBaseSalary();
+				}
+				
+				newSal += latestSal / 12 * PayhumUtil.remainingMonths(currDtCal, finStartMonth);
+				empPayroll.setBaseSalary(newSal);
+			}
 			
-			Double newSal = existingSal + diff * PayhumUtil.remainingMonths(currDtCal, finStartMonth);
-			
-			empPayroll.setBaseSalary(newSal);
 		} else if(latestEmpSal != null) {
 			Double latestSal = getAmountInMMK(latestEmpSal.getEmployeeId().getCurrency(), latestEmpSal.getBasesalary());
 			Double monthlyBase = latestSal/12;

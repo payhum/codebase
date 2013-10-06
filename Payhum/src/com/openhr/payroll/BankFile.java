@@ -20,7 +20,6 @@ import com.openhr.company.Company;
 import com.openhr.company.CompanyPayroll;
 import com.openhr.data.Branch;
 import com.openhr.data.ConfigData;
-import com.openhr.data.EmployeePayroll;
 import com.openhr.factories.BranchFactory;
 import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.CompanyPayrollFactory;
@@ -69,8 +68,10 @@ public class BankFile extends Action {
 		// Total Tax Amount : XXX
 		// Total Social Security Amount : XXX		
 		Double totalTaxAmt = 0D;
-		Double totalEmprSSAmt = 0D;
-		Double totalEmpeSSAmt = 0D;
+		Double totalEmprSSAmtMMK = 0D;
+		Double totalEmpeSSAmtMMK = 0D;
+		Double totalEmprSSAmtUSD = 0D;
+		Double totalEmpeSSAmtUSD = 0D;
 		SimpleDateFormat sdf = new SimpleDateFormat("MMMyyyy");
 		
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(branch, cal.getTime());
@@ -153,8 +154,14 @@ public class BankFile extends Action {
 						empPayStr.append("\n");
 						
 						totalTaxAmt += compPay.getTaxAmount();
-						totalEmprSSAmt += compPay.getEmprSocialSec();
-						totalEmpeSSAmt += compPay.getEmpeSocialSec();
+						
+						if(compPay.getCurrencySym().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+							totalEmprSSAmtUSD += compPay.getEmprSocialSec();
+							totalEmpeSSAmtUSD += compPay.getEmpeSocialSec();
+						} else {
+							totalEmprSSAmtMMK += compPay.getEmprSocialSec();
+							totalEmpeSSAmtMMK += compPay.getEmpeSocialSec();	
+						}
 						
 						allEmpPayStr.append(empPayStr);
 					}
@@ -166,8 +173,14 @@ public class BankFile extends Action {
 		for(CompanyPayroll compPay : compPayroll) {
 			if(compPay.getBankName().equals("-")) {
 				totalTaxAmt += compPay.getTaxAmount();
-				totalEmprSSAmt += compPay.getEmprSocialSec();
-				totalEmpeSSAmt += compPay.getEmpeSocialSec();
+				
+				if(compPay.getCurrencySym().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+					totalEmprSSAmtUSD += compPay.getEmprSocialSec();
+					totalEmpeSSAmtUSD += compPay.getEmpeSocialSec();
+				} else {
+					totalEmprSSAmtMMK += compPay.getEmprSocialSec();
+					totalEmpeSSAmtMMK += compPay.getEmpeSocialSec();	
+				}
 			}
 		}
 		
@@ -207,6 +220,12 @@ public class BankFile extends Action {
 		allEmpPayStr.append("Employee SS Amount(MMK)");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Total SS Amount(MMK)");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Employer SS Amount(USD)");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Employee SS Amount(USD)");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Total SS Amount(USD)");
 		allEmpPayStr.append("\n");
 		allEmpPayStr.append(comp.getName());
 		allEmpPayStr.append(COMMA);
@@ -216,11 +235,17 @@ public class BankFile extends Action {
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append(sdf.format(compPayroll.get(0).getProcessedDate()));
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmprSSAmt));
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmprSSAmtMMK));
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeSSAmt));
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeSSAmtMMK));
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeSSAmt + totalEmprSSAmt));
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeSSAmtMMK + totalEmprSSAmtMMK));
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmprSSAmtUSD));
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeSSAmtUSD));
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalEmpeSSAmtUSD + totalEmprSSAmtUSD));
 		allEmpPayStr.append("\n");
 		
 		OutputStream os = response.getOutputStream();

@@ -12,11 +12,9 @@ import java.util.zip.ZipOutputStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFontFactory;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import com.openhr.common.PayhumConstants;
-import com.openhr.data.ConfigData;
 import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeForm;
@@ -3983,7 +3981,10 @@ float textColy;
 					int finStart = empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getCompanyId().getFinStartMonth();
 					
 					Integer payCyclesCt = 12;
-					if(hireDtCal.get(Calendar.YEAR) == payDtCal.get(Calendar.YEAR) ) {
+					if(hireDtCal.get(Calendar.YEAR) == payDtCal.get(Calendar.YEAR)
+							&& ((hireDtCal.get(Calendar.MONTH)+1 >= finStart && finStart != 1)
+								|| finStart == 1)
+								|| (hireDtCal.get(Calendar.MONTH)+1 < finStart && finStart != 1 && payDtCal.get(Calendar.MONTH)+1 < finStart)){
 						payCyclesCt = PayhumUtil.remainingMonths(hireDtCal, finStart);
 					}
 					
