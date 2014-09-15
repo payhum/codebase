@@ -8,7 +8,17 @@ public class GlReportForm extends ActionForm{
 	
     private String empName; 
     
-    private  String ename;
+    private String empId;
+    
+    public String getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(String empId) {
+		this.empId = empId;
+	}
+
+	private  String ename;
     
     private Double debit;
 

@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS `branch`;
 CREATE TABLE `branch` (
     `id` int(10) unsigned NOT NULL auto_increment,
     `name` varchar(45) NOT NULL,
-    `address` varchar(45) NOT NULL,
+    `address` varchar(250) NOT NULL,
     `companyId` int(10) unsigned NOT NULL,
     PRIMARY KEY (`id`),
     KEY `FK_branch_company` (`companyId`),
@@ -102,7 +102,7 @@ CREATE TABLE `employee` (
     `nationality` varchar(45),
     `ppNumber` varchar(15),
     `ppExpDate` datetime,
-    `ppIssuePlace` varchar(45),
+    `ppIssuePlace` varchar(45), 
     `currency` int(10) unsigned NOT NULL,
     PRIMARY KEY (`id`),
     KEY `FK_employee_position` (`positionId`),
@@ -160,6 +160,9 @@ CREATE TABLE `emp_payroll` (
 	`paidTaxableAmt` double default 0,
 	`paidAccomAmt` double default 0,
 	`paidBasicAllow` double default 0,
+	`paidLeaveLoss` double default 0,
+	`paidAllowance` double default 0,
+	`payAccomAmt` int(2) unsigned NOT NULL default 0,
     PRIMARY KEY (`id`),
     KEY `FK_emp_payroll_emp` (`employeeId`),
     KEY `FK_emp_payroll_acc` (`accomodationType`),
@@ -271,7 +274,7 @@ CREATE TABLE `leaverequest` (
     `leaveDate` datetime NOT NULL,
     `returnDate` datetime NOT NULL,
     `status` int(10) unsigned NOT NULL default '0',
-    `noOfDays` int(10) unsigned NOT NULL,
+    `noOfDays` double unsigned NOT NULL,
     `description` text NOT NULL,
     `version` int(11) NOT NULL default '1',
     PRIMARY KEY (`id`),
@@ -450,12 +453,14 @@ CREATE TABLE `company_payroll` (
     `netPay` double NOT NULL,
     `emprSocialSec` double NOT NULL,
     `empeSocialSec` double NOT NULL,
+    `baseSalary` double NOT NULL,
     `bankName` varchar(45) NOT NULL,
     `bankBranch` varchar(45) NOT NULL,
     `routingNo` varchar(45) NOT NULL,
     `accountNo` varchar(45) NOT NULL,
     `currencySym` varchar(10) NOT NULL,
     `deptName` varchar(45) NOT NULL,
+	`residentType` varchar(45) NOT NULL,
     PRIMARY KEY (`id`),
     KEY `FK_comppay_branch` (`branchId`),
     CONSTRAINT `FK_comppay_branch` FOREIGN KEY (`branchId`)
@@ -671,6 +676,8 @@ CREATE TABLE `emp_payroll_map` (
     `taxableAmt` double NOT NUll,
 	`accomAmt` double NOT NUll,
 	`basicAllow` double NOT NUll,
+	`leaveLoss` double NOT NUll,
+	`allowance` double NOT NUll,
     `mode` int(2) NOT NULL default 0,
     PRIMARY KEY (`id`),
     KEY `FK_emppaymap_emp` (`emppayId`),
@@ -737,7 +744,9 @@ CREATE TABLE `audit_emp_payroll` (
     `paidTaxableAmt` double default 0,
     `paidAccomAmt` double default 0,
     `paidBasicAllow` double default 0,
+    `paidAllowance` double default 0,
     `updatedDate` datetime NOT NULL,
+    `payAccomAmt` int(2) unsigned NOT NULL default 0,
     PRIMARY KEY (`id`)
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -830,14 +839,14 @@ CREATE TRIGGER audit_emp_payroll_entry BEFORE UPDATE ON emp_payroll
 	  `totalDeductions`, `overtimeamt`, `paidTaxAmt`, `paidNetPay`, `paidEmpeSS`, `paidEmprSS`,
 	  `otherIncome`, `leaveLoss`, `taxPaidByEmployer`, `withholdTax`, `withholdSS`, 
       `retroBaseSal`, `newOvertimeAmt`, `newOtherIncome`, `newBonus`, `paidBaseSalary`, 
-      `paidTaxableAmt`, `paidAccomAmt`, `paidBasicAllow`, `updatedDate`)
+      `paidTaxableAmt`, `paidAccomAmt`, `paidBasicAllow`, `paidAllowance`, `payAccomAmt`, `updatedDate`)
 	VALUES(OLD.id, OLD.employeeId, OLD.FULL_NAME, OLD.GROSS_SALARY, OLD.taxableIncome,
 	  OLD.taxAmount, OLD.totalIncome, OLD.taxableOverseasIncome, OLD.allowances, OLD.baseSalary,
 	  OLD.bonus, OLD.accomodationAmount, OLD.employerSS, OLD.accomodationType, OLD.netPay,
 	  OLD.totalDeductions, OLD.overtimeamt, OLD.paidTaxAmt, OLD.paidNetPay, OLD.paidEmpeSS, OLD.paidEmprSS,
 	  OLD.otherIncome, OLD.leaveLoss, OLD.taxPaidByEmployer, OLD.withholdTax, OLD.withholdSS, 
       OLD.retroBaseSal, OLD.newOvertimeAmt, OLD.newOtherIncome, OLD.newBonus, OLD.paidBaseSalary, 
-      OLD.paidTaxableAmt, OLD.paidAccomAmt, OLD.paidBasicAllow, NOW());
+      OLD.paidTaxableAmt, OLD.paidAccomAmt, OLD.paidBasicAllow, OLD.paidAllowance, OLD.payAccomAmt, NOW());
   END;
 $$
 

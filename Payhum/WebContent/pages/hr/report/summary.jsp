@@ -48,20 +48,19 @@ $("#grid").kendoGrid({
             columns : [
 				
                 
-				{ field : "employeeId", title : "Id",template:'#=employeeId ? employeeId.employeeId: ""#', width : 120 },
-                { field : "employeeId", title : "Name", template:'#=employeeId ? employeeId.firstname+" "+employeeId.middlename: ""#', width : 100 },
+				{ field : "employeeId", title : "Employee Id",template:'#=employeeId ? employeeId.employeeId: ""#', width : 120 },
+                { field : "employeeId", title : "Name", template:'#=employeeId ? employeeId.firstname+" "+employeeId.lastname: ""#', width : 100 },
                 
                 
-                
+                { field : "baseSalary", title : "Base Salary",    width : 100  },
              
-                { field : "grossSalary", title : " Gross Pay",    width : 100  },
-                
-                { field : "baseSalary", title : "Tax Withheld",    width : 100  },
+                { field : "grossSalary", title : "Gross",    width : 100  },
                 
                 { field : "totalDeductions", title : "Deductions",    width : 100  },
-                { field : "netPay", title : "Net Pay",    width : 100  },
+                { field : "taxAmount", title : "Tax",    width : 100  },
+                { field : "netPay", title : "Net Pay",    width : 100  }
 
-                { field : "baseSalary", title : "BaseSalary",    width : 100  }
+                
                  
                 ],             
         

@@ -15,8 +15,6 @@ public class PayhumConstants {
 	public static final String EMPLOYER_SOCIAL_SECURITY = "Employer contribution for Social Security";
 	public static final String LIMIT_FOR_EMPLOYER_SS = "Limit for the Employer contribution for Social Security";
 	public static final String LIMIT_FOR_EMPLOYEE_SS = "Limit for the Employee contribution for Social Security";
-	public static final String LIMIT_FOR_EMPLOYER_SS_IN_USD = "Limit for the Employer contribution for Social Security for USD";
-	public static final String LIMIT_FOR_EMPLOYEE_SS_IN_USD = "Limit for the Employee contribution for Social Security for USD";
 	
 	public static final String LIFE_INSURANCE = "Life Insurance";
 	public static final String SELF_LIFE_INSURANCE = "Self Life Insurance";
@@ -78,4 +76,6 @@ public class PayhumConstants {
 	public static final String PAYROLLDATE_ID = "PAYROLLDATE_ID";
 	
 	public static final String DATABASE_NAME = "payhumrepo";
+	
+	public static final String PAID_LEAVE = "Paid Leave";
 }

@@ -1,5 +1,5 @@
 <%@include file="../../common/jspHeader.jsp"%>
-<h2 class="legend"> Active vs Terminated</h2>
+<h2 class="legend"> Employee Status (Active vs Resigned)</h2>
 <style type="text/css">
 .k-grouping-header {
 	display: none;
@@ -49,11 +49,11 @@ $("#grid").kendoGrid({
 	            columns : [
 					
 	                
-					{ field : "employeeId", title : "Id", width : 120 },
-	                { field : "firstname", title : "First Name", width : 100 },
+					{ field : "employeeId", title : "Employee Id", width : 120 },
+	                { field : "firstname", title : "Full Name", width : 100 },
 	                
-	                { field : "active", title : "Active",  groupable : false,  width : 100  },
-	                { field : "terminated", title : "Terminated",   groupable : false, width : 100  }
+	                { field : "active", title : "Status",  groupable : false,  width : 100  },
+	                { field : "terminated", title : "Date",   groupable : false, width : 100  }
 	                 
 	                ],             
 	        

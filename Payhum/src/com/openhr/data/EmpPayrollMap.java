@@ -107,8 +107,23 @@ public class EmpPayrollMap implements Serializable {
    @Column(name = "basicAllow", nullable = false)
    private Double basicAllow;
    
+   @Basic(optional = false)
+   @Column(name = "leaveLoss", nullable = false)
+   private Double leaveLoss;
+
+   @Basic(optional = false)
+   @Column(name = "allowance", nullable = false)
+   private Double allowance;
    
-   public Double getBasicAllow() {
+   public Double getLeaveLoss() {
+		return leaveLoss;
+	}
+	
+	public void setLeaveLoss(Double leaveLoss) {
+		this.leaveLoss = leaveLoss;
+	}
+
+	public Double getBasicAllow() {
 		return basicAllow;
 	}
 	
@@ -149,9 +164,18 @@ public class EmpPayrollMap implements Serializable {
 	}
 	
    public EmpPayrollMap() {
-	   
+	   this.leaveLoss = 0D;
+	   this.allowance = 0D;
    }
 	
+	public Double getAllowance() {
+		return allowance;
+	}
+	
+	public void setAllowance(Double allowance) {
+		this.allowance = allowance;
+	}
+
 	public Integer getId() {
 		return id;
 	}

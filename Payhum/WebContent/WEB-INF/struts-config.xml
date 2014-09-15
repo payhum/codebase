@@ -857,10 +857,13 @@
 		<action path="/GenZipFile" type="com.openhr.zipfile.PayZipDownload" scope="request" parameter="parameter">
 		</action>
 		<action path="/UploadEmployeeDataFile" type="com.openhr.employee.UploadEmployeeDataFile" scope="request">
-		<forward name="HRHome" path="employee.form" />
+			<forward name="HRHome" path="employee.form" />
 		</action>
 		<action path="/UploadEmpUpdateFile" type="com.openhr.employee.UploadEmpUpdateFile" scope="request">
-		<forward name="HRHome" path="employee.form" />
+			<forward name="HRHome" path="employee.form" />
+		</action>
+		
+		<action path="/YearEndTaxReport" type="com.openhr.YearEndTaxReport" scope="request">
 		</action>
 		
 	</action-mappings>

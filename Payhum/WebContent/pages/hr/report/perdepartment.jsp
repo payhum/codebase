@@ -55,11 +55,11 @@ var departDrp, selectDepar;
         $("#grid").kendoGrid({
             dataSource :empAll, 
             columns: [
-                      { field: "employeeId", title: "EmpID", template: '#=employeeId ? employeeId.employeeId: ""#',  width: "100px" },
+                      { field: "employeeId", title: "Employee ID", template: '#=employeeId ? employeeId.employeeId: ""#',  width: "100px" },
                 
-                { field: "employeeId", title: "FullName", template: '#=employeeId ? employeeId.firstname+"."+employeeId.middlename: ""#',  width: "100px" },
+                { field: "employeeId", title: "Name", template: '#=employeeId ? employeeId.firstname+" "+employeeId.lastname: ""#',  width: "100px" },
                 { field: "employeeId", title: "Department", template: '#=employeeId ? employeeId.deptId.deptname: ""#',  width: "100px" },
-                { field: "paidNetPay", title: "Amount Earned",  width: "100px" }
+                { field: "paidNetPay", title: "Amount",  width: "100px" }
                
             ], 
           
@@ -206,12 +206,12 @@ var departDrp, selectDepar;
                         pageSize : 5
                     }, 
                     columns: [
-                              { field: "employeeId", title: "EmpID",   width: "100px" },
+                              { field: "employeeId", title: "Employee ID",   width: "100px" },
                         
-                        { field: "firstname", title: "fullName",   width: "100px" },
+                        { field: "firstname", title: "Name",   width: "100px" },
                         { field : "deptId", title : "Department", template: '#=deptId? deptId.deptname: ""#',   width: "100px"},
                      
-                        {field : "payrol",  title: "Amount Earned", template: '#=payrol? payrol.paidNetPay: ""#',width : 50 },
+                        {field : "payrol",  title: "Amount", template: '#=payrol? payrol.paidNetPay: ""#',width : 50 },
                        
                     ], 
                   

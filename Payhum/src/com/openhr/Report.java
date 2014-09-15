@@ -134,7 +134,7 @@ public class Report extends Action {
 		response.setContentType("application/force-download");
 		
 		// Columns in the file will be:
-		// CompID,BranchName,EmpID,EmpFullName,EmpNationalID,DeptName,BankName,BankBranch,RoutingNo,AccountNo,NetPay,currency,TaxAmt,emprSS,empess
+		// CompID,BranchName,EmpID,EmpFullName,EmpNationalID,DeptName,BankName,BankBranch,RoutingNo,AccountNo,NetPay,currency,residenttype,TaxAmt,emprSS,empess,basesalary
 		StringBuilder allEmpPayStr = new StringBuilder();
 		for(EmployeePayroll empPay : empPayrollList) {
 			EmpBankAccount empBankAcct = EmpBankAccountFactory.findByEmployeeId(empPay.getEmployeeId().getId());
@@ -187,9 +187,16 @@ public class Report extends Action {
 			empPayStr.append(COMMA);
 			empPayStr.append(empPay.getEmployeeId().getCurrency().getName());
 			empPayStr.append(COMMA);
+			empPayStr.append(empPay.getEmployeeId().getResidentType().getName());
+			empPayStr.append(COMMA);
 			
 			if(empPay.getWithholdTax().compareTo(1) == 0) {
-				empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getTaxAmount()));
+				if(empPay.getEmployeeId().getResidentType().getName().equalsIgnoreCase(PayhumConstants.NON_RESIDENT_FOREIGNER)) {
+					empPayStr.append(new DecimalFormat("###.##").format(getAmountInRespectiveCurrency(empPay.getEmployeeId().getCurrency(), 
+							empPayrollMap.getTaxAmount())));	
+				} else {
+					empPayStr.append(new DecimalFormat("###.##").format(empPayrollMap.getTaxAmount()));	
+				}
 			} else {
 				empPayStr.append("0.00");
 			}
@@ -197,6 +204,8 @@ public class Report extends Action {
 			empPayStr.append(new DecimalFormat("###.##").format(getAmountInRespectiveCurrency(empPay.getEmployeeId().getCurrency(), empPayrollMap.getEmprSocialSec())));
 			empPayStr.append(COMMA);
 			empPayStr.append(new DecimalFormat("###.##").format(getAmountInRespectiveCurrency(empPay.getEmployeeId().getCurrency(), empPayrollMap.getEmpeSocialSec())));
+			empPayStr.append(COMMA);
+			empPayStr.append(new DecimalFormat("###.##").format(getAmountInRespectiveCurrency(empPay.getEmployeeId().getCurrency(), empPayrollMap.getBaseSalary())));
 			empPayStr.append("\n");
 			
 			allEmpPayStr.append(empPayStr);

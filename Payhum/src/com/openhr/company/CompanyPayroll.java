@@ -20,6 +20,10 @@ import javax.persistence.TemporalType;
 import com.openhr.common.PayhumConstants;
 import com.openhr.data.Branch;
 
+/**
+ * @author Vijay
+ *
+ */
 @Entity
 @Table(name = "company_payroll", catalog = PayhumConstants.DATABASE_NAME, schema = "")
 @NamedQueries({
@@ -97,8 +101,24 @@ public class CompanyPayroll implements Serializable {
     @Column(name = "deptName", nullable = false, length=45)
     private String deptName;
     
+    @Basic(optional = false)
+    @Column(name = "baseSalary", nullable = false)
+    private Double baseSalary;
+    
+    @Basic(optional = false)
+    @Column(name = "residentType", nullable = false, length=45)
+    private String residentType;
+    
     public String getDeptName() {
 		return deptName;
+	}
+
+	public Double getBaseSalary() {
+		return baseSalary;
+	}
+
+	public void setBaseSalary(Double baseSalary) {
+		this.baseSalary = baseSalary;
 	}
 
 	public void setDeptName(String deptName) {
@@ -107,6 +127,14 @@ public class CompanyPayroll implements Serializable {
 
 	public String getRoutingNo() {
 		return routingNo;
+	}
+
+	public String getResidentType() {
+		return residentType;
+	}
+
+	public void setResidentType(String residentType) {
+		this.residentType = residentType;
 	}
 
 	public void setRoutingNo(String routingNo) {

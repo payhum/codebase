@@ -51,8 +51,8 @@ $("#grid").kendoGrid({
 	            columns : [
 					
 	                
-					{ field : "employeeId", title : "Id", width : 120 },
-	                { field : "firstname", title : "Name", template: '#=firstname+"."+middlename#', width : 100 },
+					{ field : "employeeId", title : "Employee Id", width : 120 },
+	                { field : "firstname", title : "Name", template: '#=firstname+" "+lastname#', width : 100 },
 	                
 	             {field : "address", title : "Address", width : 100 }
 	                ],             

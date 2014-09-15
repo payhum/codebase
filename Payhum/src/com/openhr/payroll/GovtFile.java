@@ -68,6 +68,7 @@ public class GovtFile extends Action {
 		
 		List<CompanyPayroll> compPayroll = CompanyPayrollFactory.findByCompAndProcessedDate(branch, cal.getTime());
 		StringBuilder allEmpPayStr = new StringBuilder();
+		int sectionCounter = 1;
 		
 		// Header details
 		// Company Name, ABC
@@ -81,6 +82,9 @@ public class GovtFile extends Action {
 		allEmpPayStr.append(branch.getName());
 		allEmpPayStr.append("\n");
 		
+		// Populate the header.
+		allEmpPayStr.append("Section : Deposit request for Local and Resident Foreigner employees.\n");
+	
 		allEmpPayStr.append("Employee Name");
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Employee ID");
@@ -91,11 +95,14 @@ public class GovtFile extends Action {
 		allEmpPayStr.append(COMMA);
 		allEmpPayStr.append("Payroll Cycle");
 		allEmpPayStr.append(COMMA);
-		allEmpPayStr.append("Amount (MMK)");
+		allEmpPayStr.append("Base Salary (MMK)");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Tax Amount (MMK)");
 		allEmpPayStr.append("\n");
 		
 		for(CompanyPayroll compPay : compPayroll) {
-			if(compPay.getTaxAmount() == 0D) {
+			if(compPay.getTaxAmount() == 0D
+			|| compPay.getResidentType().equalsIgnoreCase(PayhumConstants.NON_RESIDENT_FOREIGNER)) {
 				continue;
 			}
 			
@@ -110,6 +117,8 @@ public class GovtFile extends Action {
 			empPayStr.append(COMMA);
 			empPayStr.append(sdf.format(compPay.getProcessedDate()));
 			empPayStr.append(COMMA);
+			empPayStr.append(new DecimalFormat("###.##").format(compPay.getBaseSalary()));
+			empPayStr.append(COMMA);
 			empPayStr.append(new DecimalFormat("###.##").format(compPay.getTaxAmount()));
 			empPayStr.append("\n");
 			
@@ -118,7 +127,60 @@ public class GovtFile extends Action {
 			totalAmt += compPay.getTaxAmount();
 		}
 		
-		allEmpPayStr.append("\n,,,,TOTAL:,");
+		allEmpPayStr.append("\n,,,,,TOTAL:,");
+		allEmpPayStr.append(new DecimalFormat("###.##").format(totalAmt));
+		
+		// Non-resident - Populate the header.
+		allEmpPayStr.append("\n\nSection : Tax Amount details for Non-Resident Foreigner employees.\n");
+	
+		allEmpPayStr.append("Employee Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Employee ID");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Department Name");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Employee National ID / Passport No");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Payroll Cycle");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Base Salary (MMK)");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Tax Amount");
+		allEmpPayStr.append(COMMA);
+		allEmpPayStr.append("Currency");
+		allEmpPayStr.append("\n");
+		
+		for(CompanyPayroll compPay : compPayroll) {
+			if(compPay.getTaxAmount() == 0D
+			|| compPay.getResidentType().equalsIgnoreCase(PayhumConstants.LOCAL)
+			|| compPay.getResidentType().equalsIgnoreCase(PayhumConstants.RESIDENT_FOREIGNER)) {
+				continue;
+			}
+			
+			StringBuilder empPayStr = new StringBuilder();
+			empPayStr.append(compPay.getEmpFullName());
+			empPayStr.append(COMMA);
+			empPayStr.append(compPay.getEmployeeId());
+			empPayStr.append(COMMA);
+			empPayStr.append(compPay.getDeptName());
+			empPayStr.append(COMMA);
+			empPayStr.append(compPay.getEmpNationalID());
+			empPayStr.append(COMMA);
+			empPayStr.append(sdf.format(compPay.getProcessedDate()));
+			empPayStr.append(COMMA);
+			empPayStr.append(new DecimalFormat("###.##").format(compPay.getBaseSalary()));
+			empPayStr.append(COMMA);
+			empPayStr.append(new DecimalFormat("###.##").format(compPay.getTaxAmount()));
+			empPayStr.append(COMMA);
+			empPayStr.append(compPay.getCurrencySym());
+			empPayStr.append("\n");
+			
+			allEmpPayStr.append(empPayStr);
+			
+			totalAmt += compPay.getTaxAmount();
+		}
+		
+		allEmpPayStr.append("\n,,,,,TOTAL:,,");
 		allEmpPayStr.append(new DecimalFormat("###.##").format(totalAmt));
 		
 		OutputStream os = response.getOutputStream();
@@ -126,5 +188,16 @@ public class GovtFile extends Action {
 		os.close();
 		
 		return map.findForward("masteradmin");
+	}
+		
+	private boolean hasEmpWithThisResType(String resType,
+			List<CompanyPayroll> compPayroll) {
+		for(CompanyPayroll compPay : compPayroll) {
+			if(compPay.getResidentType().equalsIgnoreCase(resType)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

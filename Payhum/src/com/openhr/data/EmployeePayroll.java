@@ -148,9 +148,17 @@ public class EmployeePayroll implements Serializable {
     private Double leaveLoss;
     
     @Basic(optional = false)
+    @Column(name = "paidLeaveLoss")
+    private Double paidLeaveLoss;
+    
+	@Basic(optional = false)
     @Column(name = "taxPaidByEmployer")
     private Integer taxPaidByEmployer;
     
+	@Basic(optional = false)
+    @Column(name = "payAccomAmt")
+    private Integer payAccomAmt;
+	
     @Basic(optional = false)
     @Column(name = "withholdTax")
     private Integer withholdTax;
@@ -191,12 +199,32 @@ public class EmployeePayroll implements Serializable {
     @Column(name = "paidBasicAllow")
     private Double paidBasicAllow;
     
+    @Basic(optional = false)
+    @Column(name = "paidAllowance")
+    private Double paidAllowance;
+    
     public Double getPaidBasicAllow() {
 		return paidBasicAllow;
 	}
 
 	public void setPaidBasicAllow(Double paidBasicAllow) {
 		this.paidBasicAllow = paidBasicAllow;
+	}
+
+    public Double getPaidAllowance() {
+		return paidAllowance;
+	}
+
+	public void setPaidAllowance(Double paidAllow) {
+		this.paidAllowance = paidAllow;
+	}
+	
+    public Double getPaidLeaveLoss() {
+		return paidLeaveLoss;
+	}
+
+	public void setPaidLeaveLoss(Double paidLeaveLoss) {
+		this.paidLeaveLoss = paidLeaveLoss;
 	}
 
 	public Double getPaidAccomAmt() {
@@ -209,6 +237,14 @@ public class EmployeePayroll implements Serializable {
 
 	public Double getNewBonus() {
 		return newBonus;
+	}
+
+	public Integer getPayAccomAmt() {
+		return payAccomAmt;
+	}
+
+	public void setPayAccomAmt(Integer payAccomAmt) {
+		this.payAccomAmt = payAccomAmt;
 	}
 
 	public void setNewBonus(Double newBonus) {
@@ -288,6 +324,9 @@ public class EmployeePayroll implements Serializable {
         this.paidTaxableAmt = 0D;
         this.paidAccomAmt = 0D;
         this.paidBasicAllow = 0D;
+        this.paidLeaveLoss = 0D;
+        this.paidAllowance = 0D;
+        this.payAccomAmt = 0;
     }
     
 	public Double getPaidTaxableAmt() {
@@ -428,7 +467,7 @@ public class EmployeePayroll implements Serializable {
 	}
 
 	public Double getAllowancesAmount() {
-		return this.allowances;
+		return this.getAllowances();
 	}
 
 	public Double getBonus() {

@@ -79,9 +79,9 @@ $("#grid").kendoGrid({
 	            columns : [
 					
 	                
-					{ field : "ename", title : "Name", width : 120 },
-	                { field : "empName", title : "EmpName", width : 150 },
-	                
+					
+	                { field : "empName", title : "Employee Name", width : 150 },
+	                { field : "ename", title : "Name", width : 120 },
 	               
 	                
 	                { field : "debit", title : "Debit", width : 50 },

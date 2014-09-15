@@ -19,7 +19,9 @@ public class PayhumUtil {
 	static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");// 02-11-2012
 
 	static DecimalFormat decmalfrmt = new DecimalFormat("###.00");
-
+	
+	static DecimalFormat decmalfrmtWithSeparator = new DecimalFormat("###,###.00");
+	
 	// String s="E1_JohnSo_29_07_13";
 
 	// public enum
@@ -41,6 +43,15 @@ public class PayhumUtil {
 
 	}
 
+	public static String decimalFormatWithSeparators(double d) {
+		if(d == 0D) {
+			return "0.00";
+		}
+		
+		return decmalfrmtWithSeparator.format(d);
+
+	}
+	
 	public static Date getDateAfterBefore(Date d) {
 
 		// String format=DATE_FORMAT.format(d);
@@ -164,7 +175,7 @@ public class PayhumUtil {
 		if(currYear == hireYear && currMonth == hireMonth + 1 && hireDay >= currDay) {
 			return true;
 		}
-		else if(finStartMonth != 1 &&  currYear == hireYear + 1 && currMonth == 0 && hireDay >= currDay){
+		else if(finStartMonth != 1 &&  currYear == hireYear + 1 && hireMonth == 11 && currMonth == 0 && hireDay >= currDay){
 			return true;
 		}
 		

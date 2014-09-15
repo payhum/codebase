@@ -66,14 +66,16 @@ public class CheckLeavesAction extends Action {
 	        	}
 	        }
 	        
-	        int remain = 0, gap = 0, totalApp = 0;
+	        double remain = 0;
+	        int gap = 0;
+	        double totalApp = 0;
 	        
 	        if(leaveKind.size() != 0){
 	        	for(LeaveRequest lea : leaveKind){
 	        		totalApp = totalApp + lea.getNoOfDays();
 	        		
 	        	}
-		        remain = (int)leaveKind.get(0).getLeaveTypeId().getDayCap() - totalApp;
+		        remain = (double)leaveKind.get(0).getLeaveTypeId().getDayCap() - totalApp;
   	        }
         	 
  
@@ -82,7 +84,7 @@ public class CheckLeavesAction extends Action {
 	        }
 	        
         	int a[] = {10,20};
-         	a[0] = remain;
+         	a[0] = (int)remain;
         	a[1] = (int)type.getDayCap();
 			result = JSONArray.fromObject(a);
 

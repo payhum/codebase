@@ -116,7 +116,7 @@ public class TaxEngine {
 			
 			// Update on the split per month/week/biweekly
 			computeDetailsPerPayPeriod(empPayroll, toBeProcessedFor, payroll, adhoc,
-					payrollDates, payRuns, comp.getFinStartMonth());
+					payrollDates, payRuns, comp.getFinStartMonth(), empeSS);
 			
 			if(System.getProperty("DRYRUN") != null 
 			&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
@@ -175,7 +175,8 @@ public class TaxEngine {
 				empPayroll.setNetPay(income - empPayroll.getEmployerSS() - empeSS);
 			}
 			
-			computeDetailsPerPayPeriodForInactive(empPayroll, toBeProcessedFor, payroll, payrollDates, payRuns, comp.getFinStartMonth());
+			computeDetailsPerPayPeriodForInactive(empPayroll, toBeProcessedFor, payroll, payrollDates, 
+					payRuns, comp.getFinStartMonth(), empeSS);
 			
 			if(System.getProperty("DRYRUN") != null 
 			&& System.getProperty("DRYRUN").equalsIgnoreCase("true")) {
@@ -220,7 +221,7 @@ public class TaxEngine {
 
 	private void computeDetailsPerPayPeriod(EmployeePayroll empPayroll,
 			Calendar toBeProcessedFor, Payroll payroll, boolean adhoc,
-			List<PayrollDate> payrollDates, List<Payroll> payRuns, int finStartMonth) throws Exception {
+			List<PayrollDate> payrollDates, List<Payroll> payRuns, int finStartMonth, Double empeSS) throws Exception {
 		boolean isRetroEmp = PayhumUtil.isRetroActive(toBeProcessedFor, empPayroll.getEmployeeId().getHiredate(), finStartMonth);
 		
 		Integer divNo = payrollDates.size();
@@ -295,6 +296,7 @@ public class TaxEngine {
 			Double totalTaxableAmt = empPayroll.getTaxableIncome();
 			Double totalAccomAmt = empPayroll.getAccomodationAmount();
 			Double totalBasicAllow = 0D;
+			Double totalAllowance = empPayroll.getAllowances();
 			
 			// get employee contribution of SS
 			List<DeductionsDone> deductionsList = empPayroll.getDeductionsDone();
@@ -329,15 +331,22 @@ public class TaxEngine {
 				currencyCoverVal = Double.valueOf(currencyConver.getConfigValue());
 			}
 			
-			Double newOvertimeAmt = empPayroll.getNewOvertimeAmt();
-			Double newOtherIncome = empPayroll.getNewOtherIncome();
-			Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay() - newOtherIncome - newOvertimeAmt;
+			Double newOvertimeAmt = empPayroll.getNewOvertimeAmt() * currencyCoverVal;
+			Double newOtherIncome = empPayroll.getNewOtherIncome() * currencyCoverVal;
 			Double pendingTaxAmt = totalTaxAmt - empPayroll.getPaidTaxAmt();
 			Double pendingEmprSS = totalEmprSS - empPayroll.getPaidEmprSS();
 			Double pendingEmpeSS = totalEmpeSS - empPayroll.getPaidEmpeSS();
 			Double pendingTaxableAmt = totalTaxableAmt - empPayroll.getPaidTaxableAmt();
 			Double pendingAccomAmt = totalAccomAmt - empPayroll.getPaidAccomAmt();
 			Double pendingBasicAllow = totalBasicAllow - empPayroll.getPaidBasicAllow();
+			Double pendingAllowance = totalAllowance - empPayroll.getPaidAllowance();
+			Double thisMonthLeaveLoss = empPayroll.getLeaveLoss() - empPayroll.getPaidLeaveLoss();
+			Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay() - newOtherIncome - newOvertimeAmt + thisMonthLeaveLoss;
+			
+			if(empPayroll.getPayAccomAmt().compareTo(0) == 0) {
+				// means the accomodation is prepaid, so reduce it from net pay
+				pendingNeyPay = pendingNeyPay - totalAccomAmt;
+			}
 			
 			Double thisMonthPaidNetPay = 0D;
 			Double thisMonthPaidTaxAmt = 0D;
@@ -346,6 +355,7 @@ public class TaxEngine {
 			Double thisMonthPaidTaxableAmt = 0D;
 			Double thisMonthPaidAccomAmt = 0D;
 			Double thisMonthPaidBasicAllow = 0D;
+			Double thisMonthPaidAllowance = 0D;
 			if(currYear == hireYear && currMonth == hireMonth) {
 				int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
 				
@@ -355,16 +365,14 @@ public class TaxEngine {
 				}
 				
 				Double divideBy = (remainingPaycycles - 1) + diffDays / 30D;
-				thisMonthPaidNetPay = ((pendingNeyPay / divideBy) / 30 ) * diffDays + newOvertimeAmt + newOtherIncome;
+				thisMonthPaidNetPay = ((pendingNeyPay / divideBy) / 30 ) * diffDays + newOvertimeAmt + newOtherIncome - thisMonthLeaveLoss;
 				thisMonthPaidTaxAmt = ((pendingTaxAmt / divideBy) / 30 ) * diffDays;
 				thisMonthPaidTaxableAmt = ((pendingTaxableAmt / divideBy) / 30 ) * diffDays;
 				thisMonthPaidAccomAmt = ((pendingAccomAmt / divideBy) / 30 ) * diffDays;
 				thisMonthPaidBasicAllow = ((pendingBasicAllow / divideBy) / 30 ) * diffDays;
-				thisMonthPaidEmpeSS = totalEmpeSS / remainingPaycycles;
-				thisMonthPaidEmprSS = totalEmprSS / remainingPaycycles;
-				
-				Double extraEmpeSS = (((thisMonthPaidEmpeSS / divideBy) / 30 ) * (30 - diffDays)) * (remainingPaycycles - 1);
-				thisMonthPaidNetPay = thisMonthPaidNetPay - extraEmpeSS;
+				thisMonthPaidAllowance = ((pendingAllowance / divideBy) / 30 ) * diffDays;
+				thisMonthPaidEmpeSS = ((pendingEmpeSS / divideBy) / 30 ) * diffDays;
+				thisMonthPaidEmprSS = ((pendingEmprSS/ divideBy) / 30 ) * diffDays;
 				
 				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay );
 				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
@@ -373,18 +381,23 @@ public class TaxEngine {
 				empPayroll.setPaidTaxableAmt(thisMonthPaidTaxableAmt);
 				empPayroll.setPaidAccomAmt(thisMonthPaidAccomAmt);
 				empPayroll.setPaidBasicAllow(thisMonthPaidBasicAllow);
+				empPayroll.setPaidAllowance(thisMonthPaidAllowance);
 			} else if(isRetroEmp) {
-				thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome;
+				Double tmpNetPay = pendingNeyPay - empPayroll.getRetroBaseSal() + empeSS;
+				
+				thisMonthPaidNetPay = tmpNetPay / remainingPaycycles + newOvertimeAmt + newOtherIncome + empPayroll.getRetroBaseSal() - thisMonthLeaveLoss;
 				thisMonthPaidTaxAmt = pendingTaxAmt / remainingPaycycles;
 				thisMonthPaidEmpeSS = pendingEmpeSS / (remainingPaycycles + 1);
 				thisMonthPaidEmprSS = pendingEmprSS / (remainingPaycycles + 1);
 				thisMonthPaidTaxableAmt = pendingTaxableAmt / remainingPaycycles;
 				thisMonthPaidAccomAmt = pendingAccomAmt / remainingPaycycles;
 				thisMonthPaidBasicAllow = pendingBasicAllow / remainingPaycycles;
+				thisMonthPaidAllowance = pendingAllowance / remainingPaycycles;
 				
 				// If retro lets get 2 months SS
 				thisMonthPaidEmpeSS = thisMonthPaidEmpeSS * 2;
 				thisMonthPaidEmprSS = thisMonthPaidEmprSS * 2;
+				thisMonthPaidNetPay = thisMonthPaidNetPay - thisMonthPaidEmpeSS;
 				
 				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay);
 				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
@@ -393,32 +406,16 @@ public class TaxEngine {
 				empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
 				empPayroll.setPaidAccomAmt(empPayroll.getPaidAccomAmt() + thisMonthPaidAccomAmt);
 				empPayroll.setPaidBasicAllow(empPayroll.getPaidBasicAllow() + thisMonthPaidBasicAllow);
+				empPayroll.setPaidAllowance(empPayroll.getPaidAllowance() + thisMonthPaidAllowance);
 			} else {
-				thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome;
+				thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome - thisMonthLeaveLoss;
 				thisMonthPaidTaxAmt = pendingTaxAmt / remainingPaycycles;
 				thisMonthPaidEmpeSS = pendingEmpeSS / remainingPaycycles;
 				thisMonthPaidEmprSS = pendingEmprSS / remainingPaycycles;
 				thisMonthPaidTaxableAmt = pendingTaxableAmt / remainingPaycycles;
 				thisMonthPaidAccomAmt = pendingAccomAmt / remainingPaycycles;
 				thisMonthPaidBasicAllow = pendingBasicAllow / remainingPaycycles;
-				
-				// Now if the employee is USD, then his number for SS should be 5 and 3 only.
-				if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
-					Double valForEmprSS = 5D;
-					Double valForEmpeSS = 3D;
-					
-					Double currValForEmprSS = thisMonthPaidEmprSS / currencyCoverVal;
-					Double currValForEmpeSS = thisMonthPaidEmpeSS / currencyCoverVal;
-					
-					Double diffForEmprSS = currValForEmprSS - valForEmprSS;
-					Double diffForEmpeSS = currValForEmpeSS - valForEmpeSS;
-					
-					thisMonthPaidNetPay += diffForEmprSS * currencyCoverVal;
-					thisMonthPaidNetPay += diffForEmpeSS * currencyCoverVal;
-					
-					thisMonthPaidEmpeSS = valForEmpeSS * currencyCoverVal;
-					thisMonthPaidEmprSS = valForEmprSS * currencyCoverVal;
-				} 
+				thisMonthPaidAllowance = pendingAllowance / remainingPaycycles;
 				
 				empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay);
 				empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
@@ -427,6 +424,7 @@ public class TaxEngine {
 				empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
 				empPayroll.setPaidAccomAmt(empPayroll.getPaidAccomAmt() + thisMonthPaidAccomAmt);
 				empPayroll.setPaidBasicAllow(empPayroll.getPaidBasicAllow() + thisMonthPaidBasicAllow);
+				empPayroll.setPaidAllowance(empPayroll.getPaidAllowance() + thisMonthPaidAllowance);
 			}
 			
 			// Save to emp_payroll_map table.
@@ -440,6 +438,7 @@ public class TaxEngine {
 			empPayMap.setEmprSocialSec(thisMonthPaidEmprSS);
 			empPayMap.setAccomAmt(thisMonthPaidAccomAmt);
 			empPayMap.setBasicAllow(thisMonthPaidBasicAllow);
+			empPayMap.setAllowance(thisMonthPaidAllowance);
 			
 			empPayMap.setOvertimeAmt(newOvertimeAmt);
 			empPayroll.clearNewOvertimeAmt();
@@ -453,17 +452,21 @@ public class TaxEngine {
 				empPayMap.setRetroBaseSal(0D);
 			}
 			
+			// Process leave loss
+			empPayMap.setLeaveLoss(thisMonthLeaveLoss);
+			empPayroll.setPaidLeaveLoss(empPayroll.getLeaveLoss());
+			
 			Double baseSalforMonth = empPayroll.getBaseSalary() - empPayroll.getPaidBaseSalary();
 			baseSalforMonth = baseSalforMonth / remainingPaycycles;
 			if(proRate.compareTo(1D) == 0) {
 				empPayMap.setBaseSalary(baseSalforMonth);
 				empPayroll.addPaidBaseSalary(baseSalforMonth);
 			} else {
-				empPayMap.setBaseSalary((empPayroll.getBaseSalary() / divNoWithProrate) * proRate);
-				empPayroll.addPaidBaseSalary((empPayroll.getBaseSalary() / divNoWithProrate) * proRate);
+				empPayMap.setBaseSalary(((empPayroll.getBaseSalary() / divNoWithProrate) * proRate));
+				empPayroll.addPaidBaseSalary(((empPayroll.getBaseSalary() / divNoWithProrate) * proRate ));
 			}
 			
-			empPayMap.setBonus(empPayroll.getNewBonus());
+			empPayMap.setBonus(empPayroll.getNewBonus() * currencyCoverVal);
 			empPayroll.clearNewBonus();
 			
 			empPayMap.setCurrencyConverRate(currencyCoverVal);
@@ -488,7 +491,7 @@ public class TaxEngine {
 
 	private void computeDetailsPerPayPeriodForInactive(EmployeePayroll empPayroll,
 			Calendar toBeProcessedFor, Payroll payroll,
-			List<PayrollDate> payrollDates, List<Payroll> payRuns, int finStartMonth) throws Exception {
+			List<PayrollDate> payrollDates, List<Payroll> payRuns, int finStartMonth, Double empeSS) throws Exception {
 		boolean isRetroEmp = PayhumUtil.isRetroActive(toBeProcessedFor, empPayroll.getEmployeeId().getHiredate(), finStartMonth);
 		
 		Integer divNo = 1;
@@ -543,6 +546,7 @@ public class TaxEngine {
 		Double totalTaxableAmt = empPayroll.getTaxableIncome();
 		Double totalAccomAmt = empPayroll.getAccomodationAmount();
 		Double totalBasicAllow = 0D;
+		Double totalAllowance = empPayroll.getAllowances();
 		
 		// get employee contribution of SS
 		List<DeductionsDone> deductionsList = empPayroll.getDeductionsDone();
@@ -581,13 +585,22 @@ public class TaxEngine {
 		
 		Double newOvertimeAmt = empPayroll.getNewOvertimeAmt();
 		Double newOtherIncome = empPayroll.getNewOtherIncome();
-		Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay() - newOtherIncome - newOvertimeAmt;
+		
 		Double pendingTaxAmt = totalTaxAmt - empPayroll.getPaidTaxAmt();
 		Double pendingEmprSS = totalEmprSS - empPayroll.getPaidEmprSS();
 		Double pendingEmpeSS = totalEmpeSS - empPayroll.getPaidEmpeSS();
 		Double pendingTaxableAmt = totalTaxableAmt - empPayroll.getPaidTaxableAmt();
 		Double pendingAccomAmt = totalAccomAmt - empPayroll.getPaidAccomAmt();
 		Double pendingBasicAllow = totalBasicAllow - empPayroll.getPaidBasicAllow();
+		Double pendingAllowance = totalAllowance - empPayroll.getPaidAllowance();
+
+		Double thisMonthLeaveLoss = empPayroll.getLeaveLoss() - empPayroll.getPaidLeaveLoss();
+		Double pendingNeyPay = totalNeyPay - empPayroll.getPaidNetPay() - newOtherIncome - newOvertimeAmt + thisMonthLeaveLoss;
+		
+		if(empPayroll.getPayAccomAmt().compareTo(0) == 0) {
+			// means the accomodation is prepaid, so reduce it from net pay
+			pendingNeyPay = pendingNeyPay - totalAccomAmt;
+		}
 		
 		Double thisMonthPaidNetPay = 0D;
 		Double thisMonthPaidTaxAmt = 0D;
@@ -596,6 +609,7 @@ public class TaxEngine {
 		Double thisMonthPaidTaxableAmt = 0D;
 		Double thisMonthPaidAccomAmt = 0D;
 		Double thisMonthPaidBasicAllow = 0D;
+		Double thisMonthPaidAllowance = 0D;
 		if(currYear == hireYear && currMonth == hireMonth) {
 			int hireDay = hireDtCal.get(Calendar.DAY_OF_MONTH);
 			
@@ -605,13 +619,14 @@ public class TaxEngine {
 			}
 			
 			Double divideBy = (remainingPaycycles - 1) + diffDays / (double) lastDay;
-			thisMonthPaidNetPay = ((pendingNeyPay / divideBy) / 30 ) * diffDays + newOvertimeAmt + newOtherIncome;
+			thisMonthPaidNetPay = ((pendingNeyPay / divideBy) / 30 ) * diffDays + newOvertimeAmt + newOtherIncome - thisMonthLeaveLoss;
 			thisMonthPaidTaxAmt = ((pendingTaxAmt / divideBy) / 30 ) * diffDays;
 			thisMonthPaidTaxableAmt = ((pendingTaxableAmt/ divideBy) / 30 ) * diffDays;
-			thisMonthPaidEmpeSS = totalEmpeSS / remainingPaycycles;
-			thisMonthPaidEmprSS = totalEmprSS / remainingPaycycles;
+			thisMonthPaidEmpeSS = ((pendingEmpeSS / divideBy) / 30 ) * diffDays;
+			thisMonthPaidEmprSS = ((pendingEmprSS / divideBy) / 30 ) * diffDays;
 			thisMonthPaidAccomAmt = ((pendingAccomAmt / divideBy) / 30 ) * diffDays;
 			thisMonthPaidBasicAllow = ((pendingBasicAllow / divideBy) / 30 ) * diffDays;
+			thisMonthPaidAllowance = ((pendingAllowance / divideBy) / 30 ) * diffDays;
 			
 			empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay );
 			empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
@@ -620,18 +635,23 @@ public class TaxEngine {
 			empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
 			empPayroll.setPaidAccomAmt(thisMonthPaidAccomAmt);
 			empPayroll.setPaidBasicAllow(thisMonthPaidBasicAllow);
+			empPayroll.setPaidAllowance(thisMonthPaidAllowance);
 		} else if(isRetroEmp) {
-			thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome;
+			Double tmpNetPay = pendingNeyPay - empPayroll.getRetroBaseSal() + empeSS;
+			
+			thisMonthPaidNetPay = tmpNetPay / remainingPaycycles + newOvertimeAmt + newOtherIncome + empPayroll.getRetroBaseSal() - thisMonthLeaveLoss;
 			thisMonthPaidTaxAmt = pendingTaxAmt / remainingPaycycles;
 			thisMonthPaidTaxableAmt = pendingTaxableAmt / remainingPaycycles;
 			thisMonthPaidEmpeSS = pendingEmpeSS / (remainingPaycycles + 1);
 			thisMonthPaidEmprSS = pendingEmprSS / (remainingPaycycles + 1);
 			thisMonthPaidAccomAmt = pendingAccomAmt / remainingPaycycles;
 			thisMonthPaidBasicAllow = pendingBasicAllow / remainingPaycycles;
+			thisMonthPaidAllowance = pendingAllowance / remainingPaycycles;
 			
 			// If retro lets get 2 months SS
 			thisMonthPaidEmpeSS = thisMonthPaidEmpeSS * 2;
 			thisMonthPaidEmprSS = thisMonthPaidEmprSS * 2;
+			thisMonthPaidNetPay = thisMonthPaidNetPay - thisMonthPaidEmpeSS;
 			
 			empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay);
 			empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
@@ -640,32 +660,16 @@ public class TaxEngine {
 			empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
 			empPayroll.setPaidAccomAmt(empPayroll.getPaidAccomAmt() + thisMonthPaidAccomAmt);
 			empPayroll.setPaidBasicAllow(empPayroll.getPaidBasicAllow() + thisMonthPaidBasicAllow);
+			empPayroll.setPaidAllowance(empPayroll.getPaidAllowance() + thisMonthPaidAllowance);
 		} else {
-			thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome;
+			thisMonthPaidNetPay = pendingNeyPay / remainingPaycycles + newOvertimeAmt + newOtherIncome - thisMonthLeaveLoss;
 			thisMonthPaidTaxAmt = pendingTaxAmt / remainingPaycycles;
 			thisMonthPaidTaxableAmt = pendingTaxableAmt / remainingPaycycles;
 			thisMonthPaidEmpeSS = pendingEmpeSS / remainingPaycycles;
 			thisMonthPaidEmprSS = pendingEmprSS / remainingPaycycles;
 			thisMonthPaidAccomAmt = pendingAccomAmt / remainingPaycycles;
 			thisMonthPaidBasicAllow = pendingBasicAllow / remainingPaycycles;
-			
-			// Now if the employee is USD, then his number for SS should be 5 and 3 only.
-			if(currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
-				Double valForEmprSS = 5D;
-				Double valForEmpeSS = 3D;
-				
-				Double currValForEmprSS = thisMonthPaidEmprSS / currencyCoverVal;
-				Double currValForEmpeSS = thisMonthPaidEmpeSS / currencyCoverVal;
-				
-				Double diffForEmprSS = currValForEmprSS - valForEmprSS;
-				Double diffForEmpeSS = currValForEmpeSS - valForEmpeSS;
-				
-				thisMonthPaidNetPay += diffForEmprSS * currencyCoverVal;
-				thisMonthPaidNetPay += diffForEmpeSS * currencyCoverVal;
-				
-				thisMonthPaidEmpeSS = valForEmpeSS * currencyCoverVal;
-				thisMonthPaidEmprSS = valForEmprSS * currencyCoverVal;
-			} 
+			thisMonthPaidAllowance = pendingAllowance / remainingPaycycles;
 			
 			empPayroll.setPaidNetPay(empPayroll.getPaidNetPay() + thisMonthPaidNetPay);
 			empPayroll.setPaidTaxAmt(empPayroll.getPaidTaxAmt() + thisMonthPaidTaxAmt);
@@ -674,6 +678,7 @@ public class TaxEngine {
 			empPayroll.setPaidTaxableAmt(empPayroll.getPaidTaxableAmt() + thisMonthPaidTaxableAmt);
 			empPayroll.setPaidAccomAmt(empPayroll.getPaidAccomAmt() + thisMonthPaidAccomAmt);
 			empPayroll.setPaidBasicAllow(empPayroll.getPaidBasicAllow() + thisMonthPaidBasicAllow);
+			empPayroll.setPaidAllowance(empPayroll.getPaidAllowance() + thisMonthPaidAllowance);
 		}
 		
 		// Save to emp_payroll_map table.
@@ -687,6 +692,7 @@ public class TaxEngine {
 		empPayMap.setEmprSocialSec(thisMonthPaidEmprSS);
 		empPayMap.setAccomAmt(thisMonthPaidAccomAmt);
 		empPayMap.setBasicAllow(thisMonthPaidBasicAllow);
+		empPayMap.setAllowance(thisMonthPaidAllowance);
 		
 		empPayMap.setOvertimeAmt(newOvertimeAmt);
 		empPayroll.clearNewOvertimeAmt();
@@ -700,15 +706,19 @@ public class TaxEngine {
 			empPayMap.setRetroBaseSal(0D);
 		}
 		
+		// Process leave loss
+		empPayMap.setLeaveLoss(thisMonthLeaveLoss);
+		empPayroll.setPaidLeaveLoss(empPayroll.getLeaveLoss());
+		
 		Double baseSalforMonth = empPayroll.getBaseSalary() - empPayroll.getPaidBaseSalary();
 		if(proRate.compareTo(1D) == 0) {
 			empPayMap.setBaseSalary(baseSalforMonth);
 			empPayroll.addPaidBaseSalary(baseSalforMonth);
 		} else {
-			empPayMap.setBaseSalary((empPayroll.getBaseSalary() / divNoWithProrate) * proRate);
-			empPayroll.addPaidBaseSalary((empPayroll.getBaseSalary() / divNoWithProrate) * proRate);
+			empPayMap.setBaseSalary(((empPayroll.getBaseSalary() / divNoWithProrate) * proRate));
+			empPayroll.addPaidBaseSalary(((empPayroll.getBaseSalary() / divNoWithProrate) * proRate ));
 		}
-		
+					
 		empPayMap.setBonus(empPayroll.getNewBonus());
 		empPayroll.clearNewBonus();
 		

@@ -33,6 +33,9 @@ import com.openhr.data.Employee;
 import com.openhr.data.EmployeeBonus;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.EmployeeSalary;
+import com.openhr.data.LeaveApproval;
+import com.openhr.data.LeaveRequest;
+import com.openhr.data.LeaveType;
 import com.openhr.factories.BenefitFactory;
 import com.openhr.factories.BenefitTypeFactory;
 import com.openhr.factories.BranchFactory;
@@ -41,6 +44,8 @@ import com.openhr.factories.ConfigDataFactory;
 import com.openhr.factories.DepartmentFactory;
 import com.openhr.factories.EmpPayTaxFactroy;
 import com.openhr.factories.EmployeeFactory;
+import com.openhr.factories.LeaveRequestFactory;
+import com.openhr.factories.LeaveTypeFactory;
 import com.util.payhumpackages.PayhumUtil;
 
 public class UploadEmpUpdateFile extends Action {
@@ -87,6 +92,10 @@ public class UploadEmpUpdateFile extends Action {
             List formItems = upload.parseRequest(request);
             Iterator iter = formItems.iterator();
             
+            List<LeaveType> leaveTypes = LeaveTypeFactory.findByName(PayhumConstants.PAID_LEAVE);
+            List<LeaveRequest> allLeaveRequests = LeaveRequestFactory.findAll();
+            int leaveRequestID = allLeaveRequests.size() + 1;
+            
             // iterates over form's fields
             while (iter.hasNext()) {
                 FileItem item = (FileItem) iter.next();
@@ -120,14 +129,14 @@ public class UploadEmpUpdateFile extends Action {
                     	
                     	String[] lineColumns = strLine.split(COMMA);
                     	
-                    	if(lineColumns.length != 9) {
+                    	if(lineColumns.length != 11) {
                     		br.close();
                     		in.close();
                     		fstream.close();
-                    		throw new Exception("The number of columns in the line is not 9 - " + strLine);
+                    		throw new Exception("The number of columns in the line is not 11 - " + strLine);
                     	}
                     	
-                    	// Format is - EmployeeID, Allowance, BaseSalary, OT, Commission, Bonus, Branch, Dept
+                    	// Format is - EmployeeID, Allowance, BaseSalary, OT, Commission, Bonus, Branch, Dept,unpaidleave,prepaidAccom
                     	String employeeId = lineColumns[0];
                 		String allowance = lineColumns[1];
                 		String baseSalary = lineColumns[2];
@@ -137,6 +146,8 @@ public class UploadEmpUpdateFile extends Action {
                 		String company = lineColumns[6];
                 		String branchName = lineColumns[7];
                 		String deptName = lineColumns[8];
+                		String unpaidLeave = lineColumns[9];
+                		String prepaidAccom = lineColumns[10];
                 		
                 		//Validate the Emp existence
                 		if(comp == null || !comp.getName().equalsIgnoreCase(company)) {
@@ -181,9 +192,11 @@ public class UploadEmpUpdateFile extends Action {
                 				if(newPerMonth > existingAmtPerMonth) {
                 					diffPerMonth = newPerMonth - existingAmtPerMonth;
                 					ben.setAmount(existingAmt + diffPerMonth * remainingMonths);
+                					ben.setPerMonthAmt(newPerMonth);
                 				} else {
                 					diffPerMonth = existingAmtPerMonth - newPerMonth;
                 					ben.setAmount(existingAmt - diffPerMonth * remainingMonths);
+                					ben.setPerMonthAmt(newPerMonth);
                 				}
                 				
                 				BenefitFactory.update(ben);
@@ -192,6 +205,7 @@ public class UploadEmpUpdateFile extends Action {
                         		BenefitType bt = benefitTypes.get(0);
                         		Benefit ben = new Benefit();
                         		ben.setAmount(Double.parseDouble(allowance) * remainingMonths);
+                        		ben.setPerMonthAmt(Double.parseDouble(allowance));
                         		ben.setEmployeeId(employee);
                         		ben.setTypeId(bt);
                         		
@@ -244,8 +258,42 @@ public class UploadEmpUpdateFile extends Action {
                 		if(!otherIncome.equalsIgnoreCase("NC")) {
                 			empPayroll.setNewOtherIncome(Double.parseDouble(otherIncome));
                 		}
+
+                		// Prepaid accom
+                		if(!prepaidAccom.equalsIgnoreCase("NC")) {
+                			if(prepaidAccom.equalsIgnoreCase("true")
+                			|| prepaidAccom.equalsIgnoreCase("yes")) {
+                				empPayroll.setPayAccomAmt(0);
+                			} else {
+                				empPayroll.setPayAccomAmt(1);
+                			}
+                		}
                 		
                 		EmpPayTaxFactroy.update(empPayroll);
+                		
+                		// Update Leave details
+                		if(unpaidLeave != null && !unpaidLeave.isEmpty()) {
+                			double unpaidLeaveInt = Double.parseDouble(unpaidLeave);
+                			if(unpaidLeaveInt > 0) {
+	                			LeaveRequest lrq = new LeaveRequest();
+	                			lrq.setId(leaveRequestID++);
+	                			lrq.setEmployeeId(employee);
+	                			lrq.setDescription("For month/year - " + currDate.get(Calendar.MONTH) + 1 + "/" + currDate.get(Calendar.YEAR));
+	                			lrq.setLeaveDate(currDt);
+	                			lrq.setLeaveTypeId(leaveTypes.get(0));
+	                			lrq.setNoOfDays(unpaidLeaveInt);
+	                			lrq.setReturnDate(currDt);
+	                			lrq.setStatus(1);
+	                			
+	                			LeaveRequestFactory.insert(lrq);
+	                			
+	                			LeaveApproval lar = new LeaveApproval();
+	                			lar.setApprovedbydate(currDt);
+	                			lar.setApproverId(employee);
+	                			lar.setRequestId(lrq);
+	                			LeaveRequestFactory.insert(lar);
+                			}
+                		}
                     }
                 }
             }

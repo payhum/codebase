@@ -8,7 +8,7 @@
 </style>
 <div id="loginFormContainer">
     <html:form action="/LoginAction" styleClass="loginForm">
-    	<h2 class="login-legend">MPTS Login
+    	<h2 class="login-legend">STP Payroll Login
     	<span style="float:right;padding-right:40px;padding-top:15px">
     		<span><img src="<%=request.getContextPath() + "/css/images/mm-flag.png"%>"></span>
     		<!--a class="link" href="<%=request.getContextPath() + "/do/ChangeLanguage?method=amharic" %>">

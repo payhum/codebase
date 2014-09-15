@@ -82,7 +82,7 @@ $("#grid").kendoGrid({
 	            columns : [
 	   					
 	   	                
-	   					{ field : "ename", title : "Name", width : 120 },
+	   					{ field : "ename", title : "Account Type", width : 120 },
 	   	               
 	   	               
 	   	                

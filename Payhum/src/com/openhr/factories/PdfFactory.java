@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -13,12 +14,17 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.struts.taglib.tiles.GetAttributeTag;
 
 import com.openhr.common.PayhumConstants;
+import com.openhr.data.Branch;
+import com.openhr.data.Department;
 import com.openhr.data.EmpPayrollMap;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeeForm;
 import com.openhr.data.EmployeePayroll;
+import com.openhr.data.GLReportData;
+import com.openhr.data.GLReportEmpData;
 import com.openhr.data.PayrollDate;
 import com.openhr.data.TypesData;
 import com.openhr.glreports.form.GlReportForm;
@@ -41,18 +47,18 @@ public class PdfFactory {
 	private static final String pdfHeadLinesPart2[][] = {
 		{ "Income", "Current Pay", "Annual Pay(YTD)" }, { "Gross Salary", "   BaseSalary", "   Bonus", "   Overtime Amount", "   Commission", "   Retroactive Salary"},
 		{ "Allowance" }, { "Accommodation" }, { "Taxable Overseas Income" },
-		{ "Employer Social Security" } };
+		{ "Employer Social Security", "   Employer Social Security (MMK)" }, { "Deduction (unpaid leave)" } };
 
 	private static final String pdfHeadLinesPart3[][] = { { "Exemptions" },
 		{ "Children-2" }, { "Basic Allowance (20%)-3" },
 		{ "Supporting Spouse-1" } };
 
 	private static final String pdfHeadLinesPart4[][] = { { "Deductions" },
-		{ "Life Insurance-3" }, { "Employee Social Security-5" },
+		{ "Life Insurance-3" }, { "Employee Social Security-5", "   Employee Social Security(MMK)" },
 		{ "Donation-4" } };
 
 	private static final String pdfHeadLinesPart5[][] = { {"Other Income"},{ "Taxable Income" },
-			{ "Tax Amount", "   Tax Amount(MMK)" }, { "Net Pay" } };
+			{ "Tax Amount", "   Tax Amount(MMK)" }, { "Adjusted for Prepaid Accommodation" } , { "Net Pay" } };
 
 	private static final String UNDERSCOER = "_";
 
@@ -63,351 +69,6 @@ public class PdfFactory {
 			"Employee Name & ID", "Income", "Current Pay", "YTD", "Deduction",
 			"Current Pay", "YTD", "Taxable Income", "Current Pay",
 			"Tax withholding", "Net Pay" } };
-
-	public static void glreportTaxPDF(List<EmpPayrollMap> emp, PDDocument doc,
-			Integer divNo, Integer mulNO) {
-
-		try {
-			for (EmpPayrollMap empMap : emp) {
-
-				PDPage page = null;
-				PDPageContentStream contentStream = null;
-				page = new PDPage(PDPage.PAGE_SIZE_A0);
-				doc.addPage(page);
-				contentStream = new PDPageContentStream(doc, page);
-				contentStream.beginText();
-				contentStream.setFont(PDType1Font.HELVETICA_BOLD, 40);
-				contentStream.moveTextPositionByAmount(10, 3300);
-				String payHead = PayhumUtil.getDateFormatString(empMap
-						.getPayrollId().getRunOnDate());
-				String payheadString[] = PayhumUtil
-						.splitString(payHead, 0, "-");
-				contentStream.drawString("Paystub for the month  "
-						+ payheadString[1] + " " + payheadString[2]);
-
-				contentStream.endText();
-float textColx;
-
-float textColy;
-				float y = 3200;
-				float margin = 5.5f;
-				int row = 20;
-				float cols = 15f;
-				final float rowHeight = 100f;
-				final float tableWidth = page.findMediaBox().getWidth() + 1000f;
-				final float tableHeight = rowHeight * row;
-				final float colWidth = tableWidth / cols;
-				final float cellMargin = 30f;
-
-				contentStream.setFont(PDType1Font.TIMES_BOLD, 28);
-
-				float textx = margin + cellMargin;
-				float texty = y;
-				int c = 0;
-				int rowValues = 1;
-				Float b[] = null;
-				StringBuilder stdb = new StringBuilder();
-
-				for (int i = 0; i < row; i++) {
-					switch (i) {
-
-					case 0:
-
-						for (int i1 = 0; i1 < glTaxPdfHeadPart1.length; i1++) {
-							switch (i1) {
-							case 0:
-								for (int j1 = 0; j1 < glTaxPdfHeadPart1[i1].length; j1++) {
-
-									switch (j1) {
-
-									case 0:
-
-										stdb.append(glTaxPdfHeadPart1[i1][j1]);
-										b = drawRowString(stdb, empMap,
-												rowValues, contentStream,
-												textx, texty, colWidth, margin,
-												rowHeight, cellMargin);
-
-										textx = b[0];
-
-										texty = b[1];
-
-										stdb.append(empMap.getEmppayId()
-												.getEmployeeId().getDeptId()
-												.getBranchId().getCompanyId()
-												.getName());
-										// stdb.append(PayhumUtil.getNumberSpaces(50));
-										b = drawRowString(stdb, empMap,
-												rowValues, contentStream,
-												textx, texty, colWidth, margin,
-												rowHeight, cellMargin);
-
-										textx = b[0];
-
-										texty = b[1];
-
-										break;
-
-									case 1:
-										stdb.append(glTaxPdfHeadPart1[i1][j1]);
-
-										// stdb.append(PayhumUtil.getNumberSpaces(50));
-										b = drawRowString(stdb, empMap,
-												rowValues, contentStream,
-												textx, texty, colWidth, margin,
-												rowHeight, cellMargin);
-
-										textx = b[0];
-
-										texty = b[1];
-										stdb.append(PayhumUtil
-												.getDateFormatString(empMap
-														.getPayrollId()
-														.getRunOnDate()));
-										// stdb.append(PayhumUtil.getNumberSpaces(50));
-										b = drawRowString(stdb, empMap,
-												rowValues, contentStream,
-												textx, texty, colWidth, margin,
-												rowHeight, cellMargin);
-
-										textx = b[0];
-
-										texty = b[1];
-										break;
-
-									}
-
-									if (j1 == glTaxPdfHeadPart1[i1].length - 1) {
-										texty -= rowHeight;
-										textx = margin + cellMargin + 1;
-									}
-								}
-
-								break;
-
-							case 1:
-								for (int j1 = 0; j1 < glTaxPdfHeadPart1[i1].length; j1++) {
-
-									switch (j1) {
-
-									case 0:
-
-										stdb.append(" ");
-										b = drawRowString(stdb, empMap,
-												rowValues, contentStream,
-												textx, texty, colWidth, margin,
-												rowHeight, cellMargin);
-
-										textx = b[0];
-
-										texty = b[1];
-
-										stdb.append("");
-										// stdb.append(PayhumUtil.getNumberSpaces(50));
-										b = drawRowString(stdb, empMap,
-												rowValues, contentStream,
-												textx, texty, colWidth, margin,
-												rowHeight, cellMargin);
-
-										textx = b[0];
-
-										texty = b[1];
-
-										break;
-
-									case 1:
-										stdb.append(glTaxPdfHeadPart1[i1][j1]);
-
-										// stdb.append(PayhumUtil.getNumberSpaces(50));
-										b = drawRowString(stdb, empMap,
-												rowValues, contentStream,
-												textx, texty, colWidth, margin,
-												rowHeight, cellMargin);
-
-										textx = b[0];
-
-										texty = b[1];
-
-										if (divNo == 12) {
-											// String sdate[]
-											// =PayhumUtil.splitString(PayhumUtil.getDateFormatFullNum(empMap.getPayrollId().getPayDateId().getRunDateofDateObject()),
-											// 3, "-");
-
-											Integer numDays = PayhumUtil
-													.getNumberDays(empMap
-															.getPayrollId()
-															.getPayDateId()
-															.getRunDateofDateObject());
-
-											String sdatee[] = PayhumUtil
-													.getDateFormatString(
-															empMap.getPayrollId()
-																	.getPayDateId()
-																	.getRunDateofDateObject())
-													.split("-", 0);
-
-											// String s=;
-											// String
-											// istring=sdatee.substring(0, 2);
-											stdb.append("1 " + sdatee[1] + "-"
-													+ numDays + " " + sdatee[1]);
-										} else {
-											Date payordDate = empMap
-													.getPayrollId()
-													.getPayDateId()
-													.getRunDateofDateObject();
-
-											String s2 = PayhumUtil
-													.getDateFormatString(payordDate);
-
-											String s1 = PayhumUtil
-													.getDateFormatString(PayhumUtil
-															.getDateAfterBefore(payordDate));
-
-											stdb.append(s1 + "-" + s2);
-										}
-
-										// stdb.append(PayhumUtil.getNumberSpaces(50));
-										b = drawRowString(stdb, empMap,
-												rowValues, contentStream,
-												textx, texty, colWidth, margin,
-												rowHeight, cellMargin);
-
-										textx = b[0];
-
-										texty = b[1];
-										break;
-
-									}
-
-									if (j1 == pdfHeadLinesPart1[i1].length - 1) {
-										texty -= rowHeight;
-										textx = margin + cellMargin;
-									}
-								}
-
-								break;
-
-							case 2:
-								for (int j1 = 0; j1 < glTaxPdfHeadPart1[i1].length; j1++) {
-
-									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getDeptId()
-											.getBranchId().getName()
-											+ ",  "
-											+ empMap.getEmppayId()
-													.getEmployeeId()
-													.getDeptId().getDeptname());
-									b = drawRowString(stdb, empMap, rowValues,
-											contentStream, textx, texty,
-											colWidth, margin, rowHeight,
-											cellMargin);
-
-									textx = b[0];
-
-									texty = b[1];
-
-									if (j1 == pdfHeadLinesPart1[i1].length - 1) {
-										texty -= rowHeight;
-										textx = margin + cellMargin;
-									}
-								}
-
-								break;
-
-							}
-
-						}
-
-						break;
-
-					case 1:
-						for (int i1 = 0; i1 < glTaxPdfHeadPart2[0].length; i1++) {
-
-							stdb.append(glTaxPdfHeadPart2[0][i1]);
-							b = drawRowString(stdb, empMap, rowValues,
-									contentStream, textx, texty, colWidth,
-									margin, rowHeight, cellMargin);
-
-							textx = b[0] - 5f;
-
-							texty = b[1];
-
-						}
-
-						texty -= rowHeight;
-						textx = margin + cellMargin;
-
-						break;
-					case 2:
-						for (int i1 = 0; i1 < glTaxPdfHeadPart2[0].length; i1++) {
-							
-							switch(i1)
-							{
-
-							case 0:		
-								for(int i12=0; i12<6; i12++)
-								{
-									
-									
-									stdb.append(glTaxPdfHeadPart2[0][i1]);
-									b = drawRowString(stdb, empMap, rowValues,
-											contentStream, textx, texty, colWidth,
-											margin, rowHeight, cellMargin);
-
-									textx = b[0] - 5f;
-
-									texty = b[1];
-									texty -= rowHeight;
-									textx = margin + cellMargin;
-									
-								}
-								
-								
-							break;
-							
-							
-							case 1:		
-								for(int i12=0; i12<6; i12++)
-								{
-									
-									//textx  += colWidth;
-									stdb.append(glTaxPdfHeadPart2[0][i1]);
-									b = drawRowString(stdb, empMap, rowValues,
-											contentStream, textx, texty, colWidth,
-											margin, rowHeight, cellMargin);
-
-									textx = b[0] - 5f;
-
-									texty = b[1];
-									texty -= rowHeight;
-									textx = margin + cellMargin;
-									
-								}
-								
-								
-							break;
-							}
-						}
-
-						texty -= rowHeight;
-						textx = margin + cellMargin;
-
-						break;
-					}
-
-				}
-
-				contentStream.close();
-
-			}
-
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
-	}
 
 	static Float[] drawRowString(StringBuilder st, EmpPayrollMap empMap,
 			int rowValues, PDPageContentStream contentStream, float textx,
@@ -518,7 +179,7 @@ float textColy;
 	
 
 	public static void empActivePdf(PDDocument doc, int rows, int cols, int c,
-			List<Employee> eptx, int end, int start, String[][] content) {
+			List<Employee> eptx, int end, int start, String[][] content, boolean firstPage) {
 
 		try {
 			PDPage page = new PDPage();
@@ -526,13 +187,73 @@ float textColy;
 
 			PDPageContentStream contentStream = new PDPageContentStream(doc,
 					page);
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(45, 755);
+			contentStream.drawString(eptx.get(0).getDeptId().getBranchId().getCompanyId().getName());
+			contentStream.endText();
+
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(550 - (eptx.get(0).getDeptId().getBranchId().getName().length()) * 10, 755);
+			contentStream.drawString(eptx.get(0).getDeptId().getBranchId().getName());
+			contentStream.endText();
+			
+			int yIndex = printCompanyAddress(contentStream, eptx.get(0).getDeptId().getBranchId().getCompanyId().getId(), 745, 45);
+			yIndex = yIndex - 20;
+			
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
-			contentStream.moveTextPositionByAmount(200, 730);
-
-			contentStream.drawString("Employee Status");
+			contentStream.moveTextPositionByAmount(190, yIndex);
+			contentStream.drawString("Employee Status Report");
 			contentStream.endText();
-			float y = 700;
+			
+			if(firstPage) {
+				int activeEmps = 0;
+				int inactiveEmps = 0;
+				
+				for(Employee emp: eptx) {
+					if(emp.getStatus().equalsIgnoreCase("ACTIVE")) {
+						activeEmps++;
+					} else {
+						inactiveEmps++;
+					}
+				}
+				
+				contentStream.beginText();
+				contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
+				contentStream.moveTextPositionByAmount(100, yIndex - 20);
+				contentStream.drawString("Total Number of Active Employees : " + activeEmps);
+				contentStream.endText();
+				
+				contentStream.beginText();
+				contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
+				contentStream.moveTextPositionByAmount(100, yIndex - 30);
+				contentStream.drawString("Total Number of Inactive/Resigned Employees : " + inactiveEmps);
+				contentStream.endText();
+			}
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(470, 40);
+			contentStream.drawString(new Date().toString());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD_OBLIQUE, 6);
+			contentStream.moveTextPositionByAmount(45, 65);
+			contentStream.drawString("* Date shows 'Hired Date' for Active and 'Last Working Date' for Resigned employees");
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(220, 40);
+			contentStream.drawString("Reports Prepared by STP Co., Ltd. | www.STPpayroll.com");
+			contentStream.endText();
+			
+			float y = yIndex - 40;
 			float margin = 100;
 			int row = rows + 1;
 			final float rowHeight = 20f;
@@ -598,7 +319,7 @@ float textColy;
 					case 2:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getFirstname());
+						contentStream.drawString(glf.getFirstname() + " " + glf.getLastname());
 						contentStream.endText();
 						textx += colWidth;
 
@@ -613,11 +334,11 @@ float textColy;
 						// b? ta.setActive("YES") : ta.setActive("NO");
 						if (b) {
 
-							contentStream.drawString("YES");
+							contentStream.drawString("Active");
 						}
-						if (!b) {
+						else {
 
-							contentStream.drawString("NO");
+							contentStream.drawString("Resigned");
 						}
 
 						contentStream.endText();
@@ -633,11 +354,11 @@ float textColy;
 						// b? ta.setActive("YES") : ta.setActive("NO");
 						if (b1) {
 
-							contentStream.drawString("NO");
+							contentStream.drawString(PayhumUtil.getDateFormatString(glf.getHiredate()));
 						}
-						if (!b1) {
+						else {
 
-							contentStream.drawString("YES");
+							contentStream.drawString(PayhumUtil.getDateFormatString(glf.getInactiveDate()));
 						}
 
 						contentStream.endText();
@@ -702,7 +423,7 @@ float textColy;
 
 	}
 
-	public static void empAdressPdf(PDDocument doc, int rows, int cols, int c,
+	public static void empAdressPdf(PDDocument doc, int rows, int cols, int ct,
 			List<Employee> eptx, int end, int start, String[][] content) {
 
 		try {
@@ -711,13 +432,42 @@ float textColy;
 
 			PDPageContentStream contentStream = new PDPageContentStream(doc,
 					page);
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(45, 755);
+			contentStream.drawString(eptx.get(0).getDeptId().getBranchId().getCompanyId().getName());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(550 - (eptx.get(0).getDeptId().getBranchId().getName().length()) * 10, 755);
+			contentStream.drawString(eptx.get(0).getDeptId().getBranchId().getName());
+			contentStream.endText();
+			
+			int yIndex = printCompanyAddress(contentStream, eptx.get(0).getDeptId().getBranchId().getCompanyId().getId(), 745, 45);
+			yIndex = yIndex - 20;
+			
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
-			contentStream.moveTextPositionByAmount(200, 730);
-
-			contentStream.drawString("EmployeeAddress");
+			contentStream.moveTextPositionByAmount(190, yIndex);
+			contentStream.drawString("Employee Address Report");
 			contentStream.endText();
-			float y = 700;
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(470, 40);
+			contentStream.drawString(new Date().toString());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(220, 40);
+			contentStream.drawString("Reports Prepared by STP Co., Ltd. | www.STPpayroll.com");
+			contentStream.endText();
+			
+			
+			float y = yIndex - 20;
 			float margin = 100;
 			int row = rows + 1;
 			final float rowHeight = 20f;
@@ -783,7 +533,7 @@ float textColy;
 					case 2:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getFirstname());
+						contentStream.drawString(glf.getFirstname() + " " + glf.getLastname());
 						contentStream.endText();
 						textx += colWidth;
 
@@ -793,73 +543,13 @@ float textColy;
 						contentStream.moveTextPositionByAmount(textx, texty);
 
 						if (glf.getAddress() == null) {
-							contentStream.drawString("None");
+							contentStream.drawString("NA");
 						} else {
 							contentStream.drawString(glf.getAddress());
 						}
 						contentStream.endText();
 						textx += colWidth;
 						break;
-					case 4:
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-
-						String ss1 = glf.getStatus();
-						boolean b1 = ss1.equals("ACTIVE");
-
-						// b? ta.setActive("YES") : ta.setActive("NO");
-						if (b1) {
-
-							contentStream.drawString("NO");
-						}
-						if (!b1) {
-
-							contentStream.drawString("YES");
-						}
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-					case 5:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-					case 6:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-					case 7:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
-					case 8:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
 					}
 
 				}
@@ -880,7 +570,7 @@ float textColy;
 	}
 
 	public static void empDepartmentPdf(PDDocument doc, int rows, int cols,
-			int c, List<Employee> eptx, int end, int start, String[][] content) {
+			int c, List<Employee> eptx, int end, int start, String[][] content, Map<Department, Integer> depts) {
 
 		try {
 			PDPage page = new PDPage();
@@ -888,13 +578,62 @@ float textColy;
 
 			PDPageContentStream contentStream = new PDPageContentStream(doc,
 					page);
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(45, 755);
+			contentStream.drawString(eptx.get(0).getDeptId().getBranchId().getCompanyId().getName());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(550 - (eptx.get(0).getDeptId().getBranchId().getName().length()) * 10, 755);
+			contentStream.drawString(eptx.get(0).getDeptId().getBranchId().getName());
+			contentStream.endText();
+			
+			int yIndex = printCompanyAddress(contentStream, eptx.get(0).getDeptId().getBranchId().getCompanyId().getId(), 745, 45);
+			yIndex = yIndex - 20;
+			
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
-			contentStream.moveTextPositionByAmount(200, 730);
-
-			contentStream.drawString("Employees By Department");
+			contentStream.moveTextPositionByAmount(150, yIndex);
+			contentStream.drawString("Employees by Department Report");
 			contentStream.endText();
-			float y = 700;
+			
+			if(!depts.isEmpty()) {
+				String branchName = eptx.get(0).getDeptId().getBranchId().getName();
+				contentStream.beginText();
+				contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
+				contentStream.moveTextPositionByAmount(100, yIndex - 20);
+				contentStream.drawString("Total number of employees in Branch (" + branchName
+						+ ") = " + eptx.size() );
+				contentStream.endText();
+				yIndex = yIndex - 20;
+				
+				for(Department dept: depts.keySet()) {
+					yIndex = yIndex - 10;
+					contentStream.beginText();
+					contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
+					contentStream.moveTextPositionByAmount(100, yIndex);
+					contentStream.drawString("Total number of employees in Branch (" + branchName
+							+ ") / Dept. (" + dept.getDeptname() + ") = " + depts.get(dept));
+					contentStream.endText();
+				}
+			}
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(470, 40);
+			contentStream.drawString(new Date().toString());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(220, 40);
+			contentStream.drawString("Reports Prepared by STP Co., Ltd. | www.STPpayroll.com");
+			contentStream.endText();
+			
+			float y = yIndex - 20;
 			float margin = 100;
 			int row = rows + 1;
 			final float rowHeight = 20f;
@@ -945,7 +684,7 @@ float textColy;
 			for (int i = start; i < end; i++) {
 
 				Employee glf = eptx.get(i);
-				for (int k = 1; k < 4; k++)
+				for (int k = 1; k < 5; k++)
 
 				{
 
@@ -960,7 +699,7 @@ float textColy;
 					case 2:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getFirstname());
+						contentStream.drawString(glf.getFirstname() + " " + glf.getLastname());
 						contentStream.endText();
 						textx += colWidth;
 
@@ -968,60 +707,18 @@ float textColy;
 					case 3:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
+						contentStream.drawString(glf.getDeptId().getBranchId().getName());
 						contentStream.endText();
 						textx += colWidth;
 						break;
+						
 					case 4:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-
 						contentStream.drawString(glf.getDeptId().getDeptname());
-
 						contentStream.endText();
 						textx += colWidth;
 						break;
-					case 5:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-					case 6:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-					case 7:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
-					case 8:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-
-						contentStream.drawString(glf.getDeptId().getDeptname());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
 					}
 
 				}
@@ -1050,13 +747,47 @@ float textColy;
 
 			PDPageContentStream contentStream = new PDPageContentStream(doc,
 					page);
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(45, 755);
+			contentStream.drawString(eptx.get(0).getEmployeeId().getDeptId().getBranchId().getCompanyId().getName());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(550 - (eptx.get(0).getEmployeeId().getDeptId().getBranchId().getName().length()) * 10, 755);
+			contentStream.drawString(eptx.get(0).getEmployeeId().getDeptId().getBranchId().getName());
+			contentStream.endText();
+			
+			int yIndex = printCompanyAddress(contentStream, eptx.get(0).getEmployeeId().getDeptId().getBranchId().getCompanyId().getId(), 745, 45);
+			yIndex = yIndex - 20;
+			
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
-			contentStream.moveTextPositionByAmount(200, 730);
-
-			contentStream.drawString("Employee Earns Report");
+			contentStream.moveTextPositionByAmount(180, yIndex);
+			contentStream.drawString("Employee Earnings Report");
 			contentStream.endText();
-			float y = 700;
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_OBLIQUE, 8);
+			contentStream.moveTextPositionByAmount(60, 60);
+			contentStream.drawString("NOTE: The 'Netpay' is the amount employee received till date in the current fiscal year.");
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(470, 40);
+			contentStream.drawString(new Date().toString());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(220, 40);
+			contentStream.drawString("Reports Prepared by STP Co., Ltd. | www.STPpayroll.com");
+			contentStream.endText();
+			
+			float y = yIndex - 20;
 			float margin = 100;
 			int row = rows + 1;
 			final float rowHeight = 20f;
@@ -1122,7 +853,7 @@ float textColy;
 					case 2:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getFullName());
+						contentStream.drawString(glf.getEmployeeId().getFirstname() + " " + glf.getEmployeeId().getLastname());
 						contentStream.endText();
 						textx += colWidth;
 
@@ -1141,49 +872,11 @@ float textColy;
 						contentStream.moveTextPositionByAmount(textx, texty);
 
 						contentStream
-						.drawString(PayhumUtil.decimalFormat(glf.getPaidNetPay()));
+						.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getPaidNetPay()));
 
 						contentStream.endText();
 						textx += colWidth;
 						break;
-					case 5:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getNetPay()));
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-					case 6:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getNetPay()));
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-					case 7:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getNetPay()));
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
-					case 8:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getNetPay()));
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
 					}
 
 				}
@@ -1376,17 +1069,51 @@ float textColy;
 
 			PDPageContentStream contentStream = new PDPageContentStream(doc,
 					page);
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(45, 755);
+			contentStream.drawString(eptx.get(0).getEmployeeId().getDeptId().getBranchId().getCompanyId().getName());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(550 - (eptx.get(0).getEmployeeId().getDeptId().getBranchId().getName().length()) * 10, 755);
+			contentStream.drawString(eptx.get(0).getEmployeeId().getDeptId().getBranchId().getName());
+			contentStream.endText();
+			
+			int yIndex = printCompanyAddress(contentStream, eptx.get(0).getEmployeeId().getDeptId().getBranchId().getCompanyId().getId(), 745, 45);
+			yIndex = yIndex - 20;
+			
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
-			contentStream.moveTextPositionByAmount(200, 730);
-
-			contentStream.drawString("PayrollSummary");
+			contentStream.moveTextPositionByAmount(180, yIndex);
+			contentStream.drawString("Payroll Summary Report");
 			contentStream.endText();
-			float y = 700;
-			float margin = 10;
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_OBLIQUE, 8);
+			contentStream.moveTextPositionByAmount(60, 60);
+			contentStream.drawString("NOTE: The numbers are cumulative for the entire fiscal year.");
+			contentStream.endText();
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(470, 40);
+			contentStream.drawString(new Date().toString());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(220, 40);
+			contentStream.drawString("Reports Prepared by STP Co., Ltd. | www.STPpayroll.com");
+			contentStream.endText();
+			
+			float y = yIndex - 20;
+			float margin = 30;
 			int row = rows + 1;
 			final float rowHeight = 20f;
-			final float tableWidth = page.findMediaBox().getWidth();
+			final float tableWidth = page.findMediaBox().getWidth()-20;
 			final float tableHeight = rowHeight * row;
 			final float colWidth = tableWidth / cols;
 			final float cellMargin = 5f;
@@ -1404,8 +1131,8 @@ float textColy;
 			float nextx = margin;
 			for (int i = 0; i <= cols; i++) {
 
-				if (i == 6) {
-					nextx = nextx - 40;
+				if (i == 1 || i == 7) {
+					nextx = nextx - 20;
 				}
 				contentStream.drawLine(nextx, y, nextx, y - tableHeight);
 
@@ -1413,7 +1140,7 @@ float textColy;
 			}
 
 			// now add the text
-			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
 
 			float textx = margin + cellMargin;
 			float texty = y - 15;
@@ -1422,12 +1149,12 @@ float textColy;
 				for (int j = 0; j < content[i].length; j++) {
 					String text = content[i][j];
 					contentStream.beginText();
-					if (j == 6) {
+					if (j == 1) {
 
-						textx = textx - 40;
+						textx = textx - 20;
 					}
 					contentStream.moveTextPositionByAmount(textx, texty);
-					contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+					contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
 					contentStream.drawString(text);
 					contentStream.endText();
 					textx += colWidth;
@@ -1437,7 +1164,7 @@ float textColy;
 				textx = margin + cellMargin;
 			}
 
-			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
+			contentStream.setFont(PDType1Font.HELVETICA, 8);
 			for (int i = start; i < end; i++) {
 
 				EmployeePayroll glf = eptx.get(i);
@@ -1455,9 +1182,10 @@ float textColy;
 						textx += colWidth;
 						break;
 					case 2:
+						textx = textx - 20;
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getFullName());
+						contentStream.drawString(glf.getEmployeeId().getFirstname() + " " + glf.getEmployeeId().getLastname());
 						contentStream.endText();
 						textx += colWidth;
 
@@ -1465,7 +1193,7 @@ float textColy;
 					case 3:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getGrossSalary()));
+						contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getBaseSalary()));
 
 						contentStream.endText();
 						textx += colWidth;
@@ -1474,7 +1202,7 @@ float textColy;
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
 
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getTaxableIncome()));
+						contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getGrossSalary()));
 
 						contentStream.endText();
 						textx += colWidth;
@@ -1484,7 +1212,7 @@ float textColy;
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
 
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getTaxableIncome()));
+						contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getTotalDeductions()));
 
 						contentStream.endText();
 						textx += colWidth;
@@ -1494,34 +1222,21 @@ float textColy;
 						contentStream.beginText();
 
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getNetPay()));
+						contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getTaxAmount()));
 
 						contentStream.endText();
 						textx += colWidth;
 						break;
 					case 7:
-						textx = textx - 40;
+						
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
 						contentStream
-						.drawString(PayhumUtil.decimalFormat(glf.getBaseSalary()));
+						.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getNetPay()));
 
 						contentStream.endText();
 						textx += colWidth;
 						break;
-
-					case 8:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-
-						contentStream
-						.drawString(PayhumUtil.decimalFormat(glf.getBaseSalary()));
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
 					}
 
 				}
@@ -1543,7 +1258,7 @@ float textColy;
 
 	public static void employeeViewPDFadd(PDDocument doc, int rows, int cols,
 			int c, List<GlReportForm> empPay, int end, int start,
-			String[][] content) {
+			String[][] content, String compName, Integer compId, String branchName) {
 
 		try {
 			PDPage page = new PDPage();
@@ -1551,21 +1266,58 @@ float textColy;
 
 			PDPageContentStream contentStream = new PDPageContentStream(doc,
 					page);
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(45, 755);
+			contentStream.drawString(compName);
+			contentStream.endText();
+
+			if (cols != 3) {
+				contentStream.beginText();
+				contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+				contentStream.moveTextPositionByAmount(550 - branchName.length() * 10, 755);
+				contentStream.drawString(branchName);
+				contentStream.endText();				
+			}
+			
+			int yIndex = printCompanyAddress(contentStream, compId, 745, 45);
+			yIndex = yIndex - 20;
+			
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
-			contentStream.moveTextPositionByAmount(200, 730);
-
+			contentStream.moveTextPositionByAmount(180, yIndex);
+			
 			if (cols == 3) {
 
-				contentStream.drawString("CompanyView Report");
+				contentStream.drawString("Company View GL Report");
 
 			} else {
 
-				contentStream.drawString("EmployeeView Report");
+				contentStream.drawString("Employee View GL Report");
 			}
 			contentStream.endText();
-			float y = 700;
-			float margin = 100;
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_OBLIQUE, 8);
+			contentStream.moveTextPositionByAmount(60, 60);
+			contentStream.drawString("NOTE: The 'Debit' and 'Credit' numbers are cumulative for the entire fiscal year.");
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(470, 40);
+			contentStream.drawString(new Date().toString());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(220, 40);
+			contentStream.drawString("Reports Prepared by STP Co., Ltd. | www.STPpayroll.com");
+			contentStream.endText();
+			
+			float y = yIndex - 20;
+			float margin = 60;
 			int row = rows + 1;
 			final float rowHeight = 20f;
 			final float tableWidth = page.findMediaBox().getWidth()
@@ -1613,19 +1365,22 @@ float textColy;
 			for (int i = start; i < end; i++) {
 
 				GlReportForm glf = empPay.get(i);
-				for (int k = 1; k < 5; k++)
+				for (int k = 0; k < 5; k++)
 
 				{
 
 					switch (k) {
-					case 1:
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getEname());
-						contentStream.endText();
-						textx += colWidth;
+					case 0:
+						if (glf.getEmpName() != null) {
+							contentStream.beginText();
+							contentStream
+							.moveTextPositionByAmount(textx, texty);
+							contentStream.drawString(glf.getEmpId());
+							contentStream.endText();
+							textx += colWidth;
+						}
 						break;
-					case 2:
+					case 1:
 						if (glf.getEmpName() != null) {
 							contentStream.beginText();
 							contentStream
@@ -1635,13 +1390,21 @@ float textColy;
 							textx += colWidth;
 						}
 						break;
+					case 2:
+						contentStream.beginText();
+						contentStream.moveTextPositionByAmount(textx, texty);
+						contentStream.drawString(glf.getEname());
+						contentStream.endText();
+						textx += colWidth;
+						break;
+					
 					case 3:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
 						if (glf.getDebit() == null) {
 							contentStream.drawString("0.0");
 						} else {
-							contentStream.drawString(PayhumUtil.decimalFormat(glf.getDebit()));
+							contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getDebit()));
 						}
 						contentStream.endText();
 						textx += colWidth;
@@ -1652,24 +1415,11 @@ float textColy;
 						if (glf.getCredt() == null) {
 							contentStream.drawString("0.0");
 						} else {
-							contentStream.drawString(PayhumUtil.decimalFormat(glf.getCredt()));
+							contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getCredt()));
 						}
 						contentStream.endText();
 						textx += colWidth;
 						break;
-					case 5:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						if (glf.getCredt() == null) {
-							contentStream.drawString("0");
-						} else {
-							contentStream.drawString(PayhumUtil.decimalFormat(glf.getCredt()));
-						}
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
 					}
 
 				}
@@ -1714,7 +1464,7 @@ float textColy;
 
 	static PDDocument getPDfOBject(EmpPayrollMap empMap,
 			HashMap<Integer, Double> exmap, HashMap<Integer, Double> decmap,Integer mulNO,Integer divNo,
-			boolean monthly, PayrollDate pDate)
+			boolean monthly, PayrollDate pDate, GLReportEmpData glred)
 
 	{
 		PDDocument doc = null;
@@ -1723,30 +1473,42 @@ float textColy;
 		try {
 			doc = new PDDocument();
 			page = new PDPage();
+			
 			//page.PAGE_SIZE_A6
 			doc.addPage(page);
 			contentStream = new PDPageContentStream(doc, page);
 			contentStream.beginText();
-			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 18);
-			contentStream.moveTextPositionByAmount(230, 730);
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
+			//contentStream.moveTextPositionByAmount(230, 730);
+			contentStream.moveTextPositionByAmount(90, 730);
 			String compBranch = empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getCompanyId().getName();
 			compBranch = compBranch + ", ";
 			compBranch = compBranch + empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getName();
 			contentStream.drawString(compBranch);
 			contentStream.endText();
 			
+			Integer compId = empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getCompanyId().getId();
+			int yIndex = printCompanyAddress(contentStream, compId, 720, 90);
+			
 			contentStream.beginText();
-			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16);
-			contentStream.moveTextPositionByAmount(160, 710);
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
+			contentStream.moveTextPositionByAmount(150, yIndex - 20);
 			String payHead=PayhumUtil.getDateFormatString(empMap.getPayrollId().getRunOnDate());
 			String payheadString[]=PayhumUtil.splitString(payHead,0, "-");
-			contentStream.drawString("Paystub for the month of "+payheadString[1]+", "+payheadString[2]);
+			contentStream.drawString("Earnings Statement for the month of "+payheadString[1]+", "+payheadString[2]);
+			contentStream.endText();
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 6);
+			contentStream.moveTextPositionByAmount(220, 60);
+			String copyRt = "Earnings Statement Prepared by STP Co., Ltd. | www.STPpayroll.com";
+			contentStream.drawString(copyRt);
 			contentStream.endText();
 			
 			TypesData currency = empMap.getEmppayId().getEmployeeId().getCurrency();
 			Double currencyConverRate = empMap.getCurrencyConverRate();
 			
-			float y = 690;
+			float y = yIndex - 50;
 			float margin = 40;
 			int row = 5;
 			float cols = 4;
@@ -1756,7 +1518,7 @@ float textColy;
 			final float colWidth = tableWidth / cols;
 			final float cellMargin = 50f;
 
-			contentStream.setFont(PDType1Font.TIMES_BOLD, 8);
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
 
 			float textx = margin + cellMargin;
 			float texty = y;
@@ -1802,6 +1564,9 @@ float textColy;
 
 									texty = b[1];
 
+									//save for glreport
+									glred.setEmployeeID(empMap.getEmppayId().getEmployeeId().getEmployeeId());
+									
 									break;
 
 								case 1:
@@ -1829,6 +1594,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
 									break;
 
 								}
@@ -1868,6 +1634,10 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setEmployeeName(empMap.getEmppayId().getFullName());
+									
 									break;
 
 								case 1:
@@ -1896,6 +1666,7 @@ float textColy;
 										//String s=;
 										//String  istring=sdatee.substring(0, 2);
 										stdb.append( "1 "+sdatee[1]+"-"+numDays+" "+sdatee[1]);
+										glred.setPayPeriod("1 "+sdatee[1]+"-"+numDays+" "+sdatee[1]);
 									}
 									else
 									{
@@ -1906,6 +1677,7 @@ float textColy;
 										String s1=PayhumUtil.getDateFormatString(PayhumUtil.getDateAfterBefore(payordDate));
 										
 										stdb.append(s1+"-"+s2);
+										glred.setPayPeriod(s1+"-"+s2);
 									}
 									
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
@@ -1957,6 +1729,10 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setDeptName(empMap.getEmppayId().getEmployeeId().getDeptId().getDeptname());
+									
 									break;
 
 								case 1:
@@ -1988,6 +1764,8 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									glred.setPayDate(PayhumUtil.getDateFormatString(runDate));
 									break;
 
 								}
@@ -2031,6 +1809,10 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setHireDate(empMap.getEmppayId().getEmployeeId().getHiredate());
+									
 									break;
 
 								case 1:
@@ -2104,6 +1886,10 @@ float textColy;
 										textx = b[0];
 	
 										texty = b[1];
+										
+										//save for glreport
+										glred.setLastDate(empMap.getEmppayId().getEmployeeId().getInactiveDate());
+										
 										break;
 									}
 								}
@@ -2234,6 +2020,10 @@ float textColy;
 									texty -= rowHeight;
 									textx = margin + cellMargin;
 									
+									//save for glreport
+									glred.setMonthlyGross(monthlyGross / currencyConverRate);
+									glred.setAnnualGross(annualGross / currencyConverRate);
+									
 									break;
 
 								case 1:
@@ -2272,6 +2062,10 @@ float textColy;
 									
 									texty -= rowHeight;
 									textx = margin + cellMargin;
+									
+									//save for glreport
+									glred.setBaseSalary(empMap.getBaseSalary() / currencyConverRate);
+									glred.setPaidBaseSalary(empMap.getEmppayId().getPaidBaseSalary() / currencyConverRate);
 									
 									break;
 								
@@ -2312,6 +2106,10 @@ float textColy;
 									texty -= rowHeight;
 									textx = margin + cellMargin;
 									
+									//save for glreport
+									glred.setBonus(empMap.getBonus() / currencyConverRate);
+									glred.setPaidBonus(empMap.getEmppayId().getBonus() / currencyConverRate);
+									
 									break;
 								
 								case 3:
@@ -2350,6 +2148,10 @@ float textColy;
 									
 									texty -= rowHeight;
 									textx = margin + cellMargin;
+									
+									//save for glreport
+									glred.setOT(empMap.getOvertimeAmt() / currencyConverRate);
+									glred.setPaidOT(empMap.getEmppayId().getOvertimeamt() / currencyConverRate);
 									
 									break;
 								
@@ -2390,6 +2192,10 @@ float textColy;
 									texty -= rowHeight;
 									textx = margin + cellMargin;
 									
+									//save for glreport
+									glred.setOtherIncome(empMap.getOtherIncome() / currencyConverRate);
+									glred.setPaidOtherIncome(empMap.getEmppayId().getOtherIncome() / currencyConverRate);
+									
 									break;
 									
 								case 5:
@@ -2429,7 +2235,12 @@ float textColy;
 										texty = b[1];
 										
 										texty -= rowHeight;
-										textx = margin + cellMargin;	
+										textx = margin + cellMargin;
+										
+										//save for glreport
+										glred.setRetroSal(empMap.getRetroBaseSal() / currencyConverRate);
+										glred.setPaidRetroSal(empMap.getEmppayId().getRetroBaseSal() / currencyConverRate);
+										glred.setRetro(true);
 									}
 									
 									break;
@@ -2456,8 +2267,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat((empMap.getEmppayId()
-											.getAllowances() / divNo) / currencyConverRate));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getAllowance() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2467,8 +2277,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat((((empMap.getEmppayId()
-											.getAllowances() / divNo)) * mulNO) / currencyConverRate));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidAllowance() / currencyConverRate));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2478,6 +2287,11 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setAllowance(empMap.getAllowance() / currencyConverRate);
+									glred.setPaidAllowance(empMap.getEmppayId().getAllowances() / currencyConverRate);
+									
 									break;
 
 								case 1:
@@ -2563,6 +2377,11 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setAccom(empMap.getAccomAmt() / currencyConverRate);
+									glred.setPaidAccom(empMap.getEmppayId().getPaidAccomAmt() / currencyConverRate);
+									
 									break;
 
 								case 1:
@@ -2628,8 +2447,7 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat((empMap.getEmppayId()
-											.getTaxableOverseasIncome() / divNo) / currencyConverRate));
+									stdb.append(PayhumUtil.decimalFormat(0D));
 									// stdb.append(PayhumUtil.getNumberSpaces(50));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
@@ -2639,9 +2457,8 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
-									stdb.append(PayhumUtil.decimalFormat(((empMap.getEmppayId()
-											.getTaxableOverseasIncome() / divNo)
-											* mulNO) / currencyConverRate));
+									stdb.append(PayhumUtil.decimalFormat((empMap.getEmppayId()
+											.getTaxableOverseasIncome() * 0.1) / currencyConverRate));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -2650,6 +2467,12 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									
+									//save for glreport
+									glred.setTaxableOSAmt(0D);
+									glred.setPaidTaxableOSAmt((empMap.getEmppayId().getTaxableOverseasIncome() * 0.1) / currencyConverRate);
+									
 									break;
 
 								case 1:
@@ -2738,46 +2561,52 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setEmprSS(empMap.getEmprSocialSec());
+									glred.setPaidEmprSS(empMap.getEmppayId().getPaidEmprSS());
+								
 									break;
 
 								case 1:
-									stdb.append(pdfHeadLinesPart2[i2][j2]);
-
-									b = drawRowString(stdb, empMap, rowValues,
-											contentStream, textx, texty,
-											colWidth, margin, rowHeight,
-											cellMargin);
-									textx = b[0];
-
-									texty = b[1];
-									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getDeptId()
-											.getBranchId().getCompanyId()
-											.getName());
-									// stdb.append(PayhumUtil.getNumberSpaces(50));
-									b = drawRowString(stdb, empMap, rowValues,
-											contentStream, textx, texty,
-											colWidth, margin, rowHeight,
-											cellMargin);
-
-									textx = b[0];
-
-									texty = b[1];
-									stdb.append(empMap.getEmppayId()
-											.getEmployeeId().getDeptId()
-											.getBranchId().getCompanyId()
-											.getName());
-									// stdb.append(PayhumUtil.getNumberSpaces(50));
-									b = drawRowString(stdb, empMap, rowValues,
-											contentStream, textx, texty,
-											colWidth, margin, rowHeight,
-											cellMargin);
-
-									textx = b[0];
-
-									texty = b[1];
+									if(! currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_MMK)) {
+										texty -= rowHeight;
+										textx = margin + cellMargin;
+										
+										stdb.append(pdfHeadLinesPart2[i2][j2]);
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+										textx = b[0];
+		
+										texty = b[1];
+											stdb.append(PayhumUtil.decimalFormat(empMap.getEmprSocialSec()) );
+											
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+		
+										textx = b[0];
+		
+										texty = b[1];
+											stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidEmprSS()));
+										
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+		
+										textx = b[0];
+		
+										texty = b[1];
+										
+									}
+									
 									break;
-
 								}
 
 								if (j2 == pdfHeadLinesPart2[i2].length - 1) {
@@ -2794,6 +2623,57 @@ float textColy;
 						case 6:
 
 							for (int j2 = 0; j2 < pdfHeadLinesPart2[i2].length; j2++) {
+
+								if(empMap.getLeaveLoss().compareTo(0D) != 0) {
+									switch (j2) {
+	
+									case 0:
+										stdb.append(pdfHeadLinesPart2[i2][j2]);
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+										textx = b[0];
+	
+										texty = b[1];
+											stdb.append(PayhumUtil.decimalFormat(empMap.getLeaveLoss() / currencyConverRate) );
+											
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+											stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidLeaveLoss() / currencyConverRate));
+										
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										
+										//save for glreport
+										glred.setLeaveLoss(empMap.getLeaveLoss() / currencyConverRate);
+										glred.setPaidLeaveLoss(empMap.getEmppayId().getPaidLeaveLoss() / currencyConverRate);
+										
+										break;
+									}
+	
+									if (j2 == pdfHeadLinesPart2[i2].length - 1) {
+	
+										texty -= rowHeight;
+										textx = margin + cellMargin;
+										contentStream.drawLine(textx+300, texty+10, margin+50,
+												texty+10);
+									}
+								}
 							}
 
 							break;
@@ -2895,6 +2775,11 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setExemChildren((exmsIntKeyVal / divNo) / currencyConverRate);
+									glred.setPaidExemChildren(((exmsIntKeyVal / divNo) * mulNO) / currencyConverRate);
+									
 									break;
 
 								}
@@ -2951,6 +2836,11 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setExemBasicAllow(empMap.getBasicAllow() / currencyConverRate);
+									glred.setPaidExemBasicAllow(empMap.getEmppayId().getPaidBasicAllow() / currencyConverRate);
+									
 									break;
 
 								}
@@ -3013,6 +2903,11 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setExemSpouse((exmsInt12KeyVal / divNo) / currencyConverRate);
+									glred.setPaidExemSpouse(((exmsInt12KeyVal / divNo) * mulNO) / currencyConverRate);
+									
 									break;
 
 								}
@@ -3120,6 +3015,11 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setDeducLifeInsurance((exmsInt12KeyVal / divNo) / currencyConverRate);
+									glred.setPaidDeducLifeInsurance(((exmsInt12KeyVal / divNo) * mulNO) / currencyConverRate);
+									
 									break;
 
 								}
@@ -3176,6 +3076,55 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setDeducEmpeSS(empMap.getEmpeSocialSec());
+									glred.setPaidDeducEmpeSS(empMap.getEmppayId().getPaidEmpeSS());
+								
+									
+									break;
+									
+								case 1:
+									if(! currency.getName().equalsIgnoreCase(PayhumConstants.CURRENCY_MMK)) {
+										texty -= rowHeight;
+										textx = margin + cellMargin;
+										
+										
+										stdb.append(pdfHeadLinesPart4[i4][j4]);
+	
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										
+										stdb.append(PayhumUtil.decimalFormat(empMap.getEmpeSocialSec()));
+										
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+											stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidEmpeSS()));
+										
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowStringNoBold(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+									}
+									
 									break;
 
 								}
@@ -3243,7 +3192,13 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setExemDonation((exmsInt12KeyVal / divNo) / currencyConverRate);
+									glred.setPaidExemDonation(((exmsInt12KeyVal / divNo ) * mulNO ) / currencyConverRate);
+									
 									break;
+									
 
 								}
 
@@ -3352,7 +3307,7 @@ float textColy;
 
 									texty = b[1];
 
-									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidTaxableAmt()));
+									stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId().getPaidTaxableAmt() / currencyConverRate));
 									b = drawRowString(stdb, empMap, rowValues,
 											contentStream, textx, texty,
 											colWidth, margin, rowHeight,
@@ -3362,7 +3317,10 @@ float textColy;
 
 									texty = b[1];
 
-									// stdb.append(PayhumUtil.getNumberSpaces(50));
+									//save for glreport
+									glred.setTaxableIncome(empMap.getTaxableAmt() / currencyConverRate);
+									glred.setPaidTaxableIncome(empMap.getEmppayId().getPaidTaxableAmt() / currencyConverRate);
+									
 									break;
 
 								}
@@ -3418,6 +3376,11 @@ float textColy;
 									textx = b[0];
 
 									texty = b[1];
+									
+									//save for glreport
+									glred.setTaxAmt(empMap.getTaxAmount() / currencyConverRate);
+									glred.setPaidTaxAmt(empMap.getEmppayId().getPaidTaxAmt() / currencyConverRate);
+									
 									break;
 									
 								case 1:
@@ -3457,6 +3420,11 @@ float textColy;
 										textx = b[0];
 	
 										texty = b[1];
+										
+										//save for glreport
+										glred.setTaxAmtInMMK(empMap.getTaxAmount());
+										glred.setPaidTaxAmtInMMK(empMap.getEmppayId().getPaidTaxAmt());
+										
 									}
 									break;
 
@@ -3474,6 +3442,64 @@ float textColy;
 							break;
 
 						case 3:
+
+							for (int j5 = 0; j5 < pdfHeadLinesPart5[i5].length; j5++) {
+
+								if(empMap.getEmppayId().getPayAccomAmt().compareTo(0) == 0) {
+									
+									switch (j5) {
+	
+									case 0:
+									
+										stdb.append(pdfHeadLinesPart5[i5][j5]);
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										stdb.append(PayhumUtil.decimalFormat(empMap.getAccomAmt() / currencyConverRate));
+	
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+	
+										stdb.append(PayhumUtil.decimalFormat(empMap.getEmppayId()
+												.getPaidAccomAmt() / currencyConverRate));
+										// stdb.append(PayhumUtil.getNumberSpaces(50));
+										b = drawRowString(stdb, empMap, rowValues,
+												contentStream, textx, texty,
+												colWidth, margin, rowHeight,
+												cellMargin);
+	
+										textx = b[0];
+	
+										texty = b[1];
+										contentStream.drawLine(textx-100, texty-10, margin+50,
+												texty-10);
+										break;
+									}
+									
+									if (j5 == pdfHeadLinesPart5[i5].length - 1) {
+										texty -= rowHeight;
+										textx = margin + cellMargin;
+										
+									}
+								}							
+							}
+
+							break;
+							
+						case 4:
 
 							for (int j5 = 0; j5 < pdfHeadLinesPart5[i5].length; j5++) {
 
@@ -3516,6 +3542,11 @@ float textColy;
 									texty = b[1];
 									contentStream.drawLine(textx-100, texty-10, margin+50,
 											texty-10);
+									
+									//save for glreport
+									glred.setNetPay(empMap.getNetPay() / currencyConverRate);
+									glred.setPaidNetPay(empMap.getEmppayId().getPaidNetPay() / currencyConverRate);
+									
 									break;
 
 								}
@@ -3525,13 +3556,6 @@ float textColy;
 									textx = margin + cellMargin;
 									
 								}
-							}
-
-							break;
-
-						case 4:
-
-							for (int j5 = 0; j5 < pdfHeadLinesPart5[i5].length; j5++) {
 							}
 
 							break;
@@ -3575,6 +3599,52 @@ float textColy;
 		return doc;
 	}
 
+	private static int printCompanyAddress(PDPageContentStream contentStream,
+			Integer compId, int yIndex, int xIndex) throws IOException {
+		String address = "";
+		List<Branch> branches = null;
+		try {
+			branches = BranchFactory.findByCompanyId(compId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(Branch br: branches) {
+			if(br.getName().equalsIgnoreCase("Main")) {
+				address = br.getAddress();
+				break;
+			}
+		}
+		
+		if(address != null && !address.isEmpty()) {
+			
+			String[] addresSplit = address.split(",");
+			
+			for(int aIter = 0; aIter < addresSplit.length; aIter++) {
+				String addToPrint = addresSplit[aIter];
+				if(aIter + 1 < addresSplit.length) {
+					aIter++;
+					addToPrint += ","; 
+					addToPrint += addresSplit[aIter];
+					
+					if(aIter + 1 < addresSplit.length) {
+						addToPrint += ",";
+					}
+				}
+				
+				contentStream.beginText();
+				contentStream.setFont(PDType1Font.HELVETICA, 6);
+				contentStream.moveTextPositionByAmount(xIndex, yIndex);
+				contentStream.drawString(addToPrint);
+				contentStream.endText();	
+				yIndex -= 10;
+			}
+		}
+		
+		return yIndex;
+	}
+
+
 	public static void taxAnnualPdf(PDDocument doc, int rows, int cols, int c,
 			List<TaxAnnualForm> eptx, int end, int start, String[][] content) {
 
@@ -3584,17 +3654,51 @@ float textColy;
 
 			PDPageContentStream contentStream = new PDPageContentStream(doc,
 					page);
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(45, 755);
+			contentStream.drawString(eptx.get(0).getEpay().getEmployeeId().getDeptId().getBranchId().getCompanyId().getName());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.moveTextPositionByAmount(550 - (eptx.get(0).getEpay().getEmployeeId().getDeptId().getBranchId().getName().length()) * 10, 755);
+			contentStream.drawString(eptx.get(0).getEpay().getEmployeeId().getDeptId().getBranchId().getName());
+			contentStream.endText();
+			
+			int yIndex = printCompanyAddress(contentStream, eptx.get(0).getEpay().getEmployeeId().getDeptId().getBranchId().getCompanyId().getId(), 745, 45);
+			yIndex = yIndex - 20;
+			
 			contentStream.beginText();
 			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 20);
-			contentStream.moveTextPositionByAmount(250, 730);
-
-			contentStream.drawString(" Tax Annual Report");
+			contentStream.moveTextPositionByAmount(210, yIndex);
+			contentStream.drawString("Annual Tax Report");
 			contentStream.endText();
-			float y = 700;
-			float margin = 10;
+			
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA_OBLIQUE, 8);
+			contentStream.moveTextPositionByAmount(20, 60);
+			contentStream.drawString("NOTE: The numbers give a projection of amount for the entire fiscal year, based on employee's current salary.");
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(470, 40);
+			contentStream.drawString(new Date().toString());
+			contentStream.endText();
+
+			contentStream.beginText();
+			contentStream.setFont(PDType1Font.HELVETICA, 6);
+			contentStream.moveTextPositionByAmount(220, 40);
+			contentStream.drawString("Reports Prepared by STP Co., Ltd. | www.STPpayroll.com");
+			contentStream.endText();
+			
+			float y = yIndex - 20;
+			float margin = 20;
 			int row = rows + 1;
 			final float rowHeight = 20f;
-			final float tableWidth = page.findMediaBox().getWidth();
+			final float tableWidth = page.findMediaBox().getWidth() - 40;
 			final float tableHeight = rowHeight * row;
 			final float colWidth = tableWidth / cols;
 			final float cellMargin = 5f;
@@ -3616,7 +3720,7 @@ float textColy;
 			}
 
 			// now add the text
-			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
 
 			float textx = margin + cellMargin;
 			float texty = y - 15;
@@ -3626,7 +3730,7 @@ float textColy;
 					String text = content[i][j];
 					contentStream.beginText();
 					contentStream.moveTextPositionByAmount(textx, texty);
-					contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+					contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
 					contentStream.drawString(text);
 					contentStream.endText();
 					textx += colWidth;
@@ -3636,11 +3740,11 @@ float textColy;
 				textx = margin + cellMargin;
 			}
 
-			contentStream.setFont(PDType1Font.HELVETICA_BOLD, 8);
+			contentStream.setFont(PDType1Font.HELVETICA, 8);
 			for (int i = start; i < end; i++) {
 
 				TaxAnnualForm glf = eptx.get(i);
-				for (int k = 1; k < 12; k++)
+				for (int k = 1; k <= 6; k++)
 
 				{
 
@@ -3656,7 +3760,7 @@ float textColy;
 					case 2:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getEpay().getFullName());
+						contentStream.drawString(glf.getEpay().getEmployeeId().getFirstname() + " " + glf.getEpay().getEmployeeId().getLastname());
 						contentStream.endText();
 						textx += colWidth;
 
@@ -3665,85 +3769,39 @@ float textColy;
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
 
-						contentStream.drawString(glf.getEpay().getEmployeeId()
-								.getPositionId().getName());
-
+						if(glf.getEpay().getEmployeeId().getCurrency().getName().equalsIgnoreCase(PayhumConstants.CURRENCY_USD)) {
+							contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getEpay().getBaseSalary()));	
+						} else {
+							contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getEpay().getBaseSalary()));
+						}
+						
 						contentStream.endText();
 						textx += colWidth;
 						break;
 					case 4:
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
+						contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getEpay().getTotalIncome()));
 
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getEpay().getBaseSalary()));
 						contentStream.endText();
 						textx += colWidth;
 						break;
+
 					case 5:
 
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getEpay()
-								.getAccomodationAmount()));
+						contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getEpay().getTaxableIncome()));
 
 						contentStream.endText();
 						textx += colWidth;
 						break;
+
 					case 6:
 
 						contentStream.beginText();
 						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getEpay().getOtherIncome()));
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-					case 7:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getEpay().getTotalIncome()));
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
-					case 8:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getLifeinsurance());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
-					case 9:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getSpouse());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
-					case 10:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(glf.getChilderen());
-
-						contentStream.endText();
-						textx += colWidth;
-						break;
-
-					case 11:
-
-						contentStream.beginText();
-						contentStream.moveTextPositionByAmount(textx, texty);
-						contentStream.drawString(PayhumUtil.decimalFormat(glf.getEpay().getTotalIncome()));
+						contentStream.drawString(PayhumUtil.decimalFormatWithSeparators(glf.getEpay().getTaxAmount()));
 
 						contentStream.endText();
 						textx += colWidth;
@@ -3933,8 +3991,22 @@ float textColy;
 	public static void zipFileDownload(ZipOutputStream zos,
 			List<EmpPayrollMap> employees,Integer mulNo,Integer divNo, boolean monthly, PayrollDate pDate) {
 
+		GLReportData glrd = new GLReportData();
+		boolean setCompData = true;
+		
 		for (EmpPayrollMap empMap : employees) {
-
+			if(setCompData)
+			{
+				//save for glreport
+				glrd.setCompanyName(empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getCompanyId().getName());
+				glrd.setBranchName(empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getName());
+				glrd.setRunOnDate(empMap.getPayrollId().getRunOnDate());
+				
+				setCompData = false;
+			}
+			
+			GLReportEmpData glred = new GLReportEmpData();
+			
 			ByteArrayOutputStream baos = null;
 			PDDocument docobjct = null;
 			HashMap<Integer, Double> exmap = null;
@@ -3962,14 +4034,6 @@ float textColy;
 				if(empMap.getEmppayId().getEmployeeId().getStatus().equalsIgnoreCase(PayhumConstants.EMP_STATUS_INACTIVE)) {
 					newdivNo = 1;
 				} else {
-					Calendar hireDtCal = Calendar.getInstance();
-					hireDtCal.setTime(empMap.getEmppayId().getEmployeeId().getHiredate());
-					hireDtCal.set(Calendar.HOUR_OF_DAY, 0);
-					hireDtCal.set(Calendar.MINUTE, 0);
-					hireDtCal.set(Calendar.SECOND, 0);
-					hireDtCal.set(Calendar.MILLISECOND, 0);
-					hireDtCal.set(Calendar.DAY_OF_MONTH, 1);
-				    
 					Calendar payDtCal = Calendar.getInstance();
 					payDtCal.setTime(pDate.getRunDateofDateObject());
 					payDtCal.set(Calendar.HOUR_OF_DAY, 0);
@@ -3979,26 +4043,15 @@ float textColy;
 					payDtCal.set(Calendar.DAY_OF_MONTH, 1);
 					
 					int finStart = empMap.getEmppayId().getEmployeeId().getDeptId().getBranchId().getCompanyId().getFinStartMonth();
-					
-					Integer payCyclesCt = 12;
-					if(hireDtCal.get(Calendar.YEAR) == payDtCal.get(Calendar.YEAR)
-							&& ((hireDtCal.get(Calendar.MONTH)+1 >= finStart && finStart != 1)
-								|| finStart == 1)
-								|| (hireDtCal.get(Calendar.MONTH)+1 < finStart && finStart != 1 && payDtCal.get(Calendar.MONTH)+1 < finStart)){
-						payCyclesCt = PayhumUtil.remainingMonths(hireDtCal, finStart);
-					}
-					
-					if(payCyclesCt.compareTo(divNo) > 0) {
-						newdivNo = divNo;
-					} else {
-						newdivNo = payCyclesCt;
-					}
+					newdivNo = getApplicableMonthsInCurrentFY(empMap.getEmppayId().getEmployeeId(), finStart, payDtCal);
 				}
 				
 				System.out.println("Emp Id - " + empMap.getEmppayId().getEmployeeId().getEmployeeId());
 				
-				docobjct = getPDfOBject(empMap, exmap, decmap,newMulNo,newdivNo, monthly, pDate);
+				docobjct = getPDfOBject(empMap, exmap, decmap,newMulNo,newdivNo, monthly, pDate, glred);
 
+				glrd.addEmpData(glred);
+				
 				String pdfname = getPdfName(empMap);
 
 				baos = new ByteArrayOutputStream();
@@ -4013,14 +4066,187 @@ float textColy;
 				baos.close();
 				docobjct.close();
 			}
-
 			catch (Exception e) {
 				e.printStackTrace();
-
 			}
 
 		}
+		
+		//Save the GL Report in the zip itself.
+		String glReportInStr = getGLReportData(glrd);
+		try{
+			zos.putNextEntry(new ZipEntry("GLReport" + "_" + glrd.getCompanyName() + "_" + glrd.getBranchName() + ".csv"));
+			zos.write(glReportInStr.getBytes());
+			zos.closeEntry();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 
+	private static int getApplicableMonthsInCurrentFY(Employee emp, int finStartMonth, Calendar toBeProcessedFor) {
+		Date empStartDate = emp.getHiredate();
+		
+		Calendar empStartCurr = Calendar.getInstance();
+		empStartCurr.setTime(empStartDate);
+		empStartCurr.set(Calendar.HOUR_OF_DAY, 0);
+		empStartCurr.set(Calendar.MINUTE, 0);
+		empStartCurr.set(Calendar.SECOND, 0);
+		empStartCurr.set(Calendar.MILLISECOND, 0);
+		empStartCurr.set(Calendar.DAY_OF_MONTH, 1);
+	    
+		int empStartYear = empStartCurr.get(Calendar.YEAR);
+		int currYear = toBeProcessedFor.get(Calendar.YEAR);
+		
+		int empStartMonth = empStartCurr.get(Calendar.MONTH);
+		int currMonth = toBeProcessedFor.get(Calendar.MONTH);
+		
+		if(currYear == empStartYear && currMonth == empStartMonth) {
+			return PayhumUtil.remainingMonths(toBeProcessedFor, finStartMonth);
+		} else if(currYear == empStartYear && currMonth > empStartMonth) {
+			int remMonths = PayhumUtil.remainingMonths(empStartCurr, finStartMonth);
+			int finMonths = 0;
+			try {
+				finMonths = PayrollFactory.findPayrollDateByBranch(emp.getDeptId().getBranchId().getId()).size();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(remMonths > finMonths) {
+				return finMonths;
+			} else {
+				return remMonths;
+			}
+		} else {
+			try {
+				return PayrollFactory.findPayrollDateByBranch(emp.getDeptId().getBranchId().getId()).size();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return 0;
+			}
+		}
+	}
+	
+	private static String getGLReportData(GLReportData glrd) {
+		StringBuilder glReportStr = new StringBuilder();
+		
+		glReportStr.append("Company Name:," + glrd.getCompanyName());
+		glReportStr.append(",");
+		glReportStr.append("Payroll Process Date:," + PayhumUtil.getDateFormatString(glrd.getRunOnDate()));
+		glReportStr.append("\n");
+		glReportStr.append("Branch Name:," + glrd.getBranchName());
+		glReportStr.append(",");
+		glReportStr.append("Pay Period:," + glrd.getGlredList().get(0).getPayPeriod());
+		glReportStr.append("\n");
+		glReportStr.append("*NOTE: All the numbers are in employee's respective currency, except for Social Security which is in MMK at all places.");
+		glReportStr.append("\n\n");
+		
+		glReportStr.append("Employee Details,Income,Current Pay,YTD,Deduction/Exemption,Current Pay,YTD,Final Details,Current Pay,YTD\n");
+		
+		for(GLReportEmpData glred : glrd.getGlredList()) {
+			glReportStr.append(glred.getEmployeeName() + ",");
+			glReportStr.append("Gross Salary" + ",");
+			glReportStr.append(glred.getMonthlyGross() + ",");
+			glReportStr.append(glred.getAnnualGross() + ",");
+			
+			glReportStr.append("Children" + ",");
+			glReportStr.append(glred.getExemChildren() + ",");
+			glReportStr.append(glred.getPaidExemChildren() + ",");
+			
+			glReportStr.append("Taxable Income" + ",");
+			glReportStr.append(glred.getTaxableIncome() + ",");
+			glReportStr.append(glred.getPaidTaxableIncome() + ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(glred.getEmployeeID() + ",");
+			glReportStr.append("Base Salary" + ",");
+			glReportStr.append(glred.getBaseSalary() + ",");
+			glReportStr.append(glred.getPaidBaseSalary() + ",");
+			
+			glReportStr.append("Basic Allowance" + ",");
+			glReportStr.append(glred.getExemBasicAllow() + ",");
+			glReportStr.append(glred.getPaidExemBasicAllow() + ",");
+			
+			glReportStr.append("Tax Amount" + ",");
+			glReportStr.append(glred.getTaxAmt() + ",");
+			glReportStr.append(glred.getPaidTaxAmt() +  ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(glred.getDeptName() + ",");
+			glReportStr.append("Bonus" + ",");
+			glReportStr.append(glred.getBonus() + ",");
+			glReportStr.append(glred.getPaidBonus() + ",");
+			
+			glReportStr.append("Supporting Spouse" + ",");
+			glReportStr.append(glred.getExemSpouse() + ",");
+			glReportStr.append(glred.getPaidExemSpouse() + ",");
+			
+			glReportStr.append("Net Pay" + ",");
+			glReportStr.append(glred.getNetPay() + ",");
+			glReportStr.append(glred.getPaidNetPay() +  ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(",");
+			glReportStr.append("Overtime Amount" + ",");
+			glReportStr.append(glred.getOt() + ",");
+			glReportStr.append(glred.getPaidOT() + ",");
+			
+			glReportStr.append("Life Insurance" + ",");
+			glReportStr.append(glred.getDeducLifeInsurance() + ",");
+			glReportStr.append(glred.getPaidDeducLifeInsurance() + ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(",");
+			glReportStr.append("Commission" + ",");
+			glReportStr.append(glred.getOtherIncome() + ",");
+			glReportStr.append(glred.getPaidOtherIncome() + ",");
+			
+			glReportStr.append("Employee Social Security" + ",");
+			glReportStr.append(glred.getDeducEmpeSS() + ",");
+			glReportStr.append(glred.getPaidDeducEmpeSS() + ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(",");
+			glReportStr.append("Retro Salary" + ",");
+			glReportStr.append(glred.getRetroSal() + ",");
+			glReportStr.append(glred.getPaidRetroSal() + ",");
+			
+			glReportStr.append("Donation" + ",");
+			glReportStr.append(glred.getExemDonation() + ",");
+			glReportStr.append(glred.getPaidExemDonation() + ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(",");
+			glReportStr.append("Accommodation" + ",");
+			glReportStr.append(glred.getAccom() + ",");
+			glReportStr.append(glred.getPaidAccom() + ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(",");
+			glReportStr.append("Allowance" + ",");
+			glReportStr.append(glred.getAllowance() + ",");
+			glReportStr.append(glred.getPaidAllowance() + ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(",");
+			glReportStr.append("Taxable Overseas Income" + ",");
+			glReportStr.append(glred.getTaxableOSAmt() + ",");
+			glReportStr.append(glred.getPaidTaxableOSAmt() + ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append(",");
+			glReportStr.append("Employer Social Security" + ",");
+			glReportStr.append(glred.getEmprSS() + ",");
+			glReportStr.append(glred.getPaidEmprSS() + ",");
+			glReportStr.append("\n");
+			
+			glReportStr.append("\n");
+			glReportStr.append("\n");
+		}
+		
+		return glReportStr.toString();
 	}
 
 }

@@ -43,9 +43,7 @@ INSERT INTO `types` (`id`, `name`, `desc`,`type`) VALUES
 (24,'MMK','Myanmar Currency - Kyats','CURRENCY'),
 (25,'USD','United States of America Currency - Dollars($)','CURRENCY'),
 (26,'EURO','European Union Currency - EURO','CURRENCY'),
-(27,'POUND','United Kingdom Currency - Pounds','CURRENCY'),
-(28,'Limit for the Employer contribution for Social Security for USD','Maximum amount limit for the Employer contribution for Social Security for USD','TAXDETAILS'),
-(29,'Limit for the Employee contribution for Social Security for USD','Maximum amount limit for the Employee contribution for Social Security for USD','TAXDETAILS');
+(27,'POUND','United Kingdom Currency - Pounds','CURRENCY');
 /*!40000 ALTER TABLE `types` ENABLE KEYS */;
 
 --
@@ -88,8 +86,7 @@ INSERT INTO `employee` (`id`,`employeeId`,`firstname`,`middlename`,`lastname`,`s
 
 /*!40000 ALTER TABLE `leavetype` DISABLE KEYS */;
 INSERT INTO `leavetype` (`id`,`name`,`day_cap`) VALUES 
- (1,'Sick Leave',10),
- (2,'Vacation Leave',25);
+ (1,'Paid Leave',0);
 /*!40000 ALTER TABLE `leavetype` ENABLE KEYS */;
 
 --
@@ -154,18 +151,12 @@ INSERT INTO `overtime_payrate` (`id`, `day_group`, `grosspay_percent`) VALUES
 --
 /*!40000 ALTER TABLE `taxrates` DISABLE KEYS */;
 INSERT INTO `taxrates` (`id`, `income_from`, `income_to`,`income_percent`,`residentTypeId`) VALUES
-(1,1,500000,1,11),
-(2,500001,1000000,2,11),
-(3,1000001,1500000,3,11),
-(4,1500001,2000000,4,11),
-(5,2000001,3000000,5,11),
-(6,3000001,4000000,6,11),
-(7,4000001,6000000,7,11),
-(8,6000001,8000000,9,11),
-(9,8000001,10000000,11,11),
-(10,10000001,15000000,13,11),
-(11,15000001,20000000,15,11),
-(12,20000001,20000001,20,11),
+(1,1,2000000,0,11),
+(2,2000001,5000000,5,11),
+(3,5000001,10000000,10,11),
+(4,10000001,20000000,15,11),
+(5,20000001,30000000,20,11),
+(12,30000001,30000001,25,11),
 (13,1,1,35,13);
 /*!40000 ALTER TABLE `taxrates` ENABLE KEYS */;
 
@@ -175,19 +166,17 @@ INSERT INTO `taxrates` (`id`, `income_from`, `income_to`,`income_percent`,`resid
 /*!40000 ALTER TABLE `taxdetails` DISABLE KEYS */;
 INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 (1,1,25),
-(2,2,1.5),
+(2,2,2),
 (3,3,10000000),
 (4,4,20),
-(5,5,1440000),
-(6,6,200000),
-(7,7,300000),
+(5,5,2000000),
+(6,6,300000),
+(7,7,500000),
 (8,8,12.5),
 (9,9,10),
-(10,10,2.5),
-(11,22,9300),
-(12,23,5580),
-(13,28,60),
-(14,29,36);
+(10,10,3),
+(11,22,108000),
+(12,23,72000);
 /*!40000 ALTER TABLE `taxdetails` ENABLE KEYS */;
 
 --
@@ -195,7 +184,7 @@ INSERT INTO `taxdetails` (`id`, `typeId`, `amount`) VALUES
 --
 /*!40000 ALTER TABLE `paycycle` DISABLE KEYS */;
 INSERT INTO `paycycle` (`id`, `name`, `selected`, `dayofmonth`) VALUES
-(1,'Monthly',3, 20);
+(1,'Monthly',3, 15);
 /*!40000 ALTER TABLE `paycycle` ENABLE KEYS */;
 
 --

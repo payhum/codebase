@@ -37,6 +37,9 @@ import com.openhr.data.EmpDependents;
 import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.EmployeeSalary;
+import com.openhr.data.LeaveApproval;
+import com.openhr.data.LeaveRequest;
+import com.openhr.data.LeaveType;
 import com.openhr.data.Position;
 import com.openhr.data.Roles;
 import com.openhr.data.TypesData;
@@ -47,6 +50,8 @@ import com.openhr.factories.CompanyFactory;
 import com.openhr.factories.ConfigDataFactory;
 import com.openhr.factories.DepartmentFactory;
 import com.openhr.factories.EmployeeFactory;
+import com.openhr.factories.LeaveRequestFactory;
+import com.openhr.factories.LeaveTypeFactory;
 import com.openhr.factories.PositionFactory;
 import com.openhr.factories.RolesFactory;
 import com.openhr.factories.TypesDataFactory;
@@ -102,6 +107,10 @@ public class UploadEmployeeDataFile extends Action {
             Employee empForUser = null;
             String compNameUser = "";
             
+            List<LeaveType> leaveTypes = LeaveTypeFactory.findByName(PayhumConstants.PAID_LEAVE);
+            List<LeaveRequest> allLeaveRequests = LeaveRequestFactory.findAll();
+            int leaveRequestID = allLeaveRequests.size() + 1;
+            
             // iterates over form's fields
             while (iter.hasNext()) {
                 FileItem item = (FileItem) iter.next();
@@ -132,17 +141,17 @@ public class UploadEmployeeDataFile extends Action {
                     	
                     	String[] lineColumns = strLine.split(COMMA);
                     	
-                    	if(lineColumns.length != 28) {
+                    	if(lineColumns.length != 30) {
                     		br.close();
                     		in.close();
                     		fstream.close();
-                    		throw new Exception("The number of columns in the line is not 28 - " + strLine);
+                    		throw new Exception("The number of columns in the line is not 29 - " + strLine);
                     	}
                     	
                     	// Format is - EmployeeID,FirstName,MiddleName,LastName,Sex,Birthdate,Hiredate,
                     	// Position,Married,ResidentType,NationalID,PassportNo,AccomodationType,Allowances,
                     	// BaseSalary,SpouseWorking,NoOfChildren,BankAccountNo,BankName,BankBranch,BankRoutingNo,
-                    	// Currency,AmountType,Company,Branch,Department,OT,OtherIncome
+                    	// Currency,AmountType,Company,Branch,Department,OT,OtherIncome,unpaidLeave,prepaidAccom
                     	String employeeId = lineColumns[0];
                 		String firstName = lineColumns[1];
                 		String middleName = lineColumns[2];
@@ -171,6 +180,8 @@ public class UploadEmployeeDataFile extends Action {
                 		String deptName = lineColumns[25];
                 		String otAmount = lineColumns[26];
                 		String otherIncome = lineColumns[27];
+                		String unpaidLeave = lineColumns[28];
+                		String prepaidAccom = lineColumns[29];
                 		
                 		if(checkEmps) {
                 			needUsers = checkIfCompNeedsNewUsers(compName);
@@ -181,6 +192,14 @@ public class UploadEmployeeDataFile extends Action {
                 		
                 		Date birthDate = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(birthDateStr);
                 		Date hireDate = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(hireDateStr);
+                		
+                		if(hireDate.after(currDt))
+                		{
+                    		br.close();
+                    		in.close();
+                    		fstream.close();
+                			throw new RuntimeException("Hire Date is after the current date");
+                		}
                 		
                 		Employee emp = new Employee();
                 		emp.setEmployeeId(employeeId);
@@ -266,6 +285,19 @@ public class UploadEmployeeDataFile extends Action {
                 		empPayroll.setWithholdSS(1);
                 		empPayroll.setWithholdTax(1);
                 		
+                		//PrePaidAccom
+                		if(prepaidAccom != null && !prepaidAccom.equalsIgnoreCase("NA")
+                			&& !prepaidAccom.equalsIgnoreCase("N/A")) {
+                			if(prepaidAccom.equalsIgnoreCase("true")
+                			   || prepaidAccom.equalsIgnoreCase("yes")) {
+                				empPayroll.setPayAccomAmt(0);
+                			} else {
+                				empPayroll.setPayAccomAmt(1);
+                			}
+                		}else{
+                			empPayroll.setPayAccomAmt(0);
+                		}
+                		
                 		//Other Income
                 		empPayroll.setNewOtherIncome(Double.parseDouble(otherIncome));
                 		
@@ -307,9 +339,11 @@ public class UploadEmployeeDataFile extends Action {
                 		Benefit ben = new Benefit();
                 		if(amountType.equalsIgnoreCase("annual") || amountType.equalsIgnoreCase("annually")
                 		|| amountType.equalsIgnoreCase("year") || amountType.equalsIgnoreCase("yearly")) {
-                			ben.setAmount(Double.parseDouble(allowances));	
+                			ben.setAmount(Double.parseDouble(allowances));
+                			ben.setPerMonthAmt(Double.parseDouble(allowances) / 12);
                 		} else {
                 			ben.setAmount(Double.parseDouble(allowances) * remainingMonths);
+                			ben.setPerMonthAmt(Double.parseDouble(allowances));
                 		}
                 		
                 		ben.setEmployeeId(emp);
@@ -369,6 +403,31 @@ public class UploadEmployeeDataFile extends Action {
                 		}
                 		
                 		EmployeeFactory.insertAll(emp, empPayroll, empSal, ben, empBank, dependents);
+                		
+                		// Update Leave details
+                		if(unpaidLeave != null && !unpaidLeave.isEmpty()) {
+                			double unpaidLeaveInt = Double.parseDouble(unpaidLeave);
+                			if(unpaidLeaveInt > 0) {
+	                			LeaveRequest lrq = new LeaveRequest();
+	                			lrq.setId(leaveRequestID++);
+	                			lrq.setEmployeeId(emp);
+	                			lrq.setDescription("For month/year - " + currDate.get(Calendar.MONTH) + 1 + "/" + currDate.get(Calendar.YEAR));
+	                			lrq.setLeaveDate(currDt);
+	                			lrq.setLeaveTypeId(leaveTypes.get(0));
+	                			lrq.setNoOfDays(unpaidLeaveInt);
+	                			lrq.setReturnDate(currDt);
+	                			lrq.setStatus(1);
+	                			
+	                			LeaveRequestFactory.insert(lrq);
+	                			
+	                			LeaveApproval lar = new LeaveApproval();
+	                			lar.setApprovedbydate(currDt);
+	                			lar.setApproverId(emp);
+	                			lar.setRequestId(lrq);
+	                			LeaveRequestFactory.insert(lar);
+                			}
+                		}
+                		
                 		
                 		if(needUsers) {
                 			empForUser = emp;

@@ -60,7 +60,7 @@
            
            <%if (request.getSession().getAttribute("loggedUser") != null) {
                      if(!request.getSession().getAttribute("loggedUser").toString().equalsIgnoreCase("")){%>
-            <div id="footer"><p>&copy;2013 Copyright. MPTS v1.0.9</p></div>
+            <div id="footer"><p>Copyright&copy; 2014 | STP Co., Ltd. | www.STPpayroll.com | v1.0.0</p></div>
             <%}
            } %>
         </div>

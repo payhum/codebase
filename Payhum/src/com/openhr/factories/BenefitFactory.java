@@ -158,7 +158,8 @@ public class BenefitFactory {
 
         try {
         	Benefit Benefit = (Benefit)session.get(Benefit.class, bt.getId());
-            Benefit.setAmount(bt.getAmount()); 
+            Benefit.setAmount(bt.getAmount());
+            Benefit.setPerMonthAmt(bt.getPerMonthAmt()); 
             Benefit.setTypeId(bt.getTypeId());
             session.getTransaction().commit();
             done = true;

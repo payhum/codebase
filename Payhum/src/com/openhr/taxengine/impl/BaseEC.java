@@ -10,6 +10,7 @@ import com.openhr.data.Employee;
 import com.openhr.data.EmployeePayroll;
 import com.openhr.data.Exemptionstype;
 import com.openhr.factories.DeductionFactory;
+import com.openhr.factories.PayrollFactory;
 import com.openhr.taxengine.ExemptionCalculator;
 import com.openhr.taxengine.TaxDetails;
 import com.util.payhumpackages.PayhumUtil;
@@ -79,12 +80,35 @@ public class BaseEC implements ExemptionCalculator {
 		int empStartYear = empStartCurr.get(Calendar.YEAR);
 		int currYear = toBeProcessedFor.get(Calendar.YEAR);
 		
-		//TODO VJ
-		//if(currYear > empStartYear) {
-			//return 12;
-		//}
+		int empStartMonth = empStartCurr.get(Calendar.MONTH);
+		int currMonth = toBeProcessedFor.get(Calendar.MONTH);
 		
-		return PayhumUtil.remainingMonths(toBeProcessedFor, finStartMonth);
+		if(currYear == empStartYear && currMonth == empStartMonth) {
+			return PayhumUtil.remainingMonths(toBeProcessedFor, finStartMonth);
+		} else if(currYear == empStartYear && currMonth > empStartMonth) {
+			int remMonths = PayhumUtil.remainingMonths(empStartCurr, finStartMonth);
+			int finMonths = 0;
+			try {
+				finMonths = PayrollFactory.findPayrollDateByBranch(emp.getDeptId().getBranchId().getId()).size();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if(remMonths > finMonths) {
+				return finMonths;
+			} else {
+				return remMonths;
+			}
+		} else {
+			try {
+				return PayrollFactory.findPayrollDateByBranch(emp.getDeptId().getBranchId().getId()).size();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return 0;
+			}
+		}
 	}
 
 	private Exemptionstype getExemptionType(

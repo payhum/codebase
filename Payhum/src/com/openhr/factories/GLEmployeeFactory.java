@@ -40,7 +40,7 @@ public class GLEmployeeFactory {
 		session = OpenHRSessionFactory.getInstance().getCurrentSession();
 		session.beginTransaction();
 		String sql="";
-		String hql = "SELECT SUM(e.netPay) as net, SUM(e.taxAmount) as tax ,SUM(e.totalDeductions) as dedc, sum(e.baseSalary), sum(e.allowances) from EmployeePayroll e" ;
+		String hql = "SELECT SUM(e.netPay) as net, SUM(e.taxAmount) as tax ,SUM(e.totalDeductions) as dedc, sum(e.grossSalary), sum(e.allowances) from EmployeePayroll e" ;
 				Query query = session.createQuery(hql);
 				List<Object[]>	glemployees = query.list();
 				

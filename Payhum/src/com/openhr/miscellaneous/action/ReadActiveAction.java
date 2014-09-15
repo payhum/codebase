@@ -20,6 +20,7 @@ import com.openhr.data.Position;
 import com.openhr.factories.EmployeeFactory;
 import com.openhr.miscellaneous.form.ActiveForm;
 import com.openhr.tax.form.TaxAnnualForm;
+import com.util.payhumpackages.PayhumUtil;
 
 public class ReadActiveAction  extends Action{
 	private static List<ActiveForm> employees1 = new ArrayList<ActiveForm>();
@@ -62,7 +63,7 @@ public class ReadActiveAction  extends Action{
 					ta.setEmployeeId(e.getEmployeeId());
 					
 					
-					ta.setFirstname(e.getFirstname()+"-"+e.getMiddlename());
+					ta.setFirstname(e.getFirstname()+" "+e.getLastname());
 					
 					ta.setId(e.getId());
 					String ss=e.getStatus();
@@ -71,13 +72,13 @@ public class ReadActiveAction  extends Action{
 				//b? ta.setActive("YES") : ta.setActive("NO");
 				if(b)
 				{
-					ta.setActive("YES");
-					ta.setTerminated("NO");
+					ta.setActive("Active");
+					ta.setTerminated(PayhumUtil.getDateFormatString(e.getHiredate()));
 				}
 				if(!b)
 				{
-					ta.setTerminated("YES");
-					ta.setActive("NO");	
+					ta.setActive("Resigned");
+					ta.setTerminated(PayhumUtil.getDateFormatString(e.getInactiveDate()));	
 				}
 		
 					

@@ -53,7 +53,7 @@ public class LeaveRequest implements Serializable {
 
 	@Basic(optional = false)
 	@Column(name = "noOfDays", nullable = false)
-	private int noOfDays;
+	private double noOfDays;
 
 	@Basic(optional = false)
 	@Column(name = "description", nullable = false)
@@ -155,11 +155,11 @@ public class LeaveRequest implements Serializable {
 		this.returnDate = returnDate;
 	}
 
-	public int getNoOfDays() {
+	public double getNoOfDays() {
 		return noOfDays;
 	}
 
-	public void setNoOfDays(int noOfDays) {
+	public void setNoOfDays(double noOfDays) {
 		this.noOfDays = noOfDays;
 	}
 

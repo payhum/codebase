@@ -106,7 +106,7 @@ public class UploadFile extends Action {
                     	
                     	String[] lineColumns = strLine.split(COMMA);
                     	
-                    	if(lineColumns.length < 13) {
+                    	if(lineColumns.length < 16) {
                     		br.close();
                     		in.close();
                     		fstream.close();
@@ -115,7 +115,7 @@ public class UploadFile extends Action {
                     	
                     	// Format is - 
                     	// CompID,BranchName,EmpID,EmpFullName,EmpNationalID,BankName,BankBranch,RoutingNo,AccountNo,NetPay,Currency,
-                    	// TaxAmount,EmployerSS,EmployeeSS
+                    	// residenttype,TaxAmount,EmployerSS,EmployeeSS
                     	if(comp == null || comp.getId() != Integer.parseInt(lineColumns[0])) {
                     		List<Company> comps = CompanyFactory.findById(Integer.parseInt(lineColumns[0]));
                     		
@@ -208,7 +208,7 @@ public class UploadFile extends Action {
                     		}
                     	}
 
-                    	// CompID,BranchName,EmpID,EmpFullName,EmpNationalID,DeptName,BankName,BankBranch,RoutingNo,AccountNo,NetPay,currency,TaxAmt,emprSS,empess                    	
+                    	// CompID,BranchName,EmpID,EmpFullName,EmpNationalID,DeptName,BankName,BankBranch,RoutingNo,AccountNo,NetPay,currency,TaxAmt,emprSS,empess,basesalary                    	
                     	CompanyPayroll compPayroll = new CompanyPayroll();
                     	compPayroll.setBranchId(branch);
                     	compPayroll.setEmployeeId(lineColumns[2]);
@@ -221,9 +221,11 @@ public class UploadFile extends Action {
                     	compPayroll.setAccountNo(lineColumns[9]);
                     	compPayroll.setNetPay(Double.parseDouble(lineColumns[10]));
                     	compPayroll.setCurrencySym(lineColumns[11]);
-                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[12]));
-                    	compPayroll.setEmprSocialSec(Double.parseDouble(lineColumns[13]));
-                    	compPayroll.setEmpeSocialSec(Double.parseDouble(lineColumns[14]));
+                    	compPayroll.setResidentType(lineColumns[12]);
+                    	compPayroll.setTaxAmount(Double.parseDouble(lineColumns[13]));
+                    	compPayroll.setEmprSocialSec(Double.parseDouble(lineColumns[14]));
+                    	compPayroll.setEmpeSocialSec(Double.parseDouble(lineColumns[15]));
+                    	compPayroll.setBaseSalary(Double.parseDouble(lineColumns[16]));
                     	compPayroll.setProcessedDate(now);
                     	CompanyPayrollFactory.insert(compPayroll);
                     }

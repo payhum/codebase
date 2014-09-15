@@ -192,7 +192,7 @@
 					
 					<li class="gradient_menuitem gradient31 first_item"><a
 				href="<%=request.getContextPath() + "/do/ActiveTerminate"%>">
-					Active vs Terminated</a></li>
+					Active vs Resigned</a></li>
 
 
 
